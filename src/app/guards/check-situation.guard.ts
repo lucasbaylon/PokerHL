@@ -23,12 +23,13 @@ export class CheckSituationGuard implements CanActivate {
             } else {
                 let message = "Une erreur est survenue.";
                 if (data.message === "DIRECTORY_EMPTY") {
-                    message = "Aucune situation n'est enregistré.";
+                    message = "Vous n'avez encore crée aucune situation pour vos entraînements. Veuillez d'abord créer une situation dans le menu 'Gérer les situations'.";
                 }
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oups...',
-                    text: message
+                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif;">Aucune situation d\'entraînement existante.<br> Veuillez d\'abord créer une situation dans le menu "Gérer les situations".</p>',
+                    confirmButtonColor: '#090a0f',
+                    confirmButtonText:'<p style="font-family: \'Lato\', sans-serif;">C\'est compris !</p>'
                 })
                 return false;
             }
