@@ -1,7 +1,7 @@
-// Use Express
 var express = require("express");
-// Use body-parser
 var bodyParser = require("body-parser");
+
+const fs = require('fs')
 
 // Create new instance of the express server
 var app = express();
@@ -29,4 +29,24 @@ var server = app.listen(3000, function () {
  */
 app.get("/api/status", function (req, res) {
     res.status(200).json({ status: "UP" });
+});
+
+app.get("/api/check_situations_folder", function (req, res) {
+    let situations_dir = './situations'
+    if (fs.existsSync(situations_dir)) {
+        console.log('Directory exists!')
+        fs.readdir(situations_dir, function(err, data) {
+            if (data.length == 0) {
+                console.log("Directory is empty!");
+                res.status(200).json({authorized: false, message: "DIRECTORY_EMPTY"});
+            } else {
+                console.log("Directory is not empty!");
+                res.status(200).json({authorized: true, message: "OK"});
+            }
+        });
+      } else {
+        console.log('Directory not found.')
+        res.status(200).json({authorized: false, message: "DIRECTORY_NOT_FOUND"});
+      }
+    // res.status(200).json("test");
 });
