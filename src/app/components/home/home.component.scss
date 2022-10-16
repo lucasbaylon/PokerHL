@@ -64,15 +64,13 @@ button {
     color: var(--color);
     transition: 0.25s;
 
-    &:hover,
-    &:focus {
+    &:hover {
         border-color: var(--hover);
         color: #303030;
     }
 }
 
-.fill:hover,
-.fill:focus {
+.fill:hover {
     box-shadow: inset 0 0 0 2em var(--hover);
 }
 
