@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 })
 export class SituationsComponent implements OnInit {
 
+    situationName: string = ""
+
     constructor(private router: Router) { }
 
     ngOnInit(): void {
@@ -15,6 +17,14 @@ export class SituationsComponent implements OnInit {
 
     redirectToHome() {
         this.router.navigate(['home']);
+    }
+
+    cancelSituation() {
+        this.situationName = "";
+    }
+
+    saveSituation() {
+        console.log(this.situationName)
     }
 
 }

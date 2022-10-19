@@ -11,4 +11,8 @@ export class SituationService {
     checkSituation() {
         return this.http.get("/api/check_situations_folder");
     }
+
+    getAllSituations() {
+        return this.http.get("/api/getAllSituations");
+    }
 }

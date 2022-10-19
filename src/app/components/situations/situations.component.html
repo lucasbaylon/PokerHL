@@ -3,7 +3,7 @@
     <div class="inner-header">
         <h1>Enregistrer une nouvelle situation</h1>
         <div class="form__group field">
-            <input type="input" class="form__field" placeholder="Nom de la situation" name="situationName"
+            <input [(ngModel)]="situationName" type="text" class="form__field" placeholder="Nom de la situation" name="situationName"
                 id='situationName' required />
             <label for="situationName" class="form__label">Nom de la situation</label>
         </div>
@@ -230,7 +230,7 @@
         </form>
     </div>
     <div>
-        <button class="fill doubleButton">Annuler</button>
-        <button class="fill doubleButton">Enregistrer</button>
+        <button (click)="cancelSituation()" class="fill doubleButton">Annuler</button>
+        <button (click)="saveSituation()" class="fill doubleButton">Enregistrer</button>
     </div>
 </div>
