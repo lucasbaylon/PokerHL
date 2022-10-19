@@ -72,9 +72,16 @@ app.get("/api/create_situation", function (req, res) {
     let situation = []
 
     cards.map(row => {
-        let row_obj = {}
-        row.map(card => row_obj[card] = "")
-        situation.push(row_obj)
+        let row_list = []
+        row.map(card => {
+            console.log(card)
+            let new_obj = {
+                card: card,
+                action: ""
+            }
+            row_list.push(new_obj)
+        })
+        situation.push(row_list)
     })
     console.log(situation)
 
@@ -87,5 +94,5 @@ app.get("/api/create_situation", function (req, res) {
         if (err) return console.log(err);
         console.log('Situation créer !');
     });
-    res.status(200).json({ status: "OK" });
+    res.status(200).json(situation);
 });
