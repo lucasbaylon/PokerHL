@@ -24,7 +24,8 @@ ion-icon:hover {
     text-align: center;
     background: linear-gradient(60deg, #090a0f 0%, #272f3a 100%);
     color: white;
-    height: 100vh;
+    height: 100%;
+    min-height: 100vh;
 }
 
 .inner-header {
@@ -42,7 +43,7 @@ h1 {
     margin-top: 50px;
 }
 
-// Button
+// Button //////////////////////////////////////////////////
 
 $colors: (
     fill: #fff,
@@ -93,7 +94,7 @@ button {
     margin-right: 25px;
 }
 
-// Text input field /////////////////////////////////////////////////////////////////////////
+// Name Text input field /////////////////////////////////////////////////////////////////////////
 
 .form__group {
     position: relative;
@@ -171,7 +172,7 @@ table {
 }
 
 table tr td {
-    border: 1px solid white;
+    border: 2px solid white;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 5px;
@@ -182,7 +183,7 @@ table tr td {
 table tr td:active {
     //    background: radial-gradient(rgb(0, 151, 0), black 200%);
     // background: radial-gradient(rgb(216, 0, 0), black 200%);
-    background: radial-gradient(rgb(19, 82, 255), black 200%);
+    background: radial-gradient(rgb(0, 255, 21), black 200%);
 }
 
 table thead tr td {
@@ -218,18 +219,21 @@ form {
     display: grid;
     grid-template-columns: auto var(--radio-size);
     align-items: center;
-    margin-top: 17px;
+    margin-top: 18px;
+    scale: 1.07;
 
     .textInput {
-        font-size: 1.2em;
-        margin-top: 15px;
-        margin-bottom: 15px;
+        font-size: 1.3em;
+        margin-top: 14px;
+        margin-bottom: 14px;
         border: none;
-        width: 80px;
+        width: 70px;
+        text-align: center;
+        margin-right: 15px;
     }
 
-    .textInput:active{
-        border: none;
+    .textInput::placeholder {
+        color: #090a0f;
     }
 
     input[type="radio"] {
@@ -273,7 +277,6 @@ form {
             position: relative;
             width: calc(100% /2);
             height: calc(100% /2);
-            background: var(--radio-checked);
             top: var(--y, 100%);
             transition: top .5s cubic-bezier(0.48, 1.97, 0.5, 0.63);
         }
@@ -303,6 +306,70 @@ form {
                 transition: opacity 0s linear .5s;
             }
         }
+    }
+
+    #radio1::after{
+        background: rgb(216, 0, 0);
+    }
+
+    #radio1{
+        --radio: rgb(216, 0, 0);
+    }
+
+    #radio2::after{
+        background: rgb(0, 151, 0);
+    }
+
+    #radio2{
+        --radio: rgb(0, 151, 0);
+    }
+
+    #radio3::after{
+        background: rgb(19, 82, 255);
+    }
+
+    #radio3{
+        --radio: rgb(19, 82, 255);
+    }
+
+    #radio4::after{
+        background: rgb(140, 0, 255);
+    }
+
+    #radio4{
+        --radio: rgb(140, 0, 255);
+    }
+
+    #radio5::after{
+        background: rgb(255, 0, 212);
+    }
+
+    #radio5{
+        --radio: rgb(255, 0, 212);
+    }
+
+    #radio6::after{
+        background: rgb(255, 123, 0);
+    }
+
+    #radio6{
+        --radio: rgb(255, 123, 0);
+    }
+
+    #radio7::after{
+        background: rgb(0, 163, 228);
+    }
+
+    #radio7{
+        --radio: rgb(0, 163, 228);
+    }
+
+    #radio8::after{
+        background: rgb(0, 255, 21);
+    }
+
+    #radio8{
+        --radio: rgb(0, 255, 21);
     }
 }
 
