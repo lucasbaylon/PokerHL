@@ -40,7 +40,7 @@ h1 {
     letter-spacing: 2px;
     font-size: 3em;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 2.5%;
 }
 
 // Button //////////////////////////////////////////////////
@@ -162,7 +162,7 @@ button {
 .tableaux {
     display: inline-block;
     vertical-align: top;
-    margin: 50px;
+    margin: 2.6%;
 }
 
 table {
@@ -178,12 +178,6 @@ table tr td {
     padding-left: 5px;
     padding-right: 5px;
     cursor: pointer;
-}
-
-table tr td:active {
-    //    background: radial-gradient(rgb(0, 151, 0), black 200%);
-    // background: radial-gradient(rgb(216, 0, 0), black 200%);
-    background: radial-gradient(rgb(0, 255, 21), black 200%);
 }
 
 table thead tr td {
@@ -219,8 +213,7 @@ form {
     display: grid;
     grid-template-columns: auto var(--radio-size);
     align-items: center;
-    margin-top: 18px;
-    scale: 1.07;
+    scale: 1.10;
 
     .textInput {
         font-size: 1.3em;
@@ -362,14 +355,6 @@ form {
 
     #radio7{
         --radio: rgb(0, 163, 228);
-    }
-
-    #radio8::after{
-        background: rgb(0, 255, 21);
-    }
-
-    #radio8{
-        --radio: rgb(0, 255, 21);
     }
 }
 
