@@ -301,59 +301,59 @@ form {
         }
     }
 
-    #radio1::after{
+    #radio0::after{
         background: rgb(216, 0, 0);
     }
 
-    #radio1{
+    #radio0{
         --radio: rgb(216, 0, 0);
     }
 
-    #radio2::after{
+    #radio1::after{
         background: rgb(0, 151, 0);
     }
 
-    #radio2{
+    #radio1{
         --radio: rgb(0, 151, 0);
     }
 
-    #radio3::after{
+    #radio2::after{
         background: rgb(19, 82, 255);
     }
 
-    #radio3{
+    #radio2{
         --radio: rgb(19, 82, 255);
     }
 
-    #radio4::after{
+    #radio3::after{
         background: rgb(140, 0, 255);
     }
 
-    #radio4{
+    #radio3{
         --radio: rgb(140, 0, 255);
     }
 
-    #radio5::after{
+    #radio4::after{
         background: rgb(255, 0, 212);
     }
 
-    #radio5{
+    #radio4{
         --radio: rgb(255, 0, 212);
     }
 
-    #radio6::after{
+    #radio5::after{
         background: rgb(255, 123, 0);
     }
 
-    #radio6{
+    #radio5{
         --radio: rgb(255, 123, 0);
     }
 
-    #radio7::after{
+    #radio6::after{
         background: rgb(0, 163, 228);
     }
 
-    #radio7{
+    #radio6{
         --radio: rgb(0, 163, 228);
     }
 }

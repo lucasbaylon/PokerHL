@@ -10,13 +10,15 @@ import { SituationsComponent } from './components/situations/situations.componen
 import { TrainingComponent } from './components/training/training.component';
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ActionColorPipe } from './pipe/action-color.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SituationsComponent,
-    TrainingComponent
+    TrainingComponent,
+    ActionColorPipe
   ],
   imports: [
     FormsModule,

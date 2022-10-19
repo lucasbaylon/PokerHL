@@ -12,7 +12,8 @@
         <table>
             <tbody>
                 <tr *ngFor="let row of situation_array.situations">
-                    <td *ngFor="let item of row" (click)="saveAction($event)" [style.backgroundColor]="item.action">{{item.card}}</td>
+                    <!-- <td *ngFor="let item of row" (click)="saveAction($event)" [style.backgroundColor]="item.action">{{item.card}}</td> -->
+                    <td *ngFor="let item of row" (click)="saveAction($event)" [style.background]="'radial-gradient(' + (item.action | actionColor) + ', black 200%)'">{{item.card}}</td>
                 </tr>
             </tbody>
         </table>
@@ -35,9 +36,9 @@
             <input id="radio7" type="radio" name="r" value="7">
             <input type="input" class="textInput" placeholder="Aucun"/>
             <input id="radio8" type="radio" name="r" value="8"> -->
-            <ng-container *ngFor="let row of situation_array.situations; let i = index">
-                <input type="input" class="textInput" value="All In" placeholder="Aucun"/>
-                <input [id]="'radio_action_' + i" type="radio" name="r" checked>
+            <ng-container *ngFor="let action of situation_array.actions; let i = index">
+                <input type="input" class="textInput" value="{{action.display_name}}" placeholder="Aucun"/>
+                <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i" (click)="onChangeAction($event)">
             </ng-container>
         </form>
     </div>
