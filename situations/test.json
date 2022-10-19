@@ -2,11 +2,11 @@
     "actions": [
         {
             "name": "all_in",
-            "color": "#ffffff"
+            "color": "#ff0000"
         },
         {
             "name": "call",
-            "color": "#000000"
+            "color": "#00ff00"
         }
     ],
     "test":[
