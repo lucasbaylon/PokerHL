@@ -7,16 +7,9 @@
                 id='situationName' required />
             <label for="situationName" class="form__label">Nom de la situation</label>
         </div>
+    </div>
+    <div class="tableaux">
         <table>
-            <thead>
-                <tr>
-                    <td>*</td>
-                    <td colspan="3">Fold</td>
-                    <td colspan="3">Call 1</td>
-                    <td colspan="3">Raise to 2</td>
-                    <td colspan="3">All-in 10</td>
-                </tr>
-            </thead>
             <tbody>
                 <tr>
                     <td>AA</td>
@@ -129,7 +122,7 @@
                     <td>Q7o</td>
                     <td>J7o</td>
                     <td>T7o</td>
-                    <td>77o</td>
+                    <td>97o</td>
                     <td>87o</td>
                     <td>77</td>
                     <td>76s</td>
@@ -215,9 +208,29 @@
                 </tr>
             </tbody>
         </table>
-        <div>
-            <button (click)="cancelSituation()" class="fill doubleButton">Annuler</button>
-            <button (click)="saveSituation()" class="fill doubleButton">Enregistrer</button>
-        </div>
+    </div>
+    <div class="tableaux">
+        <form>
+            <input type="input" class="textInput" value="All In"/>
+            <input id="01" type="radio" name="r" value="1" checked>
+            <input type="input" class="textInput" value="Limp"/>
+            <input id="02" type="radio" name="r" value="2">
+            <input type="input" class="textInput" value="Aucun"/>
+            <input id="03" type="radio" name="r" value="3">
+            <input type="input" class="textInput" value="Aucun"/>
+            <input id="04" type="radio" name="r" value="4">
+            <input type="input" class="textInput" value="Aucun"/>
+            <input id="05" type="radio" name="r" value="5">
+            <input type="input" class="textInput" value="Aucun"/>
+            <input id="06" type="radio" name="r" value="6">
+            <input type="input" class="textInput" value="Aucun"/>
+            <input id="07" type="radio" name="r" value="7">
+            <input type="input" class="textInput" value="Aucun"/>
+            <input id="08" type="radio" name="r" value="8">
+        </form>
+    </div>
+    <div>
+        <button (click)="cancelSituation()" class="fill doubleButton">Annuler</button>
+        <button (click)="saveSituation()" class="fill doubleButton">Enregistrer</button>
     </div>
 </div>
