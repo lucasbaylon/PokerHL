@@ -21,7 +21,7 @@
         <form>
             <ng-container *ngFor="let action of situation_array.actions; let i = index">
                 <input type="input" class="textInput" value="{{action.display_name}}" placeholder="Aucun"/>
-                <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i" (click)="onChangeAction($event)">
+                <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i" (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
             </ng-container>
         </form>
     </div>

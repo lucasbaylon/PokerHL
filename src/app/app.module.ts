@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,23 +12,28 @@ import { TrainingComponent } from './components/training/training.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ActionColorPipe } from './pipe/action-color.pipe';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    SituationsComponent,
-    TrainingComponent,
-    ActionColorPipe
-  ],
-  imports: [
-    FormsModule,
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    SweetAlert2Module
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        SituationsComponent,
+        TrainingComponent,
+        ActionColorPipe
+    ],
+    imports: [
+        FormsModule,
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        SweetAlert2Module,
+        SocketIoModule.forRoot(config)
+    ],
+    providers: [],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
