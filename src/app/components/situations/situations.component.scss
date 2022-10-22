@@ -376,3 +376,9 @@ form {
         transform: scale(1, 1)
     }
 }
+
+@media (min-width: 1900px) {
+    .header {
+        scale: 1.25;
+    }
+}

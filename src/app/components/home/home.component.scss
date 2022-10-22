@@ -128,14 +128,8 @@ button {
     }
 }
 
-/*Shrinking for mobile*/
-@media (max-width: 768px) {
-    .waves {
-        height: 40px;
-        min-height: 40px;
-    }
-
-    .content {
-        height: 30vh;
+@media (min-width: 1900px) {
+    .header {
+        scale: 1.25;
     }
 }

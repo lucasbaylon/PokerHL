@@ -134,3 +134,9 @@ hr {
     top: 10%;
     left: 90%;
 }
+
+@media (min-width: 1900px) {
+    .header {
+        scale: 1.25;
+    }
+}
