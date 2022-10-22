@@ -38,7 +38,7 @@ h1 {
     font-style: italic;
     font-size: 4em;
     position: absolute;
-    top: 40%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -56,10 +56,33 @@ h1 span {
 .cardContainer {
     height: 80px;
     position: absolute;
-    top: 76.8%;
+    overflow: hidden;
+}
+
+.userCards{
+    top: 76.7%;
     left: 50%;
     transform: translate(-50%, -50%);
-    overflow: hidden;
+}
+
+.oponent0Cards{
+    top: 9.2%;
+    left: 50%;
+    transform: rotate(180deg) translate(50%, -50%);
+}
+
+.oponent1Cards{
+    transform: rotate(135deg);
+    margin-top: 142px;
+    margin-right: 640px;
+    scale: 1.30;
+}
+
+.oponent2Cards{
+    transform: rotate(-135deg);
+    margin-top: 142px;
+    margin-left: 640px;
+    scale: 1.30;
 }
 
 .card {
@@ -67,20 +90,43 @@ h1 span {
 }
 
 .leftCard {
-    margin-right: -20.5%;
+    margin-right: -24%;
 }
 
 hr {
+    position: absolute;
     border: 0;
-    width: 40%;
+    width: 30%;
     height: 2px;
     background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255, 255, 255), rgba(255, 255, 255, 0));
-    margin-top: 470px;
 }
 
-// Players div //////////////////////////////////////////////////
+hr.userHr{
+    margin-top: 470px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
-.playerCard {
+hr.oponent0Hr{
+    margin-top: 90px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+hr.oponent1Hr{
+    transform: rotate(-45deg);
+    margin-top: 150px;
+}
+
+hr.oponent2Hr{
+    transform: rotate(45deg);
+    margin-top: 150px;
+    left: 70%;
+}
+
+// Players boxes //////////////////////////////////////////////////
+
+.playerBox {
     width: 115px;
     position: absolute;
     left: 50%;
@@ -103,36 +149,36 @@ hr {
     transform-origin: top left;
 }
 
-.playerCard:hover {
+.playerBox:hover {
     scale: 1.10;
 }
 
-.playerCard ion-icon {
+.playerBox ion-icon {
     font-size: 2.4em;
 }
 
-.playerCard h2 {
+.playerBox h2 {
     margin: 0;
 }
 
-.playerCard h3 {
+.playerBox h3 {
     font-size: 1.5em;
     margin: 0;
     margin-top: 10px;
 }
 
-.userCard {
+.userBox {
     top: 100%;
 }
 
-.oponentCard1 {
+.oponentBox1 {
     top: 10%;
-    left: 10%;
+    left: 5%;
 }
 
-.oponentCard2 {
+.oponentBox2 {
     top: 10%;
-    left: 90%;
+    left: 95%;
 }
 
 // Responsive ///////////////////////////////////////////////

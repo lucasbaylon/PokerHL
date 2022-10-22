@@ -210,7 +210,7 @@ table tbody td:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-// Selection table /////////////////////////////////////////
+// Selection des solutions /////////////////////////////////////////
 
 form {
     --background: #ffffff;
@@ -228,6 +228,7 @@ form {
     position: relative;
     padding: 30px 45px;
     display: grid;
+    margin-top: 45px;
     grid-template-columns: auto var(--radio-size);
     align-items: center;
     scale: 1.10;
