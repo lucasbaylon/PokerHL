@@ -130,6 +130,7 @@ button {
 
 @media (min-width: 1921px) {
     .header {
-        scale: 1.15;
+        scale: 1.125;
+        transform-origin: top left;
     }
 }
