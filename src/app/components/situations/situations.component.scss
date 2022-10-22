@@ -4,6 +4,15 @@
     font-family: 'Lato', sans-serif;
 }
 
+.header {
+    text-align: center;
+    background: linear-gradient(60deg, #090a0f 0%, #272f3a 100%);
+    color: white;
+    height: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
 ion-icon {
     position: absolute;
     font-size: 3.5em;
@@ -19,14 +28,6 @@ ion-icon {
 
 ion-icon:hover {
     scale: 1.15;
-}
-
-.header {
-    text-align: center;
-    background: linear-gradient(60deg, #090a0f 0%, #272f3a 100%);
-    color: white;
-    height: 100%;
-    min-height: 100vh;
 }
 
 .inner-header {
@@ -380,6 +381,5 @@ form {
 @media (min-width: 1921px) {
     .header {
         scale: 1.125;
-        transform-origin: top left;
     }
 }
