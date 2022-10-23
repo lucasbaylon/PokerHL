@@ -51,47 +51,45 @@ export class SituationsComponent implements OnInit {
 
     saveSituation() {
         console.log(this.situation_array)
-        // if (this.situationName === "") {
-        //     Swal.fire({
-        //         position: 'top-end',
-        //         icon: 'warning',
-        //         title: 'Merci de donner un nom à la situation.',
-        //         showConfirmButton: false,
-        //         timer: 2000
-        //     })
-        // } else {
-        //     let situation_empty = false;
-        //     this.situation_array.situations.map((row: any) => {
-        //         row.map((situation: any) => {
-        //             if (situation.action === "") situation_empty = true;
-        //         })
-        //     })
+        if (this.situationName === "") {
+            Swal.fire({
+                icon: 'error',
+                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation avant de l\'enregistrer.</p>',
+                confirmButtonColor: '#090a0f',
+                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em;">C\'est compris !</p>'
+            })
+        } else {
+            let situation_empty = false;
+            this.situation_array.situations.map((row: any) => {
+                row.map((situation: any) => {
+                    if (situation.action === "") situation_empty = true;
+                })
+            })
 
-        //     console.log("situation manquante =", situation_empty)
-        //     if (situation_empty) {
-        //         Swal.fire({
-        //             position: 'top-end',
-        //             icon: 'warning',
-        //             title: 'Merci de remplir toutes les situations.',
-        //             showConfirmButton: false,
-        //             timer: 2000
-        //         })
-        //     } else {
-        //         let data = {
-        //             situation_name: this.situationName,
-        //             data: this.situation_array
-        //         }
-        //         this.apiSituation.addSituation(data);
-        //         Swal.fire({
-        //             position: 'top-end',
-        //             icon: 'success',
-        //             title: 'La situation a bien été créer !',
-        //             showConfirmButton: false,
-        //             timer: 2000
-        //         })
-        //         this.router.navigate(['home']);
-        //     }
-        // }
+            console.log("situation manquante =", situation_empty)
+            if (situation_empty) {
+                Swal.fire({
+                    icon: 'error',
+                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau avant d\'enregistrer.</p>',
+                    confirmButtonColor: '#090a0f',
+                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em;">C\'est compris !</p>'
+                })
+            } else {
+                let data = {
+                    situation_name: this.situationName,
+                    data: this.situation_array
+                }
+                this.apiSituation.addSituation(data);
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'La situation a bien été créer !',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+                this.router.navigate(['home']);
+            }
+        }
     }
 
     onChangeAction(e: any) {
