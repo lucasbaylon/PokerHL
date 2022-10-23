@@ -128,11 +128,3 @@ button {
         transform: translate3d(85px, 0, 0);
     }
 }
-
-// Responsive ///////////////////////////////////////////////
-
-@media (min-width: 1921px) {
-    .header {
-        scale: 1.125;
-    }
-}
