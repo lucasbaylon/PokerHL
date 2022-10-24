@@ -3,8 +3,8 @@
     <div class="inner-header">
         <h1>Enregistrer une nouvelle situation</h1>
         <div class="form__group field">
-            <input [(ngModel)]="situationName" type="text" class="form__field" placeholder="Nom de la situation" name="situationName"
-                id='situationName' required />
+            <input [(ngModel)]="situationName" type="text" class="form__field" placeholder="Nom de la situation"
+                name="situationName" id='situationName' required />
             <label for="situationName" class="form__label">Nom de la situation</label>
         </div>
     </div>
@@ -12,21 +12,42 @@
         <table>
             <tbody>
                 <tr *ngFor="let row of situation_array.situations">
-                    <td *ngFor="let item of row" (click)="saveAction($event)" [style.background]="'radial-gradient(' + (item.action | actionColor) + ', black 200%)'">{{item.card}}</td>
+                    <td *ngFor="let item of row" (click)="saveAction($event)"
+                        [style.background]="'radial-gradient(' + (item.action | actionColor) + ', black 200%)'">
+                        {{item.card}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="tableaux">
-        <form>
+        <form class="solutions">
             <ng-container *ngFor="let action of situation_array.actions; let i = index">
-                <input type="input" class="textInput" value="{{action.display_name}}" placeholder="Aucun"/>
-                <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i" (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
+                <input type="input" class="textInput" value="{{action.display_name}}" placeholder="Aucun" />
+                <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i"
+                    (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
             </ng-container>
         </form>
     </div>
+    <div class="tableaux rightDiv">
+        <h2>Combien de jetons reste t-il au dealer ?</h2>
+        <div class="form__group field rightForm">
+            <input type="number" min="1" step="1" class="form__field" name="jetonsRestants" required />
+            <label for="jetonsRestants" class="form__label">Nombre de jetons restants</label>
+        </div>
+        <h2>Combien de joueurs y a-t-il autour de la table ?</h2>
+        <div>
+            <button class="fill smallButton">2</button>
+            <button class="fill smallButton">3</button>
+        </div>
+        <h2>Quel joueur autour de la table est le dealer ?</h2>
+        <div>
+            <button class="fill smallButton">Vous</button>
+            <button class="fill smallButton">Adversaire 1</button>
+            <button class="fill smallButton">Adversaire 2</button>
+        </div>
+    </div>
     <div>
-        <button (click)="cancelSituation()" class="fill doubleButton">Annuler</button>
-        <button (click)="saveSituation()" class="fill doubleButton">Enregistrer</button>
+        <button class="fill doubleButton">Annuler</button>
+        <button class="fill doubleButton">Enregistrer</button>
     </div>
 </div>

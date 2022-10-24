@@ -60,6 +60,11 @@ h1 {
     margin-top: 2.5%;
 }
 
+h2 {
+    letter-spacing: 1px;
+    margin-top: 32px;
+}
+
 // Button //////////////////////////////////////////////////
 
 $colors: (
@@ -111,6 +116,18 @@ button {
     margin-right: 25px;
 }
 
+.smallButton {
+    width: fit-content;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    min-width: 150px;
+}
+
+.selectedButton{
+
+}
+
 // Name Text input field /////////////////////////////////////////////////////////////////////////
 
 .form__group {
@@ -132,6 +149,13 @@ button {
     padding: 7px 0;
     background: transparent;
     transition: border-color 0.2s;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
 
     &::placeholder {
         color: transparent;
@@ -149,7 +173,12 @@ button {
     top: 0;
     display: block;
     transition: 0.2s;
-    color: white;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .form__field:focus {
@@ -172,6 +201,11 @@ button {
     &:invalid {
         box-shadow: none;
     }
+}
+
+.rightForm {
+    width: 100%;
+    margin-top: 30px;
 }
 
 // Tableaux /////////////////////////////////////////////////////////////////////////
@@ -211,9 +245,13 @@ table tbody td:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
+.rightDiv{
+    margin-top: 70px;
+}
+
 // Selection des solutions /////////////////////////////////////////
 
-form {
+.solutions {
     --background: #ffffff;
     --text: #272f3a;
     --radio: #7C96B2;
