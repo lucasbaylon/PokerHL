@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Situation } from 'src/app/interfaces/situation';
 import { CommonService } from 'src/app/services/common.service';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
@@ -13,9 +14,11 @@ export class SituationsComponent implements OnInit {
 
     situationName: string = ""
 
-    situation_array: any;
+    situation_obj!: Situation;
 
-    actionSelected: string = "radio_action_0";
+    actionSelected: "radio_action_0" | "radio_action_1" | "radio_action_2" | "radio_action_3" | "radio_action_4" | "radio_action_5" | "radio_action_6" | undefined = "radio_action_0";
+
+    showOpponent2: boolean = true;
 
     constructor(
         private router: Router,
@@ -24,7 +27,7 @@ export class SituationsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.situation_array = this.apiCommon.empty_situation_array;
+        this.situation_obj = {...this.apiCommon.empty_situation_obj};
     }
 
     redirectToHome() {
@@ -33,24 +36,24 @@ export class SituationsComponent implements OnInit {
 
     cancelSituation() {
         this.situationName = "";
-        this.situation_array = this.apiCommon.empty_situation_array;
-        // console.log(this.situation_array)
-        // this.situation_array.situations = this.situation_array.situations.map((row: any) => {
-        //     row.map((situation: any) => {
-        //         return situation.action = ""
-        //     })
-        //     return row;
-        // })
+        this.situation_obj = {...this.apiCommon.empty_situation_obj};
+        (document.getElementById("jetonsRestants") as HTMLInputElement).value = ""
+        this.situation_obj.situations = this.situation_obj.situations.map((row: any) => {
+            row.map((situation: any) => {
+                return situation.action = undefined;
+            })
+            return row;
+        });
     }
 
     saveAction(e: any) {
         let cell_index = e.target.cellIndex;
         let row_index = e.target.parentElement.rowIndex;
-        this.situation_array.situations[row_index][cell_index].action = this.actionSelected;
+        this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
     }
 
     saveSituation() {
-        console.log(this.situation_array)
+        console.log(this.situation_obj)
         if (this.situationName === "") {
             Swal.fire({
                 icon: 'error',
@@ -60,9 +63,9 @@ export class SituationsComponent implements OnInit {
             })
         } else {
             let situation_empty = false;
-            this.situation_array.situations.map((row: any) => {
+            this.situation_obj.situations.map((row: any) => {
                 row.map((situation: any) => {
-                    if (situation.action === "") situation_empty = true;
+                    if (situation.action === undefined) situation_empty = true;
                 })
             })
 
@@ -77,7 +80,7 @@ export class SituationsComponent implements OnInit {
             } else {
                 let data = {
                     situation_name: this.situationName,
-                    data: this.situation_array
+                    data: this.situation_obj
                 }
                 this.apiSituation.addSituation(data);
                 Swal.fire({
@@ -94,6 +97,29 @@ export class SituationsComponent implements OnInit {
 
     onChangeAction(e: any) {
         this.actionSelected = e.target.value;
+    }
+
+    onChangeNBPlayer(nb_player: number) {
+        if (nb_player === 2) {
+            this.showOpponent2 = false;
+            if (this.situation_obj.dealer === "opponent2") {
+                this.situation_obj.dealer = undefined;
+            }
+        } else if (nb_player === 3) {
+            this.showOpponent2 = true;
+        }
+        this.situation_obj.nbPlayer = nb_player;
+        console.log(this.situation_obj)
+    }
+
+    onChangeDealer(dealer: string) {
+        this.situation_obj.dealer = dealer;
+        console.log(this.situation_obj)
+    }
+
+    onChangeNBMissingTokens(event: any) {
+        this.situation_obj.dealerMissingTokens = parseInt(event.target.value);
+        console.log(this.situation_obj)
     }
 
 }
