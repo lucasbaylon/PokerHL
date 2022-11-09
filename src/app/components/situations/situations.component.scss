@@ -62,7 +62,18 @@ h1 {
 
 h2 {
     letter-spacing: 1px;
-    margin-top: 32px;
+}
+
+.firsth2{
+    margin-top: 35px;
+}
+
+.middleh2{
+    margin-top: 40px;
+}
+
+.lasth2{
+    margin-top: 5px;
 }
 
 // Button //////////////////////////////////////////////////
@@ -125,7 +136,9 @@ button {
 }
 
 .selectedButton{
-
+    box-shadow: inset 0 0 0 2em var(--hover);
+    color: #303030;
+    border-color: white;
 }
 
 // Name Text input field /////////////////////////////////////////////////////////////////////////

@@ -29,18 +29,18 @@
         </form>
     </div>
     <div class="tableaux rightDiv">
-        <h2>Combien de jetons reste t-il au dealer ?</h2>
+        <h2 class="firsth2">Combien de jetons reste t-il au dealer ?</h2>
         <div class="form__group field rightForm">
             <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants"
                 (input)="onChangeNBMissingTokens($event)" required />
             <label for="jetonsRestants" class="form__label">Nombre de jetons restants</label>
         </div>
-        <h2>Combien de joueurs y a-t-il autour de la table ?</h2>
+        <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
         <div>
             <button class="fill smallButton" (click)="onChangeNBPlayer(2)">2</button>
             <button class="fill smallButton" (click)="onChangeNBPlayer(3)">3</button>
         </div>
-        <h2>Quel joueur autour de la table est le dealer ?</h2>
+        <h2 class="lasth2">Quel joueur autour de la table est le dealer ?</h2>
         <div>
             <button class="fill smallButton" (click)="onChangeDealer('you')">Vous</button>
             <button class="fill smallButton" (click)="onChangeDealer('opponent1')">Adversaire 1</button>
