@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="tableaux">
-        <table id="test">
+        <table>
             <tbody>
                 <tr *ngFor="let row of situation_obj.situations">
                     <td *ngFor="let item of row" (click)="saveAction($event)"
@@ -31,7 +31,7 @@
     <div class="tableaux rightDiv">
         <h2 class="firsth2">Combien de jetons reste t-il au dealer ?</h2>
         <div class="form__group field rightForm">
-            <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants"
+            <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants" placeholder="Nombre de jetons restants"
                 (input)="onChangeNBMissingTokens($event)" required />
             <label for="jetonsRestants" class="form__label">Nombre de jetons restants</label>
         </div>
