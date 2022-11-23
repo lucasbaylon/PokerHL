@@ -103,16 +103,34 @@ export class SituationsComponent implements OnInit {
         if (nb_player === 2) {
             this.showOpponent2 = false;
             if (this.situation_obj.dealer === "opponent2") {
+                document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
                 this.situation_obj.dealer = undefined;
             }
+            document.getElementById("btn2Player")?.classList.add("selectedButton")
+            document.getElementById("btn3Player")?.classList.remove("selectedButton")
         } else if (nb_player === 3) {
             this.showOpponent2 = true;
+            document.getElementById("btn2Player")?.classList.remove("selectedButton")
+            document.getElementById("btn3Player")?.classList.add("selectedButton")
         }
         this.situation_obj.nbPlayer = nb_player;
         console.log(this.situation_obj)
     }
 
     onChangeDealer(dealer: string) {
+        if (dealer === "you") {
+            document.getElementById("btnYouDealer")?.classList.add("selectedButton")
+            document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
+            document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
+        } else if (dealer === "opponent1") {
+            document.getElementById("btnYouDealer")?.classList.remove("selectedButton")
+            document.getElementById("btnOpponent1Dealer")?.classList.add("selectedButton")
+            document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
+        } else if (dealer === "opponent2") {
+            document.getElementById("btnYouDealer")?.classList.remove("selectedButton")
+            document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
+            document.getElementById("btnOpponent2Dealer")?.classList.add("selectedButton")
+        }
         this.situation_obj.dealer = dealer;
         console.log(this.situation_obj)
     }

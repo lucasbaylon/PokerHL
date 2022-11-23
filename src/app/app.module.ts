@@ -13,6 +13,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ActionColorPipe } from './pipe/action-color.pipe';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SituationListComponent } from './components/situation-list/situation-list.component';
+import { ManageSituationComponent } from './components/manage-situation/manage-situation.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -22,7 +24,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         HomeComponent,
         SituationsComponent,
         TrainingComponent,
-        ActionColorPipe
+        ActionColorPipe,
+        SituationListComponent,
+        ManageSituationComponent
     ],
     imports: [
         FormsModule,
