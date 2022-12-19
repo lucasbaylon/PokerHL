@@ -6,7 +6,7 @@
 
 .header {
     text-align: center;
-    background: linear-gradient(60deg, #090a0f 0%, #272f3a 100%);
+    background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
     color: white;
     overflow: hidden;
 }
@@ -29,8 +29,8 @@
     transform: translate(-50%, -50%);
     background: radial-gradient(rgb(0, 151, 0), black 150%);
     border-radius: 500px;
-    border: 20px solid darkgrey;
-    box-shadow: 0 0 30px 5px darkgrey;
+    border: 20px solid rgb(230, 230, 230);
+    box-shadow: 0 0 30px 5px rgb(49, 49, 49);
 }
 
 h1 {

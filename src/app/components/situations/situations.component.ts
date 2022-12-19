@@ -27,16 +27,16 @@ export class SituationsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.situation_obj = {...this.apiCommon.empty_situation_obj};
+        this.situation_obj = { ...this.apiCommon.empty_situation_obj };
     }
 
-    redirectToHome() {
-        this.router.navigate(['home']);
+    redirectTo(page: string) {
+        this.router.navigate([page]);
     }
 
     cancelSituation() {
         this.situationName = "";
-        this.situation_obj = {...this.apiCommon.empty_situation_obj};
+        this.situation_obj = { ...this.apiCommon.empty_situation_obj };
         (document.getElementById("jetonsRestants") as HTMLInputElement).value = ""
         this.situation_obj.situations = this.situation_obj.situations.map((row: any) => {
             row.map((situation: any) => {
