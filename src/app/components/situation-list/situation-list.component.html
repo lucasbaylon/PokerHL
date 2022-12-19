@@ -1,8 +1,77 @@
 <div class="header">
-    <ion-icon (click)="redirectTo('home')" name="arrow-back-outline"></ion-icon>
+    <ion-icon class="backArrow" (click)="redirectTo('home')" name="arrow-back-outline"></ion-icon>
     <div class="inner-header">
         <h1>Liste des situations</h1>
         <p>Sélectionnez la situations sur laquelle vous souhaitez vous entrainer</p>
+        <div class="container">
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-1">Nom</div>
+                    <div class="col col-2">Nb jetons dealer</div>
+                    <div class="col col-3">Nombre joueurs</div>
+                    <div class="col col-4">Joueur Dealer</div>
+                    <div class="col col-5">Lancer</div>
+                </li>
+                <div class="tableBody">
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">42235</div>
+                        <div class="col col-3">3</div>
+                        <div class="col col-4">Adversaire 1</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">4225</div>
+                        <div class="col col-3">2</div>
+                        <div class="col col-4">Adversaire 1</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">42235</div>
+                        <div class="col col-3">3</div>
+                        <div class="col col-4">Joueur</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">4235</div>
+                        <div class="col col-3">3</div>
+                        <div class="col col-4">Adversaire 2</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">4235</div>
+                        <div class="col col-3">3</div>
+                        <div class="col col-4">Adversaire 2</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">4235</div>
+                        <div class="col col-3">3</div>
+                        <div class="col col-4">Adversaire 2</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Pending</div>
+                        <div class="col col-2">4235</div>
+                        <div class="col col-3">3</div>
+                        <div class="col col-4">Adversaire 2</div>
+                        <div class="col col-5"><ion-icon name="exit-outline"></ion-icon>
+                        </div>
+                    </li>
+                </div>
+            </ul>
+        </div>
     </div>
     <div>
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

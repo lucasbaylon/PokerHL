@@ -4,7 +4,7 @@
     font-family: 'Lato', sans-serif;
 }
 
-ion-icon {
+.backArrow {
     position: absolute;
     font-size: 3.5em;
     left: 1.5%;
@@ -17,13 +17,13 @@ ion-icon {
     -o-transition: 0.25s linear;
 }
 
-ion-icon:hover {
+.backArrow:hover {
     -moz-animation: bounce 2s infinite;
     -webkit-animation: bounce 2s infinite;
     animation: bounce 2s infinite;
 }
 
-ion-icon:active {
+.backArrow:active {
     scale: (0.80);
     -moz-animation: none !important;
     -webkit-animation: none !important;
@@ -60,8 +60,116 @@ h1 {
 p {
     font-size: 1.4em;
     letter-spacing: 1px;
-    margin-bottom: 50px;
 }
+
+.container {
+    color: #303030;
+    overflow: hidden;
+    width: 60%;
+    margin: auto;
+}
+
+.responsive-table {
+    padding: 0;
+
+    li {
+        border-radius: 3px;
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+    }
+
+    .table-header {
+        background-color: #303030;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #ffffff;
+    }
+
+    .tableBody {
+        overflow: auto;
+        height: 400px;
+        overflow-x: hidden;
+    }
+
+    .tableBody::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .table-row {
+        background-color: #ffffff;
+        box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-row:hover {
+        background-color: #d3d3d3;
+    }
+
+    .table-row ion-icon {
+        font-size: 1.6em;
+        cursor: pointer;
+        padding: 5px;
+        margin-top: -10px;
+    }
+
+    .table-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .col-1 {
+        flex-basis: 10%;
+    }
+
+    .col-2 {
+        flex-basis: 15%;
+    }
+
+    .col-3 {
+        flex-basis: 15%;
+    }
+
+    .col-4 {
+        flex-basis: 15%;
+    }
+
+    .col-5 {
+        flex-basis: 10%;
+    }
+
+    @media all and (max-width: 767px) {
+        .table-header {
+            display: none;
+        }
+
+
+        li {
+            display: block;
+        }
+
+        .col {
+
+            flex-basis: 100%;
+
+        }
+
+        .col {
+            display: flex;
+            padding: 10px 0;
+
+            &:before {
+                color: #6C7A89;
+                padding-right: 10px;
+                content: attr(data-label);
+                flex-basis: 50%;
+                text-align: right;
+            }
+        }
+    }
+}
+
 
 $colors: (
     fill: #fff,
