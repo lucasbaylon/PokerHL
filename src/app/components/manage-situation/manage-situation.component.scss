@@ -1,7 +1,7 @@
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
 
 * {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
 }
 
 .backArrow {
@@ -24,7 +24,7 @@
 }
 
 .backArrow:active {
-    scale: (0.80);
+    scale: (0.8);
     -moz-animation: none !important;
     -webkit-animation: none !important;
     animation: none !important;
@@ -93,12 +93,17 @@ p {
         overflow: auto;
         height: 400px;
         overflow-x: hidden;
+
+        // Responsive //////////////////
+
+        @media (min-width: 1921px) {
+            height: 550px;
+        }
     }
 
     .tableBody::-webkit-scrollbar {
         display: none;
     }
-
 
     .table-row {
         background-color: #ffffff;
@@ -149,15 +154,12 @@ p {
             display: none;
         }
 
-
         li {
             display: block;
         }
 
         .col {
-
             flex-basis: 100%;
-
         }
 
         .col {
@@ -165,7 +167,7 @@ p {
             padding: 10px 0;
 
             &:before {
-                color: #6C7A89;
+                color: #6c7a89;
                 padding-right: 10px;
                 content: attr(data-label);
                 flex-basis: 50%;
@@ -179,8 +181,7 @@ $colors: (
     fill: #fff,
 );
 
-@each $button,
-$color in $colors {
+@each $button, $color in $colors {
     .#{$button} {
         --color: #{$color};
         --hover: #{adjust-hue($color, 45deg)};
@@ -237,27 +238,27 @@ button {
 
 /* Animation */
 
-.parallax>use {
+.parallax > use {
     animation: move-forever 50s linear infinite;
     -webkit-animation: move-forever 50s linear infinite;
 }
 
-.parallax>use:nth-child(1) {
+.parallax > use:nth-child(1) {
     animation-delay: -4s;
     animation-duration: 14s;
 }
 
-.parallax>use:nth-child(2) {
+.parallax > use:nth-child(2) {
     animation-delay: -6s;
     animation-duration: 20s;
 }
 
-.parallax>use:nth-child(3) {
+.parallax > use:nth-child(3) {
     animation-delay: -8s;
     animation-duration: 26s;
 }
 
-.parallax>use:nth-child(4) {
+.parallax > use:nth-child(4) {
     animation-delay: -10s;
     animation-duration: 40s;
 }
@@ -273,7 +274,6 @@ button {
 }
 
 @keyframes bounce {
-
     0%,
     20%,
     50%,
@@ -288,13 +288,5 @@ button {
 
     60% {
         transform: translateX(-5px);
-    }
-}
-
-// Responsive //////////////////
-
-@media (min-width: 1921px) {
-    .tableBody {
-        height: 550px;
     }
 }

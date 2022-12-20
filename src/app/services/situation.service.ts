@@ -7,14 +7,16 @@ import { Socket } from 'ngx-socket-io';
 })
 export class SituationService {
 
+    situations = this.socket.fromEvent<[]>('Situations');
+
     constructor(private http: HttpClient, private socket: Socket) { }
 
     checkSituation() {
         return this.http.get("/api/check_situations_folder");
     }
 
-    getAllSituations() {
-        return this.http.get("/api/getAllSituations");
+    getSituations() {
+        this.socket.emit('GetSituations');
     }
 
     addSituation(data: any) {

@@ -63,6 +63,7 @@ export class SituationsComponent implements OnInit {
             })
         } else {
             let situation_empty = false;
+            this.situation_obj.name = this.situationName;
             this.situation_obj.situations.map((row: any) => {
                 row.map((situation: any) => {
                     if (situation.action === undefined) situation_empty = true;
