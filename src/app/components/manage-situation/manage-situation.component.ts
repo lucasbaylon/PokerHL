@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonService } from 'src/app/services/common.service';
 import { SituationService } from 'src/app/services/situation.service';
 import { Situation } from 'src/app/interfaces/situation';
-import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-manage-situation',
@@ -21,7 +19,6 @@ export class ManageSituationComponent implements OnInit {
 
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
-            console.log(data)
             this.situationList = data;
         });
 
