@@ -56,7 +56,7 @@
     width: 65em;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 40%;
     transform: translate(-50%, -50%);
     background: radial-gradient(rgb(0, 151, 0), black 150%);
     border-radius: 500px;
@@ -257,12 +257,79 @@ hr.oponent2Hr{
     left: 95%;
 }
 
-@media (min-width: 1921px) {
-    .pokerTable {
-        scale: 1.125;
-        transform-origin: top left;
+// Buttons //////////////////////////////////////////////////
+
+.rightDiv{
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    width: 10%;
+    position: absolute;
+    top: 50%;
+    left: 83%;
+    transform: translate(-50%, -50%);
+}
+
+.rightDiv:first-child{
+    margin-top: 100px;
+}
+
+$colors: (
+    fill: #303030,
+);
+
+@each $button,
+$color in $colors {
+    .#{$button} {
+        --color: #{$color};
+        --hover: #{adjust-hue($color, 45deg)};
     }
 }
+
+button {
+    background: none;
+    border: 2px solid;
+    line-height: 1;
+    margin: auto;
+    margin-bottom: 30px;
+    font-size: 1.4em;
+    padding: 1em;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
+    width: 200px;
+    cursor: pointer;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
+}
+
+button {
+    color: var(--color);
+    transition: 0.25s;
+
+    &:hover {
+        border-color: var(--hover);
+        color: #fff;
+    }
+}
+
+.fill:hover {
+    box-shadow: inset 0 0 0 2em var(--hover);
+}
+
+// Animations //////////////////////////////////////////////////
+
+// @media (min-width: 1921px) {
+//     .pokerTable {
+//         scale: 1.125;
+//         transform-origin: top left;
+//     }
+// }
 
 @keyframes bounce {
 
