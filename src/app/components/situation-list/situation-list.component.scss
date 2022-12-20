@@ -286,3 +286,11 @@ button {
         transform: translateX(-5px);
     }
 }
+
+// Responsive //////////////////
+
+@media (min-width: 1921px) {
+    .tableBody {
+        height: 550px;
+    }
+}
