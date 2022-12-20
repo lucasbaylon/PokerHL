@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { SituationService } from 'src/app/services/situation.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-situation-list',

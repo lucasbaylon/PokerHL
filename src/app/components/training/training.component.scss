@@ -11,6 +11,37 @@
     overflow: hidden;
 }
 
+.backArrow {
+    position: absolute;
+    font-size: 3.5em;
+    left: 1.5%;
+    top: 1.5%;
+    cursor: pointer;
+    transition: 0.25s linear;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+}
+
+.backArrow:hover {
+    -moz-animation: bounce 2s infinite;
+    -webkit-animation: bounce 2s infinite;
+    animation: bounce 2s infinite;
+}
+
+.backArrow:active {
+    scale: (0.80);
+    -moz-animation: none !important;
+    -webkit-animation: none !important;
+    animation: none !important;
+    transition: 0.1s linear;
+    -webkit-transition: 0.1s linear;
+    -moz-transition: 0.1s linear;
+    -ms-transition: 0.1s linear;
+    -o-transition: 0.1s linear;
+}
+
 .inner-header {
     height: 100%;
     min-height: 100vh;
@@ -184,7 +215,7 @@ hr.oponent2Hr{
     -moz-border-radius: 20px;
     -ms-border-radius: 20px;
     -o-border-radius: 20px;
-    color: #272f3a;
+    color: #303030;
     cursor: pointer;
     transition: 0.25s linear;
     -webkit-transition: 0.25s linear;
@@ -230,5 +261,24 @@ hr.oponent2Hr{
     .pokerTable {
         scale: 1.125;
         transform-origin: top left;
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateX(-10px);
+    }
+
+    60% {
+        transform: translateX(-5px);
     }
 }
