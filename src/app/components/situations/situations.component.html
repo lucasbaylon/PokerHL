@@ -1,5 +1,5 @@
 <div class="header">
-    <ion-icon (click)="redirectTo('manage')" name="arrow-back-outline"></ion-icon>
+    <ion-icon class="backArrow" (click)="redirectTo('manage')" name="arrow-back-outline"></ion-icon>
     <div class="inner-header">
         <h1>Enregistrer une nouvelle situation</h1>
         <div class="form__group field">
@@ -29,11 +29,11 @@
         </form>
     </div>
     <div class="tableaux rightDiv">
-        <h2 class="firsth2">Combien de jetons reste t-il au dealer ?</h2>
+        <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
         <div class="form__group field rightForm">
             <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants"
                 placeholder="Nombre de jetons restants" (input)="onChangeNBMissingTokens($event)" required />
-            <label for="jetonsRestants" class="form__label">Nombre de jetons restants</label>
+            <label for="jetonsRestants" class="form__label">Nombre de BB restantes</label>
         </div>
         <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
         <div>

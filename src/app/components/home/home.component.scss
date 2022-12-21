@@ -32,6 +32,8 @@ p {
     margin-bottom: 50px;
 }
 
+/********************************* Boutons *********************************/
+
 $colors: (
     fill: #fff,
 );
@@ -77,6 +79,8 @@ button {
     box-shadow: inset 0 0 0 2em var(--hover);
 }
 
+/********************************* Waves *********************************/
+
 .waves {
     position: relative;
     width: 100%;
@@ -93,7 +97,6 @@ button {
     background-color: white;
 }
 
-/* Animation */
 
 .parallax>use {
     animation: move-forever 50s linear infinite;

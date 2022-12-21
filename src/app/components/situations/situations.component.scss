@@ -13,37 +13,6 @@
     overflow: hidden;
 }
 
-ion-icon {
-    position: absolute;
-    font-size: 3.5em;
-    left: 1.5%;
-    top: 1.5%;
-    cursor: pointer;
-    transition: 0.25s linear;
-    -webkit-transition: 0.25s linear;
-    -moz-transition: 0.25s linear;
-    -ms-transition: 0.25s linear;
-    -o-transition: 0.25s linear;
-}
-
-ion-icon:hover {
-    -moz-animation: bounce 2s infinite;
-    -webkit-animation: bounce 2s infinite;
-    animation: bounce 2s infinite;
-}
-
-ion-icon:active {
-    scale: (0.80);
-    -moz-animation: none !important;
-    -webkit-animation: none !important;
-    animation: none !important;
-    transition: 0.1s linear;
-    -webkit-transition: 0.1s linear;
-    -moz-transition: 0.1s linear;
-    -ms-transition: 0.1s linear;
-    -o-transition: 0.1s linear;
-}
-
 .inner-header {
     width: 100%;
     display: grid;
@@ -75,7 +44,58 @@ h2 {
     margin-top: 5px;
 }
 
-// Button //////////////////////////////////////////////////
+/********************************* Back Arrow *********************************/
+
+.backArrow {
+    position: absolute;
+    font-size: 3.5em;
+    left: 1.5%;
+    top: 1.5%;
+    cursor: pointer;
+    transition: 0.25s linear;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+}
+
+.backArrow:hover {
+    -moz-animation: bounce 2s infinite;
+    -webkit-animation: bounce 2s infinite;
+    animation: bounce 2s infinite;
+}
+
+.backArrow:active {
+    scale: (0.8);
+    -moz-animation: none !important;
+    -webkit-animation: none !important;
+    animation: none !important;
+    transition: 0.1s linear;
+    -webkit-transition: 0.1s linear;
+    -moz-transition: 0.1s linear;
+    -ms-transition: 0.1s linear;
+    -o-transition: 0.1s linear;
+}
+
+@keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateX(-10px);
+    }
+
+    60% {
+        transform: translateX(-5px);
+    }
+}
+
+/********************************* Boutons *********************************/
 
 $colors: (
     fill: #fff,
@@ -146,7 +166,7 @@ button {
     color: #fff;
 }
 
-// Name Text input field /////////////////////////////////////////////////////////////////////////
+/********************************* Champ texte nom *********************************/
 
 .form__group {
     position: relative;
@@ -237,7 +257,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-// Tableaux /////////////////////////////////////////////////////////////////////////
+/********************************* Tableau *********************************/
 
 .tableaux {
     display: inline-block;
@@ -282,7 +302,7 @@ table tbody td:hover {
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
 }
 
-// Selection des solutions /////////////////////////////////////////
+/********************************* Champ solutions *********************************/
 
 .solutions {
     --background: #ffffff;
@@ -449,8 +469,6 @@ table tbody td:hover {
     }
 }
 
-// Animations ///////////////////////////////////////////
-
 @keyframes stretch-animate {
     0% {
         transform: scale(1, 1)
@@ -466,24 +484,5 @@ table tbody td:hover {
 
     100% {
         transform: scale(1, 1)
-    }
-}
-
-@keyframes bounce {
-
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0);
-    }
-
-    40% {
-        transform: translateX(-10px);
-    }
-
-    60% {
-        transform: translateX(-5px);
     }
 }
