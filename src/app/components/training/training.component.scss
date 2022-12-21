@@ -6,7 +6,7 @@
 
 .header {
     text-align: center;
-    background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
     color: white;
     overflow: hidden;
 }
@@ -90,7 +90,7 @@ h1 span {
 
 // Playing cards //////////////////////////////////////////
 
-img{
+img {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -106,7 +106,7 @@ img{
     overflow: hidden;
 }
 
-.userCards{
+.userCards {
     width: fit-content;
     top: 76.7%;
     left: 50%;
@@ -119,7 +119,7 @@ img{
     -o-transition: 0.25s linear;
 }
 
-.userCards:active + hr.userHr{
+.userCards:active+hr.userHr {
     opacity: 0;
 }
 
@@ -131,20 +131,20 @@ img{
     height: 100%;
 }
 
-.oponent0Cards{
+.oponent0Cards {
     top: 9.2%;
     left: 50%;
     transform: rotate(180deg) translate(50%, -50%);
 }
 
-.oponent1Cards{
+.oponent1Cards {
     transform: rotate(135deg);
     margin-top: 142px;
     margin-right: 640px;
     scale: 1.30;
 }
 
-.oponent2Cards{
+.oponent2Cards {
     transform: rotate(-135deg);
     margin-top: 142px;
     margin-left: 640px;
@@ -177,24 +177,24 @@ hr {
     -o-transition: 0.25s linear;
 }
 
-hr.userHr{
+hr.userHr {
     margin-top: 470px;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-hr.oponent0Hr{
+hr.oponent0Hr {
     margin-top: 90px;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-hr.oponent1Hr{
+hr.oponent1Hr {
     transform: rotate(-45deg);
     margin-top: 150px;
 }
 
-hr.oponent2Hr{
+hr.oponent2Hr {
     transform: rotate(45deg);
     margin-top: 150px;
     left: 70%;
@@ -259,7 +259,7 @@ hr.oponent2Hr{
 
 // Buttons //////////////////////////////////////////////////
 
-.rightDiv{
+.rightDiv {
     background-color: #fff;
     color: #303030;
     border-radius: 10px;
@@ -272,7 +272,7 @@ hr.oponent2Hr{
     transform: translate(-50%, -50%);
 }
 
-.rightDiv:first-child{
+.rightDiv:first-child {
     margin-top: 100px;
 }
 
@@ -293,6 +293,7 @@ button {
     border: 2px solid;
     line-height: 1;
     margin: auto;
+    font-weight: 600;
     margin-bottom: 30px;
     font-size: 1.4em;
     padding: 1em;
@@ -320,6 +321,49 @@ button {
 
 .fill:hover {
     box-shadow: inset 0 0 0 2em var(--hover);
+}
+
+// Dealer Coins //////////////////////////////////////////////////
+
+.dealer-coin {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFDE00;
+    color: #303030;
+    text-align: center;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.8);
+}
+
+.dealer-coin-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.dealer-coin-oponent0 {
+    top: 80%;
+    left: -25%;
+}
+
+.dealer-coin-oponent1 {
+    top: 60%;
+    left: 125%;
+}
+
+.dealer-coin-oponent2 {
+    top: 60%;
+    left: -25%;
+}
+
+.dealer-coin-player {
+    top: 20%;
+    left: 125%;
 }
 
 // Animations //////////////////////////////////////////////////
