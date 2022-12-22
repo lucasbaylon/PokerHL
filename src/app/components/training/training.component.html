@@ -74,7 +74,8 @@
         <div class="rightDiv">
             <br>
             <div *ngFor="let action of activeSituation.actions">
-                <button *ngIf="action.display_name" class="fill" (click)="getResultCase(action.name)">{{action.display_name}}</button>
+                <button *ngIf="action.display_name" class="fill"
+                    (click)="getResultCase(action.name)">{{action.display_name}}</button>
             </div>
             <!-- <button class="fill">All in</button>
             <button class="fill">Call</button>
@@ -85,4 +86,16 @@
             <button class="fill">Aucun</button> -->
         </div>
     </div>
+</div>
+
+<div *ngIf="currentSituation" id="situationTable" class="tableaux">
+    <table>
+        <tbody>
+            <tr *ngFor="let row of currentSituation.situations">
+                <td *ngFor="let item of row"
+                    [style.background]="'radial-gradient(' + (item.action! | actionColor) + ', black 200%)'">
+                    {{item.card}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

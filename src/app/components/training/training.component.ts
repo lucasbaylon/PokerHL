@@ -72,6 +72,7 @@ export class TrainingComponent implements OnInit {
             result: situationCase.action
         }
         console.log(this.activeSituation)
+        console.log(this.activeSituation.result)
     }
 
     getRandomCase(array: any[][]): any {
@@ -112,10 +113,10 @@ export class TrainingComponent implements OnInit {
             }
         }
         let colors = this.getRandomColors(nbColor);
-        if(colors.length === 1) {
+        if (colors.length === 1) {
             left_card = `${card_split[0]}_${colors[0]}`;
             right_card = `${card_split[1]}_${colors[0]}`;
-        } else if(colors.length === 2) {
+        } else if (colors.length === 2) {
             left_card = `${card_split[0]}_${colors[0]}`;
             right_card = `${card_split[1]}_${colors[1]}`;
         }
@@ -127,9 +128,28 @@ export class TrainingComponent implements OnInit {
 
     getResultCase(result: string) {
         if (result === this.activeSituation.result) {
-            console.log("BRAVO !!!!!!")
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                html: '<h2 style="font-family: \'Lato\', sans-serif;">Bravo !</h3>',
+                showConfirmButton: false,
+                backdrop: false,
+                timer: 3000
+            });
+            this.generateSituation();
         } else {
-            console.log("NUL")
+            // const div = document.createElement('div');
+            // div.classList.add("tableaux")
+            // h1Element.innerHTML = 'Titre';
+            // console.log(h1Element)
+            // console.log(h1Element.innerText)
+            let situationTable = document.getElementById("situationTable")
+            Swal.fire({
+                icon: 'error',
+                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce n\'étais pas la bonne réponse !</p><br>${situationTable!.outerHTML}`,
+                confirmButtonColor: '#db5b5b',
+                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+            })
         }
     }
 

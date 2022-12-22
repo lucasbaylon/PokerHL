@@ -416,3 +416,40 @@ button {
         transform: rotate(360deg);
     }
 }
+
+/********************************* Tableau *********************************/
+
+.tableaux {
+    display: inline-block;
+    vertical-align: top;
+    margin: 2.6%;
+}
+
+table {
+    margin: auto;
+    border-collapse: collapse;
+    font-family: sans-serif;
+}
+
+table tr td {
+    border: 2px solid #303030;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+table tbody td:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
