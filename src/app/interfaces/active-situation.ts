@@ -1,3 +1,5 @@
+import { Action } from "./action";
+
 export interface ActiveSituation {
     nbPlayer: number;
 
@@ -6,4 +8,8 @@ export interface ActiveSituation {
     left_card?: string;
 
     right_card?: string;
+
+    actions: Action[];
+
+    result: string;
 }

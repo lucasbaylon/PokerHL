@@ -1,17 +1,17 @@
 <!-- <div *ngIf="loading" class="lds-dual-ring"></div> -->
 <div class="header">
     <ion-icon class="backArrow" (click)="redirectToList()" name="arrow-back-outline"></ion-icon>
-    <div class="inner-header">
+    <div *ngIf="activeSituation" class="inner-header">
         <div class="pokerTable">
             <h1>Poker Trainer<br><span>&#9824;</span><span>&#9830;</span><span>&#9829;</span><span>&#9827;</span></h1>
 
             <!-- Adversaire du milieu  -->
-            <div *ngIf="activeSituation?.nbPlayer == 2">
+            <div *ngIf="activeSituation.nbPlayer == 2">
                 <div class="playerBox">
                     <ion-icon name="person-outline"></ion-icon>
                     <h2>Adversaire</h2>
                     <h3>10 BB</h3>
-                    <div *ngIf="activeSituation?.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent0">
+                    <div *ngIf="activeSituation.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent0">
                         <span class="dealer-coin-text">D</span>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
             </div>
 
             <!-- Adversaire de gauche  -->
-            <div *ngIf="activeSituation?.nbPlayer == 3">
+            <div *ngIf="activeSituation.nbPlayer == 3">
                 <div class="playerBox oponentBox1">
                     <ion-icon name="person-outline"></ion-icon>
                     <h2>Adversaire</h2>
@@ -40,7 +40,7 @@
             </div>
 
             <!-- Adversaire de droite  -->
-            <div *ngIf="activeSituation?.nbPlayer == 3">
+            <div *ngIf="activeSituation.nbPlayer == 3">
                 <div class="playerBox oponentBox2">
                     <ion-icon name="person-outline"></ion-icon>
                     <h2>Adversaire</h2>
@@ -66,20 +66,23 @@
                 </div>
             </div>
             <div class="cardContainer userCards">
-                <img class="card leftCard" src="../../../assets/img/cards/Ace of Clubs.png">
-                <img class="card" src="../../../assets/img/cards/Ace of Diamonds.png">
+                <img class="card leftCard" src="../../../assets/img/cards/{{activeSituation.left_card}}.png">
+                <img class="card" src="../../../assets/img/cards/{{activeSituation.right_card}}.png">
             </div>
             <hr class="userHr">
         </div>
         <div class="rightDiv">
             <br>
-            <button class="fill">All in</button>
+            <div *ngFor="let action of activeSituation.actions">
+                <button *ngIf="action.display_name" class="fill" (click)="getResultCase(action.name)">{{action.display_name}}</button>
+            </div>
+            <!-- <button class="fill">All in</button>
             <button class="fill">Call</button>
             <button class="fill">Check</button>
             <button class="fill">Aucun</button>
             <button class="fill">Aucun</button>
             <button class="fill">Aucun</button>
-            <button class="fill">Aucun</button>
+            <button class="fill">Aucun</button> -->
         </div>
     </div>
 </div>

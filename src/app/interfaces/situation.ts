@@ -14,5 +14,5 @@ export interface Situation {
 
     actions: Action[];
 
-    situations: Card[][]
+    situations: Card[][];
 }
