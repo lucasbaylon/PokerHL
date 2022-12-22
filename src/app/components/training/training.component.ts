@@ -131,10 +131,10 @@ export class TrainingComponent implements OnInit {
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
-                html: '<h2 style="font-family: \'Lato\', sans-serif;">Bravo !</h3>',
+                html: '<h2 style="font-family: \'Lato\', sans-serif;">Bonne réponse !</h3>',
                 showConfirmButton: false,
                 backdrop: false,
-                timer: 3000
+                timer: 2500
             });
             this.generateSituation();
         } else {
@@ -146,7 +146,7 @@ export class TrainingComponent implements OnInit {
             let situationTable = document.getElementById("situationTable")
             Swal.fire({
                 icon: 'error',
-                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce n\'était pas la bonne réponse !</p><br>${situationTable!.outerHTML}`,
+                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Mauvaise réponse !</h1>${situationTable!.outerHTML}`,
                 confirmButtonColor: '#db5b5b',
                 width: 800,
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
