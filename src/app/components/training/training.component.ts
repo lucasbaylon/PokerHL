@@ -151,7 +151,9 @@ export class TrainingComponent implements OnInit {
                 confirmButtonColor: '#db5b5b',
                 width: 800,
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            })
+            }).then(result => {
+                this.generateSituation();
+            });
         }
     }
 
