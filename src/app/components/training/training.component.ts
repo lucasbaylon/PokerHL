@@ -146,8 +146,9 @@ export class TrainingComponent implements OnInit {
             let situationTable = document.getElementById("situationTable")
             Swal.fire({
                 icon: 'error',
-                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce n\'étais pas la bonne réponse !</p><br>${situationTable!.outerHTML}`,
+                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce n\'était pas la bonne réponse !</p><br>${situationTable!.outerHTML}`,
                 confirmButtonColor: '#db5b5b',
+                width: 800,
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             })
         }

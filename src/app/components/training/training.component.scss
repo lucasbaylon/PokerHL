@@ -433,10 +433,11 @@ table {
 
 table tr td {
     border: 2px solid #303030;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 6px;
-    padding-right: 6px;
+    color: #fff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
     font-weight: bold;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -444,12 +445,4 @@ table tr td {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-table tbody td:hover {
-    background-color: rgba(255, 255, 255, 0.3);
 }
