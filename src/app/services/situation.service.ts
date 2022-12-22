@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Socket } from 'ngx-socket-io';
+import { Situation } from '../interfaces/situation';
 
 @Injectable({
     providedIn: 'root'
@@ -8,6 +9,7 @@ import { Socket } from 'ngx-socket-io';
 export class SituationService {
 
     situations = this.socket.fromEvent<[]>('Situations');
+    situationsForTraining = this.socket.fromEvent<[]>('SituationsForTraining');
 
     constructor(private http: HttpClient, private socket: Socket) { }
 
@@ -17,6 +19,10 @@ export class SituationService {
 
     getSituations() {
         this.socket.emit('GetSituations');
+    }
+
+    getSituationsForTraining(situationsList: Situation[]) {
+        this.socket.emit('GetSituationsForTraining', situationsList);
     }
 
     addSituation(data: any) {

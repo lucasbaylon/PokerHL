@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 
-const fs = require('fs')
+const fs = require('fs');
+const path = require('path');
 
 const http = require('http').Server(app);
 
@@ -82,6 +83,22 @@ io.on('connection', (socket) => {
                 })
             }
             socket.emit('Situations', situationsList);
+        });
+    });
+
+    socket.on('GetSituationsForTraining', (situationsListParam) => {
+        let situationsList = JSON.parse(situationsListParam);
+        fs.readdir('./situations', function (err, situations) {
+            let situationsListForTraining = [];
+            situations.forEach(situation => {
+                let fileInfo = path.parse(`./situations/${situation}`);
+                let situation_name = fileInfo.name;
+                if(situationsList.includes(situation_name)) {
+                    let situation_string = fs.readFileSync(`./situations/${situation}`, 'utf8');
+                    situationsListForTraining.push(JSON.parse(situation_string));
+                }
+            })
+            socket.emit('SituationsForTraining', situationsListForTraining);
         });
     });
 });

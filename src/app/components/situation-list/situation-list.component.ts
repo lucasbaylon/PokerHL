@@ -12,6 +12,8 @@ export class SituationListComponent implements OnInit {
 
     situationList: Situation[] = [];
 
+    checkedSituations: number[] = [];
+
     constructor(
         private router: Router,
         private apiSituation: SituationService
@@ -25,8 +27,22 @@ export class SituationListComponent implements OnInit {
         this.apiSituation.getSituations();
     }
 
-    redirectTo(page: string) {
-        this.router.navigate([page]);
+    redirectToHome() {
+        this.router.navigate(['home']);
+    }
+
+    onCheckedSituationCheckbox(e: any) {
+        if(this.checkedSituations.indexOf(e.target.value) === -1) {
+            this.checkedSituations.push(e.target.value);
+        } else {
+            let index = this.checkedSituations.indexOf(e.target.value);
+            this.checkedSituations.splice(index, 1);
+        }
+    }
+
+    onStartTrainingButton() {
+        console.log(this.checkedSituations)
+        this.router.navigate(['training', {situationList: JSON.stringify(this.checkedSituations)}]);
     }
 
 }
