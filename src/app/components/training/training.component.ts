@@ -131,7 +131,8 @@ export class TrainingComponent implements OnInit {
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
-                html: '<h2 style="font-family: \'Lato\', sans-serif;">Bonne réponse !</h3>',
+                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-5px; font-size:1.5em;">Bonne réponse !</h1>',
+                width: 450,
                 showConfirmButton: false,
                 backdrop: false,
                 timer: 2500
