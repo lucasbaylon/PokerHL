@@ -30,7 +30,7 @@ export class TrainingComponent implements OnInit {
 
     ngOnInit(): void {
         Swal.fire({
-            title: 'Chargement des situations en cours...',
+            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Chargement des situations en cours...</h1>',
             showCancelButton: false,
             showConfirmButton: false,
             confirmButtonColor: '#303030'
