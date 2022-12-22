@@ -28,22 +28,6 @@ h1 {
     margin-top: 2.5%;
 }
 
-h2 {
-    letter-spacing: 1px;
-}
-
-.firsth2{
-    margin-top: 35px;
-}
-
-.middleh2{
-    margin-top: 40px;
-}
-
-.lasth2{
-    margin-top: 5px;
-}
-
 /********************************* Back Arrow *********************************/
 
 .backArrow {
@@ -269,15 +253,17 @@ table {
     margin: auto;
     border-collapse: collapse;
     font-family: sans-serif;
+    
 }
 
 table tr td {
     border: 2px solid white;
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 6px;
+    padding-right: 6px;
     cursor: pointer;
+    font-weight: bold;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -294,6 +280,8 @@ table tbody td:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
+/********************************* Div de droite *********************************/
+
 .rightDiv{
     background-color: #fff;
     color: #272f3a;
@@ -302,7 +290,23 @@ table tbody td:hover {
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
 }
 
-/********************************* Champ solutions *********************************/
+h2 {
+    letter-spacing: 1px;
+}
+
+.firsth2{
+    margin-top: 35px;
+}
+
+.middleh2{
+    margin-top: 40px;
+}
+
+.lasth2{
+    margin-top: 5px;
+}
+
+/********************************* Div solutions *********************************/
 
 .solutions {
     --background: #ffffff;
