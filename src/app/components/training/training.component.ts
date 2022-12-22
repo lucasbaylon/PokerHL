@@ -60,7 +60,6 @@ export class TrainingComponent implements OnInit {
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
-        console.log(this.currentSituation);
         let situationCase = this.getRandomCase(this.currentSituation.situations)
         let cards = this.generateCards(situationCase);
         this.activeSituation = {
@@ -71,8 +70,7 @@ export class TrainingComponent implements OnInit {
             actions: situation.actions,
             result: situationCase.action
         }
-        console.log(this.activeSituation)
-        console.log(this.activeSituation.result)
+        // console.log(this.activeSituation.result)
     }
 
     getRandomCase(array: any[][]): any {
@@ -101,7 +99,6 @@ export class TrainingComponent implements OnInit {
     }
 
     generateCards(situationCase: any): any {
-        console.log(situationCase)
         let left_card;
         let right_card;
         let card = situationCase.card;
@@ -139,12 +136,8 @@ export class TrainingComponent implements OnInit {
             });
             this.generateSituation();
         } else {
-            // const div = document.createElement('div');
-            // div.classList.add("tableaux")
-            // h1Element.innerHTML = 'Titre';
-            // console.log(h1Element)
-            // console.log(h1Element.innerText)
             let situationTable = document.getElementById("situationTable")
+            situationTable!.style.display = "block";
             Swal.fire({
                 icon: 'error',
                 html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Mauvaise réponse !</h1>${situationTable!.outerHTML}`,
@@ -152,7 +145,7 @@ export class TrainingComponent implements OnInit {
                 width: 800,
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             }).then(result => {
-                this.generateSituation();
+                situationTable!.style.display = "none";
             });
         }
     }
