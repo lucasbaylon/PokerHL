@@ -28,10 +28,10 @@ export class TrainingComponent implements OnInit {
 
     ngOnInit(): void {
         Swal.fire({
-            title: 'Génération du PDF en cours...',
+            title: 'Chargement des situations en cours...',
             showCancelButton: false,
             showConfirmButton: false,
-            confirmButtonColor: '#FF512F'
+            confirmButtonColor: '#303030'
         });
         Swal.showLoading();
 

@@ -58,8 +58,8 @@ export class SituationsComponent implements OnInit {
             Swal.fire({
                 icon: 'error',
                 html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation avant de l\'enregistrer.</p>',
-                confirmButtonColor: '#090a0f',
-                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em;">C\'est compris !</p>'
+                confirmButtonColor: '#db5b5b',
+                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             })
         } else {
             let situation_empty = false;
@@ -75,8 +75,8 @@ export class SituationsComponent implements OnInit {
                 Swal.fire({
                     icon: 'error',
                     html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau avant d\'enregistrer.</p>',
-                    confirmButtonColor: '#090a0f',
-                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em;">C\'est compris !</p>'
+                    confirmButtonColor: '#db5b5b',
+                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 })
             } else {
                 let data = {
@@ -87,11 +87,11 @@ export class SituationsComponent implements OnInit {
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
-                    title: 'La situation a bien été créer !',
+                    html: '<h2 style="font-family: \'Lato\', sans-serif; margin-top:-10px; z-index:10;">Situation enregistrée !</h3>',
                     showConfirmButton: false,
-                    timer: 2000
+                    timer: 3000
                 })
-                this.router.navigate(['home']);
+                this.router.navigate(['manage']);
             }
         }
     }
