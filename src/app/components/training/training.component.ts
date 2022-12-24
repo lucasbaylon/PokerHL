@@ -68,9 +68,9 @@ export class TrainingComponent implements OnInit {
             left_card: cards.left_card,
             right_card: cards.right_card,
             actions: situation.actions,
-            result: situationCase.action
+            result: situationCase.action,
+            dealerMissingTokens: situation.dealerMissingTokens
         }
-        // console.log(this.activeSituation.result)
     }
 
     getRandomCase(array: any[][]): any {

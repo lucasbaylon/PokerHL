@@ -10,7 +10,7 @@
                 <div class="playerBox">
                     <ion-icon name="person-outline"></ion-icon>
                     <h2>Adversaire</h2>
-                    <h3>10 BB</h3>
+                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     <div *ngIf="activeSituation.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent0">
                         <span class="dealer-coin-text">D</span>
                     </div>
@@ -27,7 +27,7 @@
                 <div class="playerBox oponentBox1">
                     <ion-icon name="person-outline"></ion-icon>
                     <h2>Adversaire</h2>
-                    <h3>10 BB</h3>
+                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     <div *ngIf="activeSituation?.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent1">
                         <span class="dealer-coin-text">D</span>
                     </div>
@@ -44,7 +44,7 @@
                 <div class="playerBox oponentBox2">
                     <ion-icon name="person-outline"></ion-icon>
                     <h2>Adversaire</h2>
-                    <h3>10 BB</h3>
+                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     <div *ngIf="activeSituation?.dealer == 'opponent2'" class="dealer-coin dealer-coin-oponent2">
                         <span class="dealer-coin-text">D</span>
                     </div>
@@ -60,7 +60,7 @@
             <div class="playerBox userBox">
                 <ion-icon name="person-outline"></ion-icon>
                 <h2>Vous</h2>
-                <h3>10 BB</h3>
+                <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                 <div *ngIf="activeSituation?.dealer == 'you'" class="dealer-coin dealer-coin-player">
                     <span class="dealer-coin-text">D</span>
                 </div>

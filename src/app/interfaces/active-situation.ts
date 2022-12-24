@@ -12,4 +12,6 @@ export interface ActiveSituation {
     actions: Action[];
 
     result: string;
+
+    dealerMissingTokens?: number;
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-situation-list',
@@ -32,7 +33,7 @@ export class SituationListComponent implements OnInit {
     }
 
     onCheckedSituationCheckbox(e: any) {
-        if(this.checkedSituations.indexOf(e.target.value) === -1) {
+        if (this.checkedSituations.indexOf(e.target.value) === -1) {
             this.checkedSituations.push(e.target.value);
         } else {
             let index = this.checkedSituations.indexOf(e.target.value);
@@ -41,8 +42,18 @@ export class SituationListComponent implements OnInit {
     }
 
     onStartTrainingButton() {
-        console.log(this.checkedSituations)
-        this.router.navigate(['training', {situationList: JSON.stringify(this.checkedSituations)}]);
+        if (this.checkedSituations.length === 0) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Veuillez sélectionné au moins une situation.',
+                showConfirmButton: false,
+                backdrop: false,
+                timer: 1500
+              });
+        } else {
+            this.router.navigate(['training', { situationList: JSON.stringify(this.checkedSituations) }]);
+        }
     }
 
 }
