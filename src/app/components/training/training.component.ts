@@ -141,7 +141,7 @@ export class TrainingComponent implements OnInit {
             Swal.fire({
                 icon: 'error',
                 html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Mauvaise réponse !</h1>${situationTable!.outerHTML}`,
-                confirmButtonColor: '#db5b5b',
+                confirmButtonColor: '#d74c4c',
                 width: 800,
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             }).then(result => {

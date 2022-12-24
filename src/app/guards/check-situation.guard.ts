@@ -28,7 +28,7 @@ export class CheckSituationGuard implements CanActivate {
                 Swal.fire({
                     icon: 'error',
                     html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Aucune situation d\'entraînement existante.<br> Veuillez d\'abord créer une situation dans le menu "Gérer les situations".</p>',
-                    confirmButtonColor: '#db5b5b',
+                    confirmButtonColor: '#d74c4c',
                     confirmButtonText:'<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 })
                 return false;
