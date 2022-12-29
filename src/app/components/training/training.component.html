@@ -77,18 +77,12 @@
                 <button *ngIf="action.display_name" class="fill"
                     (click)="getResultCase(action.name)">{{action.display_name}}</button>
             </div>
-            <!-- <button class="fill">All in</button>
-            <button class="fill">Call</button>
-            <button class="fill">Check</button>
-            <button class="fill">Aucun</button>
-            <button class="fill">Aucun</button>
-            <button class="fill">Aucun</button>
-            <button class="fill">Aucun</button> -->
         </div>
     </div>
 </div>
 
-<div *ngIf="currentSituation" id="situationTable" class="tableaux" style="display: none;">
+<!-- <div *ngIf="currentSituation" id="situationTable" class="tableaux" style="display: none;"> -->
+    <div *ngIf="currentSituation" id="situationTable" class="tableaux">
     <table>
         <tbody>
             <tr *ngFor="let row of currentSituation.situations">
@@ -98,4 +92,7 @@
             </tr>
         </tbody>
     </table>
+    <div class="color-solution-container" *ngFor="let action of activeSituation.actions; let i = index">
+        <div class="color-solution" *ngIf="action.display_name">{{action.display_name}} <div class="colored-rectangle" style="background-color: {{solutionColorList[i]}};"></div></div>
+    </div>
 </div>

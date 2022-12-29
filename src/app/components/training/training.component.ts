@@ -20,7 +20,8 @@ export class TrainingComponent implements OnInit {
 
     activeSituation!: ActiveSituation;
 
-    colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"]
+    colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
+    solutionColorList: string[] = ["rgb(216, 0, 0)", "rgb(0, 151, 0)", "rgb(19, 82, 255)", "rgb(140, 0, 255)", "rgb(255, 0, 212)", "rgb(255, 123, 0)", "rgb(0, 163, 228)"];
 
     constructor(
         private apiSituation: SituationService,

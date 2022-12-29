@@ -119,7 +119,7 @@ img {
     -o-transition: 0.25s linear;
 }
 
-.userCards:active + hr.userHr {
+.userCards:active+hr.userHr {
     opacity: 0;
 }
 
@@ -280,7 +280,8 @@ $colors: (
     fill: #303030,
 );
 
-@each $button, $color in $colors {
+@each $button,
+$color in $colors {
     .#{$button} {
         --color: #{$color};
         --hover: #{adjust-hue($color, 45deg)};
@@ -375,6 +376,7 @@ button {
 // }
 
 @keyframes bounce {
+
     0%,
     20%,
     50%,
@@ -397,6 +399,7 @@ button {
     width: 80px;
     height: 80px;
 }
+
 .lds-dual-ring:after {
     content: " ";
     display: block;
@@ -408,10 +411,12 @@ button {
     border-color: #fff transparent #fff transparent;
     animation: lds-dual-ring 1.2s linear infinite;
 }
+
 @keyframes lds-dual-ring {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -445,4 +450,25 @@ table tr td {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+/********************************* Color solutions *********************************/
+
+.color-solution-container {
+    display: flex;
+}
+
+.color-solution {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #303030;
+}
+
+.colored-rectangle {
+    border: 1px solid #303030;
+    margin-left: 10px;
+    width: 27px;
+    height: 13px;
+    margin-top: 9px;
+    float: right;
 }
