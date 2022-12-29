@@ -82,7 +82,7 @@
 </div>
 
 <!-- <div *ngIf="currentSituation" id="situationTable" class="tableaux" style="display: none;"> -->
-    <div *ngIf="currentSituation" id="situationTable" class="tableaux">
+<div *ngIf="currentSituation" id="situationTable" class="tableaux">
     <table>
         <tbody>
             <tr *ngFor="let row of currentSituation.situations">
@@ -93,6 +93,8 @@
         </tbody>
     </table>
     <div class="color-solution-container" *ngFor="let action of activeSituation.actions; let i = index">
-        <div class="color-solution" *ngIf="action.display_name">{{action.display_name}} <div class="colored-rectangle" style="background-color: {{solutionColorList[i]}};"></div></div>
+        <div class="color-solution" *ngIf="action.display_name">{{action.display_name}} <div class="colored-rectangle"
+                style="background-color: {{solutionColorList[i]}};"></div>
+        </div>
     </div>
 </div>

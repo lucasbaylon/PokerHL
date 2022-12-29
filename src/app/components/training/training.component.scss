@@ -200,7 +200,7 @@ hr.oponent2Hr {
     left: 70%;
 }
 
-// Players boxes //////////////////////////////////////////////////
+/********************************* Player boxes *********************************/
 
 .playerBox {
     width: 115px;
@@ -216,17 +216,12 @@ hr.oponent2Hr {
     -ms-border-radius: 20px;
     -o-border-radius: 20px;
     color: #303030;
-    cursor: pointer;
     transition: 0.25s linear;
     -webkit-transition: 0.25s linear;
     -moz-transition: 0.25s linear;
     -ms-transition: 0.25s linear;
     -o-transition: 0.25s linear;
     transform-origin: top left;
-}
-
-.playerBox:hover {
-    scale: 1.1;
 }
 
 .playerBox ion-icon {
@@ -257,7 +252,7 @@ hr.oponent2Hr {
     left: 95%;
 }
 
-// Buttons //////////////////////////////////////////////////
+/********************************* Buttons *********************************/
 
 .rightDiv {
     background-color: #fff;
@@ -323,7 +318,7 @@ button {
     box-shadow: inset 0 0 0 2em var(--hover);
 }
 
-// Dealer Coins //////////////////////////////////////////////////
+/********************************* Dealer Coins *********************************/
 
 .dealer-coin {
     position: absolute;
@@ -342,7 +337,7 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 26px;
+    font-size: 27px;
     font-weight: bold;
 }
 
@@ -366,14 +361,7 @@ button {
     left: 125%;
 }
 
-// Animations //////////////////////////////////////////////////
-
-// @media (min-width: 1921px) {
-//     .pokerTable {
-//         scale: 1.125;
-//         transform-origin: top left;
-//     }
-// }
+/********************************* Animations *********************************/
 
 @keyframes bounce {
 
@@ -455,11 +443,11 @@ table tr td {
 /********************************* Color solutions *********************************/
 
 .color-solution-container {
-    display: flex;
+    // ???
 }
 
 .color-solution {
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
     color: #303030;
 }
@@ -472,3 +460,12 @@ table tr td {
     margin-top: 9px;
     float: right;
 }
+
+/********************************* Responsive *********************************/
+
+// @media (min-width: 1921px) {
+//     .pokerTable {
+//         scale: 1.125;
+//         transform-origin: top left;
+//     }
+// }
