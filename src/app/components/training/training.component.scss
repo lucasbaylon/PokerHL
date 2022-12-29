@@ -330,6 +330,12 @@ button {
     color: #303030;
     text-align: center;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.8);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .dealer-coin-text {
