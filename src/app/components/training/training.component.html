@@ -82,7 +82,7 @@
 </div>
 
 <!-- <div *ngIf="currentSituation" id="situationTable" class="tableaux" style="display: none;"> -->
-<div *ngIf="currentSituation" id="situationTable" class="tableaux">
+<!-- <div *ngIf="currentSituation" id="situationTable" class="tableaux">
     <table>
         <tbody>
             <tr *ngFor="let row of currentSituation.situations">
@@ -95,6 +95,29 @@
     <div class="color-solution-container" *ngFor="let action of activeSituation.actions; let i = index">
         <div class="color-solution" *ngIf="action.display_name">{{action.display_name}} <div class="colored-rectangle"
                 style="background-color: {{solutionColorList[i]}};"></div>
+        </div>
+    </div>
+</div> -->
+
+<div *ngIf="currentSituation" id="situationTable" style="display: none;">
+    <div class="parent">
+        <div class="tableaux">
+            <table>
+                <tbody>
+                    <tr *ngFor="let row of currentSituation.situations">
+                        <td *ngFor="let item of row"
+                            [style.background]="'radial-gradient(' + (item.action! | actionColor) + ', black 200%)'">
+                            {{item.card}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="color-solution-container">
+            <div *ngFor="let action of activeSituation.actions; let i = index">
+                <div class="color-solution" *ngIf="action.display_name">{{action.display_name}}
+                    <div class="colored-rectangle" [style]="'background-color: ' + solutionColorList[i]"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
