@@ -89,6 +89,7 @@ export class SituationsComponent implements OnInit {
                     icon: 'success',
                     html: '<h2 style="font-family: \'Lato\', sans-serif;">Situation enregistrée !</h3>',
                     showConfirmButton: false,
+                    backdrop: false,
                     timer: 3000
                 })
                 this.router.navigate(['manage']);
