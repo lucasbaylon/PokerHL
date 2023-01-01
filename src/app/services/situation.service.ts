@@ -28,4 +28,8 @@ export class SituationService {
     addSituation(data: any) {
         this.socket.emit('AddSituation', data);
     }
+
+    removeSituation(id: string) {
+        this.socket.emit('RemoveSituation', id);
+    }
 }
