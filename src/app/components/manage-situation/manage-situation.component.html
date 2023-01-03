@@ -12,8 +12,9 @@
                     <div class="col col-2">Nb BB dealer</div>
                     <div class="col col-3">Nb joueurs</div>
                     <div class="col col-4">Joueur Dealer</div>
-                    <div class="col col-5">Modifier</div>
-                    <div class="col col-6">Supprimer</div>
+                    <div class="col col-5">Dupliquer</div>
+                    <div class="col col-6">Modifier</div>
+                    <div class="col col-7">Supprimer</div>
                 </li>
                 <div class="tableBody">
                     <li *ngFor="let situation of situationList" class="table-row">
@@ -22,12 +23,17 @@
                         <div class="col col-3">{{ situation.nbPlayer }}</div>
                         <div class="col col-4">{{ situation.dealer! | dealer }}</div>
                         <div class="col col-5">
+                            <ion-button (click)="duplicateSituation(situation._id!)" class="icon-div">
+                                <ion-icon name="copy-outline"></ion-icon>
+                            </ion-button>
+                        </div>
+                        <div class="col col-6">
                             <ion-button (click)="editSituation(situation._id!)" class="icon-div">
                                 <ion-icon name="pencil-outline"></ion-icon>
                             </ion-button>
                         </div>
-                        <div class="col col-6">
-                            <ion-button class="icon-div" (click)="removeSituation(situation._id!)">
+                        <div class="col col-7">
+                            <ion-button (click)="removeSituation(situation._id!)" class="icon-div">
                                 <ion-icon name="trash-outline"></ion-icon>
                             </ion-button>
                         </div>
