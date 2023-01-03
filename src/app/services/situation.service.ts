@@ -30,8 +30,8 @@ export class SituationService {
         this.socket.emit('GetSituationsForTraining', situationsList);
     }
 
-    addSituation(data: any) {
-        this.socket.emit('AddSituation', data);
+    addSituation(data: Situation, remove_file_obj: any) {
+        this.socket.emit('AddSituation', {data: data, remove_file_obj: remove_file_obj});
     }
 
     removeSituation(id: string) {

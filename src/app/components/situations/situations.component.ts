@@ -13,8 +13,9 @@ import { Subscription } from 'rxjs';
 })
 export class SituationsComponent implements OnInit {
 
-    // Déclarez une variable qui contiendra la valeur de l'input
-    public dealerMissingTokens: number = 0;
+    mode: string = "new";
+
+    dealerMissingTokens: number = 0;
 
     situationSubscription!: Subscription;
 
@@ -40,6 +41,7 @@ export class SituationsComponent implements OnInit {
         }
 
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
+            this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
             this.situationName = this.situation_obj.name!;
             this.dealerMissingTokens = this.situation_obj.dealerMissingTokens;
@@ -77,7 +79,6 @@ export class SituationsComponent implements OnInit {
     }
 
     saveSituation() {
-        console.log(this.situation_obj)
         if (this.situationName === "") {
             Swal.fire({
                 icon: 'error',
@@ -86,7 +87,13 @@ export class SituationsComponent implements OnInit {
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             })
         } else {
+            let remove_file_obj = {remove_file: false, ex_name: ""};
+            if(this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
+                remove_file_obj.remove_file = true;
+                remove_file_obj.ex_name = this.situation_obj._id!;
+            }
             let situation_empty = false;
+            this.situation_obj._id = this.situationName.replace(/ /g, "_");
             this.situation_obj.name = this.situationName;
             this.situation_obj.dealerMissingTokens = this.dealerMissingTokens;
             this.situation_obj.situations.map((row: any) => {
@@ -104,11 +111,7 @@ export class SituationsComponent implements OnInit {
                     confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 })
             } else {
-                let data = {
-                    situation_name: this.situationName,
-                    data: this.situation_obj
-                }
-                this.apiSituation.addSituation(data);
+                this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -176,16 +179,5 @@ export class SituationsComponent implements OnInit {
             document.getElementById("btnOpponent2Dealer")?.classList.add("selectedButton")
         }
     }
-
-    // onChangeNBMissingTokens(event: any) {
-    // this.situation_obj.dealerMissingTokens = parseInt(event.target.value);
-    //     this.inputValue = value;
-    //     console.log(this.situation_obj)
-    // }
-
-    // Définissez la valeur de l'input dans cette méthode
-    // public setInputValue(value: string): void {
-    //     this.inputValue = value;
-    // }
 
 }

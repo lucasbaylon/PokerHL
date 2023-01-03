@@ -59,14 +59,19 @@ function getSituations() {
 
 io.on('connection', (socket) => {
     socket.on('AddSituation', (data) => {
-        let situation_name = data.situation_name;
-        let file_name = situation_name.replace(/ /g, "_");
+        let situation = data.data;
+        let file_name = situation._id;
 
-        let json = JSON.stringify(data.data);
+        let json = JSON.stringify(situation);
         fs.writeFile(`${situations_dir}/${file_name}.json`, json, 'utf8', (err) => {
             if (err) return console.log(err);
-            console.log('Situation ' + situation_name + ' créé !');
+            console.log('Situation ' + situation.name + ' créé !');
         });
+
+        if(data.remove_file_obj.remove_file) {
+            console.log("Suppression de l'ancien fichier...")
+            fs.unlinkSync(`${situations_dir}/${data.remove_file_obj.ex_name}.json`);
+        }
     });
 
     socket.on('RemoveSituation', (id) => {
