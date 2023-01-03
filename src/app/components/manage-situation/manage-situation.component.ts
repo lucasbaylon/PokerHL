@@ -32,7 +32,9 @@ export class ManageSituationComponent implements OnInit {
 
     editSituation(id: string) {
         this.router.navigate(['situations', {situation_id: id}]);
-        // this.router.navigate([`edit/${id}`]);
+    }
+    
+    duplicateSituation(id: string) {
     }
 
     removeSituation(id: string) {

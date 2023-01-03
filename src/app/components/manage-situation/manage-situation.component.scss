@@ -146,10 +146,7 @@ p {
     }
 
     .table-row ion-icon {
-        font-size: 1.3em;
-        cursor: pointer;
-        padding: 5px;
-        margin-top: -7px;
+        font-size: 1.5em;
     }
 
     .table-row:last-child {
@@ -177,6 +174,10 @@ p {
     }
 
     .col-6 {
+        flex-basis: 8%;
+    }
+    
+    .col-7 {
         flex-basis: 8%;
     }
 
