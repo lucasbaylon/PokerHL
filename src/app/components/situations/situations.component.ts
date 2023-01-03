@@ -126,6 +126,13 @@ export class SituationsComponent implements OnInit {
         this.actionSelected = e.target.value;
     }
 
+    onChangeActionName(action_name: string, e: any) {
+        let test = this.situation_obj.actions.filter(item => item.name === action_name)[0];
+        test.display_name = e.target.value;
+        console.log(test)
+        console.log(this.situation_obj.actions)
+    }
+
     onChangeNBPlayer(nb_player: number) {
         this.changeNBPlayer(nb_player);
         this.situation_obj.nbPlayer = nb_player;

@@ -24,7 +24,7 @@
     <div class="tableaux">
         <form class="solutions">
             <ng-container *ngFor="let action of situation_obj.actions; let i = index">
-                <input type="input" class="textInput" value="{{action.display_name}}" placeholder="Aucun" />
+                <input type="input" class="textInput" value="{{action.display_name}}" (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
                 <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i"
                     (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
             </ng-container>

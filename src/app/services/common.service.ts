@@ -26,19 +26,19 @@ export class CommonService {
             },
             {
                 name: "radio_action_3",
-                display_name: undefined
+                display_name: ""
             },
             {
                 name: "radio_action_4",
-                display_name: undefined
+                display_name: ""
             },
             {
                 name: "radio_action_5",
-                display_name: undefined
+                display_name: ""
             },
             {
                 name: "radio_action_6",
-                display_name: undefined
+                display_name: ""
             },
         ],
         situations: [
