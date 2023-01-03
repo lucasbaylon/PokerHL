@@ -30,6 +30,11 @@ export class ManageSituationComponent implements OnInit {
         this.router.navigate([page]);
     }
 
+    editSituation(id: string) {
+        this.router.navigate(['situations', {situation_id: id}]);
+        // this.router.navigate([`edit/${id}`]);
+    }
+
     removeSituation(id: string) {
         Swal.fire({
             title: 'Êtes vous sûr ?',

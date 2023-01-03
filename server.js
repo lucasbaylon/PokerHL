@@ -78,6 +78,11 @@ io.on('connection', (socket) => {
         socket.emit('Situations', getSituations());
     });
 
+    socket.on('GetSituation', (id) => {
+        let situation_string = fs.readFileSync(`${situations_dir}/${id}.json`, 'utf8');
+        socket.emit('Situation', situation_string);
+    });
+
     socket.on('GetSituationsForTraining', (situationsListParam) => {
         let situationsList = JSON.parse(situationsListParam);
         let situations_files = fs.readdirSync(situations_dir);

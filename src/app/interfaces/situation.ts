@@ -8,7 +8,7 @@ export interface Situation {
 
     nbPlayer?: number;
 
-    dealerMissingTokens?: number;
+    dealerMissingTokens: number;
 
     dealer?: string;
 

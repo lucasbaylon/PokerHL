@@ -9,7 +9,7 @@ export class CommonService {
     empty_situation_obj: Situation = {
         name: undefined,
         nbPlayer: 3,
-        dealerMissingTokens: undefined,
+        dealerMissingTokens: 0,
         dealer: undefined,
         actions: [
             {

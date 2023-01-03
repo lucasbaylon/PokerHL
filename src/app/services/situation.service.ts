@@ -8,6 +8,7 @@ import { Situation } from '../interfaces/situation';
 })
 export class SituationService {
 
+    situation = this.socket.fromEvent<string>('Situation');
     situations = this.socket.fromEvent<[]>('Situations');
     situationsForTraining = this.socket.fromEvent<[]>('SituationsForTraining');
 
@@ -19,6 +20,10 @@ export class SituationService {
 
     getSituations() {
         this.socket.emit('GetSituations');
+    }
+
+    getSituation(id: string) {
+        this.socket.emit('GetSituation', id);
     }
 
     getSituationsForTraining(situationsList: Situation[]) {

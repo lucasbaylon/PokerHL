@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Situation } from 'src/app/interfaces/situation';
 import { CommonService } from 'src/app/services/common.service';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-situations',
@@ -11,6 +12,11 @@ import Swal from 'sweetalert2';
     styleUrls: ['./situations.component.scss']
 })
 export class SituationsComponent implements OnInit {
+
+    // Déclarez une variable qui contiendra la valeur de l'input
+    public dealerMissingTokens: number = 0;
+
+    situationSubscription!: Subscription;
 
     situationName: string = ""
 
@@ -23,11 +29,29 @@ export class SituationsComponent implements OnInit {
     constructor(
         private router: Router,
         private apiSituation: SituationService,
-        private apiCommon: CommonService
+        private apiCommon: CommonService,
+        private _Activatedroute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
         this.situation_obj = { ...this.apiCommon.empty_situation_obj };
+        if (this._Activatedroute.snapshot.params["situation_id"]) {
+            this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
+        }
+
+        this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
+            this.situation_obj = JSON.parse(situation_str);
+            this.situationName = this.situation_obj.name!;
+            this.dealerMissingTokens = this.situation_obj.dealerMissingTokens;
+            this.changeNBPlayer(this.situation_obj.nbPlayer!)
+            this.changeDealer(this.situation_obj.dealer!);
+            console.log(this.situation_obj)
+        });
+    }
+
+    ngOnDestroy() {
+        // Désabonnez-vous du socket avant de détruire le component
+        this.situationSubscription.unsubscribe();
     }
 
     redirectTo(page: string) {
@@ -64,6 +88,7 @@ export class SituationsComponent implements OnInit {
         } else {
             let situation_empty = false;
             this.situation_obj.name = this.situationName;
+            this.situation_obj.dealerMissingTokens = this.dealerMissingTokens;
             this.situation_obj.situations.map((row: any) => {
                 row.map((situation: any) => {
                     if (situation.action === undefined) situation_empty = true;
@@ -101,6 +126,12 @@ export class SituationsComponent implements OnInit {
     }
 
     onChangeNBPlayer(nb_player: number) {
+        this.changeNBPlayer(nb_player);
+        this.situation_obj.nbPlayer = nb_player;
+        console.log(this.situation_obj)
+    }
+
+    changeNBPlayer(nb_player: number) {
         if (nb_player === 2) {
             this.showOpponent2 = false;
             if (this.situation_obj.dealer === "opponent2") {
@@ -114,11 +145,15 @@ export class SituationsComponent implements OnInit {
             document.getElementById("btn2Player")?.classList.remove("selectedButton")
             document.getElementById("btn3Player")?.classList.add("selectedButton")
         }
-        this.situation_obj.nbPlayer = nb_player;
-        console.log(this.situation_obj)
     }
 
     onChangeDealer(dealer: string) {
+        this.changeDealer(dealer);
+        this.situation_obj.dealer = dealer;
+        console.log(this.situation_obj)
+    }
+
+    changeDealer(dealer: string) {
         if (dealer === "you") {
             document.getElementById("btnYouDealer")?.classList.add("selectedButton")
             document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
@@ -132,13 +167,17 @@ export class SituationsComponent implements OnInit {
             document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
             document.getElementById("btnOpponent2Dealer")?.classList.add("selectedButton")
         }
-        this.situation_obj.dealer = dealer;
-        console.log(this.situation_obj)
     }
 
-    onChangeNBMissingTokens(event: any) {
-        this.situation_obj.dealerMissingTokens = parseInt(event.target.value);
-        console.log(this.situation_obj)
-    }
+    // onChangeNBMissingTokens(event: any) {
+    // this.situation_obj.dealerMissingTokens = parseInt(event.target.value);
+    //     this.inputValue = value;
+    //     console.log(this.situation_obj)
+    // }
+
+    // Définissez la valeur de l'input dans cette méthode
+    // public setInputValue(value: string): void {
+    //     this.inputValue = value;
+    // }
 
 }

@@ -32,7 +32,7 @@
         <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
         <div class="form__group field rightForm">
             <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants"
-                placeholder="Nombre de jetons restants" (input)="onChangeNBMissingTokens($event)" required />
+                placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens" required />
             <label for="jetonsRestants" class="form__label">Nombre de BB restantes</label>
         </div>
         <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
