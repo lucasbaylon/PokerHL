@@ -1,6 +1,8 @@
 <!-- <div *ngIf="loading" class="lds-dual-ring"></div> -->
 <div class="header">
-    <ion-icon class="backArrow" (click)="redirectToList()" name="arrow-back-outline"></ion-icon>
+    <ion-button class="backArrow" (click)="redirectTo('list')">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
     <div *ngIf="activeSituation" class="inner-header">
         <div class="pokerTable">
             <h1>Poker Trainer<br><span>&#9824;</span><span>&#9830;</span><span>&#9829;</span><span>&#9827;</span></h1>
@@ -80,24 +82,6 @@
         </div>
     </div>
 </div>
-
-<!-- <div *ngIf="currentSituation" id="situationTable" class="tableaux" style="display: none;"> -->
-<!-- <div *ngIf="currentSituation" id="situationTable" class="tableaux">
-    <table>
-        <tbody>
-            <tr *ngFor="let row of currentSituation.situations">
-                <td *ngFor="let item of row"
-                    [style.background]="'radial-gradient(' + (item.action! | actionColor) + ', black 200%)'">
-                    {{item.card}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="color-solution-container" *ngFor="let action of activeSituation.actions; let i = index">
-        <div class="color-solution" *ngIf="action.display_name">{{action.display_name}} <div class="colored-rectangle"
-                style="background-color: {{solutionColorList[i]}};"></div>
-        </div>
-    </div>
-</div> -->
 
 <div *ngIf="currentSituation" id="situationTable" style="display: none;">
     <div class="parent">

@@ -112,8 +112,9 @@ export class SituationsComponent implements OnInit {
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
-                    html: '<h2 style="font-family: \'Lato\', sans-serif; margin-top:-10px; z-index:10;">Situation enregistrée !</h3>',
+                    html: '<h2 style="font-family: \'Lato\', sans-serif;">Situation enregistrée !</h3>',
                     showConfirmButton: false,
+                    backdrop: false,
                     timer: 3000
                 })
                 this.router.navigate(['manage']);

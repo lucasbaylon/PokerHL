@@ -1,5 +1,7 @@
 <div class="header">
-    <ion-icon class="backArrow" (click)="redirectTo('home')" name="arrow-back-outline"></ion-icon>
+    <ion-button class="backArrow" (click)="redirectTo('home')">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
     <div class="inner-header">
         <h1>Gérer les situations</h1>
         <p>Supprimez, modifiez ou créez des situations</p>
@@ -19,9 +21,15 @@
                         <div class="col col-2">{{ situation.dealerMissingTokens }}</div>
                         <div class="col col-3">{{ situation.nbPlayer }}</div>
                         <div class="col col-4">{{ situation.dealer! | dealer }}</div>
-                        <div class="col col-5"><ion-icon (click)="editSituation(situation._id!)" name="pencil-outline"></ion-icon>
+                        <div class="col col-5">
+                            <ion-button (click)="editSituation(situation._id!)" class="icon-div">
+                                <ion-icon name="pencil-outline"></ion-icon>
+                            </ion-button>
                         </div>
-                        <div class="col col-6"><ion-icon (click)="removeSituation(situation._id!)" name="trash-outline"></ion-icon>
+                        <div class="col col-6">
+                            <ion-button class="icon-div" (click)="removeSituation(situation._id!)">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </ion-button>
                         </div>
                     </li>
                 </div>

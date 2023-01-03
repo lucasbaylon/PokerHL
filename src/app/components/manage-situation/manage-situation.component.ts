@@ -37,22 +37,25 @@ export class ManageSituationComponent implements OnInit {
 
     removeSituation(id: string) {
         Swal.fire({
-            title: 'Êtes vous sûr ?',
-            text: "Vous ne pourrez pas revenir en arrière !",
+            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière !</p>',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            cancelButtonColor: '#d74c4c',
             confirmButtonText: 'Oui, supprimer !',
             cancelButtonText: 'Annuler'
         }).then((result) => {
             if (result.isConfirmed) {
                 this.apiSituation.removeSituation(id);
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-5px; font-size:1.5em;">Situation supprimée !</h1>',
+                    width: 450,
+                    showConfirmButton: false,
+                    backdrop: false,
+                    timer: 2500
+                });
             }
         });
     }

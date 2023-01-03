@@ -28,8 +28,8 @@ export class SituationListComponent implements OnInit {
         this.apiSituation.getSituations();
     }
 
-    redirectToHome() {
-        this.router.navigate(['home']);
+    redirectTo(page: string) {
+        this.router.navigate([page]);
     }
 
     onCheckedSituationCheckbox(e: any) {

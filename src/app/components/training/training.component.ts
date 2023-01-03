@@ -54,8 +54,8 @@ export class TrainingComponent implements OnInit {
         return array[randomIndex];
     }
 
-    redirectToList() {
-        this.router.navigate(['list']);
+    redirectTo(page: string) {
+        this.router.navigate([page]);
     }
 
     generateSituation() {
