@@ -20,7 +20,7 @@ const situations_dir = './situations';
 // Create link to Angular build directory
 // The `ng build` command will save the result
 // under the `dist` folder.
-var distDir = __dirname + "/frontend/dist/poker-training/";
+var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
 app.get('/', (req, res) => {
