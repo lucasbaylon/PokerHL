@@ -3,7 +3,8 @@
         <ion-icon name="arrow-back-outline"></ion-icon>
     </ion-button>
     <div class="inner-header">
-        <h1>Enregistrer une nouvelle situation</h1>
+        <h1 *ngIf="mode === 'new'">Enregistrer une nouvelle situation</h1>
+        <h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
         <div class="form__group field">
             <input [(ngModel)]="situationName" type="text" class="form__field" placeholder="Nom de la situation"
                 name="situationName" id='situationName' required />
