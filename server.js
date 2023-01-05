@@ -11,11 +11,11 @@ const optionsCors = {
         origin: 'http://localhost:4200',
         methods: ["GET", "POST"]
     }
-};
+}
 
 const io = require('socket.io')(http, optionsCors);
 
-const situations_dir = './situations'
+const situations_dir = './situations';
 
 // Create link to Angular build directory
 // The `ng build` command will save the result
