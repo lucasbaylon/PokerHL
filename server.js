@@ -27,27 +27,6 @@ const situations_dir = './situations'
 //     res.sendFile(__dirname + '/index.html');
 // });
 
-app.get('/test', (req, res) => {
-    getFileName("HU_SB_10bb")
-    res.json("ok")
-});
-
-app.get('/regex', (req, res) => {
-    // const regex = /copy(_\d+)?$/;
-    const regex = /.*_copy_(\d+)$/;
-    let string1 = "HU_SB_10bb_copy"
-    let string2 = "HU_SB_10bb_copyg_1"
-    let string3 = "HU_SB_10bb_copy_515"
-    let string4 = "HU_SB_10bb_copy_12"
-    let string5 = "HU_SB_10bb_copy_6"
-    console.log(regex.test(string1))
-    console.log(regex.test(string2))
-    console.log(regex.test(string3))
-    console.log(regex.test(string4))
-    console.log(regex.test(string5))
-    res.json("ok")
-});
-
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
         console.log('Directory exists!')
