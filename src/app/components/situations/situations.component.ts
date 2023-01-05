@@ -75,6 +75,7 @@ export class SituationsComponent implements OnInit {
         let cell_index = e.target.cellIndex;
         let row_index = e.target.parentElement.rowIndex;
         this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        console.log(this.situation_obj)
     }
 
     saveSituation() {
@@ -84,10 +85,10 @@ export class SituationsComponent implements OnInit {
                 html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation avant de l\'enregistrer.</p>',
                 confirmButtonColor: '#d74c4c',
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            })
+            });
         } else {
-            let remove_file_obj = {remove_file: false, ex_name: ""};
-            if(this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
+            let remove_file_obj = { remove_file: false, ex_name: "" };
+            if (this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
                 remove_file_obj.remove_file = true;
                 remove_file_obj.ex_name = this.situation_obj._id!;
             }
@@ -107,18 +108,47 @@ export class SituationsComponent implements OnInit {
                     html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau avant d\'enregistrer.</p>',
                     confirmButtonColor: '#d74c4c',
                     confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                })
+                });
             } else {
-                this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    html: '<h2 style="font-family: \'Lato\', sans-serif;">Situation enregistrée !</h3>',
-                    showConfirmButton: false,
-                    backdrop: false,
-                    timer: 3000
-                })
-                this.router.navigate(['manage']);
+                if ((document.getElementById("jetonsRestants") as HTMLInputElement).value === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez noter un nombre de BB restant pour les joueurs.</p>',
+                        confirmButtonColor: '#d74c4c',
+                        confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                    });
+                } else {
+                    const flatArray = this.situation_obj.situations.flat();
+                    const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
+                    let empty_action_input: boolean = false;
+
+                    uniqueActions.forEach(action => {
+                        const number_str = action![action!.length - 1];
+                        console.log(number_str)
+                        if ((document.getElementById(`input_action_${number_str}`) as HTMLInputElement).value === "") {
+                            empty_action_input = true;
+                        }
+                    });
+                    if (empty_action_input) {
+                        Swal.fire({
+                            icon: 'error',
+                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom aux actions utilisé dans le tableau.</p>',
+                            confirmButtonColor: '#d74c4c',
+                            confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                        });
+                    } else {
+                        this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            html: '<h2 style="font-family: \'Lato\', sans-serif;">Situation enregistrée !</h3>',
+                            showConfirmButton: false,
+                            backdrop: false,
+                            timer: 3000
+                        });
+                        this.router.navigate(['manage']);
+                    }
+                }
             }
         }
     }

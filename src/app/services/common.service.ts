@@ -10,7 +10,7 @@ export class CommonService {
         name: undefined,
         nbPlayer: 3,
         dealerMissingTokens: 0,
-        dealer: undefined,
+        dealer: "you",
         actions: [
             {
                 name: "radio_action_0",

@@ -24,7 +24,7 @@
     <div class="tableaux">
         <form class="solutions">
             <ng-container *ngFor="let action of situation_obj.actions; let i = index">
-                <input type="input" class="textInput" value="{{action.display_name}}" (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
+                <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i" (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
                 <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i"
                     (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
             </ng-container>
@@ -44,14 +44,14 @@
         </div>
         <h2 class="lasth2">Quel joueur autour de la table est le dealer ?</h2>
         <div>
-            <button id="btnYouDealer" class="fill smallButton" (click)="onChangeDealer('you')">Vous</button>
+            <button id="btnYouDealer" class="fill smallButton selectedButton" (click)="onChangeDealer('you')">Vous</button>
             <button id="btnOpponent1Dealer" class="fill smallButton" (click)="onChangeDealer('opponent1')">Adversaire 1</button>
             <button *ngIf="showOpponent2" id="btnOpponent2Dealer" class="fill smallButton" (click)="onChangeDealer('opponent2')">Adversaire
                 2</button>
         </div>
     </div>
     <div>
-        <button class="fill doubleButton" (click)="cancelSituation()">Annuler</button>
+        <!-- <button class="fill doubleButton" (click)="cancelSituation()">Annuler</button> -->
         <button class="fill doubleButton" (click)="saveSituation()">Enregistrer</button>
     </div>
 </div>
