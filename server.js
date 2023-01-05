@@ -20,12 +20,12 @@ const situations_dir = './situations'
 // Create link to Angular build directory
 // The `ng build` command will save the result
 // under the `dist` folder.
-// var distDir = __dirname + "/dist/";
-// app.use(express.static(distDir));
+var distDir = __dirname + "/dist/poker-training/";
+app.use(express.static(distDir));
 
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/index.html');
-// });
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
