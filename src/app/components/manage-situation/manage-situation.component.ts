@@ -35,6 +35,7 @@ export class ManageSituationComponent implements OnInit {
     }
     
     duplicateSituation(id: string) {
+        this.apiSituation.duplicateSituation(id);
     }
 
     removeSituation(id: string) {

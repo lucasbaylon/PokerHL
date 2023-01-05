@@ -37,4 +37,8 @@ export class SituationService {
     removeSituation(id: string) {
         this.socket.emit('RemoveSituation', id);
     }
+
+    duplicateSituation(id: string) {
+        this.socket.emit('DuplicateSituation', id);
+    }
 }

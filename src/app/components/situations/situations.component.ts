@@ -47,7 +47,6 @@ export class SituationsComponent implements OnInit {
             this.dealerMissingTokens = this.situation_obj.dealerMissingTokens;
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
-            console.log(this.situation_obj)
         });
     }
 
@@ -102,7 +101,6 @@ export class SituationsComponent implements OnInit {
                 })
             })
 
-            console.log("situation manquante =", situation_empty)
             if (situation_empty) {
                 Swal.fire({
                     icon: 'error',
@@ -132,14 +130,11 @@ export class SituationsComponent implements OnInit {
     onChangeActionName(action_name: string, e: any) {
         let test = this.situation_obj.actions.filter(item => item.name === action_name)[0];
         test.display_name = e.target.value;
-        console.log(test)
-        console.log(this.situation_obj.actions)
     }
 
     onChangeNBPlayer(nb_player: number) {
         this.changeNBPlayer(nb_player);
         this.situation_obj.nbPlayer = nb_player;
-        console.log(this.situation_obj)
     }
 
     changeNBPlayer(nb_player: number) {
@@ -161,7 +156,6 @@ export class SituationsComponent implements OnInit {
     onChangeDealer(dealer: string) {
         this.changeDealer(dealer);
         this.situation_obj.dealer = dealer;
-        console.log(this.situation_obj)
     }
 
     changeDealer(dealer: string) {

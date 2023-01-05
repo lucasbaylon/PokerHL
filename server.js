@@ -27,6 +27,27 @@ const situations_dir = './situations'
 //     res.sendFile(__dirname + '/index.html');
 // });
 
+app.get('/test', (req, res) => {
+    getFileName("HU_SB_10bb")
+    res.json("ok")
+});
+
+app.get('/regex', (req, res) => {
+    // const regex = /copy(_\d+)?$/;
+    const regex = /.*_copy_(\d+)$/;
+    let string1 = "HU_SB_10bb_copy"
+    let string2 = "HU_SB_10bb_copyg_1"
+    let string3 = "HU_SB_10bb_copy_515"
+    let string4 = "HU_SB_10bb_copy_12"
+    let string5 = "HU_SB_10bb_copy_6"
+    console.log(regex.test(string1))
+    console.log(regex.test(string2))
+    console.log(regex.test(string3))
+    console.log(regex.test(string4))
+    console.log(regex.test(string5))
+    res.json("ok")
+});
+
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
         console.log('Directory exists!')
@@ -68,10 +89,30 @@ io.on('connection', (socket) => {
             console.log('Situation ' + situation.name + ' créé !');
         });
 
-        if(data.remove_file_obj.remove_file) {
+        if (data.remove_file_obj.remove_file) {
             console.log("Suppression de l'ancien fichier...")
             fs.unlinkSync(`${situations_dir}/${data.remove_file_obj.ex_name}.json`);
         }
+    });
+
+    socket.on('DuplicateSituation', (id) => {
+        let new_id = "";
+        if (fs.existsSync(`${situations_dir}/${id}_copy.json`)) {
+            let situation_files = fs.readdirSync(situations_dir);
+            let matchingFiles = situation_files.filter(file => file.startsWith(`${id}_copy`));
+            new_id = `${id}_copy_${matchingFiles.length}`;
+        } else {
+            new_id = `${id}_copy`;
+        }
+
+        let situation_string = fs.readFileSync(`${situations_dir}/${id}.json`, 'utf8');
+        let situation_obj = JSON.parse(situation_string);
+        situation_obj._id = new_id;
+        let new_name = new_id.replace(/_/g, " ");
+        situation_obj.name = new_name;
+        let situation_str = JSON.stringify(situation_obj);
+        fs.writeFileSync(`${situations_dir}/${new_id}.json`, situation_str, 'utf8');
+        socket.emit('Situations', getSituations());
     });
 
     socket.on('RemoveSituation', (id) => {
