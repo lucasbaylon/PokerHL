@@ -83,16 +83,21 @@ export class TrainingComponent implements OnInit {
 
     getRandomColors(num: number): string[] {
         // Vérifiez que le numéro de couleurs est valide (supérieur à 0)
-        if (num <= 0 || num >= 4) {
+        if (num <= 0) {
             throw new Error('Numéro de couleurs non valide');
         }
 
         // Créez un tableau vide pour stocker les couleurs aléatoires
-        const randomColors = [];
+        const randomColors: string[] = [];
 
         // Générez des couleurs aléatoires et ajoutez-les au tableau
         for (let i = 0; i < num; i++) {
-            randomColors.push(this.colorList[Math.floor(Math.random() * 4)]);
+            let randomColor;
+            do {
+                // Générez une couleur aléatoire
+                randomColor = this.colorList[Math.floor(Math.random() * this.colorList.length)];
+            } while (randomColors.includes(randomColor)); // Vérifiez si la couleur se trouve déjà dans le tableau
+            randomColors.push(randomColor); // Ajoutez la couleur au tableau
         }
 
         // Renvoie le tableau de couleurs aléatoires
@@ -103,7 +108,7 @@ export class TrainingComponent implements OnInit {
         let left_card;
         let right_card;
         let card = situationCase.card;
-        let card_split = card.split('')
+        let card_split = card.split('');
         let nbColor = 2;
         if (card_split.length === 3) {
             if (card_split.at(-1) === 's') {

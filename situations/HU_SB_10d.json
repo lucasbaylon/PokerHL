@@ -1,0 +1,741 @@
+{
+    "name": "HU SB 10d",
+    "nbPlayer": 2,
+    "dealerMissingTokens": 10,
+    "dealer": "you",
+    "actions": [
+        {
+            "name": "radio_action_0",
+            "display_name": "All In"
+        },
+        {
+            "name": "radio_action_1",
+            "display_name": "Call"
+        },
+        {
+            "name": "radio_action_2",
+            "display_name": "Fold"
+        },
+        {
+            "name": "radio_action_3",
+            "display_name": ""
+        },
+        {
+            "name": "radio_action_4",
+            "display_name": ""
+        },
+        {
+            "name": "radio_action_5",
+            "display_name": ""
+        },
+        {
+            "name": "radio_action_6",
+            "display_name": ""
+        }
+    ],
+    "situations": [
+        [
+            {
+                "card": "AA",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "AKs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "AQs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "AJs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "ATs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A9s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A8s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A7s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A6s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A5s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A4s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A3s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "A2s",
+                "action": "radio_action_0"
+            }
+        ],
+        [
+            {
+                "card": "AKo",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "KK",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "KQs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "KJs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "KTs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "K9s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "K8s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "K7s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "K6s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "K5s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "K4s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K3s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K2s",
+                "action": "radio_action_0"
+            }
+        ],
+        [
+            {
+                "card": "AQo",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "KQo",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "QQ",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "QJs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "QTs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q9s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q8s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q7s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q6s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q5s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q4s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q3s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q2s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "AJo",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "KJo",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "QJo",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "JJ",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "JTs",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J9s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J8s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J7s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "J6s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J5s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J4s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J3s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J2s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "ATo",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "KTo",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "QTo",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "JTo",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "TT",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T9s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T8s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T7s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "T6s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T5s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T4s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T3s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T2s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A9o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K9o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q9o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "J9o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T9o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "99",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "98s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "97s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "96s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "95s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "94s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "93s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "92s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A8o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K8o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q8o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J8o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T8o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "98o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "88",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "87s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "86s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "85s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "84s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "83s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "82s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A7o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K7o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q7o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J7o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T7o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "97o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "87o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "77",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "76s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "75s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "74s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "73s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "72s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A6o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K6o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q6o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J6o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T6o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "96o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "86o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "76o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "66",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "65s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "64s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "63s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "62s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A5o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K5o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "Q5o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J5o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T5o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "95o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "85o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "75o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "65o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "55",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "54s",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "53s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "52s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A4o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K4o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q4o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J4o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T4o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "94o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "84o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "74o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "64o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "54o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "44",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "43s",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "42s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A3o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K3o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q3o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J3o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T3o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "93o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "83o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "73o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "63o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "53o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "43o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "33",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "32s",
+                "action": "radio_action_1"
+            }
+        ],
+        [
+            {
+                "card": "A2o",
+                "action": "radio_action_0"
+            },
+            {
+                "card": "K2o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "Q2o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "J2o",
+                "action": "radio_action_1"
+            },
+            {
+                "card": "T2o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "92o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "82o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "72o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "62o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "52o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "42o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "32o",
+                "action": "radio_action_2"
+            },
+            {
+                "card": "22",
+                "action": "radio_action_0"
+            }
+        ]
+    ],
+    "_id": "HU_SB_10d"
+}
