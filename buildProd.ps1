@@ -9,7 +9,7 @@ Remove-Item $prod -Recurse
 Copy-Item $distFolder -Destination (Join-Path $prod "\dist") -Recurse
 
 # on copie les fichiers et dossier du backend dans le dossier de prod
-Copy-Item './server.js', './package.json', '.\node_modules' -Destination $prod -Exclude "frontend/" -Recurse
+Copy-Item './server.js', './package.json', './node_modules', './run.bat' -Destination $prod -Exclude "frontend/" -Recurse
 
 # On créer le dossier Situations
 New-Item -ItemType Directory -Path (Join-Path $prod "\situations")
