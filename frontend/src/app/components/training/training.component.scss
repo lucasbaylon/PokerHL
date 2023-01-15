@@ -204,6 +204,36 @@ hr.oponent2Hr {
     left: 70%;
 }
 
+.shark-fish-icon{
+    width: 40%;
+}
+
+
+/********************************* Info div *********************************/
+
+.info{
+    background-color: #fff;
+    color: #303030;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: 0;
+    padding: 15px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+}
+
+.stats{
+    background-color: #fff;
+    color: #303030;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 15px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+}
+
 /********************************* Player boxes *********************************/
 
 .playerBox {
