@@ -16,6 +16,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SituationListComponent } from './components/situation-list/situation-list.component';
 import { ManageSituationComponent } from './components/manage-situation/manage-situation.component';
 import { DealerPipe } from './pipe/dealer.pipe';
+import { OpponentLevelPipe } from './pipe/opponent-level.pipe';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -28,7 +29,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         ActionColorPipe,
         SituationListComponent,
         ManageSituationComponent,
-        DealerPipe
+        DealerPipe,
+        OpponentLevelPipe
     ],
     imports: [
         FormsModule,
