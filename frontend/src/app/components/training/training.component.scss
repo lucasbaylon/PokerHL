@@ -92,7 +92,7 @@ h1 span {
     margin-left: 15px;
 }
 
-// Playing cards //////////////////////////////////////////
+/********************************* Cartes de jeu *********************************/
 
 img {
     -webkit-touch-callout: none;
@@ -204,34 +204,33 @@ hr.oponent2Hr {
     left: 70%;
 }
 
-.shark-fish-icon{
-    width: 40%;
-}
-
 
 /********************************* Info div *********************************/
 
-.info{
+.info {
     background-color: #fff;
     color: #303030;
     font-weight: 600;
     letter-spacing: 0.5px;
     position: absolute;
-    bottom: 0;
-    padding: 15px;
+    bottom: 10px;
+    left: 10px;
+    padding: 17px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 }
 
-.stats{
+.stats {
     background-color: #fff;
     color: #303030;
     font-weight: 600;
     letter-spacing: 0.5px;
     position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 15px;
+    bottom: 10px;
+    right: 10px;
+    padding: 17px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 }
 
 /********************************* Player boxes *********************************/
@@ -286,7 +285,11 @@ hr.oponent2Hr {
     left: 95%;
 }
 
-/********************************* Buttons *********************************/
+.shark-fish-icon {
+    width: 40%;
+}
+
+/********************************* Boutons de réponses *********************************/
 
 .rightDiv {
     background-color: #fff;
@@ -297,13 +300,10 @@ hr.oponent2Hr {
     width: 10%;
     position: absolute;
     top: 50%;
-    left: 83%;
+    left: 84%;
     transform: translate(-50%, -50%);
 }
 
-.rightDiv:first-child {
-    margin-top: 100px;
-}
 
 $colors: (
     fill: #303030,
@@ -320,10 +320,9 @@ $color in $colors {
 button {
     background: none;
     border: 2px solid;
+    margin-bottom: 20px;
     line-height: 1;
-    margin: auto;
     font-weight: 600;
-    margin-bottom: 30px;
     font-size: 1.2em;
     padding: 1em;
     padding-top: 15px;
