@@ -47,6 +47,7 @@ export class SituationsComponent implements OnInit {
             this.dealerMissingTokens = this.situation_obj.dealerMissingTokens;
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
+            this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
         });
     }
 
@@ -202,6 +203,18 @@ export class SituationsComponent implements OnInit {
             document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
             document.getElementById("btnOpponent2Dealer")?.classList.add("selectedButton")
         }
+    }
+
+    onChangeOpponentLevel(opponentLevel: string) {
+        this.situation_obj.opponentLevel = opponentLevel;
+        if (opponentLevel === "fish") {
+            document.getElementById("btnFishOpponent")?.classList.add("selectedButton");
+            document.getElementById("btnSharkOpponent")?.classList.remove("selectedButton");
+        } else if (opponentLevel === "shark") {
+            document.getElementById("btnFishOpponent")?.classList.remove("selectedButton");
+            document.getElementById("btnSharkOpponent")?.classList.add("selectedButton");
+        }
+        console.log(this.situation_obj)
     }
 
 }

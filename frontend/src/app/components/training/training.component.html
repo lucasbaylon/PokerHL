@@ -9,7 +9,7 @@
             <!-- Adversaire du milieu  -->
             <div *ngIf="activeSituation.nbPlayer == 2">
                 <div class="playerBox">
-                    <img class="shark-fish-icon" src="../../../assets/img/fish.png">
+                    <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
                     <h2>Adversaire</h2>
                     <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     <div *ngIf="activeSituation.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent0">
@@ -26,7 +26,7 @@
             <!-- Adversaire de gauche  -->
             <div *ngIf="activeSituation.nbPlayer == 3">
                 <div class="playerBox oponentBox1">
-                    <img class="shark-fish-icon" src="../../../assets/img/fish.png">
+                    <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
                     <h2>Adversaire</h2>
                     <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     <div *ngIf="activeSituation?.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent1">
@@ -43,7 +43,7 @@
             <!-- Adversaire de droite  -->
             <div *ngIf="activeSituation.nbPlayer == 3">
                 <div class="playerBox oponentBox2">
-                    <img class="shark-fish-icon" src="../../../assets/img/shark.png">
+                    <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
                     <h2>Adversaire</h2>
                     <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     <div *ngIf="activeSituation?.dealer == 'opponent2'" class="dealer-coin dealer-coin-oponent2">
@@ -82,7 +82,7 @@
     </div>
 </div>
 
-<div class="info">Situation actuelle : Nom_situation</div>
+<div class="info">Situation actuelle : {{currentSituationName}}</div>
 <div class="stats">Ratio W/L : 1 / 24<br>Taux de réussite : 54%
     <!-- <br>Nbre cas restants : ∞ -->
 </div>

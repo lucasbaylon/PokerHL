@@ -18,6 +18,8 @@ export class TrainingComponent implements OnInit {
 
     currentSituation!: Situation;
 
+    currentSituationName: string = "";
+
     activeSituation!: ActiveSituation;
 
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
@@ -61,6 +63,8 @@ export class TrainingComponent implements OnInit {
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
+        console.log(this.currentSituation)
+        this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
         let cards = this.generateCards(situationCase);
         this.activeSituation = {
@@ -70,7 +74,8 @@ export class TrainingComponent implements OnInit {
             right_card: cards.right_card,
             actions: situation.actions,
             result: situationCase.action,
-            dealerMissingTokens: situation.dealerMissingTokens
+            dealerMissingTokens: situation.dealerMissingTokens,
+            opponentLevel: situation.opponentLevel
         }
     }
 

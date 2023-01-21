@@ -3,6 +3,7 @@
     "nbPlayer": 2,
     "dealerMissingTokens": 10,
     "dealer": "you",
+    "opponentLevel":"shark",
     "actions": [
         {
             "name": "radio_action_0",

@@ -12,6 +12,8 @@ export interface Situation {
 
     dealer?: string;
 
+    opponentLevel?: string;
+
     actions: Action[];
 
     situations: Card[][];
