@@ -27,7 +27,10 @@ const routes: Routes = [
     },
     {
         path: 'list',
-        component: SituationListComponent
+        component: SituationListComponent,
+        canActivate: [
+            CheckSituationGuard
+        ]
     },
     {
         path: 'training',
