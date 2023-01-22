@@ -12,7 +12,15 @@ import Swal from 'sweetalert2';
 })
 export class TrainingComponent implements OnInit {
 
-    // loading: boolean = true;
+    countResult: boolean = true;
+
+    GoodResponse: number = 0;
+
+    BadResponse: number = 0;
+
+    TotalResponse: number = 0;
+
+    SuccessRatePercentage: number = 0;
 
     situationList: Situation[] = [];
 
@@ -135,7 +143,11 @@ export class TrainingComponent implements OnInit {
     }
 
     getResultCase(result: string) {
+        if (this.countResult) this.TotalResponse += 1;
         if (result === this.activeSituation.result) {
+            if (this.countResult) this.GoodResponse += 1;
+            if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
+            this.countResult = true;
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -147,6 +159,9 @@ export class TrainingComponent implements OnInit {
             });
             this.generateSituation();
         } else {
+            if (this.countResult) this.BadResponse += 1;
+            if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
+            this.countResult = false;
             let situationTable = document.getElementById("situationTable")
             situationTable!.style.display = "block";
             Swal.fire({
