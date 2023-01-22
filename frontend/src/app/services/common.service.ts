@@ -7,10 +7,12 @@ import { Situation } from '../interfaces/situation';
 export class CommonService {
 
     empty_situation_obj: Situation = {
+        _id: undefined,
         name: undefined,
         nbPlayer: 3,
         dealerMissingTokens: 0,
         dealer: "you",
+        opponentLevel: "fish",
         actions: [
             {
                 name: "radio_action_0",
