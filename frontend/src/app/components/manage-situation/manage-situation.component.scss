@@ -99,7 +99,7 @@ p {
     color: #303030;
     font-weight: 600;
     overflow: hidden;
-    width: 64%;
+    width: 75%;
     margin: auto;
 }
 
@@ -154,19 +154,19 @@ p {
     }
 
     .col-1 {
-        flex-basis: 20%;
+        flex-basis: 16%;
     }
 
     .col-2 {
-        flex-basis: 9%;
+        flex-basis: 10%;
     }
 
     .col-3 {
-        flex-basis: 8%;
+        flex-basis: 10%;
     }
 
     .col-4 {
-        flex-basis: 10%;
+        flex-basis: 8%;
     }
 
     .col-5 {
@@ -178,6 +178,10 @@ p {
     }
     
     .col-7 {
+        flex-basis: 8%;
+    }
+    
+    .col-8 {
         flex-basis: 8%;
     }
 
