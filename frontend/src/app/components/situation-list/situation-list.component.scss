@@ -151,7 +151,7 @@ p {
     }
 
     .col-1 {
-        flex-basis: 20%;
+        flex-basis: 18%;
     }
 
     .col-2 {
@@ -167,6 +167,10 @@ p {
     }
 
     .col-5 {
+        flex-basis: 10%;
+    }
+    
+    .col-6 {
         flex-basis: 10%;
     }
 
