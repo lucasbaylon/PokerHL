@@ -10,7 +10,7 @@ ion-icon {
 
 .header {
     text-align: center;
-    background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
     color: white;
     height: 100%;
     min-height: 100vh;
@@ -66,6 +66,7 @@ h1 {
 }
 
 @keyframes bounce {
+
     0%,
     20%,
     50%,
@@ -130,9 +131,8 @@ button {
     box-shadow: inset 0 0 0 2em var(--hover);
 }
 
-.doubleButton {
-    margin-left: 25px;
-    margin-right: 25px;
+.saveButton {
+    margin: 50px;
 }
 
 .smallButton {
@@ -149,7 +149,7 @@ button {
     color: #fff;
 }
 
-.selectedButton{
+.selectedButton {
     box-shadow: inset 0 0 0 2em #272f3a;
     color: #fff;
 }
@@ -159,7 +159,7 @@ button {
 .form__group {
     position: relative;
     padding: 15px 0 0;
-    margin-left: 21%;
+    margin: auto;
     margin-top: 50px;
     width: 25%;
     text-align: center;
@@ -235,7 +235,7 @@ button {
     margin-left: 0;
 }
 
-.rightForm .form__field{
+.rightForm .form__field {
     border-bottom: 2px solid #272f3a;
     color: #272f3a;
 }
@@ -255,8 +255,8 @@ button {
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /********************************* Tableau *********************************/
@@ -271,7 +271,6 @@ table {
     margin: auto;
     border-collapse: collapse;
     font-family: sans-serif;
-    
 }
 
 table tr td {
@@ -298,63 +297,58 @@ table tbody td:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-/********************************* Div de droite *********************************/
+/********************************* Div caractéristiques de la situation *********************************/
 
-.rightDiv{
+.situationCaracteristics {
     background-color: #fff;
     color: #272f3a;
     border-radius: 10px;
     padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    margin-top: -49px;
+    width: 35%;
+    margin: auto;
+    margin-top: 10px;
 }
 
 h2 {
     letter-spacing: 1px;
 }
 
-.firsth2{
+.firsth2 {
     margin-top: 15px;
 }
 
-.middleh2{
+.middleh2 {
     margin-top: 25px;
 }
 
-.lasth2{
+.lasth2 {
     margin-top: 5px;
 }
 
 /********************************* Div solutions *********************************/
 
 .solutions {
-    --background: #ffffff;
-    --text: #272f3a;
-    --radio: #7C96B2;
-    --radio-checked: #272f3a;
-    --radio-size: 25px;
-    --width: 100px;
-    --border-radius: 10px;
-    background: var(--background);
-    width: var(--width);
-    height: fit-content;
-    border-radius: var(--border-radius);
-    color: var(--text);
-    position: relative;
-    padding: 30px 45px;
-    display: grid;
-    margin-top: 45px;
-    grid-template-columns: auto var(--radio-size);
-    align-items: center;
+    margin-top: 30px;
     scale: 1.10;
+    background-color: #fff;
+    color: #272f3a;
+    border-radius: 10px;
+    padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    width: 130px;
+
+    .grid {
+        display: grid;
+        grid-template-columns: auto 33px;
+    }
 
     .textInput {
         font-size: 1.3em;
         margin-top: 14px;
         margin-bottom: 14px;
         border: none;
-        width: 70px;
+        width: 80px;
         text-align: center;
         margin-right: 15px;
     }
@@ -363,149 +357,33 @@ h2 {
         color: #090a0f;
     }
 
-    input[type="radio"] {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        position: relative;
-        height: var(--radio-size);
-        width: var(--radio-size);
-        outline: none;
-        margin: 0;
-        cursor: pointer;
-        border: 2px solid var(--radio);
-        background: transparent;
-        border-radius: 50%;
-        display: grid;
-        justify-self: end;
-        justify-items: center;
+    .color-picker {
+        display: flex;
         align-items: center;
-        overflow: hidden;
-        transition: border .5s ease;
-
-        &::before,
-        &::after {
-            content: "";
-            display: flex;
-            justify-self: center;
-            border-radius: 50%;
-        }
-
-        &::before {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--background);
-            z-index: 1;
-            opacity: var(--opacity, 1);
-        }
-
-        &::after {
-            position: relative;
-            width: calc(100% /2);
-            height: calc(100% /2);
-            top: var(--y, 100%);
-            transition: top .5s cubic-bezier(0.48, 1.97, 0.5, 0.63);
-        }
-
-        &:checked {
-            --radio: var(--radio-checked);
-
-            &::after {
-                --y: 0%;
-                animation: stretch-animate .3s ease-out .17s;
-            }
-
-            &::before {
-                --opacity: 0;
-            }
-
-            ~input[type="radio"] {
-                &::after {
-                    --y: -100%;
-                }
-            }
-        }
-
-        &:not(:checked) {
-            &::before {
-                --opacity: 1;
-                transition: opacity 0s linear .5s;
-            }
-        }
     }
 
-    #radio0::after {
-        background: rgb(216, 0, 0);
+    .color-picker input[type="color"] {
+        border: none;
+        padding: 0;
+        margin: 0;
+        width: 30px;
+        cursor: pointer;
+        height: 30px;
+        background-color: transparent;
+        margin-left: 7px;
     }
 
-    #radio0 {
-        --radio: rgb(216, 0, 0);
+    .addButton {
+        width: fit-content;
+        min-width: 130px;
+        color: #272f3a;
+        margin-bottom: 5px;
+        margin-top: 10px;
+        padding: 12px;
     }
-
-    #radio1::after {
-        background: rgb(0, 151, 0);
-    }
-
-    #radio1 {
-        --radio: rgb(0, 151, 0);
-    }
-
-    #radio2::after {
-        background: rgb(19, 82, 255);
-    }
-
-    #radio2 {
-        --radio: rgb(19, 82, 255);
-    }
-
-    #radio3::after {
-        background: rgb(140, 0, 255);
-    }
-
-    #radio3 {
-        --radio: rgb(140, 0, 255);
-    }
-
-    #radio4::after {
-        background: rgb(255, 0, 212);
-    }
-
-    #radio4 {
-        --radio: rgb(255, 0, 212);
-    }
-
-    #radio5::after {
-        background: rgb(255, 123, 0);
-    }
-
-    #radio5 {
-        --radio: rgb(255, 123, 0);
-    }
-
-    #radio6::after {
-        background: rgb(0, 163, 228);
-    }
-
-    #radio6 {
-        --radio: rgb(0, 163, 228);
-    }
-}
-
-@keyframes stretch-animate {
-    0% {
-        transform: scale(1, 1)
-    }
-
-    28% {
-        transform: scale(1.15, .85)
-    }
-
-    50% {
-        transform: scale(.9, 1.1)
-    }
-
-    100% {
-        transform: scale(1, 1)
+    
+    .addButton:hover {
+        box-shadow: inset 0 0 0 2em #272f3a;
+        color: #fff;
     }
 }

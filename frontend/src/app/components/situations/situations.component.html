@@ -7,7 +7,7 @@
         <h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
         <div class="form__group field">
             <input [(ngModel)]="situationName" type="text" class="form__field" placeholder="Nom de la situation"
-                name="situationName" id='situationName' required autocomplete="off"/>
+                name="situationName" id='situationName' required autocomplete="off" />
             <label for="situationName" class="form__label">Nom de la situation</label>
         </div>
     </div>
@@ -24,14 +24,19 @@
     </div>
     <div class="tableaux">
         <form class="solutions">
-            <ng-container *ngFor="let action of situation_obj.actions; let i = index">
-                <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i" (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
-                <input [id]="'radio' + i" type="radio" name="r" [value]="'radio_action_' + i"
-                    (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
-            </ng-container>
+            <div class="grid">
+                <ng-container *ngFor="let action of situation_obj.actions; let i = index">
+                    <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i"
+                        (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
+                    <div class="color-picker">
+                        <input type="color">
+                    </div>
+                </ng-container>
+            </div>
+            <button class="fill addButton">Ajouter +</button>
         </form>
     </div>
-    <div class="tableaux rightDiv">
+    <div class="situationCaracteristics">
         <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
         <div class="form__group field rightForm">
             <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants"
@@ -45,19 +50,21 @@
         </div>
         <h2 class="lasth2">Quel joueur autour de la table est le dealer ?</h2>
         <div>
-            <button id="btnYouDealer" class="fill smallButton selectedButton" (click)="onChangeDealer('you')">Vous</button>
-            <button id="btnOpponent1Dealer" class="fill smallButton" (click)="onChangeDealer('opponent1')">Adversaire 1</button>
-            <button *ngIf="showOpponent2" id="btnOpponent2Dealer" class="fill smallButton" (click)="onChangeDealer('opponent2')">Adversaire
+            <button id="btnYouDealer" class="fill smallButton selectedButton"
+                (click)="onChangeDealer('you')">Vous</button>
+            <button id="btnOpponent1Dealer" class="fill smallButton" (click)="onChangeDealer('opponent1')">Adversaire
+                1</button>
+            <button *ngIf="showOpponent2" id="btnOpponent2Dealer" class="fill smallButton"
+                (click)="onChangeDealer('opponent2')">Adversaire
                 2</button>
         </div>
         <h2 class="lasth2">Quel niveau ont les adversaires ?</h2>
         <div>
-            <button id="btnFishOpponent" class="fill smallButton selectedButton" (click)="onChangeOpponentLevel('fish')">Débutant</button>
-            <button id="btnSharkOpponent" class="fill smallButton" (click)="onChangeOpponentLevel('shark')">Confirmé</button>
+            <button id="btnFishOpponent" class="fill smallButton selectedButton"
+                (click)="onChangeOpponentLevel('fish')">Débutant</button>
+            <button id="btnSharkOpponent" class="fill smallButton"
+                (click)="onChangeOpponentLevel('shark')">Confirmé</button>
         </div>
     </div>
-    <div>
-        <!-- <button class="fill doubleButton" (click)="cancelSituation()">Annuler</button> -->
-        <button class="fill doubleButton" (click)="saveSituation()">Enregistrer</button>
-    </div>
+    <button class="fill saveButton" (click)="saveSituation()">Enregistrer</button>
 </div>
