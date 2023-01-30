@@ -15,7 +15,9 @@
         <table>
             <tbody>
                 <tr *ngFor="let row of situation_obj.situations">
-                    <td *ngFor="let item of row" (click)="saveAction($event)"
+                    <td *ngFor="let item of row"
+                        (mousedown)="startSelection($event)"
+                        (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
                         [style.background]="'radial-gradient(' + (item.action! | actionColor) + ', black 200%)'">
                         {{item.card}}</td>
                 </tr>
