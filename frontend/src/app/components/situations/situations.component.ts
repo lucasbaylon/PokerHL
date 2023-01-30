@@ -91,13 +91,13 @@ export class SituationsComponent implements OnInit {
             let remove_file_obj = { remove_file: false, ex_name: "" };
             console.log(this.situationName)
             console.log(this.situation_obj._id)
-            if(this.situation_obj._id) {
+            if (this.situation_obj._id) {
                 if (this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
                     remove_file_obj.remove_file = true;
                     remove_file_obj.ex_name = this.situation_obj._id!;
                 }
             }
-            
+
             let situation_empty = false;
             this.situation_obj._id = this.situationName.replace(/ /g, "_");
             this.situation_obj.name = this.situationName;
@@ -221,5 +221,4 @@ export class SituationsComponent implements OnInit {
         }
         console.log(this.situation_obj)
     }
-
 }

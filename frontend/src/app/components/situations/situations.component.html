@@ -28,8 +28,25 @@
                 <ng-container *ngFor="let action of situation_obj.actions; let i = index">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i"
                         (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
-                    <div class="color-picker">
-                        <input type="color">
+                    <div class="color-picker"></div>
+                    <div class="opened">
+                        <div class="colors">
+                            <div class="color-picker" style="background: #d80c05"></div>
+                            <div class="color-picker" style="background: #ff9100"></div>
+                            <div class="color-picker" style="background: #ebe700"></div>
+                            <div class="color-picker" style="background: #3f7a89"></div>
+                            <div class="color-picker" style="background: #96c582"></div>
+                            <div class="color-picker" style="background: #303030"></div>
+                            <div class="color-picker" style="background: #1c51ff"></div>
+                            <div class="color-picker" style="background: #00aeff"></div>
+                            <div class="color-picker" style="background: #8400ff"></div>
+                            <div class="color-picker" style="background: #e284ff"></div>
+                        </div>
+                        <div class="hex-code">
+                            <div class="g-input">
+                                <input type="text" value="#ffffff" />
+                            </div>
+                        </div>
                     </div>
                 </ng-container>
             </div>
