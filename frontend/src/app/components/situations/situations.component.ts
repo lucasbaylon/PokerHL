@@ -27,6 +27,8 @@ export class SituationsComponent implements OnInit {
 
     showOpponent2: boolean = true;
 
+    isSelectionActive: boolean = false;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -72,11 +74,26 @@ export class SituationsComponent implements OnInit {
         });
     }
 
-    saveAction(e: any) {
-        let cell_index = e.target.cellIndex;
-        let row_index = e.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
-        console.log(this.situation_obj)
+    startSelection(event: any) {
+        this.isSelectionActive = true;
+        let cell_index = event.target.cellIndex;
+        let row_index = event.target.parentElement.rowIndex;
+        this.situation_obj.situations[row_index][cell_index].action = this.situation_obj.situations[row_index][cell_index].action ? undefined : this.actionSelected;
+    }
+
+    updateSelection(event: any) {
+        if (!this.isSelectionActive) {
+            return;
+        }
+
+        this.isSelectionActive = true;
+        let cell_index = event.target.cellIndex;
+        let row_index = event.target.parentElement.rowIndex;
+        this.situation_obj.situations[row_index][cell_index].action = this.situation_obj.situations[row_index][cell_index].action ? undefined : this.actionSelected;
+    }
+
+    endSelection() {
+        this.isSelectionActive = false;
     }
 
     saveSituation() {
@@ -91,13 +108,13 @@ export class SituationsComponent implements OnInit {
             let remove_file_obj = { remove_file: false, ex_name: "" };
             console.log(this.situationName)
             console.log(this.situation_obj._id)
-            if(this.situation_obj._id) {
+            if (this.situation_obj._id) {
                 if (this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
                     remove_file_obj.remove_file = true;
                     remove_file_obj.ex_name = this.situation_obj._id!;
                 }
             }
-            
+
             let situation_empty = false;
             this.situation_obj._id = this.situationName.replace(/ /g, "_");
             this.situation_obj.name = this.situationName;
