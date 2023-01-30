@@ -11,7 +11,7 @@
             <label for="situationName" class="form__label">Nom de la situation</label>
         </div>
     </div>
-    <div class="tableaux">
+    <div class="case-definition">
         <table>
             <tbody>
                 <tr *ngFor="let row of situation_obj.situations">
@@ -21,37 +21,42 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-    <div class="tableaux">
-        <form class="solutions">
+        <div class="solutions">
+            <h2 class="firsth2">Solutions</h2>
             <div class="grid">
                 <ng-container *ngFor="let action of situation_obj.actions; let i = index">
-                    <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i"
-                        (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
-                    <div class="color-picker"></div>
-                    <div class="opened">
+                    <!-- <div class="solution-selector"> -->
+                        <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i"
+                            (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
+                        <div class="color-picker-square"></div>
+                    <!-- </div> -->
+                    <!-- <div class="color-picker-div-opened">
                         <div class="colors">
-                            <div class="color-picker" style="background: #d80c05"></div>
-                            <div class="color-picker" style="background: #ff9100"></div>
-                            <div class="color-picker" style="background: #ebe700"></div>
-                            <div class="color-picker" style="background: #3f7a89"></div>
-                            <div class="color-picker" style="background: #96c582"></div>
-                            <div class="color-picker" style="background: #303030"></div>
-                            <div class="color-picker" style="background: #1c51ff"></div>
-                            <div class="color-picker" style="background: #00aeff"></div>
-                            <div class="color-picker" style="background: #8400ff"></div>
-                            <div class="color-picker" style="background: #e284ff"></div>
+                            <div class="color-picker-square" style="background: #d80c05"></div>
+                            <div class="color-picker-square" style="background: #ff9100"></div>
+                            <div class="color-picker-square" style="background: #ebe700"></div>
+                            <div class="color-picker-square" style="background: #3f7a89"></div>
+                            <div class="color-picker-square" style="background: #96c582"></div>
+                            <div class="color-picker-square" style="background: #303030"></div>
+                            <div class="color-picker-square" style="background: #1c51ff"></div>
+                            <div class="color-picker-square" style="background: #00aeff"></div>
+                            <div class="color-picker-square" style="background: #8400ff"></div>
+                            <div class="color-picker-square" style="background: #e284ff"></div>
                         </div>
                         <div class="hex-code">
                             <div class="g-input">
                                 <input type="text" value="#ffffff" />
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </ng-container>
             </div>
             <button class="fill addButton">Ajouter +</button>
-        </form>
+        </div>
+        <div class="mixed-solutions">
+            <h2 class="firsth2">Fréquences de solutions</h2>
+            <button class="fill addButton">Ajouter +</button>
+        </div>
     </div>
     <div class="situationCaracteristics">
         <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
