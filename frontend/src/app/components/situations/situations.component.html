@@ -5,10 +5,10 @@
     <div class="inner-header">
         <h1 *ngIf="mode === 'new'">Enregistrer une nouvelle situation</h1>
         <h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
-        <div class="form__group field">
-            <input [(ngModel)]="situationName" type="text" class="form__field" placeholder="Nom de la situation"
-                name="situationName" id='situationName' required autocomplete="off" />
-            <label for="situationName" class="form__label">Nom de la situation</label>
+        <div class="div-input-text field">
+            <input [(ngModel)]="situationName" type="text" class="styled-input-text" placeholder="Nom de la situation"
+                name="situationName" id='situationName' autocomplete="off" />
+            <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
         </div>
     </div>
     <div class="case-definition">
@@ -18,7 +18,7 @@
                     <td *ngFor="let item of row"
                         (mousedown)="startSelection($event)"
                         (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
-                        [style.background]="'radial-gradient(' + (item.action! | actionColor) + ', black 200%)'">
+                        [style.background]="(item.action! | actionColor)">
                         {{item.card}}</td>
                 </tr>
             </tbody>
@@ -29,10 +29,10 @@
                 <ng-container *ngFor="let action of situation_obj.actions; let i = index">
                     <!-- <div class="solution-selector"> -->
                         <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i"
-                            (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" />
+                            (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" autocomplete="off"/>
                         <div class="color-picker-square"></div>
                     <!-- </div> -->
-                    <!-- <div class="color-picker-div-opened">
+                    <div class="color-picker-div-opened">
                         <div class="colors">
                             <div class="color-picker-square" style="background: #d80c05"></div>
                             <div class="color-picker-square" style="background: #ff9100"></div>
@@ -50,7 +50,7 @@
                                 <input type="text" value="#ffffff" />
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </ng-container>
             </div>
             <button class="fill addButton">Ajouter +</button>
@@ -62,10 +62,10 @@
     </div>
     <div class="situationCaracteristics">
         <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
-        <div class="form__group field rightForm">
-            <input type="number" min="1" step="1" class="form__field" id="jetonsRestants" name="jetonsRestants"
-                placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens" required />
-            <label for="jetonsRestants" class="form__label">Nombre de BB restantes</label>
+        <div class="div-input-text field input-nb-bb-restants">
+            <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
+                placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens"/>
+            <label for="jetonsRestants" class="styled-input-text-label">Nombre de BB restantes</label>
         </div>
         <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
         <div>

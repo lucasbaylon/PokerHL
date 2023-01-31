@@ -34,10 +34,12 @@ h1 {
 
 .case-definition {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin: 50px;
+    justify-content: center;
+    width: 90%;
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 /********************************* Back Arrow *********************************/
@@ -162,9 +164,9 @@ button {
     color: #fff;
 }
 
-/********************************* Champ texte nom *********************************/
+/********************************* Champ texte nom de situation *********************************/
 
-.form__group {
+.div-input-text {
     position: relative;
     padding: 15px 0 0;
     margin: auto;
@@ -173,7 +175,7 @@ button {
     text-align: center;
 }
 
-.form__field {
+.styled-input-text {
     width: 100%;
     border: 0;
     border-bottom: 2px solid white;
@@ -195,14 +197,14 @@ button {
         color: transparent;
     }
 
-    &:placeholder-shown~.form__label {
+    &:placeholder-shown~.styled-input-text-label {
         font-size: 1.3rem;
         cursor: text;
         top: 20px;
     }
 }
 
-.form__label {
+.styled-input-text-label {
     position: absolute;
     top: 0;
     display: block;
@@ -215,8 +217,8 @@ button {
     user-select: none;
 }
 
-.form__field:focus {
-    ~.form__label {
+.styled-input-text:focus {
+    ~.styled-input-text-label {
         position: absolute;
         top: 0;
         display: block;
@@ -229,7 +231,7 @@ button {
 }
 
 /* reset input */
-.form__field {
+.styled-input-text {
 
     &:required,
     &:invalid {
@@ -237,19 +239,18 @@ button {
     }
 }
 
-.rightForm {
-    width: 100%;
-    margin-top: 20px;
-    margin-left: 0;
+.input-nb-bb-restants {
+    width: 70%;
+    margin: auto;
 }
 
-.rightForm .form__field {
+.input-nb-bb-restants .styled-input-text {
     border-bottom: 2px solid #303030;
     color: #303030;
 }
 
-.rightForm .form__field:focus {
-    ~.form__label {
+.input-nb-bb-restants .styled-input-text:focus {
+    ~.styled-input-text-label {
         position: absolute;
         top: 0;
         display: block;
@@ -309,6 +310,7 @@ table tbody td:hover {
     padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
     width: 130px;
+    margin: auto;
 
     .grid {
         display: grid;
@@ -346,7 +348,7 @@ table tbody td:hover {
     color: #fff;
 }
 
-.solution-selector{
+.solution-selector {
     display: flex;
     align-items: center;
 }
@@ -422,7 +424,7 @@ table tbody td:hover {
     outline: none;
     text-align: center;
     letter-spacing: 1.5px;
-    color: #595b65;
+    color: #303030;
     box-sizing: border-box;
 }
 
