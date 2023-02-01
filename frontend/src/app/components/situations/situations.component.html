@@ -54,14 +54,14 @@
         </div>
         <div class="mixed-solutions-div">
             <h2 class="firsth2">Fréquences de solutions</h2>
-            <div class="mixed-solution">
+            <div *ngFor="let mixed-solution of mixedSolutionsList" class="table-row mixed-solution">
                 <div class="mixed-solution-name">
                     All In + Call
                 </div>
-                <ion-button class="icon-div col-1">
+                <ion-button class="col-2">
                     <ion-icon name="pencil-outline"></ion-icon>
                 </ion-button>
-                <ion-button class="icon-div col-1">
+                <ion-button class="col-3">
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
             </div>
