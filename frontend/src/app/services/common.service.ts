@@ -15,33 +15,17 @@ export class CommonService {
         opponentLevel: "fish",
         actions: [
             {
-                name: "radio_action_0",
+                id: "action_0",
                 display_name: "All In"
             },
             {
-                name: "radio_action_1",
+                id: "action_1",
                 display_name: "Call"
             },
             {
-                name: "radio_action_2",
+                id: "action_2",
                 display_name: "Check"
-            },
-            {
-                name: "radio_action_3",
-                display_name: ""
-            },
-            {
-                name: "radio_action_4",
-                display_name: ""
-            },
-            {
-                name: "radio_action_5",
-                display_name: ""
-            },
-            {
-                name: "radio_action_6",
-                display_name: ""
-            },
+            }
         ],
         situations: [
             [{ "card": "AA", "action": undefined }, { "card": "AKs", "action": undefined }, { "card": "AQs", "action": undefined }, { "card": "AJs", "action": undefined }, { "card": "ATs", "action": undefined }, { "card": "A9s", "action": undefined }, { "card": "A8s", "action": undefined }, { "card": "A7s", "action": undefined }, { "card": "A6s", "action": undefined }, { "card": "A5s", "action": undefined }, { "card": "A4s", "action": undefined }, { "card": "A3s", "action": undefined }, { "card": "A2s", "action": undefined }],

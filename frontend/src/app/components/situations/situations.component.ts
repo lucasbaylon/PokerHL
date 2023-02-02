@@ -5,6 +5,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
+import { Action } from 'src/app/interfaces/action';
 
 @Component({
     selector: 'app-situations',
@@ -23,7 +24,7 @@ export class SituationsComponent implements OnInit {
 
     situation_obj!: Situation;
 
-    actionSelected: "radio_action_0" | "radio_action_1" | "radio_action_2" | "radio_action_3" | "radio_action_4" | "radio_action_5" | "radio_action_6" | undefined = "radio_action_0";
+    actionSelected: string = "action_0";
 
     showOpponent2: boolean = true;
 
@@ -72,6 +73,14 @@ export class SituationsComponent implements OnInit {
             })
             return row;
         });
+    }
+
+    addAction() {
+        let new_index = this.situation_obj.actions.length;
+        // let test = "action_" + new_index;
+
+        // this.situation_obj.actions.push({ name: ActionList[`action_${new_index}`], display_name: "" })
+        this.situation_obj.actions.push({ id: "", display_name: "" })
     }
 
     startSelection(event: any) {
@@ -181,7 +190,7 @@ export class SituationsComponent implements OnInit {
     }
 
     onChangeActionName(action_name: string, e: any) {
-        let test = this.situation_obj.actions.filter(item => item.name === action_name)[0];
+        let test = this.situation_obj.actions.filter(item => item.id === action_name)[0];
         test.display_name = e.target.value;
     }
 
@@ -237,5 +246,10 @@ export class SituationsComponent implements OnInit {
             document.getElementById("btnSharkOpponent")?.classList.add("selectedButton");
         }
         console.log(this.situation_obj)
+    }
+
+    test(index: number) {
+        console.log(this.situation_obj.actions)
+        document.getElementById(`color-picker-div_${index}`)?.classList.remove("color-picker-div-closed");
     }
 }

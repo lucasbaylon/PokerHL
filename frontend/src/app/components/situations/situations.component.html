@@ -28,11 +28,11 @@
             <div class="grid">
                 <ng-container *ngFor="let action of situation_obj.actions; let i = index">
                     <!-- <div class="solution-selector"> -->
-                        <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_action_' + i"
-                            (input)="onChangeActionName(action.name, $event)" placeholder="Aucun" autocomplete="off"/>
-                        <div class="color-picker-square"></div>
+                        <input type="input" class="textInput" value="{{action.display_name}}" [id]="action.id"
+                            (input)="onChangeActionName(action.id, $event)" placeholder="Aucun" autocomplete="off"/>
+                        <div class="color-picker-square" (click)="test(i)"></div>
                     <!-- </div> -->
-                    <div class="color-picker-div-opened">
+                    <div class="color-picker-div color-picker-div-closed" [id]="'color-picker-div_' + i">
                         <div class="colors">
                             <div class="color-picker-square" style="background: #d80c05"></div>
                             <div class="color-picker-square" style="background: #ff9100"></div>
@@ -53,7 +53,7 @@
                     </div>
                 </ng-container>
             </div>
-            <button class="fill addButton">Ajouter +</button>
+            <button class="fill addButton" (click)="addAction()">Ajouter +</button>
         </div>
         <div class="mixed-solutions">
             <h2 class="firsth2">Fréquences de solutions</h2>
