@@ -15,15 +15,18 @@ export class CommonService {
         opponentLevel: "fish",
         actions: [
             {
-                id: "action_0",
+                id: "unique_action_0",
+                type: "unique",
                 display_name: "All In"
             },
             {
-                id: "action_1",
+                id: "unique_action_1",
+                type: "unique",
                 display_name: "Call"
             },
             {
-                id: "action_2",
+                id: "unique_action_2",
+                type: "unique",
                 display_name: "Check"
             }
         ],

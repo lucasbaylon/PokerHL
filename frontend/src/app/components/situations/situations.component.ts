@@ -25,8 +25,6 @@ export class SituationsComponent implements OnInit {
     situation_obj!: Situation;
 
     actionSelected: string = "action_0";
-    
-    mixedSolutionsList: any;
 
     showOpponent2: boolean = true;
 
@@ -77,12 +75,25 @@ export class SituationsComponent implements OnInit {
         });
     }
 
-    addAction() {
-        let new_index = this.situation_obj.actions.length;
-        // let test = "action_" + new_index;
+    addUniqueAction() {
+        let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
 
-        // this.situation_obj.actions.push({ name: ActionList[`action_${new_index}`], display_name: "" })
-        this.situation_obj.actions.push({ id: "", display_name: "" })
+        if (actionList.length < 7) {
+            this.situation_obj.actions.push({ id: `unique_action_${actionList.length}`, type: "unique", display_name: undefined })
+        } else {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Vous ne pouvez pas créer plus de 7 actions.',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    }
+
+    addMixedAction() {
+        let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
+        document.getElementById("add-mixed-solution")!.style.display = "block";
     }
 
     startSelection(event: any) {
@@ -192,8 +203,8 @@ export class SituationsComponent implements OnInit {
     }
 
     onChangeActionName(action_name: string, e: any) {
-        let test = this.situation_obj.actions.filter(item => item.id === action_name)[0];
-        test.display_name = e.target.value;
+        let actionList = this.situation_obj.actions.filter(item => item.id === action_name)[0];
+        actionList.display_name = e.target.value;
     }
 
     onChangeNBPlayer(nb_player: number) {
@@ -250,8 +261,20 @@ export class SituationsComponent implements OnInit {
         console.log(this.situation_obj)
     }
 
-    test(index: number) {
+    filteredActionList(list: Action[], type: string) {
+        return list.filter(item => item.type === type);
+    }
+
+    onColorAction(action_id: string) {
         console.log(this.situation_obj.actions)
-        document.getElementById(`color-picker-div_${index}`)?.classList.remove("color-picker-div-closed");
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
+    }
+
+    onSelectColor(action_id: string, color: string) {
+        console.log(action_id)
+        console.log(color)
+        let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0]
+        actionList.color = color;
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
     }
 }

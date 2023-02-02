@@ -24,39 +24,40 @@
         </table>
         <div class="solutions">
             <h2 class="firsth2">Solutions</h2>
-            <ng-container *ngFor="let action of situation_obj.actions; let i = index">
+            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                 <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="Aucun" autocomplete="off" />
-                    <div class="color-picker-square" (click)="test(i)"></div>
+                    <div class="color-picker-square" [style]="'background: ' + action.color" (click)="onColorAction(action.id)"></div>
                 </div>
-                <!-- <div class="color-picker-div color-picker-div-closed"  [id]="'color-picker-div_' + i">
-                        <div class="colors">
-                            <div class="color-picker-square" style="background: #d80c05"></div>
-                            <div class="color-picker-square" style="background: #ff9100"></div>
-                            <div class="color-picker-square" style="background: #ebe700"></div>
-                            <div class="color-picker-square" style="background: #3f7a89"></div>
-                            <div class="color-picker-square" style="background: #96c582"></div>
-                            <div class="color-picker-square" style="background: #303030"></div>
-                            <div class="color-picker-square" style="background: #1c51ff"></div>
-                            <div class="color-picker-square" style="background: #00aeff"></div>
-                            <div class="color-picker-square" style="background: #8400ff"></div>
-                            <div class="color-picker-square" style="background: #e284ff"></div>
-                        </div>
-                        <div class="hex-code">
-                            <div class="g-input">
-                                <input type="text" value="#ffffff" />
-                            </div>
+                <div class="color-picker-div color-picker-div-closed" [id]="'color-picker-div_' + action.id">
+                    <div class="colors">
+                        <div class="color-picker-square" style="background: #d80c05" (click)="onSelectColor(action.id, '#d80c05')"></div>
+                        <div class="color-picker-square" style="background: #ff9100" (click)="onSelectColor(action.id, '#ff9100')"></div>
+                        <div class="color-picker-square" style="background: #ebe700" (click)="onSelectColor(action.id, '#ebe700')"></div>
+                        <div class="color-picker-square" style="background: #3f7a89" (click)="onSelectColor(action.id, '#3f7a89')"></div>
+                        <div class="color-picker-square" style="background: #96c582" (click)="onSelectColor(action.id, '#96c582')"></div>
+                        <div class="color-picker-square" style="background: #303030" (click)="onSelectColor(action.id, '#303030')"></div>
+                        <div class="color-picker-square" style="background: #1c51ff" (click)="onSelectColor(action.id, '#1c51ff')"></div>
+                        <div class="color-picker-square" style="background: #00aeff" (click)="onSelectColor(action.id, '#00aeff')"></div>
+                        <div class="color-picker-square" style="background: #8400ff" (click)="onSelectColor(action.id, '#8400ff')"></div>
+                        <div class="color-picker-square" style="background: #e284ff" (click)="onSelectColor(action.id, '#e284ff')"></div>
+                    </div>
+                    <!-- <div class="hex-code">
+                        <div class="g-input">
+                            <input type="text" value="#ffffff" />
                         </div>
                     </div> -->
+                </div>
             </ng-container>
-            <button class="fill addButton" (click)="addAction()">Ajouter +</button>
+            <button class="fill addButton" (click)="addUniqueAction()">Ajouter +</button>
         </div>
         <div class="mixed-solutions-div">
             <h2 class="firsth2">Fréquences de solutions</h2>
-            <div *ngFor="let mixed-solution of mixedSolutionsList" class="table-row mixed-solution">
+            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
+                class="table-row mixed-solution">
                 <div class="mixed-solution-name">
-                    All In + Call
+                    {{action.display_name}}
                 </div>
                 <ion-button class="col-2">
                     <ion-icon name="pencil-outline"></ion-icon>
@@ -65,10 +66,10 @@
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
             </div>
-            <button class="fill addButton">Ajouter +</button>
-            <div class="add-mixed-solution">
+            <button class="fill addButton" (click)="addMixedAction()">Ajouter +</button>
+            <div class="add-mixed-solution" id="add-mixed-solution">
                 <h2 class="firsth2">Ajouter des fréquences de solutions</h2>
-                <ng-container *ngFor="let action of situation_obj.actions; let i = index">
+                <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed'); let i = index">
                     <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"></div>
                     </div>
                 </ng-container>
