@@ -15,8 +15,7 @@
         <table>
             <tbody>
                 <tr *ngFor="let row of situation_obj.situations">
-                    <td *ngFor="let item of row"
-                        (mousedown)="startSelection($event)"
+                    <td *ngFor="let item of row" (mousedown)="startSelection($event)"
                         (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
                         [style.background]="(item.action! | actionColor)">
                         {{item.card}}</td>
@@ -25,14 +24,13 @@
         </table>
         <div class="solutions">
             <h2 class="firsth2">Solutions</h2>
-            <div class="grid">
-                <ng-container *ngFor="let action of situation_obj.actions; let i = index">
-                    <!-- <div class="solution-selector"> -->
-                        <input type="input" class="textInput" value="{{action.display_name}}" [id]="action.id"
-                            (input)="onChangeActionName(action.id, $event)" placeholder="Aucun" autocomplete="off"/>
-                        <div class="color-picker-square" (click)="test(i)"></div>
-                    <!-- </div> -->
-                    <div class="color-picker-div color-picker-div-closed" [id]="'color-picker-div_' + i">
+            <ng-container *ngFor="let action of situation_obj.actions; let i = index">
+                <div class="solution-selector">
+                    <input type="input" class="textInput" value="{{action.display_name}}" [id]="action.id"
+                        (input)="onChangeActionName(action.id, $event)" placeholder="Aucun" autocomplete="off" />
+                    <div class="color-picker-square" (click)="test(i)"></div>
+                </div>
+                <!-- <div class="color-picker-div color-picker-div-closed"  [id]="'color-picker-div_' + i">
                         <div class="colors">
                             <div class="color-picker-square" style="background: #d80c05"></div>
                             <div class="color-picker-square" style="background: #ff9100"></div>
@@ -50,21 +48,38 @@
                                 <input type="text" value="#ffffff" />
                             </div>
                         </div>
+                    </div> -->
+            </ng-container>
+            <button class="fill addButton" (click)="addAction()">Ajouter +</button>
+        </div>
+        <div class="mixed-solutions-div">
+            <h2 class="firsth2">Fréquences de solutions</h2>
+            <div *ngFor="let mixed-solution of mixedSolutionsList" class="table-row mixed-solution">
+                <div class="mixed-solution-name">
+                    All In + Call
+                </div>
+                <ion-button class="col-2">
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </ion-button>
+                <ion-button class="col-3">
+                    <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+            </div>
+            <button class="fill addButton">Ajouter +</button>
+            <div class="add-mixed-solution">
+                <h2 class="firsth2">Ajouter des fréquences de solutions</h2>
+                <ng-container *ngFor="let action of situation_obj.actions; let i = index">
+                    <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"></div>
                     </div>
                 </ng-container>
             </div>
-            <button class="fill addButton" (click)="addAction()">Ajouter +</button>
-        </div>
-        <div class="mixed-solutions">
-            <h2 class="firsth2">Fréquences de solutions</h2>
-            <button class="fill addButton">Ajouter +</button>
         </div>
     </div>
     <div class="situationCaracteristics">
         <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
         <div class="div-input-text field input-nb-bb-restants">
             <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
-                placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens"/>
+                placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens" />
             <label for="jetonsRestants" class="styled-input-text-label">Nombre de BB restantes</label>
         </div>
         <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>

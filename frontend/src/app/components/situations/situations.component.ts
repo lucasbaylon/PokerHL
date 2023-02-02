@@ -25,6 +25,8 @@ export class SituationsComponent implements OnInit {
     situation_obj!: Situation;
 
     actionSelected: string = "action_0";
+    
+    mixedSolutionsList: any;
 
     showOpponent2: boolean = true;
 
