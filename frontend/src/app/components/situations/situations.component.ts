@@ -77,17 +77,11 @@ export class SituationsComponent implements OnInit {
 
     addUniqueAction() {
         let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
-
         if (actionList.length < 7) {
-            this.situation_obj.actions.push({ id: `unique_action_${actionList.length}`, type: "unique", display_name: undefined })
-        } else {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'warning',
-                title: 'Vous ne pouvez pas créer plus de 7 actions.',
-                showConfirmButton: false,
-                timer: 1500
-            })
+            this.situation_obj.actions.push({ id: `unique_action_${actionList.length}`, type: "unique", display_name: undefined });
+            if (actionList.length === 6) {
+                document.getElementById("add-solution-button")!.style.display = "none";
+            }
         }
     }
 
@@ -213,18 +207,22 @@ export class SituationsComponent implements OnInit {
     }
 
     changeNBPlayer(nb_player: number) {
+        const btn2Player = document.getElementById("btn2Player");
+        const btn3Player = document.getElementById("btn3Player");
+        const btnOpponent2Dealer = document.getElementById("btnOpponent2Dealer");
+
         if (nb_player === 2) {
             this.showOpponent2 = false;
             if (this.situation_obj.dealer === "opponent2") {
-                document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
+                btnOpponent2Dealer?.classList.remove("selectedButton");
                 this.situation_obj.dealer = undefined;
             }
-            document.getElementById("btn2Player")?.classList.add("selectedButton")
-            document.getElementById("btn3Player")?.classList.remove("selectedButton")
+            btn2Player?.classList.add("selectedButton");
+            btn3Player?.classList.remove("selectedButton");
         } else if (nb_player === 3) {
             this.showOpponent2 = true;
-            document.getElementById("btn2Player")?.classList.remove("selectedButton")
-            document.getElementById("btn3Player")?.classList.add("selectedButton")
+            btn2Player?.classList.remove("selectedButton");
+            btn3Player?.classList.add("selectedButton");
         }
     }
 
@@ -234,32 +232,29 @@ export class SituationsComponent implements OnInit {
     }
 
     changeDealer(dealer: string) {
-        if (dealer === "you") {
-            document.getElementById("btnYouDealer")?.classList.add("selectedButton")
-            document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
-        } else if (dealer === "opponent1") {
-            document.getElementById("btnYouDealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent1Dealer")?.classList.add("selectedButton")
-            document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
-        } else if (dealer === "opponent2") {
-            document.getElementById("btnYouDealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent2Dealer")?.classList.add("selectedButton")
+        const buttonIds = ["btnYouDealer", "btnOpponent1Dealer", "btnOpponent2Dealer"];
+        for (const id of buttonIds) {
+            document.getElementById(id)?.classList.remove("selectedButton");
         }
+        document.getElementById(`btn${dealer[0].toUpperCase() + dealer.slice(1)}Dealer`)?.classList.add("selectedButton");
     }
 
     onChangeOpponentLevel(opponentLevel: string) {
         this.situation_obj.opponentLevel = opponentLevel;
-        if (opponentLevel === "fish") {
-            document.getElementById("btnFishOpponent")?.classList.add("selectedButton");
-            document.getElementById("btnSharkOpponent")?.classList.remove("selectedButton");
-        } else if (opponentLevel === "shark") {
-            document.getElementById("btnFishOpponent")?.classList.remove("selectedButton");
-            document.getElementById("btnSharkOpponent")?.classList.add("selectedButton");
+        this.setSelectedButton("fish", "btnFishOpponent", opponentLevel === "fish");
+        this.setSelectedButton("shark", "btnSharkOpponent", opponentLevel === "shark");
+      }
+      
+      setSelectedButton(opponentLevel: string, buttonId: string, isSelected: boolean) {
+        const button = document.getElementById(buttonId);
+        if (button) {
+          if (isSelected) {
+            button.classList.add("selectedButton");
+          } else {
+            button.classList.remove("selectedButton");
+          }
         }
-        console.log(this.situation_obj)
-    }
+      }
 
     filteredActionList(list: Action[], type: string) {
         return list.filter(item => item.type === type);

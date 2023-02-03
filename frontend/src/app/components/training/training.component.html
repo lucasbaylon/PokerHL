@@ -76,7 +76,7 @@
             <br>
             <div *ngFor="let action of activeSituation.actions">
                 <button *ngIf="action.display_name" class="fill"
-                    (click)="getResultCase(action.name)">{{action.display_name}}</button>
+                    (click)="getResultCase(action.id)">{{action.display_name}}</button>
             </div>
         </div>
     </div>
