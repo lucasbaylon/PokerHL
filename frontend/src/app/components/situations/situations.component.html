@@ -65,15 +65,44 @@
         </div>
         <div class="mixed-solutions-div">
             <h2 class="firsth2">Fréquences de solutions</h2>
-            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
-                class="table-row mixed-solution">
+            <!-- <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
+                class="table-row mixed-solution"> -->
+            <div class="mixed-solution">
                 <div class="mixed-solution-name">
-                    {{action.display_name}}
+                    <!-- {{action.display_name}} -->
+                    All In 55% + Call 45%
                 </div>
-                <ion-button class="col-2">
+                <div class="color-picker-square"></div>
+                <ion-button>
                     <ion-icon name="pencil-outline"></ion-icon>
                 </ion-button>
-                <ion-button class="col-3">
+                <ion-button>
+                    <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+            </div>
+            <div class="mixed-solution">
+                <div class="mixed-solution-name">
+                    <!-- {{action.display_name}} -->
+                    All In 50% + Call 40% + Check 10%
+                </div>
+                <div class="color-picker-square"></div>
+                <ion-button>
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </ion-button>
+                <ion-button>
+                    <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+            </div>
+            <div class="mixed-solution">
+                <div class="mixed-solution-name">
+                    <!-- {{action.display_name}} -->
+                    All In 55% + Call 45%
+                </div>
+                <div class="color-picker-square"></div>
+                <ion-button>
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </ion-button>
+                <ion-button>
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
             </div>

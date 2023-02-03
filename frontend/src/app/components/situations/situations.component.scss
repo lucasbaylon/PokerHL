@@ -398,7 +398,7 @@ table tbody td:hover {
 
 .colors .color-picker-square:nth-child(n+6) {
     margin-bottom: 0;
-  }
+}
 
 // .hex-code {
 //     display: flex;
@@ -435,8 +435,38 @@ table tbody td:hover {
     padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
     margin: auto;
-    width: 20%;
+    min-width: 300px;
 }
+
+.mixed-solution {
+    font-size: 1.3em;
+    margin-bottom: 6px;
+    display: grid;
+    grid-template-columns: 70% 13% 10% 10%;
+    padding: 15px;
+    text-align: left;
+    align-items: center;
+}
+
+.mixed-solution .color-picker-square {
+    cursor: default;
+    margin-top: -4px;
+}
+
+.mixed-solution-name {
+    padding-right: 25px;
+}
+
+.mixed-solutions-div {
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.mixed-solutions-div::-webkit-scrollbar {
+    display: none;
+}
+
+/********************************* Div add mixed solutions *********************************/
 
 .add-mixed-solution {
     display: none;
@@ -451,69 +481,6 @@ table tbody td:hover {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-}
-
-.mixed-solution {
-    font-size: 1.3em;
-    margin-bottom: 10px;
-}
-
-.mixed-solutions-div {
-    overflow: auto;
-    overflow-x: hidden;
-}
-
-.mixed-solutions-div::-webkit-scrollbar {
-    display: none;
-}
-
-.table-row {
-    background-color: #ffffff;
-    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
-}
-
-.table-row:hover {
-    background-color: #d3d3d3;
-}
-
-.table-row ion-icon {
-    font-size: 1.5em;
-}
-
-.table-row:last-child {
-    margin-bottom: 0;
-}
-
-.col-1 {
-    flex-basis: 16%;
-}
-
-.col-2 {
-    flex-basis: 10%;
-}
-
-.col-3 {
-    flex-basis: 10%;
-}
-
-.col-4 {
-    flex-basis: 8%;
-}
-
-.col-5 {
-    flex-basis: 8%;
-}
-
-.col-6 {
-    flex-basis: 8%;
-}
-
-.col-7 {
-    flex-basis: 8%;
-}
-
-.col-8 {
-    flex-basis: 8%;
 }
 
 /********************************* Div caractéristiques de la situation *********************************/
