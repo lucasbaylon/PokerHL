@@ -21,6 +21,8 @@ export class SituationsComponent implements OnInit {
     situationSubscription!: Subscription;
 
     situationName: string = ""
+    
+    multipleSolution: string = ""
 
     situation_obj!: Situation;
 
@@ -85,9 +87,13 @@ export class SituationsComponent implements OnInit {
         }
     }
 
-    addMixedAction() {
+    addMultiplesAction() {
         let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
-        document.getElementById("add-mixed-solution")!.style.display = "block";
+        document.getElementById("add-multiples-solutions")!.style.display = "block";
+    }
+    
+    closeMultiplesActionWindow() {
+        document.getElementById("add-multiples-solutions")!.style.display = "none";
     }
 
     startSelection(event: any) {

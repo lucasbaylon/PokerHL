@@ -23,7 +23,7 @@
             </tbody>
         </table>
         <div class="solutions">
-            <h2 class="firsth2">Solutions</h2>
+            <h2>Solutions</h2>
             <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                 <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="action.id"
@@ -67,12 +67,12 @@
             </ng-container>
             <button class="fill addButton" id="add-solution-button" (click)="addUniqueAction()">Ajouter +</button>
         </div>
-        <div class="mixed-solutions-div">
-            <h2 class="firsth2">Fréquences de solutions</h2>
+        <div class="multiples-solutionss-div">
+            <h2>Solutions multiples</h2>
             <!-- <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
-                class="table-row mixed-solution"> -->
-            <div class="mixed-solution">
-                <div class="mixed-solution-name">
+                class="table-row multiples-solutions"> -->
+            <div class="multiples-solutions">
+                <div class="multiples-solutions-name">
                     <!-- {{action.display_name}} -->
                     All In 55% + Call 45%
                 </div>
@@ -88,8 +88,8 @@
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
             </div>
-            <div class="mixed-solution">
-                <div class="mixed-solution-name">
+            <div class="multiples-solutions">
+                <div class="multiples-solutions-name">
                     <!-- {{action.display_name}} -->
                     All In 50% + Call 40% + Check 10%
                 </div>
@@ -105,8 +105,8 @@
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
             </div>
-            <div class="mixed-solution">
-                <div class="mixed-solution-name">
+            <div class="multiples-solutions">
+                <div class="multiples-solutions-name">
                     <!-- {{action.display_name}} -->
                     All In 55% + Call 45% fffffffff
                 </div>
@@ -122,18 +122,35 @@
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
             </div>
-            <button class="fill addButton" (click)="addMixedAction()">Ajouter +</button>
-            <div class="add-mixed-solution" id="add-mixed-solution">
-                <h2 class="firsth2">Ajouter des fréquences de solutions</h2>
+            <button class="fill addButton" (click)="addMultiplesAction()">Ajouter +</button>
+            <div class="add-multiples-solutions" id="add-multiples-solutions">
+                <ion-button (click)="closeMultiplesActionWindow()">
+                    <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+                <h2>Ajout d'une multiplicité de solutions</h2>
+                <div class="div-input-text field input-name-multiples-solutions">
+                    <input [(ngModel)]="multipleSolution" type="text" class="styled-input-text" placeholder="Nom"
+                        name="multipleSolution" id='multipleSolution' autocomplete="off" />
+                    <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
+                </div>
                 <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed'); let i = index">
                     <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"></div>
+                        <input type="checkbox" class="cbx">
+                        <label class="check">
+                            <svg width="18px" height="18px" viewBox="0 0 18 18">
+                                <path
+                                    d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z">
+                                </path>
+                                <polyline points="1 9 7 14 15 4"></polyline>
+                            </svg>
+                        </label>
                     </div>
                 </ng-container>
             </div>
         </div>
     </div>
     <div class="situationCaracteristics">
-        <h2 class="firsth2">Combien de BB reste t-il au dealer ?</h2>
+        <h2>Combien de BB reste t-il au dealer ?</h2>
         <div class="div-input-text field input-nb-bb-restants">
             <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
                 placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens" />

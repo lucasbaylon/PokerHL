@@ -12,6 +12,8 @@ ion-button {
     cursor: pointer;
     width: fit-content;
     height: fit-content;
+    padding: 0;
+    margin: 0;
 }
 
 .header {
@@ -243,29 +245,6 @@ button {
     }
 }
 
-.input-nb-bb-restants {
-    width: 70%;
-    margin: auto;
-}
-
-.input-nb-bb-restants .styled-input-text {
-    border-bottom: 2px solid #303030;
-    color: #303030;
-}
-
-.input-nb-bb-restants .styled-input-text:focus {
-    ~.styled-input-text-label {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-    }
-
-    padding-bottom: 6px;
-    border-width: 3px;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -477,9 +456,9 @@ input[type="radio"]:checked+.design::before {
 //     box-sizing: border-box;
 // }
 
-/********************************* Div mixed solutions *********************************/
+/********************************* Div multiples solutions *********************************/
 
-.mixed-solutions-div {
+.multiples-solutionss-div {
     background-color: #fff;
     color: #303030;
     border-radius: 10px;
@@ -489,15 +468,15 @@ input[type="radio"]:checked+.design::before {
     min-width: 300px;
 }
 
-.mixed-solutions-div label {
+.multiples-solutionss-div label {
     margin-top: 6px;
 }
 
-.mixed-solution-name{
+.multiples-solutions-name {
     padding-right: 25px;
 }
 
-.mixed-solution {
+.multiples-solutions {
     font-size: 1.3em;
     margin-bottom: 6px;
     display: grid;
@@ -518,19 +497,19 @@ input[type="radio"]:checked+.design::before {
     }
 }
 
-.mixed-solution .color-picker-square {
+.multiples-solutions .color-picker-square {
     cursor: default;
 }
 
-.mixed-solution ion-button{
+.multiples-solutions ion-button {
     margin-top: 4px;
 }
 
-/********************************* Div add mixed solutions *********************************/
+/********************************* Div add multiples solutions *********************************/
 
-.add-mixed-solution {
+.add-multiples-solutions {
     display: none;
-    width: 400px;
+    width: 500px;
     background-color: #fff;
     color: #303030;
     border-radius: 10px;
@@ -541,6 +520,39 @@ input[type="radio"]:checked+.design::before {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
+}
+
+.add-multiples-solutions ion-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 2em;
+    cursor: pointer;
+    color: #303030;
+    padding: 0px;
+}
+
+.input-name-multiples-solutions {
+    width: 70%;
+    margin: auto;
+}
+
+.input-name-multiples-solutions .styled-input-text {
+    border-bottom: 2px solid #303030;
+    color: #303030;
+}
+
+.input-name-multiples-solutions .styled-input-text:focus {
+    ~.styled-input-text-label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+    }
+
+    padding-bottom: 6px;
+    border-width: 3px;
 }
 
 /********************************* Div caractéristiques de la situation *********************************/
@@ -556,12 +568,31 @@ input[type="radio"]:checked+.design::before {
     margin-top: 10px;
 }
 
-h2 {
-    letter-spacing: 1px;
+.input-nb-bb-restants {
+    width: 70%;
+    margin: auto;
 }
 
-.firsth2 {
-    margin-top: 15px;
+.input-nb-bb-restants .styled-input-text {
+    border-bottom: 2px solid #303030;
+    color: #303030;
+}
+
+.input-nb-bb-restants .styled-input-text:focus {
+    ~.styled-input-text-label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+    }
+
+    padding-bottom: 6px;
+    border-width: 3px;
+}
+
+h2 {
+    letter-spacing: 1px;
 }
 
 .middleh2 {
