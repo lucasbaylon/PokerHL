@@ -79,6 +79,18 @@ button {
     box-shadow: inset 0 0 0 2em var(--hover);
 }
 
+.animate__fadeInDown{
+animation-duration: 0.5s;
+}
+
+.animation-delay-1{
+    animation-delay: 0.25s;
+}
+
+.animation-delay-2{
+    animation-delay: 0.5s;
+}
+
 /********************************* Waves *********************************/
 
 .waves {
