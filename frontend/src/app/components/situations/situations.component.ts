@@ -99,7 +99,7 @@ export class SituationsComponent implements OnInit {
         this.isSelectionActive = true;
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.situation_obj.situations[row_index][cell_index].action ? undefined : this.actionSelected;
+        this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
     }
 
     updateSelection(event: any) {
@@ -110,7 +110,7 @@ export class SituationsComponent implements OnInit {
         this.isSelectionActive = true;
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.situation_obj.situations[row_index][cell_index].action ? undefined : this.actionSelected;
+        this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
     }
 
     endSelection() {
