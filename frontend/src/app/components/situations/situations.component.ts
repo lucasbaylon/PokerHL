@@ -21,7 +21,7 @@ export class SituationsComponent implements OnInit {
     situationSubscription!: Subscription;
 
     situationName: string = ""
-    
+
     multipleSolution: string = ""
 
     situation_obj!: Situation;
@@ -32,6 +32,8 @@ export class SituationsComponent implements OnInit {
 
     isSelectionActive: boolean = false;
 
+    situation_objActionsRef: any;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -41,6 +43,7 @@ export class SituationsComponent implements OnInit {
 
     ngOnInit(): void {
         this.situation_obj = { ...this.apiCommon.empty_situation_obj };
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
@@ -90,7 +93,7 @@ export class SituationsComponent implements OnInit {
     showAddMultiplesAction() {
         document.getElementById("add-multiples-solutions")!.style.display = "block";
     }
-    
+
     closeMultiplesActionWindow() {
         document.getElementById("add-multiples-solutions")!.style.display = "none";
     }
@@ -248,33 +251,31 @@ export class SituationsComponent implements OnInit {
         this.situation_obj.opponentLevel = opponentLevel;
         this.setSelectedButton("fish", "btnFishOpponent", opponentLevel === "fish");
         this.setSelectedButton("shark", "btnSharkOpponent", opponentLevel === "shark");
-      }
-      
-      setSelectedButton(opponentLevel: string, buttonId: string, isSelected: boolean) {
+    }
+
+    setSelectedButton(opponentLevel: string, buttonId: string, isSelected: boolean) {
         const button = document.getElementById(buttonId);
         if (button) {
-          if (isSelected) {
-            button.classList.add("selectedButton");
-          } else {
-            button.classList.remove("selectedButton");
-          }
+            if (isSelected) {
+                button.classList.add("selectedButton");
+            } else {
+                button.classList.remove("selectedButton");
+            }
         }
-      }
+    }
 
     filteredActionList(list: Action[], type: string) {
         return list.filter(item => item.type === type);
     }
 
     onColorAction(action_id: string) {
-        console.log(this.situation_obj.actions)
         document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
     }
 
     onSelectColor(action_id: string, color: string) {
-        console.log(action_id)
-        console.log(color)
         let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0]
         actionList.color = color;
         document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
 }

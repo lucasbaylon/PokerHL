@@ -17,7 +17,7 @@
                 <tr *ngFor="let row of situation_obj.situations">
                     <td *ngFor="let item of row" (mousedown)="startSelection($event)"
                         (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
-                        [style.background]="(item.action! | actionColor:situation_obj.actions)">
+                        [style.background]="(item.action! | actionColor:situation_objActionsRef)">
                         {{item.card}} </td>
                 </tr>
             </tbody>
