@@ -1,437 +1,437 @@
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
 
 * {
-    font-family: 'Lato', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
-.animate__animated{
-    animation-duration: 0.4s;
+.animate__animated {
+  animation-duration: 0.4s;
 }
 
 ion-icon {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 ion-button {
-    cursor: pointer;
-    width: fit-content;
-    height: fit-content;
-    padding: 0;
-    margin: 0;
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+  padding: 0;
+  margin: 0;
 }
 
 .header {
-    text-align: center;
-    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
-    color: white;
-    height: 100%;
-    min-height: 100vh;
-    overflow: hidden;
+  text-align: center;
+  background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
+  color: white;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
 .inner-header {
-    width: 100%;
-    display: grid;
-    margin: auto;
-    align-content: center;
+  width: 100%;
+  display: grid;
+  margin: auto;
+  align-content: center;
 }
 
 h1 {
-    font-weight: 300;
-    letter-spacing: 2px;
-    font-size: 3em;
-    margin: auto;
-    margin-top: 2.5%;
+  font-weight: 300;
+  letter-spacing: 2px;
+  font-size: 3em;
+  margin: auto;
+  margin-top: 2.5%;
 }
 
 .case-definition {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 85%;
-    margin: 60px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85%;
+  margin: 60px auto;
 }
 
 /********************************* Back Arrow *********************************/
 
 .backArrow {
-    position: absolute;
-    font-size: 3.5em;
-    left: 1.5%;
-    top: 1.5%;
-    cursor: pointer;
-    transition: 0.25s linear;
-    -webkit-transition: 0.25s linear;
-    -moz-transition: 0.25s linear;
-    -ms-transition: 0.25s linear;
-    -o-transition: 0.25s linear;
+  position: absolute;
+  font-size: 3.5em;
+  left: 1.5%;
+  top: 1.5%;
+  cursor: pointer;
+  transition: 0.25s linear;
+  -webkit-transition: 0.25s linear;
+  -moz-transition: 0.25s linear;
+  -ms-transition: 0.25s linear;
+  -o-transition: 0.25s linear;
 }
 
 .backArrow:hover {
-    -moz-animation: bounce 2s infinite;
-    -webkit-animation: bounce 2s infinite;
-    animation: bounce 2s infinite;
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
 }
 
 .backArrow:active {
-    scale: (0.8);
-    -moz-animation: none !important;
-    -webkit-animation: none !important;
-    animation: none !important;
-    transition: 0.1s linear;
-    -webkit-transition: 0.1s linear;
-    -moz-transition: 0.1s linear;
-    -ms-transition: 0.1s linear;
-    -o-transition: 0.1s linear;
+  scale: (0.8);
+  -moz-animation: none !important;
+  -webkit-animation: none !important;
+  animation: none !important;
+  transition: 0.1s linear;
+  -webkit-transition: 0.1s linear;
+  -moz-transition: 0.1s linear;
+  -ms-transition: 0.1s linear;
+  -o-transition: 0.1s linear;
 }
 
 @keyframes bounce {
 
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0);
-    }
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
 
-    40% {
-        transform: translateX(-10px);
-    }
+  40% {
+    transform: translateX(-10px);
+  }
 
-    60% {
-        transform: translateX(-5px);
-    }
+  60% {
+    transform: translateX(-5px);
+  }
 }
 
 /********************************* Boutons *********************************/
 
 $colors: (
-    fill: #fff,
+  fill: #fff,
 );
 
 @each $button,
 $color in $colors {
-    .#{$button} {
-        --color: #{$color};
-        --hover: #{adjust-hue($color, 45deg)};
-    }
+  .#{$button} {
+    --color: #{$color};
+    --hover: #{adjust-hue($color, 45deg)};
+  }
 }
 
 button {
-    background: none;
-    border: 2px solid;
-    line-height: 1;
-    margin: auto;
-    margin-bottom: 30px;
-    font-size: 1.1em;
-    font-weight: 600;
-    padding: 1em;
-    letter-spacing: 0.5px;
-    border-radius: 30px;
-    width: 400px;
-    cursor: pointer;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    -ms-border-radius: 30px;
-    -o-border-radius: 30px;
+  background: none;
+  border: 2px solid;
+  line-height: 1;
+  margin: auto;
+  margin-bottom: 30px;
+  font-size: 1.1em;
+  font-weight: 600;
+  padding: 1em;
+  letter-spacing: 0.5px;
+  border-radius: 30px;
+  width: 400px;
+  cursor: pointer;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
 }
 
 button {
-    color: var(--color);
-    transition: 0.25s;
+  color: var(--color);
+  transition: 0.25s;
 
-    &:hover {
-        border-color: var(--hover);
-        color: #303030;
-    }
+  &:hover {
+    border-color: var(--hover);
+    color: #303030;
+  }
 }
 
 .fill:hover {
-    box-shadow: inset 0 0 0 2em var(--hover);
+  box-shadow: inset 0 0 0 2em var(--hover);
 }
 
 .saveButton {
-    margin: 50px;
+  margin: 50px;
 }
 
 .smallButton {
-    width: fit-content;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    min-width: 150px;
-    color: #303030;
+  width: fit-content;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  min-width: 150px;
+  color: #303030;
 }
 
 .smallButton:hover {
-    box-shadow: inset 0 0 0 2em #303030;
-    color: #fff;
+  box-shadow: inset 0 0 0 2em #303030;
+  color: #fff;
 }
 
 .selectedButton {
-    box-shadow: inset 0 0 0 2em #303030;
-    color: #fff;
+  box-shadow: inset 0 0 0 2em #303030;
+  color: #fff;
 }
 
 /********************************* Champ texte nom de situation *********************************/
 
 .div-input-text {
-    position: relative;
-    padding: 15px 0 0;
-    margin: auto;
-    margin-top: 50px;
-    width: 25%;
-    text-align: center;
+  position: relative;
+  padding: 15px 0 0;
+  margin: auto;
+  margin-top: 50px;
+  width: 25%;
+  text-align: center;
 }
 
 .styled-input-text {
-    width: 100%;
-    border: 0;
-    border-bottom: 2px solid white;
-    outline: 0;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid white;
+  outline: 0;
+  font-size: 1.3rem;
+  color: white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown~.styled-input-text-label {
     font-size: 1.3rem;
-    color: white;
-    padding: 7px 0;
-    background: transparent;
-    transition: border-color 0.2s;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-
-    &::placeholder {
-        color: transparent;
-    }
-
-    &:placeholder-shown~.styled-input-text-label {
-        font-size: 1.3rem;
-        cursor: text;
-        top: 20px;
-    }
+    cursor: text;
+    top: 20px;
+  }
 }
 
 .styled-input-text-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.styled-input-text:focus {
+  ~.styled-input-text-label {
     position: absolute;
     top: 0;
     display: block;
     transition: 0.2s;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
+    font-size: 1rem;
+  }
 
-.styled-input-text:focus {
-    ~.styled-input-text-label {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-    }
-
-    padding-bottom: 6px;
-    border-width: 3px;
+  padding-bottom: 6px;
+  border-width: 3px;
 }
 
 /* reset input */
 .styled-input-text {
 
-    &:required,
-    &:invalid {
-        box-shadow: none;
-    }
+  &:required,
+  &:invalid {
+    box-shadow: none;
+  }
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /********************************* Tableau *********************************/
 
 table {
-    margin: auto;
-    font-family: sans-serif;
-    border-collapse: separate;
-    border-spacing: 2px 2px;
+  margin: auto;
+  font-family: sans-serif;
+  border-collapse: separate;
+  border-spacing: 2px 2px;
 }
 
 table tr td {
-    background-color: #fff;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 6px;
-    padding-right: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    color: #303030;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #303030;
 }
 
 table tbody td:hover {
-    background-color: rgb(218, 218, 218);
+  background-color: rgb(218, 218, 218);
 }
 
 /********************************* Div solutions *********************************/
 
 .solutions {
-    scale: 1.05;
-    background-color: #fff;
-    color: #303030;
-    border-radius: 10px;
-    padding: 20px 45px;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    width: 170px;
-    margin: auto;
+  scale: 1.05;
+  background-color: #fff;
+  color: #303030;
+  border-radius: 10px;
+  padding: 20px 45px;
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+  width: 170px;
+  margin: auto;
 
-    .textInput {
-        font-size: 1.3em;
-        margin-top: 14px;
-        margin-bottom: 14px;
-        border: none;
-        width: 80px;
-        text-align: center;
-        margin-right: 15px;
-    }
+  .textInput {
+    font-size: 1.3em;
+    margin-top: 14px;
+    margin-bottom: 14px;
+    border: none;
+    width: 80px;
+    text-align: center;
+    margin-right: 15px;
+  }
 
-    .textInput::placeholder {
-        color: #090a0f;
-    }
+  .textInput::placeholder {
+    color: #090a0f;
+  }
 
-    label {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-wrap: nowrap;
-        margin: 12px 0;
-        cursor: pointer;
-        position: relative;
-        margin-left: 20px;
-    }
+  label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin: 12px 0;
+    cursor: pointer;
+    position: relative;
+    margin-left: 20px;
+  }
 }
 
 .addButton {
-    width: fit-content;
-    min-width: 130px;
-    color: #303030;
-    margin-bottom: 5px;
-    margin-top: 10px;
-    padding: 12px;
-    border: 1px solid #303030;
-    font-weight: lighter;
+  width: fit-content;
+  min-width: 130px;
+  color: #303030;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #303030;
+  font-weight: lighter;
 }
 
 .addButton:hover {
-    box-shadow: inset 0 0 0 2em #303030;
-    color: #fff;
+  box-shadow: inset 0 0 0 2em #303030;
+  color: #fff;
 }
 
 .solution-selector {
-    display: inline-flex;
-    align-items: center;
+  display: inline-flex;
+  align-items: center;
 }
 
 input[type="radio"] {
-    opacity: 0;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  opacity: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .design {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #303030;
-    border-radius: 100%;
-    margin-right: 16px;
-    position: relative;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #303030;
+  border-radius: 100%;
+  margin-right: 16px;
+  position: relative;
 }
 
 .design::before {
-    content: "";
-    display: block;
-    width: inherit;
-    height: inherit;
-    border-radius: inherit;
-    position: absolute;
-    transform: scale(0);
-    transform-origin: center center;
+  content: "";
+  display: block;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  position: absolute;
+  transform: scale(0);
+  transform-origin: center center;
 }
 
 .design:before {
-    background: #303030;
-    opacity: 0;
-    transition: .3s;
+  background: #303030;
+  opacity: 0;
+  transition: .3s;
 }
 
 input[type="radio"]:checked+.design::before {
-    opacity: 1;
-    transform: scale(.6);
+  opacity: 1;
+  transform: scale(.6);
 }
 
 .color-picker-square {
-    height: 30px;
-    box-sizing: border-box;
-    border-radius: 5px;
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.14);
-    width: 30px;
-    cursor: pointer;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.14);
+  width: 30px;
+  cursor: pointer;
 }
 
 .color-picker-div {
-    background: #fff;
-    padding: 15px;
-    border-radius: 5px;
-    position: absolute;
-    box-sizing: border-box;
-    width: 220px;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.15);
-    margin-left: 4px;
-    z-index: 1;
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  position: absolute;
+  box-sizing: border-box;
+  width: 220px;
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.15);
+  margin-left: 4px;
+  z-index: 1;
 }
 
 .color-picker-div-closed {
-    display: none;
+  display: none;
 }
 
 .colors {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .colors .color-picker-square {
-    height: 30px;
-    box-sizing: border-box;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
-    width: 30px;
-    cursor: pointer;
-    margin-right: 10px;
-    margin-bottom: 10px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
+  width: 30px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .colors .color-picker-square:nth-child(5n) {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .colors .color-picker-square:nth-child(n+6) {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 // .hex-code {
@@ -463,555 +463,590 @@ input[type="radio"]:checked+.design::before {
 /********************************* Div multiples solutions *********************************/
 
 .multiples-solutions-div {
-    background-color: #fff;
-    color: #303030;
-    border-radius: 10px;
-    padding: 20px 45px;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    margin: auto;
-    min-width: 300px;
+  background-color: #fff;
+  color: #303030;
+  border-radius: 10px;
+  padding: 20px 45px;
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+  margin: auto;
+  min-width: 300px;
 }
 
 .multiples-solutions-div label {
-    margin-top: 6px;
+  margin-top: 6px;
 }
 
 .multiples-solutions-name {
-    padding-right: 25px;
+  padding-right: 25px;
 }
 
 .multiples-solutions {
-    font-size: 1.3em;
-    margin-bottom: 6px;
-    display: grid;
-    grid-template-columns: 60% 8% 15% 10% 10%;
-    padding: 15px;
-    text-align: left;
-    align-items: center;
+  font-size: 1.3em;
+  margin-bottom: 6px;
+  display: grid;
+  grid-template-columns: 60% 8% 15% 10% 10%;
+  padding: 15px;
+  text-align: left;
+  align-items: center;
 
-    label {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-wrap: nowrap;
-        margin: 12px 0;
-        cursor: pointer;
-        position: relative;
-        margin-left: 20px;
-    }
+  label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin: 12px 0;
+    cursor: pointer;
+    position: relative;
+    margin-left: 20px;
+  }
 }
 
 .multiples-solutions .color-picker-square {
-    cursor: default;
+  cursor: default;
 }
 
 .multiples-solutions ion-button {
-    margin-top: 4px;
+  margin-top: 4px;
 }
 
 /********************************* Div add multiples solutions *********************************/
 
 .add-multiples-solutions {
-    // display: none;
-    width: 500px;
-    background-color: #fff;
-    color: #303030;
-    border-radius: 10px;
-    padding: 20px 45px;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
+  // display: none;
+  width: 500px;
+  background-color: #fff;
+  color: #303030;
+  border-radius: 10px;
+  padding: 20px 45px;
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .add-multiples-solutions ion-button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    font-size: 2em;
-    cursor: pointer;
-    color: #303030;
-    padding: 0px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 2em;
+  cursor: pointer;
+  color: #303030;
+  padding: 0px;
 }
 
 .input-name-multiples-solutions {
-    width: 70%;
-    margin: auto;
+  width: 70%;
+  margin: auto;
 }
 
 .input-name-multiples-solutions .styled-input-text {
-    border-bottom: 2px solid #303030;
-    color: #303030;
+  border-bottom: 2px solid #303030;
+  color: #303030;
 }
 
 .input-name-multiples-solutions .styled-input-text:focus {
-    ~.styled-input-text-label {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-    }
+  ~.styled-input-text-label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+  }
 
-    padding-bottom: 6px;
-    border-width: 3px;
+  padding-bottom: 6px;
+  border-width: 3px;
 }
 
 // Multiple Slider
-  
-  .range-slider.flat {
-    --thumb-size: 25px;
-    --track-height: calc(var(--thumb-size) / 3);
-    --progress-shadow: none;
-    --progress-flll-shadow: none;
-    --thumb-shadow: 0 0 0 7px var(--primary-color) inset, 0 0 0 99px white inset;
-    --thumb-shadow-hover: 0 0 0 9px var(--primary-color) inset,
-      0 0 0 99px white inset;
-    --thumb-shadow-active: 0 0 0 13px var(--primary-color) inset;
+
+.range-slider.flat {
+  --thumb-size: 25px;
+  --track-height: calc(var(--thumb-size) / 3);
+  --progress-shadow: none;
+  --progress-flll-shadow: none;
+  --thumb-shadow: 0 0 0 7px var(--primary-color) inset, 0 0 0 99px white inset;
+  --thumb-shadow-hover: 0 0 0 9px var(--primary-color) inset,
+    0 0 0 99px white inset;
+  --thumb-shadow-active: 0 0 0 13px var(--primary-color) inset;
+}
+
+////////////////////////////////////////////////
+// The main styles
+
+.range-slider {
+  --primary-color: #0366d6;
+
+  --value-offset-y: var(--ticks-gap);
+  --value-active-color: white;
+  --value-background: transparent;
+  --value-background-hover: var(--primary-color);
+  --value-font: 700 12px/1 Arial;
+
+  --fill-color: var(--primary-color);
+  --progress-background: #eee;
+  --progress-radius: 20px;
+  --track-height: calc(var(--thumb-size) / 2);
+
+  --min-max-font: 12px Arial;
+  --min-max-opacity: 0.5;
+  --min-max-x-offset: 10%; // 50% to center
+
+  --thumb-size: 22px;
+  --thumb-color: white;
+  --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset,
+    0 0 0 99px var(--thumb-color) inset;
+
+  --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset var(--thumb-color),
+    0 0 0 99px var(--primary-color) inset, 0 0 3px rgba(0, 0, 0, 0.4);
+
+  --thumb-shadow-hover: var(--thumb-shadow);
+
+  --ticks-thickness: 1px;
+  --ticks-height: 5px;
+  --ticks-gap: var(--ticks-height,
+      0); // vertical space between the ticks and the progress bar
+  --ticks-color: silver;
+
+  // ⚠️ BELOW VARIABLES SHOULD NOT BE CHANGED
+  --step: 1;
+  --ticks-count: Calc(var(--max) - var(--min)) / var(--step);
+  --maxTicksAllowed: 30;
+  --too-many-ticks: Min(1, Max(var(--ticks-count) - var(--maxTicksAllowed), 0));
+  --x-step: Max(var(--step),
+      var(--too-many-ticks) * (var(--max) - var(--min))); // manipulate the number of steps if too many ticks exist, so there would only be 2
+  --tickInterval: 100/ ((var(--max) - var(--min)) / var(--step)) * var(--tickEvery, 1);
+  --tickIntervalPerc: calc((100% - var(--thumb-size)) / ((var(--max) - var(--min)) / var(--x-step)) * var(--tickEvery, 1));
+
+  --value-a: Clamp(var(--min),
+      var(--value, 0),
+      var(--max)); // default value ("--value" is used in single-range markup)
+  --value-b: var(--value, 0); // default value
+  --text-value-a: var(--text-value, "");
+
+  --completed-a: calc((var(--value-a) - var(--min)) / (var(--max) - var(--min)) * 100);
+  --completed-b: calc((var(--value-b) - var(--min)) / (var(--max) - var(--min)) * 100);
+  --ca: Min(var(--completed-a), var(--completed-b));
+  --cb: Max(var(--completed-a), var(--completed-b));
+
+  // breakdown of the below super-complex brain-breaking CSS math:
+  // "clamp" is used to ensure either "-1" or "1"
+  // "calc" is used to inflat the outcome into a huge number, to get rid of any value between -1 & 1
+  // if absolute diff of both completed % is above "5" (%)
+  // ".001" bumps the value just a bit, to avoid a scenario where calc resulted in "0" (then clamp will also be "0")
+  --thumbs-too-close: Clamp(-1,
+      1000 * (Min(1, Max(var(--cb) - var(--ca) - 5, -1)) + 0.001),
+      1);
+  --thumb-close-to-min: Min(1, Max(var(--ca) - 2, 0)); // 2% threshold
+  --thumb-close-to-max: Min(1, Max(98 - var(--cb), 0)); // 2% threshold
+
+  @mixin thumb {
+    appearance: none;
+    height: var(--thumb-size);
+    width: var(--thumb-size);
+    transform: var(--thumb-transform);
+    border-radius: var(--thumb-radius, 50%);
+    background: var(--thumb-color);
+    box-shadow: var(--thumb-shadow);
+    border: none;
+    pointer-events: auto;
+    transition: 0.1s;
   }
 
-  ////////////////////////////////////////////////
-  // The main styles
-  
-  .range-slider {
-    --primary-color: #0366d6;
-  
-    --value-offset-y: var(--ticks-gap);
-    --value-active-color: white;
-    --value-background: transparent;
-    --value-background-hover: var(--primary-color);
-    --value-font: 700 12px/1 Arial;
-  
-    --fill-color: var(--primary-color);
-    --progress-background: #eee;
-    --progress-radius: 20px;
-    --track-height: calc(var(--thumb-size) / 2);
-  
-    --min-max-font: 12px Arial;
-    --min-max-opacity: 0.5;
-    --min-max-x-offset: 10%; // 50% to center
-  
-    --thumb-size: 22px;
-    --thumb-color: white;
-    --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset,
-      0 0 0 99px var(--thumb-color) inset;
-  
-    --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset
-        var(--thumb-color),
-      0 0 0 99px var(--primary-color) inset, 0 0 3px rgba(0, 0, 0, 0.4);
-  
-    --thumb-shadow-hover: var(--thumb-shadow);
-  
-    --ticks-thickness: 1px;
-    --ticks-height: 5px;
-    --ticks-gap: var(
-      --ticks-height,
-      0
-    ); // vertical space between the ticks and the progress bar
-    --ticks-color: silver;
-  
-    // ⚠️ BELOW VARIABLES SHOULD NOT BE CHANGED
-    --step: 1;
-    --ticks-count: Calc(var(--max) - var(--min)) / var(--step);
-    --maxTicksAllowed: 30;
-    --too-many-ticks: Min(1, Max(var(--ticks-count) - var(--maxTicksAllowed), 0));
-    --x-step: Max(
-      var(--step),
-      var(--too-many-ticks) * (var(--max) - var(--min))
-    ); // manipulate the number of steps if too many ticks exist, so there would only be 2
-    --tickInterval: 100/ ((var(--max) - var(--min)) / var(--step)) * var(--tickEvery, 1);
-    --tickIntervalPerc: calc(
-      (100% - var(--thumb-size)) / ((var(--max) - var(--min)) / var(--x-step)) *
-        var(--tickEvery, 1)
-    );
-  
-    --value-a: Clamp(
-      var(--min),
-      var(--value, 0),
-      var(--max)
-    ); // default value ("--value" is used in single-range markup)
-    --value-b: var(--value, 0); // default value
-    --text-value-a: var(--text-value, "");
-  
-    --completed-a: calc(
-      (var(--value-a) - var(--min)) / (var(--max) - var(--min)) * 100
-    );
-    --completed-b: calc(
-      (var(--value-b) - var(--min)) / (var(--max) - var(--min)) * 100
-    );
-    --ca: Min(var(--completed-a), var(--completed-b));
-    --cb: Max(var(--completed-a), var(--completed-b));
-  
-    // breakdown of the below super-complex brain-breaking CSS math:
-    // "clamp" is used to ensure either "-1" or "1"
-    // "calc" is used to inflat the outcome into a huge number, to get rid of any value between -1 & 1
-    // if absolute diff of both completed % is above "5" (%)
-    // ".001" bumps the value just a bit, to avoid a scenario where calc resulted in "0" (then clamp will also be "0")
-    --thumbs-too-close: Clamp(
-      -1,
-      1000 * (Min(1, Max(var(--cb) - var(--ca) - 5, -1)) + 0.001),
-      1
-    );
-    --thumb-close-to-min: Min(1, Max(var(--ca) - 2, 0)); // 2% threshold
-    --thumb-close-to-max: Min(1, Max(98 - var(--cb), 0)); // 2% threshold
-  
-    @mixin thumb {
-      appearance: none;
-      height: var(--thumb-size);
-      width: var(--thumb-size);
-      transform: var(--thumb-transform);
-      border-radius: var(--thumb-radius, 50%);
-      background: var(--thumb-color);
-      box-shadow: var(--thumb-shadow);
-      border: none;
-      pointer-events: auto;
-      transition: 0.1s;
-    }
-  
-    display: inline-block;
-    height: Max(var(--track-height), var(--thumb-size));
-    // margin: calc((var(--thumb-size) - var(--track-height)) * -.25) var(--thumb-size) 0;
-    background: linear-gradient(
-        to right,
-        var(--ticks-color) var(--ticks-thickness),
-        transparent 1px
-      )
-      repeat-x;
-    background-size: var(--tickIntervalPerc) var(--ticks-height);
-    background-position-x: calc(
-      var(--thumb-size) / 2 - var(--ticks-thickness) / 2
-    );
-    background-position-y: var(--flip-y, bottom);
-  
-    padding-bottom: var(--flip-y, var(--ticks-gap));
-    padding-top: calc(var(--flip-y) * var(--ticks-gap));
-  
+  display: inline-block;
+  height: Max(var(--track-height), var(--thumb-size));
+  // margin: calc((var(--thumb-size) - var(--track-height)) * -.25) var(--thumb-size) 0;
+  background: linear-gradient(to right,
+    var(--ticks-color) var(--ticks-thickness),
+    transparent 1px) repeat-x;
+  background-size: var(--tickIntervalPerc) var(--ticks-height);
+  background-position-x: calc(var(--thumb-size) / 2 - var(--ticks-thickness) / 2);
+  background-position-y: var(--flip-y, bottom);
+
+  padding-bottom: var(--flip-y, var(--ticks-gap));
+  padding-top: calc(var(--flip-y) * var(--ticks-gap));
+
+  position: relative;
+  z-index: 1;
+
+  &[data-ticks-position="top"] {
+    --flip-y: 1;
+  }
+
+  // mix/max texts
+  &::before,
+  &::after {
+    --offset: calc(var(--thumb-size) / 2);
+    content: counter(x);
+    display: var(--show-min-max, block);
+    font: var(--min-max-font);
+    position: absolute;
+    bottom: var(--flip-y, -2.5ch);
+    top: calc(-2.5ch * var(--flip-y));
+    opacity: Clamp(0, var(--at-edge), var(--min-max-opacity));
+    transform: translateX(calc(var(--min-max-x-offset) * var(--before, -1) * -1)) scale(var(--at-edge));
+    pointer-events: none;
+  }
+
+  &::before {
+    --before: 1;
+    --at-edge: var(--thumb-close-to-min);
+    counter-reset: x var(--min);
+    left: var(--offset);
+  }
+
+  &::after {
+    --at-edge: var(--thumb-close-to-max);
+    counter-reset: x var(--max);
+    right: var(--offset);
+  }
+
+  &__values {
     position: relative;
-    z-index: 1;
-  
-    &[data-ticks-position="top"] {
-      --flip-y: 1;
-    }
-  
-    // mix/max texts
-    &::before,
+    top: 50%;
+    line-height: 0;
+    text-align: justify;
+    width: 100%;
+    pointer-events: none;
+    margin: 0 auto;
+    z-index: 5;
+
+    // trick so "justify" will work
     &::after {
-      --offset: calc(var(--thumb-size) / 2);
-      content: counter(x);
-      display: var(--show-min-max, block);
-      font: var(--min-max-font);
-      position: absolute;
-      bottom: var(--flip-y, -2.5ch);
-      top: calc(-2.5ch * var(--flip-y));
-      opacity: Clamp(0, var(--at-edge), var(--min-max-opacity));
-      transform: translateX(
-          calc(var(--min-max-x-offset) * var(--before, -1) * -1)
-        )
-        scale(var(--at-edge));
-      pointer-events: none;
+      content: "";
+      width: 100%;
+      display: inline-block;
+      height: 0;
+      background: red;
     }
-  
+  }
+
+  &__progress {
+    --start-end: calc(var(--thumb-size) / 2);
+    --clip-end: calc(100% - (var(--cb)) * 1%);
+    --clip-start: calc(var(--ca) * 1%);
+    --clip: inset(-20px var(--clip-end) -20px var(--clip-start));
+    position: absolute;
+    left: var(--start-end);
+    right: var(--start-end);
+    top: calc(var(--ticks-gap) * var(--flip-y, 0) + var(--thumb-size) / 2 - var(--track-height) / 2);
+    //  transform: var(--flip-y, translateY(-50%) translateZ(0));
+    height: calc(var(--track-height));
+    background: var(--progress-background, #eee);
+    pointer-events: none;
+    z-index: -1;
+    border-radius: var(--progress-radius);
+
+    // fill area
     &::before {
-      --before: 1;
-      --at-edge: var(--thumb-close-to-min);
-      counter-reset: x var(--min);
-      left: var(--offset);
-    }
-  
-    &::after {
-      --at-edge: var(--thumb-close-to-max);
-      counter-reset: x var(--max);
-      right: var(--offset);
-    }
-  
-    &__values {
-      position: relative;
-      top: 50%;
-      line-height: 0;
-      text-align: justify;
-      width: 100%;
-      pointer-events: none;
-      margin: 0 auto;
-      z-index: 5;
-  
-      // trick so "justify" will work
-      &::after {
-        content: "";
-        width: 100%;
-        display: inline-block;
-        height: 0;
-        background: red;
-      }
-    }
-  
-    &__progress {
-      --start-end: calc(var(--thumb-size) / 2);
-      --clip-end: calc(100% - (var(--cb)) * 1%);
-      --clip-start: calc(var(--ca) * 1%);
-      --clip: inset(-20px var(--clip-end) -20px var(--clip-start));
+      content: "";
       position: absolute;
-      left: var(--start-end);
-      right: var(--start-end);
-      top: calc(
-        var(--ticks-gap) * var(--flip-y, 0) + var(--thumb-size) / 2 -
-          var(--track-height) / 2
-      );
-      //  transform: var(--flip-y, translateY(-50%) translateZ(0));
-      height: calc(var(--track-height));
-      background: var(--progress-background, #eee);
-      pointer-events: none;
-      z-index: -1;
-      border-radius: var(--progress-radius);
-  
-      // fill area
-      &::before {
-        content: "";
-        position: absolute;
-        // left: Clamp(0%, calc(var(--ca) * 1%), 100%); // confine to 0 or above
-        // width: Min(100%, calc((var(--cb) - var(--ca)) * 1%)); // confine to maximum 100%
-        left: 0;
-        right: 0;
-        clip-path: var(--clip);
-        top: 0;
-        bottom: 0;
-        background: var(--fill-color, black);
-        box-shadow: var(--progress-flll-shadow);
-        z-index: 1;
-        border-radius: inherit;
-      }
-  
-      // shadow-effect
-      &::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        box-shadow: var(--progress-shadow);
-        pointer-events: none;
-        border-radius: inherit;
-      }
-    }
-  
-    & > input {
-      -webkit-appearance: none;
-      width: 100%;
-      height: var(--thumb-size);
-      margin: 0;
-      position: absolute;
+      // left: Clamp(0%, calc(var(--ca) * 1%), 100%); // confine to 0 or above
+      // width: Min(100%, calc((var(--cb) - var(--ca)) * 1%)); // confine to maximum 100%
       left: 0;
-      top: calc(
-        50% - Max(var(--track-height), var(--thumb-size)) / 2 +
-          calc(var(--ticks-gap) / 2 * var(--flip-y, -1))
-      );
-      cursor: -webkit-grab;
-      cursor: grab;
-      outline: none;
-      background: none;
-  
-      &:not(:only-of-type) {
-        pointer-events: none;
+      right: 0;
+      clip-path: var(--clip);
+      top: 0;
+      bottom: 0;
+      background: var(--fill-color, black);
+      box-shadow: var(--progress-flll-shadow);
+      z-index: 1;
+      border-radius: inherit;
+    }
+
+    // shadow-effect
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-shadow: var(--progress-shadow);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+  }
+
+  &>input {
+    -webkit-appearance: none;
+    width: 100%;
+    height: var(--thumb-size);
+    margin: 0;
+    position: absolute;
+    left: 0;
+    top: calc(50% - Max(var(--track-height), var(--thumb-size)) / 2 + calc(var(--ticks-gap) / 2 * var(--flip-y, -1)));
+    cursor: -webkit-grab;
+    cursor: grab;
+    outline: none;
+    background: none;
+
+    &:not(:only-of-type) {
+      pointer-events: none;
+    }
+
+    &::-webkit-slider-thumb {
+      @include thumb;
+    }
+
+    &::-moz-range-thumb {
+      @include thumb;
+    }
+
+    &::-ms-thumb {
+      @include thumb;
+    }
+
+    &:hover {
+      --thumb-shadow: var(--thumb-shadow-hover);
+
+      &+output {
+        --value-background: var(--value-background-hover);
+        --y-offset: -5px;
+        color: var(--value-active-color);
+        box-shadow: 0 0 0 3px var(--value-background);
       }
-  
-      &::-webkit-slider-thumb {
-        @include thumb;
+    }
+
+    &:active {
+      --thumb-shadow: var(--thumb-shadow-active);
+      cursor: grabbing;
+      z-index: 2; // when sliding left thumb over the right or vice-versa, make sure the moved thumb is on top
+
+      +output {
+        transition: 0s;
       }
-      &::-moz-range-thumb {
-        @include thumb;
-      }
-      &::-ms-thumb {
-        @include thumb;
-      }
-  
-      &:hover {
-        --thumb-shadow: var(--thumb-shadow-hover);
-        & + output {
-          --value-background: var(--value-background-hover);
-          --y-offset: -5px;
-          color: var(--value-active-color);
-          box-shadow: 0 0 0 3px var(--value-background);
+    }
+
+    &:nth-of-type(1) {
+      --is-left-most: Clamp(0, (var(--value-a) - var(--value-b)) * 99999, 1);
+
+      &+output {
+        &:not(:only-of-type) {
+          --flip: calc(var(--thumbs-too-close) * -1);
         }
-      }
-  
-      &:active {
-        --thumb-shadow: var(--thumb-shadow-active);
-        cursor: grabbing;
-        z-index: 2; // when sliding left thumb over the right or vice-versa, make sure the moved thumb is on top
-        + output {
-          transition: 0s;
-        }
-      }
-  
-      &:nth-of-type(1) {
-        --is-left-most: Clamp(0, (var(--value-a) - var(--value-b)) * 99999, 1);
-        & + output {
-          &:not(:only-of-type) {
-            --flip: calc(var(--thumbs-too-close) * -1);
-          }
-  
-          --value: var(--value-a);
-          --x-offset: calc(var(--completed-a) * -1%);
-          &::after {
-            content: var(--prefix, "") var(--text-value-a) var(--suffix, "");
-          }
-        }
-      }
-  
-      &:nth-of-type(2) {
-        --is-left-most: Clamp(0, (var(--value-b) - var(--value-a)) * 99999, 1);
-        & + output {
-          --value: var(--value-b);
-        }
-      }
-  
-      // non-multiple range should not clip start of progress bar
-      &:only-of-type {
-        ~ .range-slider__progress {
-          --clip-start: 0;
-        }
-      }
-  
-      & + output {
-        --flip: -1;
-        --x-offset: calc(var(--completed-b) * -1%);
-        --pos: calc(
-          ((var(--value) - var(--min)) / (var(--max) - var(--min))) * 100%
-        );
-  
-        pointer-events: none;
-        position: absolute;
-        z-index: 5;
-        background: var(--value-background);
-        border-radius: 10px;
-        padding: 2px 4px;
-        left: var(--pos);
-        transform: translate(
-          var(--x-offset),
-          calc(
-            150% * var(--flip) - (var(--y-offset, 0px) + var(--value-offset-y)) *
-              var(--flip)
-          )
-        );
-        transition: all 0.12s ease-out, left 0s;
-  
+
+        --value: var(--value-a);
+        --x-offset: calc(var(--completed-a) * -1%);
+
         &::after {
-          content: var(--prefix, "") var(--text-value-b) var(--suffix, "");
-          font: var(--value-font);
+          content: var(--prefix, "") var(--text-value-a) var(--suffix, "");
         }
       }
     }
+
+    &:nth-of-type(2) {
+      --is-left-most: Clamp(0, (var(--value-b) - var(--value-a)) * 99999, 1);
+
+      &+output {
+        --value: var(--value-b);
+      }
+    }
+
+    // non-multiple range should not clip start of progress bar
+    &:only-of-type {
+      ~.range-slider__progress {
+        --clip-start: 0;
+      }
+    }
+
+    &+output {
+      --flip: -1;
+      --x-offset: calc(var(--completed-b) * -1%);
+      --pos: calc(((var(--value) - var(--min)) / (var(--max) - var(--min))) * 100%);
+
+      pointer-events: none;
+      position: absolute;
+      z-index: 5;
+      background: var(--value-background);
+      border-radius: 10px;
+      padding: 2px 4px;
+      left: var(--pos);
+      transform: translate(var(--x-offset),
+          calc(150% * var(--flip) - (var(--y-offset, 0px) + var(--value-offset-y)) * var(--flip)));
+      transition: all 0.12s ease-out, left 0s;
+
+      &::after {
+        content: var(--prefix, "") var(--text-value-b) var(--suffix, "");
+        font: var(--value-font);
+      }
+    }
   }
-  
-  .add-multiples-solutions > .range-slider,
-  label[dir="rtl"] .range-slider {
-    margin-top: 35px;
-    margin-bottom: 20px;
-    width: 85%;
-    min-width: 200px;
-  }
-  
+}
+
+.add-multiples-solutions>.range-slider,
+label[dir="rtl"] .range-slider {
+  margin-top: 35px;
+  margin-bottom: 20px;
+  width: 85%;
+  min-width: 200px;
+}
+
+/********************************* Checkbox *********************************/
+
+.check {
+  cursor: pointer;
+  position: relative;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(0, 0, 0);
+}
+
+.check:before {
+  content: "";
+  position: absolute;
+  top: -15.5px;
+  left: -15px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.check svg {
+  position: relative;
+  z-index: 1;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: #303030;
+  stroke-width: 1.5;
+  transform: translate3d(0, 0, 0);
+  transition: all 0.2s ease;
+}
+
+.check svg path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
+}
+
+.check svg polyline {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 66;
+}
+
+.check:hover:before {
+  opacity: 1;
+}
+
+.cbx:checked+.check svg {
+  stroke: #303030;
+}
+
+.cbx:checked+.check svg path {
+  stroke-dashoffset: 60;
+  transition: all 0.3s linear;
+}
+
+.cbx:checked+.check svg polyline {
+  stroke-dashoffset: 42;
+  transition: all 0.2s linear;
+  transition-delay: 0.15s;
+}
+
 
 /********************************* Div caractéristiques de la situation *********************************/
 
 .situationCaracteristics {
-    background-color: #fff;
-    color: #303030;
-    border-radius: 10px;
-    padding: 20px 45px;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    width: 35%;
-    margin: auto;
-    margin-top: 10px;
+  background-color: #fff;
+  color: #303030;
+  border-radius: 10px;
+  padding: 20px 45px;
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+  width: 35%;
+  margin: auto;
+  margin-top: 10px;
 }
 
 .input-nb-bb-restants {
-    width: 70%;
-    margin: auto;
+  width: 70%;
+  margin: auto;
 }
 
 .input-nb-bb-restants .styled-input-text {
-    border-bottom: 2px solid #303030;
-    color: #303030;
+  border-bottom: 2px solid #303030;
+  color: #303030;
 }
 
 .input-nb-bb-restants .styled-input-text:focus {
-    ~.styled-input-text-label {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-    }
+  ~.styled-input-text-label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+  }
 
-    padding-bottom: 6px;
-    border-width: 3px;
+  padding-bottom: 6px;
+  border-width: 3px;
 }
 
 h2 {
-    letter-spacing: 1px;
+  letter-spacing: 1px;
 }
 
 .middleh2 {
-    margin-top: 25px;
+  margin-top: 25px;
 }
 
 .lasth2 {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 /********************************* Waves *********************************/
 
 .waves {
-    position: relative;
-    width: 100%;
-    height: 15vh;
-    margin-bottom: -7px;
-    min-height: 100px;
-    max-height: 150px;
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  margin-bottom: -7px;
+  min-height: 100px;
+  max-height: 150px;
 }
 
 .content {
-    position: relative;
-    height: 20vh;
-    text-align: center;
-    background-color: white;
+  position: relative;
+  height: 20vh;
+  text-align: center;
+  background-color: white;
 }
 
 
 .parallax>use {
-    animation: move-forever 50s linear infinite;
-    -webkit-animation: move-forever 50s linear infinite;
+  animation: move-forever 50s linear infinite;
+  -webkit-animation: move-forever 50s linear infinite;
 }
 
 .parallax>use:nth-child(1) {
-    animation-delay: -4s;
-    animation-duration: 14s;
+  animation-delay: -4s;
+  animation-duration: 14s;
 }
 
 .parallax>use:nth-child(2) {
-    animation-delay: -6s;
-    animation-duration: 20s;
+  animation-delay: -6s;
+  animation-duration: 20s;
 }
 
 .parallax>use:nth-child(3) {
-    animation-delay: -8s;
-    animation-duration: 26s;
+  animation-delay: -8s;
+  animation-duration: 26s;
 }
 
 .parallax>use:nth-child(4) {
-    animation-delay: -10s;
-    animation-duration: 40s;
+  animation-delay: -10s;
+  animation-duration: 40s;
 }
 
 @keyframes move-forever {
-    0% {
-        transform: translate3d(-90px, 0, 0);
-    }
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
 
-    100% {
-        transform: translate3d(85px, 0, 0);
-    }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
 }
