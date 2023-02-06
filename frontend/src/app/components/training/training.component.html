@@ -94,7 +94,7 @@
                 <tbody>
                     <tr *ngFor="let row of currentSituation.situations">
                         <td *ngFor="let item of row"
-                            [style.background]="'radial-gradient(' + (item.action! | actionColor:currentSituation.actions) + ', black 200%)'">
+                            [style.background]="(item.action! | actionColor:currentSituation.actions)">
                             {{item.card}}</td>
                     </tr>
                 </tbody>

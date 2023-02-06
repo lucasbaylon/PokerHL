@@ -31,6 +31,7 @@ export class TrainingComponent implements OnInit {
     activeSituation!: ActiveSituation;
 
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
+    
     solutionColorList: string[] = ["rgb(216, 0, 0)", "rgb(0, 151, 0)", "rgb(19, 82, 255)", "rgb(140, 0, 255)", "rgb(255, 0, 212)", "rgb(255, 123, 0)", "rgb(0, 163, 228)"];
 
     constructor(
@@ -71,7 +72,6 @@ export class TrainingComponent implements OnInit {
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
-        console.log(this.currentSituation)
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
         let cards = this.generateCards(situationCase);
@@ -85,6 +85,7 @@ export class TrainingComponent implements OnInit {
             dealerMissingTokens: situation.dealerMissingTokens,
             opponentLevel: situation.opponentLevel
         }
+        console.log(this.activeSituation)
     }
 
     getRandomCase(array: any[][]): any {
