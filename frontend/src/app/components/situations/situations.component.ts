@@ -26,7 +26,7 @@ export class SituationsComponent implements OnInit {
 
     situation_obj!: Situation;
 
-    actionSelected: string = "action_0";
+    actionSelected: string = "unique_action_0";
 
     showOpponent2: boolean = true;
 
@@ -87,8 +87,7 @@ export class SituationsComponent implements OnInit {
         }
     }
 
-    addMultiplesAction() {
-        let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
+    showAddMultiplesAction() {
         document.getElementById("add-multiples-solutions")!.style.display = "block";
     }
     
