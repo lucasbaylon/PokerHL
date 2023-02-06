@@ -134,7 +134,7 @@
                     name="multipleSolution" id='multipleSolution' autocomplete="off" />
                 <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
             </div>
-            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed'); let i = index">
+            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                 <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"></div>
                     <input type="checkbox" class="cbx">
                     <label class="check">
