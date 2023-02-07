@@ -26,7 +26,7 @@
             <h2>Solutions</h2>
             <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                 <div class="solution-selector">
-                    <input type="input" class="textInput" value="{{action.display_name}}" [id]="action.id"
+                    <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
                     <div class="color-picker-square" [style]="'background: ' + action.color"
                         (click)="onColorAction(action.id)"></div>

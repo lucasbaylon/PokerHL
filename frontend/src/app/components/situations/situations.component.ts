@@ -176,11 +176,13 @@ export class SituationsComponent implements OnInit {
                     const flatArray = this.situation_obj.situations.flat();
                     const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
                     let empty_action_input: boolean = false;
+                    console.log(uniqueActions)
 
                     uniqueActions.forEach(action => {
-                        const number_str = action![action!.length - 1];
-                        console.log(number_str)
-                        if ((document.getElementById(`input_action_${number_str}`) as HTMLInputElement).value === "") {
+                        console.log(action)
+                        // const number_str = action![action!.length - 1];
+                        // console.log(number_str)
+                        if ((document.getElementById(`input_${action}`) as HTMLInputElement).value === "") {
                             empty_action_input = true;
                         }
                     });
@@ -215,6 +217,7 @@ export class SituationsComponent implements OnInit {
     onChangeActionName(action_name: string, e: any) {
         let actionList = this.situation_obj.actions.filter(item => item.id === action_name)[0];
         actionList.display_name = e.target.value;
+        console.log(this.situation_obj.actions)
     }
 
     onChangeNBPlayer(nb_player: number) {
@@ -278,6 +281,7 @@ export class SituationsComponent implements OnInit {
 
     onColorAction(action_id: string) {
         document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
+        //TODO Supprimmer l'event listener lorsque la div est fermée
         setTimeout(() => {
             document.addEventListener('click', (event) => {
                 if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
