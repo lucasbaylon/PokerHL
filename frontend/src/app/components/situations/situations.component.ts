@@ -130,8 +130,6 @@ export class SituationsComponent implements OnInit {
             });
         } else {
             let remove_file_obj = { remove_file: false, ex_name: "" };
-            console.log(this.situationName)
-            console.log(this.situation_obj._id)
             if (this.situation_obj._id) {
                 if (this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
                     remove_file_obj.remove_file = true;
@@ -270,6 +268,13 @@ export class SituationsComponent implements OnInit {
 
     onColorAction(action_id: string) {
         document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
+        setTimeout(() => {
+            document.addEventListener('click', (event) => {
+                if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
+                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('color-picker-div-closed');
+                }
+            });
+        }, 0);
     }
 
     onSelectColor(action_id: string, color: string) {
