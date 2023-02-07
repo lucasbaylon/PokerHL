@@ -6,6 +6,7 @@ import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/action';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
     selector: 'app-situations',
@@ -33,6 +34,15 @@ export class SituationsComponent implements OnInit {
     isSelectionActive: boolean = false;
 
     situation_objActionsRef: any;
+
+    mixedSolutionSliderMinValue: number = 50;
+
+    mixedSolutionSliderMaxValue: number = 100;
+
+    options: Options = {
+        floor: 0,
+        ceil: 100
+    };
 
     constructor(
         private router: Router,

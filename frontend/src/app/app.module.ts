@@ -10,6 +10,7 @@ import { SituationsComponent } from './components/situations/situations.componen
 import { TrainingComponent } from './components/training/training.component';
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ActionColorPipe } from './pipe/action-color.pipe';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -38,7 +39,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         HttpClientModule,
         AppRoutingModule,
         SweetAlert2Module,
-        SocketIoModule.forRoot(config)
+        SocketIoModule.forRoot(config),
+        NgxSliderModule
     ],
     providers: [],
     bootstrap: [AppComponent],
