@@ -527,7 +527,7 @@ input[type="radio"]:checked+.design::before {
   z-index: 2;
 }
 
-.add-multiples-solutions .div-input-text{
+.add-multiples-solutions .div-input-text {
   margin-bottom: 25px;
 }
 
@@ -541,7 +541,7 @@ input[type="radio"]:checked+.design::before {
   padding: 0px;
 }
 
-.add-multiples-solutions .solution-selector{
+.add-multiples-solutions .solution-selector {
   font-size: 1.3em;
   margin-bottom: 6px;
   display: grid;
@@ -652,6 +652,51 @@ input[type="radio"]:checked+.design::before {
   display: none;
 }
 
+//Slider
+::ng-deep {
+  .custom-slider .ngx-slider .ngx-slider-bar {
+    background: #cecece;
+    height: 3px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-selection {
+    background: red;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer {
+    background-color: #303030;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer:hover {
+    cursor: grab;
+  }
+  .custom-slider .ngx-slider .ngx-slider-pointer:active {
+    cursor:grabbing;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer:after {
+    color: #fff;
+    top: 6px;
+    left: 6px;
+  }
+
+  .custom-slider .ngx-slider-pointer.ngx-slider-active:after {
+    background-color: #303030 !important;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-floor {
+    margin-left: -6px !important;
+  }
+  
+  .custom-slider .ngx-slider .ngx-slider-ceil {
+    margin-left: 16px !important;
+  }
+
+}
 
 /********************************* Div caractéristiques de la situation *********************************/
 

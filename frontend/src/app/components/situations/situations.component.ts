@@ -41,7 +41,7 @@ export class SituationsComponent implements OnInit {
 
     options: Options = {
         floor: 0,
-        ceil: 100
+        ceil: 100,
     };
 
     constructor(
