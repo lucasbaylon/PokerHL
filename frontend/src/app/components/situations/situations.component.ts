@@ -39,6 +39,8 @@ export class SituationsComponent implements OnInit {
 
     mixedSolutionSliderMaxValue: number = 100;
 
+    listener: any;
+
     options: Options = {
         floor: 0,
         ceil: 100,
@@ -281,13 +283,15 @@ export class SituationsComponent implements OnInit {
 
     onColorAction(action_id: string) {
         document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
-        //TODO Supprimmer l'event listener lorsque la div est fermée
         setTimeout(() => {
-            document.addEventListener('click', (event) => {
+            this.listener = (event: any) => {
                 if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
                     document.getElementById(`color-picker-div_${action_id}`)?.classList.add('color-picker-div-closed');
+                    document.removeEventListener('click', this.listener);
+                    this.listener = null;
                 }
-            });
+            };
+            document.addEventListener('click', this.listener);
         }, 0);
     }
 
