@@ -35,9 +35,9 @@ export class SituationsComponent implements OnInit {
 
     situation_objActionsRef: any;
 
-    mixedSolutionSliderMinValue: number = 50;
+    mixedSolutionSliderMinValue: number = 30;
 
-    mixedSolutionSliderMaxValue: number = 100;
+    mixedSolutionSliderMaxValue: number = 70;
 
     listener: any;
 

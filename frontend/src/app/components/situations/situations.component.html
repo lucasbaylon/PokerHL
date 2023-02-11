@@ -2,7 +2,7 @@
     <ion-button class="backArrow" (click)="redirectTo('manage')">
         <ion-icon name="arrow-back-outline"></ion-icon>
     </ion-button>
-    <div class="inner-header">
+    <div class="inner-header animate__animated animate__fadeInDown">
         <h1 *ngIf="mode === 'new'">Enregistrer une nouvelle situation</h1>
         <h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
         <div class="div-input-text field">
@@ -11,7 +11,7 @@
             <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
         </div>
     </div>
-    <div class="case-definition">
+    <div class="case-definition animate__animated animate__fadeInDown">
         <table (mouseleave)="endSelection()">
             <tbody>
                 <tr *ngFor="let row of situation_obj.situations">
@@ -155,7 +155,7 @@
             <button class="fill addButton">Enregistrer</button>
         </div>
     </div>
-    <div class="situationCaracteristics">
+    <div class="situationCaracteristics animate__animated animate__fadeInDown">
         <h2>Combien de BB reste t-il au dealer ?</h2>
         <div class="div-input-text field input-nb-bb-restants">
             <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"

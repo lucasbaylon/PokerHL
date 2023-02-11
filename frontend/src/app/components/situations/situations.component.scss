@@ -6,7 +6,7 @@
 }
 
 .animate__animated {
-  animation-duration: 0.4s;
+  animation-duration: 1s;
 }
 
 ion-icon {
@@ -51,6 +51,7 @@ h1 {
   justify-content: center;
   width: 85%;
   margin: 60px auto;
+  animation-delay: 0.5s;
 }
 
 /********************************* Back Arrow *********************************/
@@ -66,6 +67,7 @@ h1 {
   -moz-transition: 0.25s linear;
   -ms-transition: 0.25s linear;
   -o-transition: 0.25s linear;
+  z-index: 1;
 }
 
 .backArrow:hover {
@@ -706,6 +708,7 @@ input[type="radio"]:checked+.design::before {
   width: 35%;
   margin: auto;
   margin-top: 10px;
+  animation-delay: 1s;
 }
 
 .input-nb-bb-restants {
