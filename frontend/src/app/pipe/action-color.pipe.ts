@@ -8,7 +8,10 @@ export class ActionColorPipe implements PipeTransform {
 
     transform(value: string, action_colors: Action[]): string {
         let item = action_colors.filter((item: any) => item.id === value);
-        return item[0]?.color!;
+        console.log(action_colors)
+        console.log(value)
+        return ""
+        // return item[0]?.color!;
     }
 
 }

@@ -28,8 +28,9 @@
                 <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
-                    <div class="color-picker-square" [style]="'background: ' + action.color"
+                    <div class="color-picker-square" [ngStyle]="{'background': background(action.color)}"
                         (click)="onColorAction(action.id)"></div>
+                         <!-- [style]="'background: linear-gradient(to left, #d80c05 0%, #d80c05 100%);'" -->
                     <label>
                         <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
                             (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
@@ -70,46 +71,9 @@
         </div>
         <div class="multiples-solutions-div">
             <h2>Solutions multiples</h2>
-            <!-- <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
-                class="table-row multiples-solutions"> -->
-            <div class="multiples-solutions">
+            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')" class="multiples-solutions">
                 <div class="multiples-solutions-name">
-                    <!-- {{action.display_name}} -->
-                    All In 55% + Call 45%
-                </div>
-                <div class="color-picker-square"></div>
-                <label>
-                    <input type="radio" name="radio_button">
-                    <span class="design"></span>
-                </label>
-                <ion-button>
-                    <ion-icon name="pencil-outline"></ion-icon>
-                </ion-button>
-                <ion-button>
-                    <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
-            </div>
-            <div class="multiples-solutions">
-                <div class="multiples-solutions-name">
-                    <!-- {{action.display_name}} -->
-                    All In 50% + Call 40% + Check 10%
-                </div>
-                <div class="color-picker-square"></div>
-                <label>
-                    <input type="radio" name="radio_button">
-                    <span class="design"></span>
-                </label>
-                <ion-button>
-                    <ion-icon name="pencil-outline"></ion-icon>
-                </ion-button>
-                <ion-button>
-                    <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
-            </div>
-            <div class="multiples-solutions">
-                <div class="multiples-solutions-name">
-                    <!-- {{action.display_name}} -->
-                    All In 55% + Call 45% fffffffff
+                    {{action.display_name}}
                 </div>
                 <div class="color-picker-square"></div>
                 <label>
@@ -136,7 +100,8 @@
                 <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
             </div>
             <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
-                <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"></div>
+                <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
+                        [style]="'background: ' + action.color"></div>
                     <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id">
                     <label [for]="'id_check_'+ action.id" class="check">
                         <svg width="18px" height="18px" viewBox="0 0 18 18">

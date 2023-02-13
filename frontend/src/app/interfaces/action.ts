@@ -5,5 +5,5 @@ export interface Action {
 
     display_name: string | undefined;
 
-    color?: string;
+    color?: {color: string, percent?: number}[];
 }
