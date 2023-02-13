@@ -49,7 +49,7 @@ export class SituationsComponent implements OnInit {
     constructor(
         private router: Router,
         private apiSituation: SituationService,
-        private apiCommon: CommonService,
+        public apiCommon: CommonService,
         private _Activatedroute: ActivatedRoute
     ) { }
 
@@ -297,13 +297,8 @@ export class SituationsComponent implements OnInit {
 
     onSelectColor(action_id: string, color: string) {
         let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0];
-        actionList.color = [{color: color, percent: 100}];
+        actionList.color = [{ color: color, percent: 100 }];
         document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
         this.situation_objActionsRef = this.situation_obj.actions.slice();
-    }
-
-    background(action_color: any) {
-        console.log(action_color)
-        return `linear-gradient(to left, ${action_color.map((d: any) => `${d.color} ${d.percent}`).join(', ')})`;
     }
 }

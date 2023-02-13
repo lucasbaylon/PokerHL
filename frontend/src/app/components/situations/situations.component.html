@@ -17,7 +17,7 @@
                 <tr *ngFor="let row of situation_obj.situations">
                     <td *ngFor="let item of row" (mousedown)="startSelection($event)"
                         (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
-                        [style.background]="(item.action! | actionColor:situation_objActionsRef)">
+                        [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : 'black'}">
                         {{item.card}} </td>
                 </tr>
             </tbody>
@@ -28,9 +28,8 @@
                 <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
-                    <div class="color-picker-square" [ngStyle]="{'background': background(action.color)}"
+                    <div class="color-picker-square" [ngStyle]="{'background': apiCommon.cellBackground(action.color)}"
                         (click)="onColorAction(action.id)"></div>
-                         <!-- [style]="'background: linear-gradient(to left, #d80c05 0%, #d80c05 100%);'" -->
                     <label>
                         <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
                             (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">

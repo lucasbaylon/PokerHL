@@ -18,7 +18,7 @@ export class CommonService {
                 id: "unique_action_0",
                 type: "unique",
                 display_name: "All In",
-                color: [{color: "#d80c05", percent: 100}]
+                color: [{ color: "#d80c05", percent: 100 }]
             },
             {
                 id: "unique_action_1",
@@ -64,4 +64,16 @@ export class CommonService {
     }
 
     constructor() { }
+
+    cellBackground(action_color: any) {
+        if (action_color) {
+            let total = 0;
+            let data = action_color.map((d: any) => {
+                total += d.percent;
+                return { color: d.color, startPercent: total - d.percent, endPercent: total };
+            });
+            return `linear-gradient(to right, ${data.map((d: any) => `${d.color} ${d.startPercent}%, ${d.color} ${d.endPercent}%`).join(', ')})`;
+        }
+        return '';
+    }
 }
