@@ -6,7 +6,7 @@
 }
 
 .animate__animated {
-    animation-duration: 0.4s;
+    animation-duration: 1s;
 }
 
 ion-icon {
@@ -51,6 +51,7 @@ h1 {
     justify-content: center;
     width: 85%;
     margin: 60px auto;
+    animation-delay: 0.5s;
 }
 
 /********************************* Back Arrow *********************************/
@@ -66,6 +67,7 @@ h1 {
     -moz-transition: 0.25s linear;
     -ms-transition: 0.25s linear;
     -o-transition: 0.25s linear;
+    z-index: 1;
 }
 
 .backArrow:hover {
@@ -466,7 +468,7 @@ input[type="radio"]:checked + .design::before {
     padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
     margin: auto;
-    min-width: 300px;
+    width: 500px;
 }
 
 .multiples-solutions-div label {
@@ -539,10 +541,9 @@ input[type="radio"]:checked + .design::before {
 
 .add-multiples-solutions .solution-selector {
     font-size: 1.3em;
-    margin-bottom: 6px;
     display: grid;
     grid-template-columns: 40% 20% 20%;
-    padding: 15px;
+    padding: 7px;
     align-items: center;
     justify-content: center;
     width: 50%;
@@ -586,20 +587,9 @@ input[type="radio"]:checked + .design::before {
     width: 18px;
     height: 18px;
     -webkit-tap-highlight-color: transparent;
-    transform: translate3d(0, 0, 0);
-    margin-top: 3px;
-}
-
-.check:before {
-    content: "";
-    position: absolute;
-    top: -15.5px;
-    left: -15px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    margin-top: 3.5px;
+    align-items: center;
+    justify-content: center;
 }
 
 .check svg {
@@ -648,7 +638,13 @@ input[type="radio"]:checked + .design::before {
 }
 
 //Slider
+
 ::ng-deep {
+    .ngx-slider {
+        margin-top: 50px !important;
+        margin-bottom: 20px !important;
+    }
+
     .custom-slider .ngx-slider .ngx-slider-bar {
         background: #cecece;
         height: 3px;
@@ -669,6 +665,7 @@ input[type="radio"]:checked + .design::before {
     .custom-slider .ngx-slider .ngx-slider-pointer:hover {
         cursor: grab;
     }
+
     .custom-slider .ngx-slider .ngx-slider-pointer:active {
         cursor: grabbing;
     }
@@ -690,6 +687,10 @@ input[type="radio"]:checked + .design::before {
     .custom-slider .ngx-slider .ngx-slider-ceil {
         margin-left: 16px !important;
     }
+
+    .custom-slider .ngx-slider .ngx-slider-ceil {
+        margin-left: 16px !important;
+    }
 }
 
 /********************************* Div caractéristiques de la situation *********************************/
@@ -703,6 +704,7 @@ input[type="radio"]:checked + .design::before {
     width: 35%;
     margin: auto;
     margin-top: 10px;
+    animation-delay: 1s;
 }
 
 .input-nb-bb-restants {
