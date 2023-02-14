@@ -216,10 +216,9 @@ export class SituationsComponent implements OnInit {
         this.actionSelected = e.target.value;
     }
 
-    onChangeActionName(action_name: string, e: any) {
-        let actionList = this.situation_obj.actions.filter(item => item.id === action_name)[0];
+    onChangeActionName(action_id: string, e: any) {
+        let actionList = this.situation_obj.actions.filter(item => item.id === action_id)[0];
         actionList.display_name = e.target.value;
-        console.log(this.situation_obj.actions)
     }
 
     onChangeNBPlayer(nb_player: number) {
@@ -297,7 +296,7 @@ export class SituationsComponent implements OnInit {
 
     onSelectColor(action_id: string, color: string) {
         let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0];
-        actionList.color = [{ color: color, percent: 100 }];
+        actionList.colorList = [{ color: color, percent: 100 }];
         document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
         this.situation_objActionsRef = this.situation_obj.actions.slice();
     }

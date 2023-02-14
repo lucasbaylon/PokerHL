@@ -11,7 +11,8 @@ export class ActionColorPipe implements PipeTransform {
 
     transform(value: string, action_colors: Action[]): string {
         let item = action_colors.filter((item: any) => item.id === value);
-        return this.apiCommon.cellBackground(item[0]?.color);
+        if (item.length === 1) return this.apiCommon.cellBackground(item[0], action_colors);
+        return "";
     }
 
 }

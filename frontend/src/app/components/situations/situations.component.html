@@ -28,7 +28,7 @@
                 <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
-                    <div class="color-picker-square" [ngStyle]="{'background': apiCommon.cellBackground(action.color)}"
+                    <div class="color-picker-square" [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"
                         (click)="onColorAction(action.id)"></div>
                     <label>
                         <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
@@ -74,9 +74,10 @@
                 <div class="multiples-solutions-name">
                     {{action.display_name}}
                 </div>
-                <div class="color-picker-square"></div>
+                <div class="color-picker-square" [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
                 <label>
-                    <input type="radio" name="radio_button">
+                    <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
+                        (click)="onChangeAction($event)">
                     <span class="design"></span>
                 </label>
                 <ion-button>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Situation } from '../interfaces/situation';
+import { Action } from '../interfaces/action';
 
 @Injectable({
     providedIn: 'root'
@@ -18,12 +19,13 @@ export class CommonService {
                 id: "unique_action_0",
                 type: "unique",
                 display_name: "All In",
-                color: [{ color: "#d80c05", percent: 100 }]
+                color: "#d80c05"
             },
             {
                 id: "unique_action_1",
                 type: "unique",
-                display_name: "Call"
+                display_name: "Call",
+                color: "#00aeff"
             },
             {
                 id: "unique_action_2",
@@ -34,7 +36,7 @@ export class CommonService {
                 id: "mixed_action_0",
                 type: "mixed",
                 display_name: "All In 55% + Call 45%",
-                color: [
+                colorList: [
                     {
                         color: "unique_action_0",
                         percent: 55
@@ -65,14 +67,19 @@ export class CommonService {
 
     constructor() { }
 
-    cellBackground(action_color: any) {
-        if (action_color) {
+    cellBackground(action: Action, actionSituations: Action[]) {
+        if (action.type === "unique") {
+            return `linear-gradient(to right, ${action.color} 0%, ${action.color} 100%)`;
+        } else if (action.type === "mixed") {
+            let gradient = "linear-gradient(to right";
             let total = 0;
-            let data = action_color.map((d: any) => {
+            action.colorList!.map((d: any) => {
+                let goodColor = actionSituations.filter(action => action.id === d.color)[0];
                 total += d.percent;
-                return { color: d.color, startPercent: total - d.percent, endPercent: total };
+                gradient += `, ${goodColor.color} ${total - d.percent}%, ${goodColor.color} ${total}%`
             });
-            return `linear-gradient(to right, ${data.map((d: any) => `${d.color} ${d.startPercent}%, ${d.color} ${d.endPercent}%`).join(', ')})`;
+            gradient += ")";
+            return gradient;
         }
         return '';
     }
