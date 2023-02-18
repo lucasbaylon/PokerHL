@@ -11,14 +11,18 @@
             <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
         </div>
     </div>
-    <div class="case-definition animate__animated animate__fadeInDown">
+    <div class="case-definition animate__animated animate__fadeIn">
         <table (mouseleave)="endSelection()">
             <tbody>
-                <tr *ngFor="let row of situation_obj.situations">
-                    <td *ngFor="let item of row" (mousedown)="startSelection($event)"
+                <tr *ngFor="let row of situation_obj.situations; let i = index" class="table-row animate__animated animate__fadeIn" [style.animation-delay]="0.5+i * 0.05+'s'">
+                    <td *ngFor="let item of row; let j = index" (mousedown)="startSelection($event)" 
                         (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
                         [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
                         {{item.card}} </td>
+                    <!-- <td *ngFor="let item of row; let j = index" (mousedown)="startSelection($event)" class="table-row animate__animated animate__fadeIn" [style.animation-delay]="0.5+i*j * 0.01+'s'"
+                        (mouseenter)="updateSelection($event)" (mouseup)="endSelection()"
+                        [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
+                        {{item.card}} </td> -->
                 </tr>
             </tbody>
         </table>
@@ -120,7 +124,7 @@
             <button class="fill addButton">Enregistrer</button>
         </div>
     </div>
-    <div class="situationCaracteristics animate__animated animate__fadeInDown">
+    <div class="situationCaracteristics animate__animated animate__fadeInUp">
         <h2>Combien de BB reste t-il au dealer ?</h2>
         <div class="div-input-text field input-nb-bb-restants">
             <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
@@ -150,7 +154,7 @@
                 (click)="onChangeOpponentLevel('shark')">Confirmé</button>
         </div>
     </div>
-    <button class="fill saveButton" (click)="saveSituation()">Enregistrer</button>
+    <button class="fill saveButton animate__animated animate__fadeInUp" (click)="saveSituation()">Enregistrer</button>
     <div>
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
