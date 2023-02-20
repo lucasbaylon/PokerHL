@@ -407,6 +407,7 @@ input[type="radio"]:checked+.design::before {
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.15);
     margin-left: 4px;
     z-index: 1;
+    animation-duration: 0.3s;
 }
 
 .color-picker-div-closed {
@@ -530,7 +531,7 @@ input[type="radio"]:checked+.design::before {
     padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
     z-index: 1;
-    animation-duration: 0.7s;
+    animation-duration: 0.5s;
 }
 
 .add-multiples-solutions h2{
