@@ -107,7 +107,7 @@
                         name="multipleSolution" id='multipleSolution' autocomplete="off" />
                     <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
                 </div>
-                <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
+                <!-- <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                     <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
                             [style]="'background: ' + action.color"></div>
                         <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id">
@@ -120,7 +120,12 @@
                             </svg>
                         </label>
                     </div>
-                </ng-container>
+                </ng-container> -->
+                <div style="display: flex;flex-direction: row;width: 120px;align-items: center;">
+                    <div class="color-picker-square" style="cursor: pointer;"></div>
+                    <div class="color-picker-square" style="cursor: pointer;"></div>
+                    <div class="color-picker-square" style="cursor: pointer;"></div>
+                </div>
                 <div *ngIf="simpleSlider" class="custom-slider">
                     <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"
                         (valueChange)="test1($event)"></ngx-slider>
