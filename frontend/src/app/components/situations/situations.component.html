@@ -30,7 +30,7 @@
         <div class="solutions">
             <h2>Solutions</h2>
             <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index" class="solution-selector animate__animated animate__fadeInDown">
-                <div class="solution-selector animate__animated animate__fadeInDown">
+                <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
                     <div class="color-picker-square"
@@ -76,7 +76,7 @@
         </div>
         <div class="multiples-solutions-div">
             <h2>Solutions multiples</h2>
-            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')" class="multiples-solutions animate__animated animate__fadeInDown">
+            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')" class="multiples-solutions">
                 <div class="multiples-solutions-name">
                     {{action.display_name}}
                 </div>
