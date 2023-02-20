@@ -35,9 +35,9 @@ export class SituationsComponent implements OnInit {
 
     situation_objActionsRef: any;
 
-    mixedSolutionSliderMinValue: number = 30;
+    mixedSolutionSliderMinValue: number = 50;
 
-    mixedSolutionSliderMaxValue: number = 70;
+    mixedSolutionSliderMaxValue: number = 100;
 
     listener: any;
 
@@ -45,6 +45,10 @@ export class SituationsComponent implements OnInit {
         floor: 0,
         ceil: 100
     };
+
+    simpleSlider: boolean = true;
+
+    multipleSlider: boolean = false;
 
     constructor(
         private router: Router,
@@ -69,6 +73,20 @@ export class SituationsComponent implements OnInit {
             this.changeDealer(this.situation_obj.dealer!);
             this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
         });
+    }
+
+    test() {
+        this.simpleSlider = !this.simpleSlider;
+        this.multipleSlider = !this.multipleSlider;
+    }
+
+    test1(e: any) {
+        console.log("value")
+        console.log(e)
+    }
+
+    test2(e: any) {
+        console.log(e)
     }
 
     ngOnDestroy() {
@@ -100,6 +118,7 @@ export class SituationsComponent implements OnInit {
                 document.getElementById("add-solution-button")!.style.display = "none";
             }
         }
+        console.log(this.situation_obj.actions.filter(action => action.type === "unique"))
     }
 
     showAddMultiplesAction() {
@@ -296,7 +315,7 @@ export class SituationsComponent implements OnInit {
 
     onSelectColor(action_id: string, color: string) {
         let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0];
-        actionList.colorList = [{ color: color, percent: 100 }];
+        actionList.color = color;
         document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
         this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
