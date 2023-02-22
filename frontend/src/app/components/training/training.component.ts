@@ -151,11 +151,11 @@ export class TrainingComponent implements OnInit {
             this.countResult = true;
             Swal.fire({
                 position: 'top-end',
+                toast: true,
                 icon: 'success',
-                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-5px; font-size:1.5em;">Bonne réponse !</h1>',
-                width: 450,
+                html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Bonne réponse !</h2>',
                 showConfirmButton: false,
-                backdrop: false,
+                width:'301px',
                 timer: 2500
             });
             this.generateSituation();

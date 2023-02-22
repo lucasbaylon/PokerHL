@@ -29,8 +29,8 @@
         </table>
         <div class="solutions">
             <h2>Solutions</h2>
-            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
-                <div class="solution-selector animate__animated animate__zoomIn">
+            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index" class="solution-selector animate__animated animate__fadeInDown">
+                <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
                     <div class="color-picker-square"
@@ -42,14 +42,14 @@
                         <span class="design"></span>
                     </label>
                 </div>
-                <div class="color-picker-div color-picker-div-closed" [id]="'color-picker-div_' + action.id">
+                <div class="color-picker-div color-picker-div-closed animate__animated animate__zoomIn" [id]="'color-picker-div_' + action.id">
                     <div class="colors">
                         <div class="color-picker-square" style="background: #d80c05"
                             (click)="onSelectColor(action.id, '#d80c05')"></div>
                         <div class="color-picker-square" style="background: #ff9100"
                             (click)="onSelectColor(action.id, '#ff9100')"></div>
-                        <div class="color-picker-square" style="background: #ebe700"
-                            (click)="onSelectColor(action.id, '#ebe700')"></div>
+                        <div class="color-picker-square" style="background: #7a5a00"
+                            (click)="onSelectColor(action.id, '#7a5a00')"></div>
                         <div class="color-picker-square" style="background: #3f7a89"
                             (click)="onSelectColor(action.id, '#3f7a89')"></div>
                         <div class="color-picker-square" style="background: #96c582"
