@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +19,8 @@ import { SituationListComponent } from './components/situation-list/situation-li
 import { ManageSituationComponent } from './components/manage-situation/manage-situation.component';
 import { DealerPipe } from './pipe/dealer.pipe';
 import { OpponentLevelPipe } from './pipe/opponent-level.pipe';
+import { MatMenuModule } from '@angular/material/menu';
+import { TestComponent } from './test/test.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -31,16 +34,19 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         SituationListComponent,
         ManageSituationComponent,
         DealerPipe,
-        OpponentLevelPipe
+        OpponentLevelPipe,
+        TestComponent
     ],
     imports: [
         FormsModule,
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
         SweetAlert2Module,
         SocketIoModule.forRoot(config),
-        NgxSliderModule
+        NgxSliderModule,
+        MatMenuModule
     ],
     providers: [],
     bootstrap: [AppComponent],

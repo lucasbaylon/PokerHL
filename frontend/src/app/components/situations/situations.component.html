@@ -122,7 +122,12 @@
                     </div>
                 </ng-container> -->
                 <div style="display: flex;flex-direction: row;width: 120px;align-items: center;">
-                    <div class="color-picker-square" style="cursor: pointer;"></div>
+                    <div class="color-picker-square" style="cursor: pointer;" [matMenuTriggerFor]="menu"></div>
+                    <mat-menu #menu>
+                        <div class="mat-menu-item" style="cursor: pointer;">Option 1</div>
+                        <div class="mat-menu-item" style="cursor: pointer;">Option 2</div>
+                        <div class="mat-menu-item" style="cursor: pointer;">Option 3</div>
+                    </mat-menu>
                     <div class="color-picker-square" style="cursor: pointer;"></div>
                     <div class="color-picker-square" style="cursor: pointer;"></div>
                 </div>
