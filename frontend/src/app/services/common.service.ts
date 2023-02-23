@@ -31,21 +31,6 @@ export class CommonService {
                 id: "unique_action_2",
                 type: "unique",
                 display_name: "Check"
-            },
-            {
-                id: "mixed_action_0",
-                type: "mixed",
-                display_name: "All In 55% + Call 45%",
-                colorList: [
-                    {
-                        color: "unique_action_0",
-                        percent: 55
-                    },
-                    {
-                        color: "unique_action_1",
-                        percent: 45
-                    }
-                ]
             }
         ],
         situations: [

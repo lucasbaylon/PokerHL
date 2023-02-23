@@ -21,9 +21,9 @@ export class SituationsComponent implements OnInit {
 
     situationSubscription!: Subscription;
 
-    situationName: string = ""
+    situationName: string = "";
 
-    multipleSolution: string = ""
+    multipleSolutionName: string = "";
 
     situation_obj!: Situation;
 
@@ -50,6 +50,12 @@ export class SituationsComponent implements OnInit {
 
     multipleSlider: boolean = false;
 
+    checkboxMultipleSolutionChecked: number = 0;
+
+    multipleSolutionCheckedList: string[] = [];
+
+    countMultipleSolution: number = 0;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -73,20 +79,6 @@ export class SituationsComponent implements OnInit {
             this.changeDealer(this.situation_obj.dealer!);
             this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
         });
-    }
-
-    test() {
-        this.simpleSlider = !this.simpleSlider;
-        this.multipleSlider = !this.multipleSlider;
-    }
-
-    test1(e: any) {
-        console.log("value")
-        console.log(e)
-    }
-
-    test2(e: any) {
-        console.log(e)
     }
 
     ngOnDestroy() {
@@ -125,9 +117,9 @@ export class SituationsComponent implements OnInit {
         document.getElementById("add-multiples-solutions")!.style.display = "block";
     }
 
-    closeMultiplesActionWindow() {
-        document.getElementById("add-multiples-solutions")!.style.display = "none";
-    }
+    // closeMultiplesActionWindow() {
+    //     document.getElementById("add-multiples-solutions")!.style.display = "none";
+    // }
 
     startSelection(event: any) {
         this.isSelectionActive = true;
@@ -220,7 +212,7 @@ export class SituationsComponent implements OnInit {
                             icon: 'success',
                             html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
                             showConfirmButton: false,
-                            width:'362px',
+                            width: '362px',
                             timer: 2500
                         });
                         this.router.navigate(['manage']);
@@ -232,6 +224,8 @@ export class SituationsComponent implements OnInit {
 
     onChangeAction(e: any) {
         this.actionSelected = e.target.value;
+        console.log(this.actionSelected)
+        console.log(this.situation_objActionsRef)
     }
 
     onChangeActionName(action_id: string, e: any) {
@@ -317,5 +311,88 @@ export class SituationsComponent implements OnInit {
         actionList.color = color;
         document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
         this.situation_objActionsRef = this.situation_obj.actions.slice();
+    }
+
+    onCheckChange(e: any) {
+        let checkbox_id = e.target.id;
+        if (e.target.checked) {
+            if (this.checkboxMultipleSolutionChecked < 3) {
+                this.checkboxMultipleSolutionChecked++;
+                this.multipleSolutionCheckedList.push(checkbox_id.replace("id_check_", ""));
+            } else {
+                e.target.checked = false;
+            }
+        } else {
+            this.checkboxMultipleSolutionChecked--;
+            const index: number = this.multipleSolutionCheckedList.indexOf(checkbox_id.replace("id_check_", ""));
+            if (index !== -1) {
+                this.multipleSolutionCheckedList.splice(index, 1);
+            }
+        }
+
+        if (this.checkboxMultipleSolutionChecked < 3) {
+            this.simpleSlider = true;
+            this.multipleSlider = false;
+        } else if (this.checkboxMultipleSolutionChecked === 3) {
+            this.simpleSlider = false;
+            this.multipleSlider = true;
+        }
+    }
+
+    addMultipleAction() {
+        this.multipleSolutionCheckedList.sort((a: string, b: string) => {
+            const numA = parseInt(a.slice(14));
+            const numB = parseInt(b.slice(14));
+
+            return numA - numB;
+        });
+        console.log(this.multipleSolutionCheckedList)
+        console.log(this.mixedSolutionSliderMinValue)
+        console.log(this.mixedSolutionSliderMaxValue)
+        //TODO ajouter une vérification en cas qu'il y ai qu'une case de coché
+        let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
+        let colorLst: {
+            color: string;
+            percent?: number | undefined;
+        }[] = [];
+        let nb = 0;
+        //TODO bug avec les pourcentages, ils dépassent 100
+        this.multipleSolutionCheckedList.map((action, index) => {
+            let percent = 0;
+            if (index === 0) percent = this.mixedSolutionSliderMinValue;
+            if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
+            if (index + 1 === this.multipleSolutionCheckedList.length) percent = 100 - nb;
+            nb = percent;
+            let obj = {
+                color: action,
+                percent: percent
+            }
+            colorLst.push(obj);
+        })
+        let new_obj = {
+            id: `mixed_action_${this.countMultipleSolution}`,
+            type: "mixed",
+            display_name: this.multipleSolutionName,
+            colorList: colorLst
+        }
+        this.countMultipleSolution++;
+        console.log(new_obj)
+        this.situation_obj.actions.push(new_obj);
+        if (actionList.length === 3) {
+            document.getElementById("add-multiple-solution-button")!.style.display = "none";
+        }
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
+        console.log(this.situation_objActionsRef)
+        this.resetMultipleSituation();
+    }
+
+    resetMultipleSituation() {
+        this.checkboxMultipleSolutionChecked = 0;
+        this.mixedSolutionSliderMinValue = 50;
+        this.mixedSolutionSliderMaxValue = 100;
+        this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = false);
+        this.multipleSolutionCheckedList = [];
+        this.multipleSolutionName = "";
+        document.getElementById("add-multiples-solutions")!.style.display = "none";
     }
 }

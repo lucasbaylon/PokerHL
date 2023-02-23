@@ -98,19 +98,19 @@
         </div>
         <div class="add-multiples-solutions-container">
             <div class="add-multiples-solutions animate__animated animate__fadeInDown" id="add-multiples-solutions">
-                <ion-button (click)="closeMultiplesActionWindow()">
+                <ion-button (click)="resetMultipleSituation()">
                     <ion-icon name="close-outline"></ion-icon>
                 </ion-button>
                 <h2>Ajout d'une solution multiple</h2>
                 <div class="div-input-text field input-name-multiples-solutions">
-                    <input [(ngModel)]="multipleSolution" type="text" class="styled-input-text" placeholder="Nom"
+                    <input [(ngModel)]="multipleSolutionName" type="text" class="styled-input-text" placeholder="Nom"
                         name="multipleSolution" id='multipleSolution' autocomplete="off" />
                     <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
                 </div>
-                <!-- <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
+                <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                     <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
                             [style]="'background: ' + action.color"></div>
-                        <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id">
+                        <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id" (change)="onCheckChange($event)">
                         <label [for]="'id_check_'+ action.id" class="check">
                             <svg width="18px" height="18px" viewBox="0 0 18 18">
                                 <path
@@ -120,27 +120,15 @@
                             </svg>
                         </label>
                     </div>
-                </ng-container> -->
-                <div style="display: flex;flex-direction: row;width: 120px;align-items: center;">
-                    <div class="color-picker-square" style="cursor: pointer;" [matMenuTriggerFor]="menu"></div>
-                    <mat-menu #menu>
-                        <div class="mat-menu-item" style="cursor: pointer;">Option 1</div>
-                        <div class="mat-menu-item" style="cursor: pointer;">Option 2</div>
-                        <div class="mat-menu-item" style="cursor: pointer;">Option 3</div>
-                    </mat-menu>
-                    <div class="color-picker-square" style="cursor: pointer;"></div>
-                    <div class="color-picker-square" style="cursor: pointer;"></div>
-                </div>
+                </ng-container>
                 <div *ngIf="simpleSlider" class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"
-                        (valueChange)="test1($event)"></ngx-slider>
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
                 </div>
                 <div *ngIf="multipleSlider" class="custom-slider">
                     <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                        [options]="options" (valueChange)="test1($event)"
-                        (highValueChange)="test2($event)"></ngx-slider>
+                        [options]="options"></ngx-slider>
                 </div>
-                <button class="fill addButton" (click)="test()">Enregistrer</button>
+                <button class="fill addButton" id="add-multiple-solution-button" (click)="addMultipleAction()">Enregistrer</button>
             </div>
         </div>
     </div>
