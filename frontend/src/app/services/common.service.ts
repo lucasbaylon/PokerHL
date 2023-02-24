@@ -30,7 +30,8 @@ export class CommonService {
             {
                 id: "unique_action_2",
                 type: "unique",
-                display_name: "Check"
+                display_name: "Check",
+                color: "#96c582"
             }
         ],
         situations: [

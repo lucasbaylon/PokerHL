@@ -346,24 +346,24 @@ export class SituationsComponent implements OnInit {
 
             return numA - numB;
         });
-        console.log(this.multipleSolutionCheckedList)
-        console.log(this.mixedSolutionSliderMinValue)
-        console.log(this.mixedSolutionSliderMaxValue)
         //TODO ajouter une vérification en cas qu'il y ai qu'une case de coché
         //TODO ajouter une vérification en cas qu'il y n'y ai pas de noms de solution multiple (peut être générer un nom automatiquement selon les % et les noms de solutions impliquées)
-        let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
         let colorLst: {
             color: string;
             percent?: number | undefined;
         }[] = [];
-        let nb = 0;
-        //TODO bug avec les pourcentages, ils dépassent 100
         this.multipleSolutionCheckedList.map((action, index) => {
             let percent = 0;
             if (index === 0) percent = this.mixedSolutionSliderMinValue;
             if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
-            if (index + 1 === this.multipleSolutionCheckedList.length) percent = 100 - nb;
-            nb = percent;
+            if (index + 1 === this.multipleSolutionCheckedList.length) {
+                if (this.mixedSolutionSliderMaxValue === 100) {
+                    percent = 100 - this.mixedSolutionSliderMinValue;
+                } else {
+                    percent = 100 - this.mixedSolutionSliderMaxValue;
+                }
+            }
+
             let obj = {
                 color: action,
                 percent: percent
@@ -377,10 +377,8 @@ export class SituationsComponent implements OnInit {
             colorList: colorLst
         }
         this.countMultipleSolution++;
-        console.log(new_obj)
         this.situation_obj.actions.push(new_obj);
         this.situation_objActionsRef = this.situation_obj.actions.slice();
-        console.log(this.situation_objActionsRef)
         this.resetMultipleSituation();
     }
 
@@ -392,5 +390,13 @@ export class SituationsComponent implements OnInit {
         this.multipleSolutionCheckedList = [];
         this.multipleSolutionName = "";
         document.getElementById("add-multiples-solutions")!.style.display = "none";
+    }
+
+    deleteMultipleSolution(action_id: string) {
+        const index = this.situation_obj.actions.findIndex(action => action.id === action_id);
+        if (index !== -1) {
+            this.situation_obj.actions.splice(index, 1);
+        }
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
 }
