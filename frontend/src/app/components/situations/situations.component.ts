@@ -350,6 +350,7 @@ export class SituationsComponent implements OnInit {
         console.log(this.mixedSolutionSliderMinValue)
         console.log(this.mixedSolutionSliderMaxValue)
         //TODO ajouter une vérification en cas qu'il y ai qu'une case de coché
+        //TODO ajouter une vérification en cas qu'il y n'y ai pas de noms de solution multiple (peut être générer un nom automatiquement selon les % et les noms de solutions impliquées)
         let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
         let colorLst: {
             color: string;
@@ -378,9 +379,6 @@ export class SituationsComponent implements OnInit {
         this.countMultipleSolution++;
         console.log(new_obj)
         this.situation_obj.actions.push(new_obj);
-        if (actionList.length === 3) {
-            document.getElementById("add-multiple-solution-button")!.style.display = "none";
-        }
         this.situation_objActionsRef = this.situation_obj.actions.slice();
         console.log(this.situation_objActionsRef)
         this.resetMultipleSituation();

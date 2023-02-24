@@ -89,6 +89,7 @@ h1 {
 }
 
 @keyframes bounce {
+
     0%,
     20%,
     50%,
@@ -112,7 +113,8 @@ $colors: (
     fill: #fff,
 );
 
-@each $button, $color in $colors {
+@each $button,
+$color in $colors {
     .#{$button} {
         --color: #{$color};
         --hover: #{adjust-hue($color, 45deg)};
@@ -207,7 +209,7 @@ button {
         color: transparent;
     }
 
-    &:placeholder-shown ~ .styled-input-text-label {
+    &:placeholder-shown~.styled-input-text-label {
         font-size: 1.3rem;
         cursor: text;
         top: 20px;
@@ -228,7 +230,7 @@ button {
 }
 
 .styled-input-text:focus {
-    ~ .styled-input-text-label {
+    ~.styled-input-text-label {
         position: absolute;
         top: 0;
         display: block;
@@ -242,6 +244,7 @@ button {
 
 /* reset input */
 .styled-input-text {
+
     &:required,
     &:invalid {
         box-shadow: none;
@@ -393,7 +396,7 @@ input[type="radio"] {
     transition: 0.3s;
 }
 
-input[type="radio"]:checked + .design::before {
+input[type="radio"]:checked+.design::before {
     opacity: 1;
     transform: scale(0.6);
 }
@@ -484,6 +487,29 @@ input[type="radio"]:checked + .design::before {
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
     margin: auto;
     width: 500px;
+
+}
+
+.multiples-solutions-container {
+    max-height: 328px;
+    overflow: auto;
+}
+
+.multiples-solutions-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.multiples-solutions-container::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -ms-border-radius: 50px;
+    -o-border-radius: 50px;
+    background: #9b9b9b;
+}
+
+.multiples-solutions-container::-webkit-scrollbar-thumb:hover {
+    background: #464646;
 }
 
 .multiples-solutions-div label {
@@ -590,7 +616,7 @@ input[type="radio"]:checked + .design::before {
 }
 
 .input-name-multiples-solutions .styled-input-text:focus {
-    ~ .styled-input-text-label {
+    ~.styled-input-text-label {
         position: absolute;
         top: 0;
         display: block;
@@ -642,16 +668,16 @@ input[type="radio"]:checked + .design::before {
     opacity: 1;
 }
 
-.cbx:checked + .check svg {
+.cbx:checked+.check svg {
     stroke: #303030;
 }
 
-.cbx:checked + .check svg path {
+.cbx:checked+.check svg path {
     stroke-dashoffset: 60;
     transition: all 0.3s linear;
 }
 
-.cbx:checked + .check svg polyline {
+.cbx:checked+.check svg polyline {
     stroke-dashoffset: 42;
     transition: all 0.2s linear;
     transition-delay: 0.15s;
@@ -742,7 +768,7 @@ input[type="radio"]:checked + .design::before {
 }
 
 .input-nb-bb-restants .styled-input-text:focus {
-    ~ .styled-input-text-label {
+    ~.styled-input-text-label {
         position: absolute;
         top: 0;
         display: block;
@@ -784,27 +810,27 @@ h2 {
     background-color: white;
 }
 
-.parallax > use {
+.parallax>use {
     animation: move-forever 50s linear infinite;
     -webkit-animation: move-forever 50s linear infinite;
 }
 
-.parallax > use:nth-child(1) {
+.parallax>use:nth-child(1) {
     animation-delay: -4s;
     animation-duration: 14s;
 }
 
-.parallax > use:nth-child(2) {
+.parallax>use:nth-child(2) {
     animation-delay: -6s;
     animation-duration: 20s;
 }
 
-.parallax > use:nth-child(3) {
+.parallax>use:nth-child(3) {
     animation-delay: -8s;
     animation-duration: 26s;
 }
 
-.parallax > use:nth-child(4) {
+.parallax>use:nth-child(4) {
     animation-delay: -10s;
     animation-duration: 40s;
 }

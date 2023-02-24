@@ -20,7 +20,6 @@ import { ManageSituationComponent } from './components/manage-situation/manage-s
 import { DealerPipe } from './pipe/dealer.pipe';
 import { OpponentLevelPipe } from './pipe/opponent-level.pipe';
 import { MatMenuModule } from '@angular/material/menu';
-import { TestComponent } from './test/test.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -34,8 +33,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         SituationListComponent,
         ManageSituationComponent,
         DealerPipe,
-        OpponentLevelPipe,
-        TestComponent
+        OpponentLevelPipe
     ],
     imports: [
         FormsModule,

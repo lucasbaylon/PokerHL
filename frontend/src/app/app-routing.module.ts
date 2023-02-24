@@ -6,7 +6,6 @@ import { SituationListComponent } from './components/situation-list/situation-li
 import { SituationsComponent } from './components/situations/situations.component';
 import { TrainingComponent } from './components/training/training.component';
 import { CheckSituationGuard } from './guards/check-situation.guard';
-import { TestComponent } from './test/test.component';
 
 const routes: Routes = [
     {
@@ -25,10 +24,6 @@ const routes: Routes = [
     {
         path: 'manage',
         component: ManageSituationComponent
-    },
-    {
-        path: 'test',
-        component: TestComponent
     },
     {
         path: 'list',

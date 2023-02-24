@@ -29,7 +29,8 @@
         </table>
         <div class="solutions">
             <h2>Solutions</h2>
-            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index" class="solution-selector animate__animated animate__fadeInDown">
+            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index"
+                class="solution-selector animate__animated animate__fadeInDown">
                 <div class="solution-selector">
                     <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                         (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
@@ -42,7 +43,8 @@
                         <span class="design"></span>
                     </label>
                 </div>
-                <div class="color-picker-div color-picker-div-closed animate__animated animate__zoomIn" [id]="'color-picker-div_' + action.id">
+                <div class="color-picker-div color-picker-div-closed animate__animated animate__zoomIn"
+                    [id]="'color-picker-div_' + action.id">
                     <div class="colors">
                         <div class="color-picker-square" style="background: #d80c05"
                             (click)="onSelectColor(action.id, '#d80c05')"></div>
@@ -76,23 +78,26 @@
         </div>
         <div class="multiples-solutions-div">
             <h2>Solutions multiples</h2>
-            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')" class="multiples-solutions">
-                <div class="multiples-solutions-name">
-                    {{action.display_name}}
+            <div class="multiples-solutions-container">
+                <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
+                    class="multiples-solutions">
+                    <div class="multiples-solutions-name">
+                        {{action.display_name}}
+                    </div>
+                    <div class="color-picker-square"
+                        [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
+                    <label>
+                        <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
+                            (click)="onChangeAction($event)">
+                        <span class="design"></span>
+                    </label>
+                    <ion-button>
+                        <ion-icon name="pencil-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button>
+                        <ion-icon name="trash-outline"></ion-icon>
+                    </ion-button>
                 </div>
-                <div class="color-picker-square"
-                    [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
-                <label>
-                    <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                        (click)="onChangeAction($event)">
-                    <span class="design"></span>
-                </label>
-                <ion-button>
-                    <ion-icon name="pencil-outline"></ion-icon>
-                </ion-button>
-                <ion-button>
-                    <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
             </div>
             <button class="fill addButton" (click)="showAddMultiplesAction()">Ajouter +</button>
         </div>
@@ -110,7 +115,8 @@
                 <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
                     <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
                             [style]="'background: ' + action.color"></div>
-                        <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id" (change)="onCheckChange($event)">
+                        <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id"
+                            (change)="onCheckChange($event)">
                         <label [for]="'id_check_'+ action.id" class="check">
                             <svg width="18px" height="18px" viewBox="0 0 18 18">
                                 <path
@@ -128,7 +134,8 @@
                     <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
                         [options]="options"></ngx-slider>
                 </div>
-                <button class="fill addButton" id="add-multiple-solution-button" (click)="addMultipleAction()">Enregistrer</button>
+                <button class="fill addButton" id="add-multiple-solution-button"
+                    (click)="addMultipleAction()">Enregistrer</button>
             </div>
         </div>
     </div>
