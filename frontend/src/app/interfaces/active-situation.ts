@@ -16,4 +16,6 @@ export interface ActiveSituation {
     dealerMissingTokens?: number;
 
     opponentLevel?: string;
+
+    randomizer: number;
 }

@@ -31,7 +31,7 @@ export class TrainingComponent implements OnInit {
     activeSituation!: ActiveSituation;
 
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
-    
+
     solutionColorList: string[] = ["rgb(216, 0, 0)", "rgb(0, 151, 0)", "rgb(19, 82, 255)", "rgb(140, 0, 255)", "rgb(255, 0, 212)", "rgb(255, 123, 0)", "rgb(0, 163, 228)"];
 
     constructor(
@@ -75,6 +75,7 @@ export class TrainingComponent implements OnInit {
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
         let cards = this.generateCards(situationCase);
+        let randomNumber = this.generateRandomNumber();
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
             dealer: situation.dealer,
@@ -83,7 +84,8 @@ export class TrainingComponent implements OnInit {
             actions: situation.actions,
             result: situationCase.action,
             dealerMissingTokens: situation.dealerMissingTokens,
-            opponentLevel: situation.opponentLevel
+            opponentLevel: situation.opponentLevel,
+            randomizer: randomNumber
         }
         console.log(this.activeSituation)
     }
@@ -155,7 +157,7 @@ export class TrainingComponent implements OnInit {
                 icon: 'success',
                 html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Bonne réponse !</h2>',
                 showConfirmButton: false,
-                width:'301px',
+                width: '301px',
                 timer: 2500
             });
             this.generateSituation();
@@ -175,6 +177,14 @@ export class TrainingComponent implements OnInit {
                 situationTable!.style.display = "none";
             });
         }
+    }
+
+    /**
+    * Génère un nombre entier aléatoire entre 0 et 100 inclus.
+    * @returns Le nombre entier aléatoire généré.
+    */
+    generateRandomNumber(): number {
+        return Math.floor(Math.random() * 101);
     }
 
 }
