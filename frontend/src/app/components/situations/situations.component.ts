@@ -102,10 +102,23 @@ export class SituationsComponent implements OnInit {
         });
     }
 
+    getRandomColor(): string {
+        let colorList = ["#d80c05", "#ff9100", "#7a5a00", "#3f7a89", "#96c582", "#303030", "#1c51ff", "#00aeff", "#8400ff", "#e284ff"];
+        const colorActionsSituation = this.situation_obj.actions.map(action => action.color);
+        
+        const filteredColorList = colorList.filter(color => !colorActionsSituation.includes(color));
+
+        const randomIndex = Math.floor(Math.random() * filteredColorList.length);
+
+        return filteredColorList[randomIndex];
+    }
+
     addUniqueAction() {
         let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
         if (actionList.length < 7) {
-            this.situation_obj.actions.push({ id: `unique_action_${actionList.length}`, type: "unique", display_name: undefined });
+            let color = this.getRandomColor();
+            this.situation_obj.actions.push({ id: `unique_action_${actionList.length}`, type: "unique", display_name: undefined, color: color });
+            this.situation_objActionsRef = this.situation_obj.actions.slice();
             if (actionList.length === 6) {
                 document.getElementById("add-solution-button")!.style.display = "none";
             }
