@@ -366,56 +366,69 @@ export class SituationsComponent implements OnInit {
         });
         //TODO ajouter une vérification en cas qu'il y ai qu'une case de coché
         //TODO ajouter une vérification en cas qu'il y n'y ai pas de noms de solution multiple (peut être générer un nom automatiquement selon les % et les noms de solutions impliquées)
-        let colorLst: {
-            color: string;
-            percent?: number | undefined;
-        }[] = [];
-        this.multipleSolutionCheckedList.map((action, index) => {
-            let percent = 0;
-            if (index === 0) percent = this.mixedSolutionSliderMinValue;
-            if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
-            if (index + 1 === this.multipleSolutionCheckedList.length) {
-                if (this.mixedSolutionSliderMaxValue === 100) {
-                    percent = 100 - this.mixedSolutionSliderMinValue;
-                } else {
-                    percent = 100 - this.mixedSolutionSliderMaxValue;
-                }
-            }
-
-            let obj = {
-                color: action,
-                percent: percent
-            }
-            colorLst.push(obj);
-        });
-        let new_obj = {
-            id: this.multipleSituationId ? this.multipleSituationId : `mixed_action_${this.countMultipleSolution}`,
-            type: "mixed",
-            display_name: this.multipleSolutionName,
-            colorList: colorLst
-        }
-        if (this.multipleSituationId) {
-            // replace action
-            const indexToReplace = this.situation_obj.actions.findIndex(action => action.id === this.multipleSituationId);
-            if (indexToReplace !== -1) {
-                this.situation_obj.actions = [
-                    ...this.situation_obj.actions.slice(0, indexToReplace),
-                    new_obj,
-                    ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
-                ];
-            }
+        if (this.multipleSolutionName === "") {
+            Swal.fire({
+                icon: 'error',
+                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom à la solution multiple.</p>',
+                confirmButtonColor: '#d74c4c',
+                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+            });
         } else {
-            this.countMultipleSolution++;
-            this.situation_obj.actions.push(new_obj);
+            if (this.checkboxMultipleSolutionChecked < 2) {
+                Swal.fire({
+                    icon: 'error',
+                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de cocher au moins deux cases.</p>',
+                    confirmButtonColor: '#d74c4c',
+                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                });
+            } else {
+                let colorLst: {
+                    color: string;
+                    percent?: number | undefined;
+                }[] = [];
+                this.multipleSolutionCheckedList.map((action, index) => {
+                    let percent = 0;
+                    if (index === 0) percent = this.mixedSolutionSliderMinValue;
+                    if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
+                    if (index + 1 === this.multipleSolutionCheckedList.length) {
+                        if (this.mixedSolutionSliderMaxValue === 100) {
+                            percent = 100 - this.mixedSolutionSliderMinValue;
+                        } else {
+                            percent = 100 - this.mixedSolutionSliderMaxValue;
+                        }
+                    }
+
+                    let obj = {
+                        color: action,
+                        percent: percent
+                    }
+                    colorLst.push(obj);
+                });
+                let new_obj = {
+                    id: this.multipleSituationId ? this.multipleSituationId : `mixed_action_${this.countMultipleSolution}`,
+                    type: "mixed",
+                    display_name: this.multipleSolutionName,
+                    colorList: colorLst
+                }
+                if (this.multipleSituationId) {
+                    const indexToReplace = this.situation_obj.actions.findIndex(action => action.id === this.multipleSituationId);
+                    if (indexToReplace !== -1) {
+                        this.situation_obj.actions = [
+                            ...this.situation_obj.actions.slice(0, indexToReplace),
+                            new_obj,
+                            ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
+                        ];
+                        (document.getElementById(`radio_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
+                    }
+                } else {
+                    this.countMultipleSolution++;
+                    this.situation_obj.actions.push(new_obj);
+                }
+                this.situation_objActionsRef = this.situation_obj.actions.slice();
+                console.log(this.situation_objActionsRef)
+                this.resetMultipleSituation();
+            }
         }
-        this.situation_objActionsRef = this.situation_obj.actions.slice();
-        console.log(this.situation_objActionsRef)
-        let mixed_actions = this.situation_obj.actions.filter(action => action.type === "mixed")
-        mixed_actions.map(action => {
-            let input = document.getElementById(`radio_${action.id}`) as HTMLInputElement;
-            if (input && input.checked) input.checked === true;
-        });
-        this.resetMultipleSituation();
     }
 
     resetMultipleSituation() {
@@ -433,7 +446,6 @@ export class SituationsComponent implements OnInit {
 
     editMultipleSolution(action_id: string) {
         let action: Action = this.situation_objActionsRef.filter((action: Action) => action.id === action_id)[0];
-        console.log(action)
         this.multipleSituationId = action.id;
         this.multipleSolutionName = action.display_name!;
         this.multipleSolutionCheckedList = action.colorList!.map(action => action.color);
@@ -445,7 +457,6 @@ export class SituationsComponent implements OnInit {
             this.mixedSolutionSliderMinValue = action.colorList[0].percent!;
             this.mixedSolutionSliderMaxValue = action.colorList[0].percent! + action.colorList[1].percent!;
         }
-        console.log(this.multipleSolutionCheckedList)
 
         if (this.checkboxMultipleSolutionChecked < 3) {
             this.simpleSlider = true;
