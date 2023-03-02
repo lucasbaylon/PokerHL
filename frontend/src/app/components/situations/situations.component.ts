@@ -205,9 +205,11 @@ export class SituationsComponent implements OnInit {
                     });
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
+                    console.log(flatArray)
                     const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
-                    let empty_action_input: boolean = false;
                     console.log(uniqueActions)
+                    let empty_action_input: boolean = false;
+                    // console.log(uniqueActions)
 
                     uniqueActions.forEach(action => {
                         console.log(action)
@@ -364,8 +366,6 @@ export class SituationsComponent implements OnInit {
 
             return numA - numB;
         });
-        //TODO ajouter une vérification en cas qu'il y ai qu'une case de coché
-        //TODO ajouter une vérification en cas qu'il y n'y ai pas de noms de solution multiple (peut être générer un nom automatiquement selon les % et les noms de solutions impliquées)
         if (this.multipleSolutionName === "") {
             Swal.fire({
                 icon: 'error',
