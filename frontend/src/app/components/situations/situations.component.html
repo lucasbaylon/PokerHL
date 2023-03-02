@@ -91,7 +91,7 @@
                             (click)="onChangeAction($event)">
                         <span class="design"></span>
                     </label>
-                    <ion-button>
+                    <ion-button (click)="editMultipleSolution(action.id)">
                         <ion-icon name="pencil-outline"></ion-icon>
                     </ion-button>
                     <ion-button (click)="deleteMultipleSolution(action.id)">

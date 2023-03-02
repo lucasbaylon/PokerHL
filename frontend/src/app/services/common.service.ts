@@ -32,7 +32,37 @@ export class CommonService {
                 type: "unique",
                 display_name: "Check",
                 color: "#96c582"
-            }
+            },
+            // {
+            //     id: "mixed_action_0",
+            //     type: "mixed",
+            //     display_name: "test",
+            //     colorList: [
+            //         {
+            //             color: "unique_action_0",
+            //             percent: 50
+            //         },
+            //         {
+            //             color: "unique_action_1",
+            //             percent: 50
+            //         }
+            //     ]
+            // },
+            // {
+            //     id: "mixed_action_1",
+            //     type: "mixed",
+            //     display_name: "salut",
+            //     colorList: [
+            //         {
+            //             color: "unique_action_0",
+            //             percent: 20
+            //         },
+            //         {
+            //             color: "unique_action_1",
+            //             percent: 80
+            //         }
+            //     ]
+            // }
         ],
         situations: [
             [{ "card": "AA", "action": undefined }, { "card": "AKs", "action": undefined }, { "card": "AQs", "action": undefined }, { "card": "AJs", "action": undefined }, { "card": "ATs", "action": undefined }, { "card": "A9s", "action": undefined }, { "card": "A8s", "action": undefined }, { "card": "A7s", "action": undefined }, { "card": "A6s", "action": undefined }, { "card": "A5s", "action": undefined }, { "card": "A4s", "action": undefined }, { "card": "A3s", "action": undefined }, { "card": "A2s", "action": undefined }],

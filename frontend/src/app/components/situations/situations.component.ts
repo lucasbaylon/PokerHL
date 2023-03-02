@@ -56,6 +56,8 @@ export class SituationsComponent implements OnInit {
 
     countMultipleSolution: number = 0;
 
+    multipleSituationId?: string;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -78,6 +80,9 @@ export class SituationsComponent implements OnInit {
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
             this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
+
+            let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
+            this.countMultipleSolution = actionList.length;
         });
     }
 
@@ -105,7 +110,7 @@ export class SituationsComponent implements OnInit {
     getRandomColor(): string {
         let colorList = ["#d80c05", "#ff9100", "#7a5a00", "#3f7a89", "#96c582", "#303030", "#1c51ff", "#00aeff", "#8400ff", "#e284ff"];
         const colorActionsSituation = this.situation_obj.actions.map(action => action.color);
-        
+
         const filteredColorList = colorList.filter(color => !colorActionsSituation.includes(color));
 
         const randomIndex = Math.floor(Math.random() * filteredColorList.length);
@@ -382,27 +387,75 @@ export class SituationsComponent implements OnInit {
                 percent: percent
             }
             colorLst.push(obj);
-        })
+        });
         let new_obj = {
-            id: `mixed_action_${this.countMultipleSolution}`,
+            id: this.multipleSituationId ? this.multipleSituationId : `mixed_action_${this.countMultipleSolution}`,
             type: "mixed",
             display_name: this.multipleSolutionName,
             colorList: colorLst
         }
-        this.countMultipleSolution++;
-        this.situation_obj.actions.push(new_obj);
+        if (this.multipleSituationId) {
+            // replace action
+            const indexToReplace = this.situation_obj.actions.findIndex(action => action.id === this.multipleSituationId);
+            if (indexToReplace !== -1) {
+                this.situation_obj.actions = [
+                    ...this.situation_obj.actions.slice(0, indexToReplace),
+                    new_obj,
+                    ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
+                ];
+            }
+        } else {
+            this.countMultipleSolution++;
+            this.situation_obj.actions.push(new_obj);
+        }
         this.situation_objActionsRef = this.situation_obj.actions.slice();
+        console.log(this.situation_objActionsRef)
+        let mixed_actions = this.situation_obj.actions.filter(action => action.type === "mixed")
+        mixed_actions.map(action => {
+            let input = document.getElementById(`radio_${action.id}`) as HTMLInputElement;
+            if (input && input.checked) input.checked === true;
+        });
         this.resetMultipleSituation();
     }
 
     resetMultipleSituation() {
+        this.simpleSlider = true;
+        this.multipleSlider = false;
         this.checkboxMultipleSolutionChecked = 0;
         this.mixedSolutionSliderMinValue = 50;
         this.mixedSolutionSliderMaxValue = 100;
         this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = false);
         this.multipleSolutionCheckedList = [];
         this.multipleSolutionName = "";
+        this.multipleSituationId = undefined;
         document.getElementById("add-multiples-solutions")!.style.display = "none";
+    }
+
+    editMultipleSolution(action_id: string) {
+        let action: Action = this.situation_objActionsRef.filter((action: Action) => action.id === action_id)[0];
+        console.log(action)
+        this.multipleSituationId = action.id;
+        this.multipleSolutionName = action.display_name!;
+        this.multipleSolutionCheckedList = action.colorList!.map(action => action.color);
+        this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = true);
+        this.checkboxMultipleSolutionChecked = this.multipleSolutionCheckedList.length;
+        if (action.colorList?.length === 2) {
+            this.mixedSolutionSliderMinValue = action.colorList[0].percent!;
+        } else if (action.colorList?.length === 3) {
+            this.mixedSolutionSliderMinValue = action.colorList[0].percent!;
+            this.mixedSolutionSliderMaxValue = action.colorList[0].percent! + action.colorList[1].percent!;
+        }
+        console.log(this.multipleSolutionCheckedList)
+
+        if (this.checkboxMultipleSolutionChecked < 3) {
+            this.simpleSlider = true;
+            this.multipleSlider = false;
+        } else if (this.checkboxMultipleSolutionChecked === 3) {
+            this.simpleSlider = false;
+            this.multipleSlider = true;
+        }
+
+        document.getElementById("add-multiples-solutions")!.style.display = "block";
     }
 
     deleteMultipleSolution(action_id: string) {
