@@ -72,11 +72,12 @@ export class SituationsComponent implements OnInit {
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
+            this.situation_objActionsRef = this.situation_obj.actions.slice();
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
-            this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
+            this.onChangeOpponentLevel(this.situation_obj.opponentLevel!);
 
-            let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
+            let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
             this.countMultipleSolution = actionList.length;
         });
     }
@@ -119,25 +120,39 @@ export class SituationsComponent implements OnInit {
     }
 
     startSelection(event: any) {
-        this.isSelectionActive = true;
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        if (event.button === 0) {
+            this.isSelectionActive = true;
+            this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        } else if (event.button === 2) {
+            for (let i = cell_index; i < this.situation_obj.situations[row_index].length; i++) {
+                this.situation_obj.situations[row_index][i].action = this.actionSelected;
+            }
+        }
     }
 
     updateSelection(event: any) {
+        let cell_index = event.target.cellIndex;
+        let row_index = event.target.parentElement.rowIndex;
         if (!this.isSelectionActive) {
             return;
         }
 
         this.isSelectionActive = true;
-        let cell_index = event.target.cellIndex;
-        let row_index = event.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        if (event.button === 0) {
+            this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        } else if (event.button === 2) {
+            for (let i = cell_index; i < this.situation_obj.situations[row_index].length; i++) {
+                this.situation_obj.situations[row_index][i].action = this.actionSelected;
+            }
+        }
     }
 
-    endSelection() {
-        this.isSelectionActive = false;
+    endSelection(event: any) {
+        if (event.button === 0) {
+            this.isSelectionActive = false;
+        }
     }
 
     saveSituation() {
