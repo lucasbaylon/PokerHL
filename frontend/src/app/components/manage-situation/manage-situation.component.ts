@@ -56,7 +56,7 @@ export class ManageSituationComponent implements OnInit {
                     icon: 'success',
                     html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation supprimée !</h3>',
                     showConfirmButton: false,
-                    width:'352px',
+                    width:'359px',
                     timer: 2500
                 });
             }

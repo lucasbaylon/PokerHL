@@ -157,7 +157,7 @@ export class TrainingComponent implements OnInit {
                 icon: 'success',
                 html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Bonne réponse !</h2>',
                 showConfirmButton: false,
-                width: '301px',
+                width: '305px',
                 timer: 2500
             });
             this.generateSituation();
