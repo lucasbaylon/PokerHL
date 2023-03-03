@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Action } from 'src/app/interfaces/action';
 import { ActiveSituation } from 'src/app/interfaces/active-situation';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
@@ -21,6 +22,8 @@ export class TrainingComponent implements OnInit {
     TotalResponse: number = 0;
 
     SuccessRatePercentage: number = 0;
+
+    randomizer: number = 0;
 
     situationList: Situation[] = [];
 
@@ -60,6 +63,10 @@ export class TrainingComponent implements OnInit {
         this.apiSituation.getSituationsForTraining(situationList);
     }
 
+    filteredActionList(list: Action[], type: string) {
+        return list.filter(item => item.type === type);
+    }
+
     getRandomSituation(array: any[]): any {
         const randomIndex = Math.floor(Math.random() * array.length);
         return array[randomIndex];
@@ -75,19 +82,18 @@ export class TrainingComponent implements OnInit {
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
         let cards = this.generateCards(situationCase);
-        let randomNumber = this.generateRandomNumber();
+        this.randomizer = this.generateRandomNumber();
+        let result = this.getResultCase(situationCase.action);
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
             dealer: situation.dealer,
             left_card: cards.left_card,
             right_card: cards.right_card,
             actions: situation.actions,
-            result: situationCase.action,
+            result: result,
             dealerMissingTokens: situation.dealerMissingTokens,
-            opponentLevel: situation.opponentLevel,
-            randomizer: randomNumber
+            opponentLevel: situation.opponentLevel
         }
-        console.log(this.activeSituation)
     }
 
     getRandomCase(array: any[][]): any {
@@ -145,7 +151,28 @@ export class TrainingComponent implements OnInit {
         }
     }
 
-    getResultCase(result: string) {
+    getActionFromPercent(percent: number, actions: any): string | undefined {
+        let sum = 0;
+        for (const action of actions) {
+            sum += action.percent;
+            if (percent < sum) {
+                return action.color;
+            }
+        }
+        return undefined;
+    }
+
+    getResultCase(good_action: string): string {
+        let action = this.currentSituation.actions.filter(action => action.id === good_action)[0];
+        if (action.type === "unique") {
+            return action.id;
+        } else {
+            const action_id = this.getActionFromPercent(this.randomizer, action.colorList);
+            return action_id!;
+        }
+    }
+
+    checkResultCase(result: string) {
         if (this.countResult) this.TotalResponse += 1;
         if (result === this.activeSituation.result) {
             if (this.countResult) this.GoodResponse += 1;

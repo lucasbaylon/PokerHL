@@ -74,16 +74,17 @@
         </div>
         <div class="rightDiv">
             <br>
-            <div *ngFor="let action of activeSituation.actions">
+            <!-- <div *ngFor="let action of activeSituation.actions"> -->
+            <div *ngFor="let action of filteredActionList(activeSituation.actions, 'unique')">
                 <button *ngIf="action.display_name" class="fill"
-                    (click)="getResultCase(action.id)">{{action.display_name}}</button>
+                    (click)="checkResultCase(action.id)">{{action.display_name}}</button>
             </div>
         </div>
     </div>
 </div>
 
 <div class="info">Situation actuelle : {{currentSituationName}}</div>
-<div class="randomizer">Randomizer : {{activeSituation.randomizer}}%</div>
+<div class="randomizer">Randomizer : {{randomizer}}%</div>
 <div class="stats">Ratio W/L : {{GoodResponse}} / {{BadResponse}}<br>Taux de réussite : {{SuccessRatePercentage}}%
     <!-- <br>Nbre cas restants : ∞ -->
 </div>
