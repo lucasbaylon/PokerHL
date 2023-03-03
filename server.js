@@ -45,6 +45,26 @@ app.get("/api/check_situations_folder", function (req, res) {
     }
 });
 
+app.get("/api/check_situation_id/:new_situation_id", function (req, res) {
+    let new_situation_id = req.params.new_situation_id
+    let situations_files = fs.readdirSync(situations_dir);
+    let situation_exist = false;
+    if (situations_files.length > 0) {
+        situations_files.forEach(situation => {
+            const situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
+            let situation_obj = JSON.parse(situation_string);
+            if (new_situation_id === situation_obj._id) {
+                situation_exist = true;
+            }
+        });
+    }
+    if (situation_exist) {
+        res.status(200).json({ exist: true});
+    } else {
+        res.status(200).json({ exist: false});
+    }
+});
+
 function getSituations() {
     let situations_files = fs.readdirSync(situations_dir);
     let situationsList = [];

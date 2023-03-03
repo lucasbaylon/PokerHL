@@ -165,8 +165,14 @@ export class SituationsComponent implements OnInit {
             });
         } else {
             let remove_file_obj = { remove_file: false, ex_name: "" };
+            let situation_name_change = false;
+            let ex_id = "";
             if (this.situation_obj._id) {
+                console.log(this.situation_obj.name)
+                console.log(this.situation_obj._id)
                 if (this.situation_obj.name.replace(/ /g, "_") !== this.situation_obj._id) {
+                    situation_name_change = true;
+                    ex_id = this.situation_obj._id;
                     remove_file_obj.remove_file = true;
                     remove_file_obj.ex_name = this.situation_obj._id!;
                 }
@@ -214,21 +220,88 @@ export class SituationsComponent implements OnInit {
                             confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                         });
                     } else {
-                        this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
-                        Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'success',
-                            html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
-                            showConfirmButton: false,
-                            width: '370px',
-                            timer: 2500
-                        });
-                        this.router.navigate(['manage']);
+                        console.log(ex_id)
+                        if (this.mode === "new") {
+                            console.log(remove_file_obj)
+                            this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                                if (data.exist) {
+                                    Swal.fire({
+                                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Attention, ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d74c4c',
+                                        confirmButtonText: 'Oui',
+                                        cancelButtonText: 'Non'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            this.addSituation(remove_file_obj);
+                                        }
+                                    });
+                                } else {
+                                    this.addSituation(remove_file_obj);
+                                }
+                            });
+                        } else if (this.mode === "edit") {
+                            if (situation_name_change) {
+                                this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                                    if (data.exist) {
+                                        Swal.fire({
+                                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Attention, ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d74c4c',
+                                            confirmButtonText: 'Oui',
+                                            cancelButtonText: 'Non'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                this.addSituation(remove_file_obj);
+                                            } else {
+                                                this.situation_obj._id = ex_id;
+                                                this.situation_obj.name = ex_id.replace(/_/g, ' ');
+                                            }
+                                        });
+                                    } else {
+                                        this.addSituation(remove_file_obj);
+                                    }
+                                });
+                            } else {
+                                this.addSituation(remove_file_obj);
+                            }
+                        }
+                        // this.apiSituation.checkSituationID(this.situation_obj._id).subscribe(data => {
+                        //     console.log(data)
+                        // });
+                        // this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
+                        // Swal.fire({
+                        //     toast: true,
+                        //     position: 'top-end',
+                        //     icon: 'success',
+                        //     html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
+                        //     showConfirmButton: false,
+                        //     width: '370px',
+                        //     timer: 2500
+                        // });
+                        // this.router.navigate(['manage']);
                     }
                 }
             }
         }
+    }
+
+    addSituation(remove_file_obj: any) {
+        this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
+            showConfirmButton: false,
+            width: '370px',
+            timer: 2500
+        });
+        this.router.navigate(['manage']);
     }
 
     onChangeAction(e: any) {

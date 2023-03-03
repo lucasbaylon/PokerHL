@@ -18,6 +18,10 @@ export class SituationService {
         return this.http.get("/api/check_situations_folder");
     }
 
+    checkSituationID(id: string) {
+        return this.http.get(`/api/check_situation_id/${id}`);
+    }
+
     getSituations() {
         this.socket.emit('GetSituations');
     }
