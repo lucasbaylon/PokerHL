@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { Action } from 'src/app/interfaces/action';
 import { Options } from '@angular-slider/ngx-slider';
+import { cloneDeep } from 'lodash';
 
 @Component({
     selector: 'app-situations',
@@ -17,11 +18,7 @@ export class SituationsComponent implements OnInit {
 
     mode: string = "new";
 
-    dealerMissingTokens: number = 0;
-
     situationSubscription!: Subscription;
-
-    situationName: string = "";
 
     multipleSolutionName: string = "";
 
@@ -66,7 +63,7 @@ export class SituationsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.situation_obj = { ...this.apiCommon.empty_situation_obj };
+        this.situation_obj = cloneDeep(this.apiCommon.empty_situation_obj);
         this.situation_objActionsRef = this.situation_obj.actions.slice();
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
@@ -75,8 +72,6 @@ export class SituationsComponent implements OnInit {
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
-            this.situationName = this.situation_obj.name!;
-            this.dealerMissingTokens = this.situation_obj.dealerMissingTokens;
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
             this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
@@ -87,24 +82,11 @@ export class SituationsComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        // Désabonnez-vous du socket avant de détruire le component
         this.situationSubscription.unsubscribe();
     }
 
     redirectTo(page: string) {
         this.router.navigate([page]);
-    }
-
-    cancelSituation() {
-        this.situationName = "";
-        this.situation_obj = { ...this.apiCommon.empty_situation_obj };
-        (document.getElementById("jetonsRestants") as HTMLInputElement).value = ""
-        this.situation_obj.situations = this.situation_obj.situations.map((row: any) => {
-            row.map((situation: any) => {
-                return situation.action = undefined;
-            })
-            return row;
-        });
     }
 
     getRandomColor(): string {
@@ -129,15 +111,12 @@ export class SituationsComponent implements OnInit {
             }
         }
         console.log(this.situation_obj.actions.filter(action => action.type === "unique"))
+        console.log(this.situation_obj)
     }
 
     showAddMultiplesAction() {
         document.getElementById("add-multiples-solutions")!.style.display = "block";
     }
-
-    // closeMultiplesActionWindow() {
-    //     document.getElementById("add-multiples-solutions")!.style.display = "none";
-    // }
 
     startSelection(event: any) {
         this.isSelectionActive = true;
@@ -162,7 +141,7 @@ export class SituationsComponent implements OnInit {
     }
 
     saveSituation() {
-        if (this.situationName === "") {
+        if (!this.situation_obj.name) {
             Swal.fire({
                 icon: 'error',
                 html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
@@ -172,16 +151,14 @@ export class SituationsComponent implements OnInit {
         } else {
             let remove_file_obj = { remove_file: false, ex_name: "" };
             if (this.situation_obj._id) {
-                if (this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
+                if (this.situation_obj.name.replace(/ /g, "_") !== this.situation_obj._id) {
                     remove_file_obj.remove_file = true;
                     remove_file_obj.ex_name = this.situation_obj._id!;
                 }
             }
 
             let situation_empty = false;
-            this.situation_obj._id = this.situationName.replace(/ /g, "_");
-            this.situation_obj.name = this.situationName;
-            this.situation_obj.dealerMissingTokens = this.dealerMissingTokens;
+            this.situation_obj._id = this.situation_obj.name.replace(/ /g, "_");
             this.situation_obj.situations.map((row: any) => {
                 row.map((situation: any) => {
                     if (situation.action === undefined) situation_empty = true;
@@ -196,7 +173,7 @@ export class SituationsComponent implements OnInit {
                     confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 });
             } else {
-                if ((document.getElementById("jetonsRestants") as HTMLInputElement).value === "") {
+                if (!this.situation_obj.dealerMissingTokens) {
                     Swal.fire({
                         icon: 'error',
                         html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
@@ -205,15 +182,12 @@ export class SituationsComponent implements OnInit {
                     });
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
-                    console.log(flatArray)
                     const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
-                    console.log(uniqueActions)
                     let empty_action_input: boolean = false;
-                    // console.log(uniqueActions)
 
                     uniqueActions.forEach(action => {
-                        console.log(action)
-                        if ((document.getElementById(`input_${action}`) as HTMLInputElement).value === "") {
+                        let input = document.getElementById(`input_${action}`) as HTMLInputElement;
+                        if (input && input.value === "") {
                             empty_action_input = true;
                         }
                     });

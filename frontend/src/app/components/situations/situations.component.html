@@ -6,7 +6,7 @@
         <h1 *ngIf="mode === 'new'">Enregistrer une nouvelle situation</h1>
         <h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
         <div class="div-input-text field">
-            <input [(ngModel)]="situationName" type="text" class="styled-input-text" placeholder="Nom de la situation"
+            <input [(ngModel)]="situation_obj.name" type="text" class="styled-input-text" placeholder="Nom de la situation"
                 name="situationName" id='situationName' autocomplete="off" />
             <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
         </div>
@@ -143,7 +143,7 @@
         <h2>Combien de BB reste t-il au dealer ?</h2>
         <div class="div-input-text field input-nb-bb-restants">
             <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
-                placeholder="Nombre de jetons restants" [(ngModel)]="dealerMissingTokens" />
+                placeholder="Nombre de jetons restants" [(ngModel)]="situation_obj.dealerMissingTokens" />
             <label for="jetonsRestants" class="styled-input-text-label">Nombre de BB restantes</label>
         </div>
         <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
