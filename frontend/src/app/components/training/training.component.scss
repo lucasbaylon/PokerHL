@@ -344,8 +344,7 @@ button {
     padding-bottom: 15px;
     letter-spacing: 0.5px;
     border-radius: 30px;
-    width: 200px;
-    cursor: pointer;
+    width: 100%;
     -webkit-border-radius: 30px;
     -moz-border-radius: 30px;
     -ms-border-radius: 30px;
@@ -355,19 +354,16 @@ button {
 button {
     color: var(--color);
     transition: 0.25s;
-
-    &:hover {
-        border-color: var(--hover);
-        color: #fff;
-    }
 }
 
 .fill {
-    width: 100%;
+    cursor: pointer;
 }
 
 .fill:hover {
     box-shadow: inset 0 0 0 2em var(--hover);
+    border-color: var(--hover);
+    color: #fff;
 }
 
 /********************************* Dealer Coins *********************************/
