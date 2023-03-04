@@ -30,7 +30,7 @@ Copy-Item './server.js', './package.json', './node_modules', './run.bat' -Destin
 New-Item -ItemType Directory -Path (Join-Path $prod "\situations")
 
 # On supprime le zip
-Remove-Item -Path (Join-Path $dossierCourant "\PokerTraining.zip") -Force
+# Remove-Item -Path (Join-Path $dossierCourant "\PokerTraining.zip") -Force
 
 # Création du zip final
 Compress-Archive -Path $prod -DestinationPath (Join-Path $dossierCourant "\PokerTraining.zip")
