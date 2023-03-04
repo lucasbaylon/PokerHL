@@ -447,7 +447,26 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 99999999;
+    z-index: 1;
+    animation: zoom-in 0.2s ease-in-out;
+    transform-origin: top left;
+}
+
+@keyframes zoom-in {
+    0% {
+        scale: 0;
+        opacity: 0;
+    }
+
+    70% {
+        scale: 1.10;
+        opacity: 0.7;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
 }
 
 .error-window {
