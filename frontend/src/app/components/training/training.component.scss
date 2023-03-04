@@ -69,7 +69,7 @@ ion-icon {
     box-shadow: 0 0 30px 5px rgb(49, 49, 49);
 }
 
-h1 {
+.pokerTable h1 {
     opacity: 0.6;
     font-style: italic;
     font-size: 4em;
@@ -440,35 +440,41 @@ button {
     }
 }
 
-.lds-dual-ring {
-    display: inline-block;
-    width: 80px;
-    height: 80px;
+/********************************* Error Window *********************************/
+
+.error-window-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999999;
 }
 
-.lds-dual-ring:after {
-    content: " ";
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border-radius: 50%;
-    border: 6px solid #fff;
-    border-color: #fff transparent #fff transparent;
-    animation: lds-dual-ring 1.2s linear infinite;
+.error-window {
+    width: fit-content;
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    animation-duration: 0.5s;
 }
 
-@keyframes lds-dual-ring {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+.error-window ion-button {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    transform: translate(50%, -50%);
+    font-size: 2em;
+    cursor: pointer;
+    color: #303030;
+    padding: 0px;
 }
 
-/********************************* Tableau *********************************/
+.error-window h1 {
+    margin-bottom: 30px;
+}
 
 table {
     margin: auto;
@@ -478,7 +484,6 @@ table {
 }
 
 table tr td {
-    border: 1px solid transparent;
     border-radius: 4px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -498,11 +503,7 @@ table tbody td:hover {
     background-color: rgb(218, 218, 218);
 }
 
-/********************************* Color solutions *********************************/
-
 .color-solution-container {
-    display: flex;
-    flex-direction: column;
     margin-left: 20px;
 }
 
@@ -513,6 +514,8 @@ table tbody td:hover {
     display: flex;
     align-items: center;
     margin: 10px;
+    grid-template-columns: 80% 20%;
+    display: grid;
 }
 
 .color-picker-square {

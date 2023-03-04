@@ -193,16 +193,16 @@ export class TrainingComponent implements OnInit {
             if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
             this.countResult = false;
             let situationTable = document.getElementById("situationTable")
-            situationTable!.style.display = "block";
-            Swal.fire({
-                icon: 'error',
-                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Mauvaise réponse !</h1>${situationTable!.outerHTML}`,
-                confirmButtonColor: '#d74c4c',
-                width: 850,
-                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            }).then(result => {
-                situationTable!.style.display = "none";
-            });
+            situationTable!.style.display = "flex";
+            // Swal.fire({
+            //     icon: 'error',
+            //     html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Mauvaise réponse !</h1>${situationTable!.outerHTML}`,
+            //     confirmButtonColor: '#d74c4c',
+            //     width: 850,
+            //     confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+            // }).then(result => {
+            //     situationTable!.style.display = "none";
+            // });
         }
     }
 
@@ -212,6 +212,10 @@ export class TrainingComponent implements OnInit {
     */
     generateRandomNumber(): number {
         return Math.floor(Math.random() * 101);
+    }
+
+    closeErrorWindow(){
+        document.getElementById("error-window-container")!.style.display = "none";
     }
 
 }

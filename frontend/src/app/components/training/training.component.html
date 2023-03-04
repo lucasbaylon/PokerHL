@@ -83,33 +83,38 @@
             </div>
         </div>
     </div>
+    <div class="error-window-container" id="error-window-container">
+        <div *ngIf="currentSituation" class="error-window">
+            <ion-button (click)="closeErrorWindow()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+            <h1>Mauvaise réponse !</h1>
+            <div class="parent">
+                <div class="tableaux">
+                    <table>
+                        <tbody>
+                            <tr *ngFor="let row of currentSituation.situations">
+                                <td *ngFor="let item of row"
+                                    [style.background]="(item.action! | actionColor:currentSituation.actions)">
+                                    {{item.card}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="color-solution-container">
+                    <div *ngFor="let action of activeSituation.actions; let i = index">
+                        <div class="color-solution" *ngIf="action.display_name">{{action.display_name}}
+                            <div class="color-picker-square" [style]="'background-color: ' + solutionColorList[i]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="info">Situation actuelle : {{currentSituationName}}</div>
 <div class="randomizer">Randomizer : {{randomizer}}%</div>
 <div class="stats">Ratio W/L : {{GoodResponse}} / {{BadResponse}}<br>Taux de réussite : {{SuccessRatePercentage}}%
     <!-- <br>Nbre cas restants : ∞ -->
-</div>
-
-<div *ngIf="currentSituation" id="situationTable" style="display: none;">
-    <div class="parent">
-        <div class="tableaux">
-            <table>
-                <tbody>
-                    <tr *ngFor="let row of currentSituation.situations">
-                        <td *ngFor="let item of row"
-                            [style.background]="(item.action! | actionColor:currentSituation.actions)">
-                            {{item.card}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="color-solution-container">
-            <div *ngFor="let action of activeSituation.actions; let i = index">
-                <div class="color-solution" *ngIf="action.display_name">{{action.display_name}}
-                    <div class="color-picker-square" [style]="'background-color: ' + solutionColorList[i]"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

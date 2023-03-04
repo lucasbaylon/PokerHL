@@ -268,7 +268,6 @@ table {
 
 table tr td {
     background-color: #fff;
-    // border: 1px solid transparent;
     border: none;
     border-radius: 4px;
     padding-top: 10px;
@@ -450,32 +449,6 @@ input[type="radio"]:checked+.design::before {
 .colors .color-picker-square:nth-child(n + 6) {
     margin-bottom: 0;
 }
-
-// .hex-code {
-//     display: flex;
-//     align-items: center;
-// }
-
-// .g-input {
-//     border: 1px solid #e8ebed;
-//     height: 30px;
-//     border-radius: 5px;
-//     margin: auto;
-//     margin-top: 5px;
-// }
-
-// .hex-code .g-input input {
-//     border: none;
-//     width: 100%;
-//     margin-top: 7px;
-//     text-transform: uppercase;
-//     padding: 0 25px;
-//     outline: none;
-//     text-align: center;
-//     letter-spacing: 1.5px;
-//     color: #303030;
-//     box-sizing: border-box;
-// }
 
 /********************************* Div multiples solutions *********************************/
 
