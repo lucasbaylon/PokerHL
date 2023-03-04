@@ -190,8 +190,14 @@ export class TrainingComponent implements OnInit {
             if (this.countResult) this.BadResponse += 1;
             if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
             this.countResult = false;
-            let situationTable = document.getElementById("error-window-container")
+            let situationTable = document.getElementById("error-window-container");
             situationTable!.style.display = "block";
+            let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
+            uniqueActionList.map(action => {
+                let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
+                button!.classList.remove("fill");
+                button.disabled = true;
+            });
         }
     }
 
@@ -203,8 +209,14 @@ export class TrainingComponent implements OnInit {
         return Math.floor(Math.random() * 101);
     }
 
-    closeErrorWindow(){
+    closeErrorWindow() {
         document.getElementById("error-window-container")!.style.display = "none";
+        let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
+        uniqueActionList.map(action => {
+            let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
+                button!.classList.add("fill");
+                button.disabled = false;
+        })
     }
 
 }
