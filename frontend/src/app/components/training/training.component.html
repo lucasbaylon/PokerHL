@@ -100,7 +100,6 @@
                 <div class="color-solution-container">
                     <div *ngFor="let action of activeSituation.actions; let i = index">
                         <div class="color-solution" *ngIf="action.display_name">{{action.display_name}}
-                            <!-- <div class="color-picker-square" [style]="'background-color: ' + solutionColorList[i]"></div> -->
                             <div class="color-picker-square" [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
                         </div>
                     </div>
