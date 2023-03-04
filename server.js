@@ -83,16 +83,42 @@ io.on('connection', (socket) => {
         let file_name = situation._id;
 
         let json = JSON.stringify(situation);
-        fs.writeFile(`${situations_dir}/${file_name}.json`, json, 'utf8', (err) => {
-            if (err) return console.log(err);
-            // console.log('Situation ' + situation.name + ' créé !');
-        });
-
-        if (data.remove_file_obj.remove_file) {
-            // console.log("Suppression de l'ancien fichier...")
-            fs.unlinkSync(`${situations_dir}/${data.remove_file_obj.ex_name}.json`);
-        }
+        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
     });
+
+    socket.on('EditSituation', (data) => {
+        let situation = data.data;
+        let file_name = situation._id;
+
+        let json = JSON.stringify(situation);
+        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+    });
+
+    socket.on('EditSituationWithRemove', (data) => {
+        let situation = data.data;
+        let ex_id_to_remove = data.ex_id;
+        let file_name = situation._id;
+
+        let json = JSON.stringify(situation);
+        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+        fs.unlinkSync(`${situations_dir}/${ex_id_to_remove}.json`);
+    });
+
+    // socket.on('AddSituation', (data) => {
+    //     let situation = data.data;
+    //     let file_name = situation._id;
+
+    //     let json = JSON.stringify(situation);
+    //     fs.writeFile(`${situations_dir}/${file_name}.json`, json, 'utf8', (err) => {
+    //         if (err) return console.log(err);
+    //         // console.log('Situation ' + situation.name + ' créé !');
+    //     });
+
+    //     if (data.remove_file_obj.remove_file) {
+    //         // console.log("Suppression de l'ancien fichier...")
+    //         fs.unlinkSync(`${situations_dir}/${data.remove_file_obj.ex_name}.json`);
+    //     }
+    // });
 
     socket.on('DuplicateSituation', (id) => {
         let new_id = "";
