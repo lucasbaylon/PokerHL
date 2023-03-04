@@ -18,6 +18,10 @@ export class SituationService {
         return this.http.get("/api/check_situations_folder");
     }
 
+    checkSituationID(id: string) {
+        return this.http.get(`/api/check_situation_id/${id}`);
+    }
+
     getSituations() {
         this.socket.emit('GetSituations');
     }
@@ -30,8 +34,16 @@ export class SituationService {
         this.socket.emit('GetSituationsForTraining', situationsList);
     }
 
-    addSituation(data: Situation, remove_file_obj: any) {
-        this.socket.emit('AddSituation', {data: data, remove_file_obj: remove_file_obj});
+    addSituation(data: Situation) {
+        this.socket.emit('AddSituation', {data: data});
+    }
+
+    editSituation(data: Situation) {
+        this.socket.emit('EditSituation', {data: data});
+    }
+
+    editSituationWithRemove(data: Situation, ex_id: string) {
+        this.socket.emit('EditSituationWithRemove', {data: data, ex_id: ex_id});
     }
 
     removeSituation(id: string) {

@@ -2,6 +2,7 @@
 
 * {
     font-family: "Lato", sans-serif;
+    user-drag: none;
 }
 
 ion-icon {
@@ -106,6 +107,7 @@ p {
         display: flex;
         justify-content: space-between;
         margin-bottom: 25px;
+        animation-duration: 0.5s;
     }
 
     .table-header {

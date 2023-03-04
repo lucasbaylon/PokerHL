@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Action } from 'src/app/interfaces/action';
 import { ActiveSituation } from 'src/app/interfaces/active-situation';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
@@ -22,6 +23,8 @@ export class TrainingComponent implements OnInit {
 
     SuccessRatePercentage: number = 0;
 
+    randomizer: number = 0;
+
     situationList: Situation[] = [];
 
     currentSituation!: Situation;
@@ -31,7 +34,6 @@ export class TrainingComponent implements OnInit {
     activeSituation!: ActiveSituation;
 
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
-    solutionColorList: string[] = ["rgb(216, 0, 0)", "rgb(0, 151, 0)", "rgb(19, 82, 255)", "rgb(140, 0, 255)", "rgb(255, 0, 212)", "rgb(255, 123, 0)", "rgb(0, 163, 228)"];
 
     constructor(
         private apiSituation: SituationService,
@@ -59,6 +61,10 @@ export class TrainingComponent implements OnInit {
         this.apiSituation.getSituationsForTraining(situationList);
     }
 
+    filteredActionList(list: Action[], type: string) {
+        return list.filter(item => item.type === type);
+    }
+
     getRandomSituation(array: any[]): any {
         const randomIndex = Math.floor(Math.random() * array.length);
         return array[randomIndex];
@@ -71,17 +77,18 @@ export class TrainingComponent implements OnInit {
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
-        console.log(this.currentSituation)
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
         let cards = this.generateCards(situationCase);
+        this.randomizer = this.generateRandomNumber();
+        let result = this.getResultCase(situationCase.action);
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
             dealer: situation.dealer,
             left_card: cards.left_card,
             right_card: cards.right_card,
             actions: situation.actions,
-            result: situationCase.action,
+            result: result,
             dealerMissingTokens: situation.dealerMissingTokens,
             opponentLevel: situation.opponentLevel
         }
@@ -142,7 +149,28 @@ export class TrainingComponent implements OnInit {
         }
     }
 
-    getResultCase(result: string) {
+    getActionFromPercent(percent: number, actions: any): string | undefined {
+        let sum = 0;
+        for (const action of actions) {
+            sum += action.percent;
+            if (percent < sum) {
+                return action.color;
+            }
+        }
+        return undefined;
+    }
+
+    getResultCase(good_action: string): string {
+        let action = this.currentSituation.actions.filter(action => action.id === good_action)[0];
+        if (action.type === "unique") {
+            return action.id;
+        } else {
+            const action_id = this.getActionFromPercent(this.randomizer, action.colorList);
+            return action_id!;
+        }
+    }
+
+    checkResultCase(result: string) {
         if (this.countResult) this.TotalResponse += 1;
         if (result === this.activeSituation.result) {
             if (this.countResult) this.GoodResponse += 1;
@@ -150,11 +178,11 @@ export class TrainingComponent implements OnInit {
             this.countResult = true;
             Swal.fire({
                 position: 'top-end',
+                toast: true,
                 icon: 'success',
-                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-5px; font-size:1.5em;">Bonne réponse !</h1>',
-                width: 450,
+                html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Bonne réponse !</h2>',
                 showConfirmButton: false,
-                backdrop: false,
+                width: '305px',
                 timer: 2500
             });
             this.generateSituation();
@@ -162,18 +190,33 @@ export class TrainingComponent implements OnInit {
             if (this.countResult) this.BadResponse += 1;
             if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
             this.countResult = false;
-            let situationTable = document.getElementById("situationTable")
+            let situationTable = document.getElementById("error-window-container");
             situationTable!.style.display = "block";
-            Swal.fire({
-                icon: 'error',
-                html: `<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Mauvaise réponse !</h1>${situationTable!.outerHTML}`,
-                confirmButtonColor: '#d74c4c',
-                width: 800,
-                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            }).then(result => {
-                situationTable!.style.display = "none";
+            let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
+            uniqueActionList.map(action => {
+                let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
+                button!.classList.remove("fill");
+                button.disabled = true;
             });
         }
+    }
+
+    /**
+    * Génère un nombre entier aléatoire entre 0 et 100 inclus.
+    * @returns Le nombre entier aléatoire généré.
+    */
+    generateRandomNumber(): number {
+        return Math.floor(Math.random() * 101);
+    }
+
+    closeErrorWindow() {
+        document.getElementById("error-window-container")!.style.display = "none";
+        let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
+        uniqueActionList.map(action => {
+            let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
+                button!.classList.add("fill");
+                button.disabled = false;
+        })
     }
 
 }

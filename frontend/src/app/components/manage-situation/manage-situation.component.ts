@@ -51,12 +51,12 @@ export class ManageSituationComponent implements OnInit {
             if (result.isConfirmed) {
                 this.apiSituation.removeSituation(id);
                 Swal.fire({
+                    toast: true,
                     position: 'top-end',
                     icon: 'success',
-                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-5px; font-size:1.5em;">Situation supprimée !</h1>',
-                    width: 450,
+                    html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation supprimée !</h3>',
                     showConfirmButton: false,
-                    backdrop: false,
+                    width:'359px',
                     timer: 2500
                 });
             }

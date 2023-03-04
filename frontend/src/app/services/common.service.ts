@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Situation } from '../interfaces/situation';
+import { Action } from '../interfaces/action';
 
 @Injectable({
     providedIn: 'root'
@@ -15,33 +16,23 @@ export class CommonService {
         opponentLevel: "fish",
         actions: [
             {
-                name: "radio_action_0",
-                display_name: "All In"
+                id: "unique_action_0",
+                type: "unique",
+                display_name: "All In",
+                color: "#d80c05"
             },
             {
-                name: "radio_action_1",
-                display_name: "Call"
+                id: "unique_action_1",
+                type: "unique",
+                display_name: "Call",
+                color: "#00aeff"
             },
             {
-                name: "radio_action_2",
-                display_name: "Check"
-            },
-            {
-                name: "radio_action_3",
-                display_name: ""
-            },
-            {
-                name: "radio_action_4",
-                display_name: ""
-            },
-            {
-                name: "radio_action_5",
-                display_name: ""
-            },
-            {
-                name: "radio_action_6",
-                display_name: ""
-            },
+                id: "unique_action_2",
+                type: "unique",
+                display_name: "Check",
+                color: "#96c582"
+            }
         ],
         situations: [
             [{ "card": "AA", "action": undefined }, { "card": "AKs", "action": undefined }, { "card": "AQs", "action": undefined }, { "card": "AJs", "action": undefined }, { "card": "ATs", "action": undefined }, { "card": "A9s", "action": undefined }, { "card": "A8s", "action": undefined }, { "card": "A7s", "action": undefined }, { "card": "A6s", "action": undefined }, { "card": "A5s", "action": undefined }, { "card": "A4s", "action": undefined }, { "card": "A3s", "action": undefined }, { "card": "A2s", "action": undefined }],
@@ -61,4 +52,21 @@ export class CommonService {
     }
 
     constructor() { }
+
+    cellBackground(action: Action, actionSituations: Action[]) {
+        if (action.type === "unique") {
+            return `linear-gradient(to right, ${action.color} 0%, ${action.color} 100%)`;
+        } else if (action.type === "mixed") {
+            let gradient = "linear-gradient(to right";
+            let total = 0;
+            action.colorList!.map((d: any) => {
+                let goodColor = actionSituations.filter(action => action.id === d.color)[0];
+                total += d.percent;
+                gradient += `, ${goodColor.color} ${total - d.percent}%, ${goodColor.color} ${total}%`
+            });
+            gradient += ")";
+            return gradient;
+        }
+        return '';
+    }
 }

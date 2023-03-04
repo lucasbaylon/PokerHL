@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +11,7 @@ import { SituationsComponent } from './components/situations/situations.componen
 import { TrainingComponent } from './components/training/training.component';
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ActionColorPipe } from './pipe/action-color.pipe';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -17,6 +19,7 @@ import { SituationListComponent } from './components/situation-list/situation-li
 import { ManageSituationComponent } from './components/manage-situation/manage-situation.component';
 import { DealerPipe } from './pipe/dealer.pipe';
 import { OpponentLevelPipe } from './pipe/opponent-level.pipe';
+import { MatMenuModule } from '@angular/material/menu';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -35,10 +38,13 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     imports: [
         FormsModule,
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
         SweetAlert2Module,
-        SocketIoModule.forRoot(config)
+        SocketIoModule.forRoot(config),
+        NgxSliderModule,
+        MatMenuModule
     ],
     providers: [],
     bootstrap: [AppComponent],

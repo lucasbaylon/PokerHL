@@ -5,6 +5,9 @@ import { CommonService } from 'src/app/services/common.service';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
+import { Action } from 'src/app/interfaces/action';
+import { Options } from '@angular-slider/ngx-slider';
+import { cloneDeep } from 'lodash';
 
 @Component({
     selector: 'app-situations',
@@ -15,29 +18,55 @@ export class SituationsComponent implements OnInit {
 
     mode: string = "new";
 
-    dealerMissingTokens: number = 0;
-
     situationSubscription!: Subscription;
 
-    situationName: string = ""
+    multipleSolutionName: string = "";
 
     situation_obj!: Situation;
 
-    actionSelected: "radio_action_0" | "radio_action_1" | "radio_action_2" | "radio_action_3" | "radio_action_4" | "radio_action_5" | "radio_action_6" | undefined = "radio_action_0";
+    actionSelected: string = "unique_action_0";
 
     showOpponent2: boolean = true;
 
     isSelectionActive: boolean = false;
 
+    situation_objActionsRef: any;
+
+    mixedSolutionSliderMinValue: number = 50;
+
+    mixedSolutionSliderMaxValue: number = 100;
+
+    listener: any;
+
+    options: Options = {
+        floor: 0,
+        ceil: 100
+    };
+
+    simpleSlider: boolean = true;
+
+    multipleSlider: boolean = false;
+
+    checkboxMultipleSolutionChecked: number = 0;
+
+    multipleSolutionCheckedList: string[] = [];
+
+    countMultipleSolution: number = 0;
+
+    multipleSituationId?: string;
+
+    editSituationID?: string;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
-        private apiCommon: CommonService,
+        public apiCommon: CommonService,
         private _Activatedroute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        this.situation_obj = { ...this.apiCommon.empty_situation_obj };
+        this.situation_obj = cloneDeep(this.apiCommon.empty_situation_obj);
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
@@ -45,16 +74,18 @@ export class SituationsComponent implements OnInit {
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
-            this.situationName = this.situation_obj.name!;
-            this.dealerMissingTokens = this.situation_obj.dealerMissingTokens;
+            this.editSituationID = this.situation_obj._id;
+            this.situation_objActionsRef = this.situation_obj.actions.slice();
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
-            this.onChangeOpponentLevel(this.situation_obj.opponentLevel!)
+            this.onChangeOpponentLevel(this.situation_obj.opponentLevel!);
+
+            let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
+            this.countMultipleSolution = actionList.length;
         });
     }
 
     ngOnDestroy() {
-        // Désabonnez-vous du socket avant de détruire le component
         this.situationSubscription.unsubscribe();
     }
 
@@ -62,81 +93,99 @@ export class SituationsComponent implements OnInit {
         this.router.navigate([page]);
     }
 
-    cancelSituation() {
-        this.situationName = "";
-        this.situation_obj = { ...this.apiCommon.empty_situation_obj };
-        (document.getElementById("jetonsRestants") as HTMLInputElement).value = ""
-        this.situation_obj.situations = this.situation_obj.situations.map((row: any) => {
-            row.map((situation: any) => {
-                return situation.action = undefined;
-            })
-            return row;
-        });
+    getRandomColor(): string {
+        let colorList = ["#d80c05", "#ff9100", "#7a5a00", "#3f7a89", "#96c582", "#303030", "#1c51ff", "#00aeff", "#8400ff", "#e284ff"];
+        const colorActionsSituation = this.situation_obj.actions.map(action => action.color);
+
+        const filteredColorList = colorList.filter(color => !colorActionsSituation.includes(color));
+
+        const randomIndex = Math.floor(Math.random() * filteredColorList.length);
+
+        return filteredColorList[randomIndex];
+    }
+
+    addUniqueAction() {
+        let actionList = this.situation_obj.actions.filter(action => action.type === "unique");
+        if (actionList.length < 7) {
+            let color = this.getRandomColor();
+            this.situation_obj.actions.push({ id: `unique_action_${actionList.length}`, type: "unique", display_name: undefined, color: color });
+            this.situation_objActionsRef = this.situation_obj.actions.slice();
+            if (actionList.length === 6) {
+                document.getElementById("add-solution-button")!.style.display = "none";
+            }
+        }
+    }
+
+    showAddMultiplesAction() {
+        document.getElementById("add-multiples-solutions")!.style.display = "block";
     }
 
     startSelection(event: any) {
-        this.isSelectionActive = true;
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.situation_obj.situations[row_index][cell_index].action ? undefined : this.actionSelected;
+        if (event.button === 0) {
+            this.isSelectionActive = true;
+            this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        } else if (event.button === 2) {
+            for (let i = cell_index; i < this.situation_obj.situations[row_index].length; i++) {
+                this.situation_obj.situations[row_index][i].action = this.actionSelected;
+            }
+        }
     }
 
     updateSelection(event: any) {
+        let cell_index = event.target.cellIndex;
+        let row_index = event.target.parentElement.rowIndex;
         if (!this.isSelectionActive) {
             return;
         }
 
         this.isSelectionActive = true;
-        let cell_index = event.target.cellIndex;
-        let row_index = event.target.parentElement.rowIndex;
-        this.situation_obj.situations[row_index][cell_index].action = this.situation_obj.situations[row_index][cell_index].action ? undefined : this.actionSelected;
+        if (event.button === 0) {
+            this.situation_obj.situations[row_index][cell_index].action = this.actionSelected;
+        } else if (event.button === 2) {
+            for (let i = cell_index; i < this.situation_obj.situations[row_index].length; i++) {
+                this.situation_obj.situations[row_index][i].action = this.actionSelected;
+            }
+        }
     }
 
-    endSelection() {
-        this.isSelectionActive = false;
+    endSelection(event: any) {
+        if (event.button === 0) {
+            this.isSelectionActive = false;
+        }
     }
 
     saveSituation() {
-        if (this.situationName === "") {
+        // On check si il y a bien un nom à la situation
+        if (!this.situation_obj.name) {
             Swal.fire({
                 icon: 'error',
-                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation avant de l\'enregistrer.</p>',
+                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
                 confirmButtonColor: '#d74c4c',
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             });
         } else {
-            let remove_file_obj = { remove_file: false, ex_name: "" };
-            console.log(this.situationName)
-            console.log(this.situation_obj._id)
-            if (this.situation_obj._id) {
-                if (this.situationName.replace(/ /g, "_") !== this.situation_obj._id) {
-                    remove_file_obj.remove_file = true;
-                    remove_file_obj.ex_name = this.situation_obj._id!;
-                }
-            }
-
             let situation_empty = false;
-            this.situation_obj._id = this.situationName.replace(/ /g, "_");
-            this.situation_obj.name = this.situationName;
-            this.situation_obj.dealerMissingTokens = this.dealerMissingTokens;
             this.situation_obj.situations.map((row: any) => {
                 row.map((situation: any) => {
                     if (situation.action === undefined) situation_empty = true;
                 })
-            })
-
+            });
+            // On check si toutes les cases sont bien remplies
             if (situation_empty) {
                 Swal.fire({
                     icon: 'error',
-                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau avant d\'enregistrer.</p>',
+                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau.</p>',
                     confirmButtonColor: '#d74c4c',
                     confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 });
             } else {
-                if ((document.getElementById("jetonsRestants") as HTMLInputElement).value === "") {
+                // On check si il y a bien un nombre de jetons
+                if (!this.situation_obj.dealerMissingTokens) {
                     Swal.fire({
                         icon: 'error',
-                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez noter un nombre de BB restant pour les joueurs.</p>',
+                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
                         confirmButtonColor: '#d74c4c',
                         confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                     });
@@ -146,43 +195,118 @@ export class SituationsComponent implements OnInit {
                     let empty_action_input: boolean = false;
 
                     uniqueActions.forEach(action => {
-                        const number_str = action![action!.length - 1];
-                        console.log(number_str)
-                        if ((document.getElementById(`input_action_${number_str}`) as HTMLInputElement).value === "") {
+                        let input = document.getElementById(`input_${action}`) as HTMLInputElement;
+                        if (input && input.value === "") {
                             empty_action_input = true;
                         }
                     });
+                    // On check si toutes les situations simple ont bien un nom
                     if (empty_action_input) {
                         Swal.fire({
                             icon: 'error',
-                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom aux actions utilisé dans le tableau.</p>',
+                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom aux actions utilisées dans le tableau.</p>',
                             confirmButtonColor: '#d74c4c',
                             confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                         });
                     } else {
-                        this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            html: '<h2 style="font-family: \'Lato\', sans-serif;">Situation enregistrée !</h3>',
-                            showConfirmButton: false,
-                            backdrop: false,
-                            timer: 3000
-                        });
-                        this.router.navigate(['manage']);
+                        this.situation_obj._id = this.situation_obj.name.replace(/ /g, "_");
+                        if (this.mode === "new") {
+                            this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                                if (data.exist) {
+                                    Swal.fire({
+                                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d74c4c',
+                                        confirmButtonText: 'Oui',
+                                        cancelButtonText: 'Non'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            this.addSituation();
+                                        }
+                                    });
+                                } else {
+                                    this.addSituation();
+                                }
+                            });
+                        } else if (this.mode === "edit") {
+                            let situation_name_change = false;
+                            if (this.situation_obj._id !== this.editSituationID) {
+                                situation_name_change = true;
+                            }
+                            if (situation_name_change) {
+                                this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                                    if (data.exist) {
+                                        Swal.fire({
+                                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d74c4c',
+                                            confirmButtonText: 'Oui',
+                                            cancelButtonText: 'Non'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                this.editSituation(this.editSituationID);
+                                            } else {
+                                                this.situation_obj._id = this.editSituationID;
+                                                this.situation_obj.name = this.editSituationID!.replace(/_/g, ' ');
+                                            }
+                                        });
+                                    } else {
+                                        this.editSituation(this.editSituationID);
+                                    }
+                                });
+                            } else {
+                                this.editSituation();
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
+    addSituation() {
+        this.apiSituation.addSituation(this.situation_obj);
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
+            showConfirmButton: false,
+            width: '370px',
+            timer: 2500
+        });
+        this.router.navigate(['manage']);
+    }
+
+    editSituation(ex_id?: string) {
+        if (ex_id) {
+            this.apiSituation.editSituationWithRemove(this.situation_obj, ex_id);
+        } else {
+            this.apiSituation.editSituation(this.situation_obj);
+        }
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation modifiée !</h3>',
+            showConfirmButton: false,
+            width: '339px',
+            timer: 2500
+        });
+        this.router.navigate(['manage']);
+    }
+
     onChangeAction(e: any) {
         this.actionSelected = e.target.value;
     }
 
-    onChangeActionName(action_name: string, e: any) {
-        let test = this.situation_obj.actions.filter(item => item.name === action_name)[0];
-        test.display_name = e.target.value;
+    onChangeActionName(action_id: string, e: any) {
+        let actionList = this.situation_obj.actions.filter(item => item.id === action_id)[0];
+        actionList.display_name = e.target.value;
     }
 
     onChangeNBPlayer(nb_player: number) {
@@ -191,18 +315,22 @@ export class SituationsComponent implements OnInit {
     }
 
     changeNBPlayer(nb_player: number) {
+        const btn2Player = document.getElementById("btn2Player");
+        const btn3Player = document.getElementById("btn3Player");
+        const btnOpponent2Dealer = document.getElementById("btnOpponent2Dealer");
+
         if (nb_player === 2) {
             this.showOpponent2 = false;
             if (this.situation_obj.dealer === "opponent2") {
-                document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
+                btnOpponent2Dealer?.classList.remove("selectedButton");
                 this.situation_obj.dealer = undefined;
             }
-            document.getElementById("btn2Player")?.classList.add("selectedButton")
-            document.getElementById("btn3Player")?.classList.remove("selectedButton")
+            btn2Player?.classList.add("selectedButton");
+            btn3Player?.classList.remove("selectedButton");
         } else if (nb_player === 3) {
             this.showOpponent2 = true;
-            document.getElementById("btn2Player")?.classList.remove("selectedButton")
-            document.getElementById("btn3Player")?.classList.add("selectedButton")
+            btn2Player?.classList.remove("selectedButton");
+            btn3Player?.classList.add("selectedButton");
         }
     }
 
@@ -212,31 +340,195 @@ export class SituationsComponent implements OnInit {
     }
 
     changeDealer(dealer: string) {
-        if (dealer === "you") {
-            document.getElementById("btnYouDealer")?.classList.add("selectedButton")
-            document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
-        } else if (dealer === "opponent1") {
-            document.getElementById("btnYouDealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent1Dealer")?.classList.add("selectedButton")
-            document.getElementById("btnOpponent2Dealer")?.classList.remove("selectedButton")
-        } else if (dealer === "opponent2") {
-            document.getElementById("btnYouDealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent1Dealer")?.classList.remove("selectedButton")
-            document.getElementById("btnOpponent2Dealer")?.classList.add("selectedButton")
+        const buttonIds = ["btnYouDealer", "btnOpponent1Dealer", "btnOpponent2Dealer"];
+        for (const id of buttonIds) {
+            document.getElementById(id)?.classList.remove("selectedButton");
         }
+        document.getElementById(`btn${dealer[0].toUpperCase() + dealer.slice(1)}Dealer`)?.classList.add("selectedButton");
     }
 
     onChangeOpponentLevel(opponentLevel: string) {
         this.situation_obj.opponentLevel = opponentLevel;
-        if (opponentLevel === "fish") {
-            document.getElementById("btnFishOpponent")?.classList.add("selectedButton");
-            document.getElementById("btnSharkOpponent")?.classList.remove("selectedButton");
-        } else if (opponentLevel === "shark") {
-            document.getElementById("btnFishOpponent")?.classList.remove("selectedButton");
-            document.getElementById("btnSharkOpponent")?.classList.add("selectedButton");
-        }
-        console.log(this.situation_obj)
+        this.setSelectedButton("fish", "btnFishOpponent", opponentLevel === "fish");
+        this.setSelectedButton("shark", "btnSharkOpponent", opponentLevel === "shark");
     }
 
+    setSelectedButton(opponentLevel: string, buttonId: string, isSelected: boolean) {
+        const button = document.getElementById(buttonId);
+        if (button) {
+            if (isSelected) {
+                button.classList.add("selectedButton");
+            } else {
+                button.classList.remove("selectedButton");
+            }
+        }
+    }
+
+    filteredActionList(list: Action[], type: string) {
+        return list.filter(item => item.type === type);
+    }
+
+    onColorAction(action_id: string) {
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
+        setTimeout(() => {
+            this.listener = (event: any) => {
+                if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
+                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('color-picker-div-closed');
+                    document.removeEventListener('click', this.listener);
+                    this.listener = null;
+                }
+            };
+            document.addEventListener('click', this.listener);
+        }, 0);
+    }
+
+    onSelectColor(action_id: string, color: string) {
+        let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0];
+        actionList.color = color;
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
+    }
+
+    onCheckChange(e: any) {
+        let checkbox_id = e.target.id;
+        if (e.target.checked) {
+            if (this.checkboxMultipleSolutionChecked < 3) {
+                this.checkboxMultipleSolutionChecked++;
+                this.multipleSolutionCheckedList.push(checkbox_id.replace("id_check_", ""));
+            } else {
+                e.target.checked = false;
+            }
+        } else {
+            this.checkboxMultipleSolutionChecked--;
+            const index: number = this.multipleSolutionCheckedList.indexOf(checkbox_id.replace("id_check_", ""));
+            if (index !== -1) {
+                this.multipleSolutionCheckedList.splice(index, 1);
+            }
+        }
+
+        if (this.checkboxMultipleSolutionChecked < 3) {
+            this.simpleSlider = true;
+            this.multipleSlider = false;
+        } else if (this.checkboxMultipleSolutionChecked === 3) {
+            this.simpleSlider = false;
+            this.multipleSlider = true;
+        }
+    }
+
+    addMultipleAction() {
+        this.multipleSolutionCheckedList.sort((a: string, b: string) => {
+            const numA = parseInt(a.slice(14));
+            const numB = parseInt(b.slice(14));
+
+            return numA - numB;
+        });
+        if (this.multipleSolutionName === "") {
+            Swal.fire({
+                icon: 'error',
+                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom à la solution multiple.</p>',
+                confirmButtonColor: '#d74c4c',
+                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+            });
+        } else {
+            if (this.checkboxMultipleSolutionChecked < 2) {
+                Swal.fire({
+                    icon: 'error',
+                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de cocher au moins deux cases.</p>',
+                    confirmButtonColor: '#d74c4c',
+                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                });
+            } else {
+                let colorLst: {
+                    color: string;
+                    percent?: number | undefined;
+                }[] = [];
+                this.multipleSolutionCheckedList.map((action, index) => {
+                    let percent = 0;
+                    if (index === 0) percent = this.mixedSolutionSliderMinValue;
+                    if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
+                    if (index + 1 === this.multipleSolutionCheckedList.length) {
+                        if (this.mixedSolutionSliderMaxValue === 100) {
+                            percent = 100 - this.mixedSolutionSliderMinValue;
+                        } else {
+                            percent = 100 - this.mixedSolutionSliderMaxValue;
+                        }
+                    }
+
+                    let obj = {
+                        color: action,
+                        percent: percent
+                    }
+                    colorLst.push(obj);
+                });
+                let new_obj = {
+                    id: this.multipleSituationId ? this.multipleSituationId : `mixed_action_${this.countMultipleSolution}`,
+                    type: "mixed",
+                    display_name: this.multipleSolutionName,
+                    colorList: colorLst
+                }
+                if (this.multipleSituationId) {
+                    const indexToReplace = this.situation_obj.actions.findIndex(action => action.id === this.multipleSituationId);
+                    if (indexToReplace !== -1) {
+                        this.situation_obj.actions = [
+                            ...this.situation_obj.actions.slice(0, indexToReplace),
+                            new_obj,
+                            ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
+                        ];
+                        (document.getElementById(`radio_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
+                    }
+                } else {
+                    this.countMultipleSolution++;
+                    this.situation_obj.actions.push(new_obj);
+                }
+                this.situation_objActionsRef = this.situation_obj.actions.slice();
+                this.resetMultipleSituation();
+            }
+        }
+    }
+
+    resetMultipleSituation() {
+        this.simpleSlider = true;
+        this.multipleSlider = false;
+        this.checkboxMultipleSolutionChecked = 0;
+        this.mixedSolutionSliderMinValue = 50;
+        this.mixedSolutionSliderMaxValue = 100;
+        this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = false);
+        this.multipleSolutionCheckedList = [];
+        this.multipleSolutionName = "";
+        this.multipleSituationId = undefined;
+        document.getElementById("add-multiples-solutions")!.style.display = "none";
+    }
+
+    editMultipleSolution(action_id: string) {
+        let action: Action = this.situation_objActionsRef.filter((action: Action) => action.id === action_id)[0];
+        this.multipleSituationId = action.id;
+        this.multipleSolutionName = action.display_name!;
+        this.multipleSolutionCheckedList = action.colorList!.map(action => action.color);
+        this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = true);
+        this.checkboxMultipleSolutionChecked = this.multipleSolutionCheckedList.length;
+        if (action.colorList?.length === 2) {
+            this.mixedSolutionSliderMinValue = action.colorList[0].percent!;
+        } else if (action.colorList?.length === 3) {
+            this.mixedSolutionSliderMinValue = action.colorList[0].percent!;
+            this.mixedSolutionSliderMaxValue = action.colorList[0].percent! + action.colorList[1].percent!;
+        }
+
+        if (this.checkboxMultipleSolutionChecked < 3) {
+            this.simpleSlider = true;
+            this.multipleSlider = false;
+        } else if (this.checkboxMultipleSolutionChecked === 3) {
+            this.simpleSlider = false;
+            this.multipleSlider = true;
+        }
+
+        document.getElementById("add-multiples-solutions")!.style.display = "block";
+    }
+
+    deleteMultipleSolution(action_id: string) {
+        const index = this.situation_obj.actions.findIndex(action => action.id === action_id);
+        if (index !== -1) {
+            this.situation_obj.actions.splice(index, 1);
+        }
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
+    }
 }

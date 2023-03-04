@@ -29,19 +29,39 @@ app.get('/', (req, res) => {
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
-        // console.log('Directory exists!')
+        // Directory exists!
         fs.readdir(situations_dir, function (err, data) {
             if (data.length == 0) {
-                // console.log("Directory is empty!");
+                // Directory is empty!
                 res.status(200).json({ authorized: false, message: "DIRECTORY_EMPTY" });
             } else {
-                // console.log("Directory is not empty!");
+                // Directory is not empty!
                 res.status(200).json({ authorized: true, message: "OK" });
             }
         });
     } else {
-        // console.log('Directory not found.')
+        // Directory not found.
         res.status(200).json({ authorized: false, message: "DIRECTORY_NOT_FOUND" });
+    }
+});
+
+app.get("/api/check_situation_id/:new_situation_id", function (req, res) {
+    let new_situation_id = req.params.new_situation_id
+    let situations_files = fs.readdirSync(situations_dir);
+    let situation_exist = false;
+    if (situations_files.length > 0) {
+        situations_files.forEach(situation => {
+            const situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
+            let situation_obj = JSON.parse(situation_string);
+            if (new_situation_id === situation_obj._id) {
+                situation_exist = true;
+            }
+        });
+    }
+    if (situation_exist) {
+        res.status(200).json({ exist: true});
+    } else {
+        res.status(200).json({ exist: false});
     }
 });
 
@@ -63,15 +83,25 @@ io.on('connection', (socket) => {
         let file_name = situation._id;
 
         let json = JSON.stringify(situation);
-        fs.writeFile(`${situations_dir}/${file_name}.json`, json, 'utf8', (err) => {
-            if (err) return console.log(err);
-            // console.log('Situation ' + situation.name + ' créé !');
-        });
+        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+    });
 
-        if (data.remove_file_obj.remove_file) {
-            // console.log("Suppression de l'ancien fichier...")
-            fs.unlinkSync(`${situations_dir}/${data.remove_file_obj.ex_name}.json`);
-        }
+    socket.on('EditSituation', (data) => {
+        let situation = data.data;
+        let file_name = situation._id;
+
+        let json = JSON.stringify(situation);
+        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+    });
+
+    socket.on('EditSituationWithRemove', (data) => {
+        let situation = data.data;
+        let ex_id_to_remove = data.ex_id;
+        let file_name = situation._id;
+
+        let json = JSON.stringify(situation);
+        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+        fs.unlinkSync(`${situations_dir}/${ex_id_to_remove}.json`);
     });
 
     socket.on('DuplicateSituation', (id) => {

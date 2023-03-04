@@ -1,16 +1,29 @@
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
 
 * {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
+    user-drag: none;
+}
+
+.animate__animated {
+    animation-duration: 1s;
 }
 
 ion-icon {
     pointer-events: none;
 }
 
+ion-button {
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    padding: 0;
+    margin: 0;
+}
+
 .header {
     text-align: center;
-    background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
     color: white;
     height: 100%;
     min-height: 100vh;
@@ -32,6 +45,15 @@ h1 {
     margin-top: 2.5%;
 }
 
+.case-definition {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    margin: 60px auto;
+    animation-delay: 0.5s;
+}
+
 /********************************* Back Arrow *********************************/
 
 .backArrow {
@@ -45,6 +67,7 @@ h1 {
     -moz-transition: 0.25s linear;
     -ms-transition: 0.25s linear;
     -o-transition: 0.25s linear;
+    z-index: 1;
 }
 
 .backArrow:hover {
@@ -66,6 +89,7 @@ h1 {
 }
 
 @keyframes bounce {
+
     0%,
     20%,
     50%,
@@ -130,9 +154,8 @@ button {
     box-shadow: inset 0 0 0 2em var(--hover);
 }
 
-.doubleButton {
-    margin-left: 25px;
-    margin-right: 25px;
+.saveButton {
+    margin: 50px;
 }
 
 .smallButton {
@@ -141,31 +164,31 @@ button {
     margin-right: 10px;
     margin-top: 10px;
     min-width: 150px;
-    color: #272f3a;
+    color: #303030;
 }
 
 .smallButton:hover {
-    box-shadow: inset 0 0 0 2em #272f3a;
+    box-shadow: inset 0 0 0 2em #303030;
     color: #fff;
 }
 
-.selectedButton{
-    box-shadow: inset 0 0 0 2em #272f3a;
+.selectedButton {
+    box-shadow: inset 0 0 0 2em #303030;
     color: #fff;
 }
 
-/********************************* Champ texte nom *********************************/
+/********************************* Champ texte nom de situation *********************************/
 
-.form__group {
+.div-input-text {
     position: relative;
     padding: 15px 0 0;
-    margin-left: 21%;
+    margin: auto;
     margin-top: 50px;
     width: 25%;
     text-align: center;
 }
 
-.form__field {
+.styled-input-text {
     width: 100%;
     border: 0;
     border-bottom: 2px solid white;
@@ -182,19 +205,18 @@ button {
     -ms-user-select: none;
     user-select: none;
 
-
     &::placeholder {
         color: transparent;
     }
 
-    &:placeholder-shown~.form__label {
+    &:placeholder-shown~.styled-input-text-label {
         font-size: 1.3rem;
         cursor: text;
         top: 20px;
     }
 }
 
-.form__label {
+.styled-input-text-label {
     position: absolute;
     top: 0;
     display: block;
@@ -207,8 +229,8 @@ button {
     user-select: none;
 }
 
-.form__field:focus {
-    ~.form__label {
+.styled-input-text:focus {
+    ~.styled-input-text-label {
         position: absolute;
         top: 0;
         display: block;
@@ -221,7 +243,7 @@ button {
 }
 
 /* reset input */
-.form__field {
+.styled-input-text {
 
     &:required,
     &:invalid {
@@ -229,53 +251,25 @@ button {
     }
 }
 
-.rightForm {
-    width: 100%;
-    margin-top: 20px;
-    margin-left: 0;
-}
-
-.rightForm .form__field{
-    border-bottom: 2px solid #272f3a;
-    color: #272f3a;
-}
-
-.rightForm .form__field:focus {
-    ~.form__label {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-    }
-
-    padding-bottom: 6px;
-    border-width: 3px;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /********************************* Tableau *********************************/
 
-.tableaux {
-    display: inline-block;
-    vertical-align: top;
-    margin: 2.6%;
-}
-
 table {
     margin: auto;
-    border-collapse: collapse;
     font-family: sans-serif;
-    
+    border-collapse: separate;
+    border-spacing: 2px 2px;
 }
 
 table tr td {
-    border: 2px solid white;
+    background-color: #fff;
+    border: none;
+    border-radius: 4px;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 6px;
@@ -288,73 +282,31 @@ table tr td {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    color: #303030;
 }
 
 table tbody td:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/********************************* Div de droite *********************************/
-
-.rightDiv{
-    background-color: #fff;
-    color: #272f3a;
-    border-radius: 10px;
-    padding: 20px 45px;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    margin-top: -49px;
-}
-
-h2 {
-    letter-spacing: 1px;
-}
-
-.firsth2{
-    margin-top: 15px;
-}
-
-.middleh2{
-    margin-top: 25px;
-}
-
-.lasth2{
-    margin-top: 5px;
+    background-color: rgb(218, 218, 218);
 }
 
 /********************************* Div solutions *********************************/
 
 .solutions {
-    --background: #ffffff;
-    --text: #272f3a;
-    --radio: #7C96B2;
-    --radio-checked: #272f3a;
-    --radio-size: 25px;
-    --width: 100px;
-    --border-radius: 10px;
-    background: var(--background);
-    width: var(--width);
-    height: fit-content;
-    border-radius: var(--border-radius);
-    color: var(--text);
-    position: relative;
-    padding: 30px 45px;
-    display: grid;
-    margin-top: 45px;
-    grid-template-columns: auto var(--radio-size);
-    align-items: center;
-    scale: 1.10;
+    scale: 1.05;
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    width: 170px;
+    margin: auto;
 
     .textInput {
         font-size: 1.3em;
         margin-top: 14px;
         margin-bottom: 14px;
         border: none;
-        width: 70px;
+        width: 80px;
         text-align: center;
         margin-right: 15px;
     }
@@ -363,149 +315,505 @@ h2 {
         color: #090a0f;
     }
 
-    input[type="radio"] {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        position: relative;
-        height: var(--radio-size);
-        width: var(--radio-size);
-        outline: none;
-        margin: 0;
-        cursor: pointer;
-        border: 2px solid var(--radio);
-        background: transparent;
-        border-radius: 50%;
-        display: grid;
-        justify-self: end;
-        justify-items: center;
+    label {
+        display: flex;
+        justify-content: flex-start;
         align-items: center;
-        overflow: hidden;
-        transition: border .5s ease;
-
-        &::before,
-        &::after {
-            content: "";
-            display: flex;
-            justify-self: center;
-            border-radius: 50%;
-        }
-
-        &::before {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--background);
-            z-index: 1;
-            opacity: var(--opacity, 1);
-        }
-
-        &::after {
-            position: relative;
-            width: calc(100% /2);
-            height: calc(100% /2);
-            top: var(--y, 100%);
-            transition: top .5s cubic-bezier(0.48, 1.97, 0.5, 0.63);
-        }
-
-        &:checked {
-            --radio: var(--radio-checked);
-
-            &::after {
-                --y: 0%;
-                animation: stretch-animate .3s ease-out .17s;
-            }
-
-            &::before {
-                --opacity: 0;
-            }
-
-            ~input[type="radio"] {
-                &::after {
-                    --y: -100%;
-                }
-            }
-        }
-
-        &:not(:checked) {
-            &::before {
-                --opacity: 1;
-                transition: opacity 0s linear .5s;
-            }
-        }
-    }
-
-    #radio0::after {
-        background: rgb(216, 0, 0);
-    }
-
-    #radio0 {
-        --radio: rgb(216, 0, 0);
-    }
-
-    #radio1::after {
-        background: rgb(0, 151, 0);
-    }
-
-    #radio1 {
-        --radio: rgb(0, 151, 0);
-    }
-
-    #radio2::after {
-        background: rgb(19, 82, 255);
-    }
-
-    #radio2 {
-        --radio: rgb(19, 82, 255);
-    }
-
-    #radio3::after {
-        background: rgb(140, 0, 255);
-    }
-
-    #radio3 {
-        --radio: rgb(140, 0, 255);
-    }
-
-    #radio4::after {
-        background: rgb(255, 0, 212);
-    }
-
-    #radio4 {
-        --radio: rgb(255, 0, 212);
-    }
-
-    #radio5::after {
-        background: rgb(255, 123, 0);
-    }
-
-    #radio5 {
-        --radio: rgb(255, 123, 0);
-    }
-
-    #radio6::after {
-        background: rgb(0, 163, 228);
-    }
-
-    #radio6 {
-        --radio: rgb(0, 163, 228);
+        flex-wrap: nowrap;
+        margin: 12px 0;
+        cursor: pointer;
+        position: relative;
+        margin-left: 20px;
     }
 }
 
-@keyframes stretch-animate {
+.addButton {
+    width: fit-content;
+    min-width: 130px;
+    color: #303030;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #303030;
+    font-weight: lighter;
+}
+
+.addButton:hover {
+    box-shadow: inset 0 0 0 2em #303030;
+    color: #fff;
+}
+
+.solution-selector {
+    display: inline-flex;
+    align-items: center;
+    animation: zoom-in 0.5s ease-in-out;
+}
+
+@keyframes zoom-in {
     0% {
-        transform: scale(1, 1)
-    }
-
-    28% {
-        transform: scale(1.15, .85)
-    }
-
-    50% {
-        transform: scale(.9, 1.1)
+        transform: scale(0, 0);
+        opacity: 0;
     }
 
     100% {
-        transform: scale(1, 1)
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+}
+
+input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.design {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #303030;
+    border-radius: 100%;
+    margin-right: 16px;
+    position: relative;
+}
+
+.design::before {
+    content: "";
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    position: absolute;
+    transform: scale(0);
+    transform-origin: center center;
+}
+
+.design:before {
+    background: #303030;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+input[type="radio"]:checked+.design::before {
+    opacity: 1;
+    transform: scale(0.6);
+}
+
+.color-picker-square {
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.14);
+    width: 30px;
+    cursor: pointer;
+}
+
+.color-picker-div {
+    background: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    position: absolute;
+    box-sizing: border-box;
+    width: 220px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.15);
+    margin-left: 4px;
+    z-index: 1;
+    animation-duration: 0.3s;
+}
+
+.color-picker-div-closed {
+    display: none;
+}
+
+.colors {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.colors .color-picker-square {
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
+    width: 30px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.colors .color-picker-square:nth-child(5n) {
+    margin-right: 0;
+}
+
+.colors .color-picker-square:nth-child(n + 6) {
+    margin-bottom: 0;
+}
+
+/********************************* Div multiples solutions *********************************/
+
+.multiples-solutions-div {
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    margin: auto;
+    width: 500px;
+
+}
+
+.multiples-solutions-container {
+    max-height: 328px;
+    overflow: auto;
+}
+
+.multiples-solutions-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.multiples-solutions-container::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -ms-border-radius: 50px;
+    -o-border-radius: 50px;
+    background: #9b9b9b;
+}
+
+.multiples-solutions-container::-webkit-scrollbar-thumb:hover {
+    background: #464646;
+}
+
+.multiples-solutions-div label {
+    margin-top: 6px;
+}
+
+.multiples-solutions-name {
+    padding-right: 25px;
+}
+
+.multiples-solutions {
+    font-size: 1.3em;
+    margin-bottom: 6px;
+    display: grid;
+    grid-template-columns: 60% 8% 15% 10% 10%;
+    padding: 15px;
+    text-align: left;
+    align-items: center;
+    animation: zoom-in 0.5s ease-in-out;
+
+    label {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: nowrap;
+        margin: 12px 0;
+        cursor: pointer;
+        position: relative;
+        margin-left: 20px;
+    }
+}
+
+.multiples-solutions .color-picker-square {
+    cursor: default;
+}
+
+.multiples-solutions ion-button {
+    margin-top: 4px;
+}
+
+/********************************* Div add multiples solutions *********************************/
+
+.add-multiples-solutions-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-multiples-solutions {
+    display: none;
+    width: 500px;
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    animation-duration: 0.5s;
+}
+
+.add-multiples-solutions h2 {
+    margin-top: -15px;
+}
+
+.add-multiples-solutions .div-input-text {
+    margin-bottom: 25px;
+}
+
+.add-multiples-solutions ion-button {
+    position: relative;
+    left: 267px;
+    top: -10px;
+    font-size: 2em;
+    cursor: pointer;
+    color: #303030;
+    padding: 0px;
+}
+
+.add-multiples-solutions .solution-selector {
+    font-size: 1.3em;
+    display: grid;
+    grid-template-columns: 40% 20% 20%;
+    padding: 7px;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    margin-left: 18%;
+}
+
+.add-multiples-solutions .color-picker-square {
+    cursor: default;
+    margin: auto;
+}
+
+.input-name-multiples-solutions {
+    width: 70%;
+    margin: auto;
+}
+
+.input-name-multiples-solutions .styled-input-text {
+    border-bottom: 2px solid #303030;
+    color: #303030;
+}
+
+.input-name-multiples-solutions .styled-input-text:focus {
+    ~.styled-input-text-label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+    }
+
+    padding-bottom: 6px;
+    border-width: 3px;
+}
+
+// Checkbox
+
+.check {
+    cursor: pointer;
+    position: relative;
+    margin: auto;
+    width: 18px;
+    height: 18px;
+    -webkit-tap-highlight-color: transparent;
+    margin-top: 3.5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.check svg {
+    position: relative;
+    z-index: 1;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: #303030;
+    stroke-width: 1.5;
+    transform: translate3d(0, 0, 0);
+    transition: all 0.2s ease;
+}
+
+.check svg path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 0;
+}
+
+.check svg polyline {
+    stroke-dasharray: 22;
+    stroke-dashoffset: 66;
+}
+
+.check:hover:before {
+    opacity: 1;
+}
+
+.cbx:checked+.check svg {
+    stroke: #303030;
+}
+
+.cbx:checked+.check svg path {
+    stroke-dashoffset: 60;
+    transition: all 0.3s linear;
+}
+
+.cbx:checked+.check svg polyline {
+    stroke-dashoffset: 42;
+    transition: all 0.2s linear;
+    transition-delay: 0.15s;
+}
+
+.cbx {
+    display: none;
+}
+
+//Slider
+
+::ng-deep {
+    .ngx-slider {
+        margin-top: 50px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-bar {
+        background: #cecece;
+        height: 3px;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-selection {
+        background: red;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer {
+        background-color: #303030;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        margin-top: 5px;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer:hover {
+        cursor: grab;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer:active {
+        cursor: grabbing;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer:after {
+        color: #fff;
+        top: 6px;
+        left: 6px;
+    }
+
+    .custom-slider .ngx-slider-pointer.ngx-slider-active:after {
+        background-color: #303030 !important;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-floor {
+        margin-left: -6px !important;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-ceil {
+        margin-left: 16px !important;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-ceil {
+        margin-left: 16px !important;
+    }
+}
+
+/********************************* Div caractéristiques de la situation *********************************/
+
+.situationCaracteristics {
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    width: 35%;
+    margin: auto;
+    margin-top: 10px;
+    animation-delay: 1s;
+}
+
+.input-nb-bb-restants {
+    width: 70%;
+    margin: auto;
+}
+
+.input-nb-bb-restants .styled-input-text {
+    border-bottom: 2px solid #303030;
+    color: #303030;
+}
+
+.input-nb-bb-restants .styled-input-text:focus {
+    ~.styled-input-text-label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+    }
+
+    padding-bottom: 6px;
+    border-width: 3px;
+}
+
+h2 {
+    letter-spacing: 1px;
+}
+
+.middleh2 {
+    margin-top: 25px;
+}
+
+.lasth2 {
+    margin-top: 5px;
+}
+
+/********************************* Waves *********************************/
+
+.waves {
+    position: relative;
+    width: 100%;
+    height: 15vh;
+    margin-bottom: -7px;
+    min-height: 100px;
+    max-height: 150px;
+}
+
+.content {
+    position: relative;
+    height: 20vh;
+    text-align: center;
+    background-color: white;
+}
+
+.parallax>use {
+    animation: move-forever 50s linear infinite;
+    -webkit-animation: move-forever 50s linear infinite;
+}
+
+.parallax>use:nth-child(1) {
+    animation-delay: -4s;
+    animation-duration: 14s;
+}
+
+.parallax>use:nth-child(2) {
+    animation-delay: -6s;
+    animation-duration: 20s;
+}
+
+.parallax>use:nth-child(3) {
+    animation-delay: -8s;
+    animation-duration: 26s;
+}
+
+.parallax>use:nth-child(4) {
+    animation-delay: -10s;
+    animation-duration: 40s;
+}
+
+@keyframes move-forever {
+    0% {
+        transform: translate3d(-90px, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(85px, 0, 0);
     }
 }
