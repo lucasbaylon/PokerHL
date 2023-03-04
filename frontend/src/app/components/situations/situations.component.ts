@@ -114,8 +114,6 @@ export class SituationsComponent implements OnInit {
                 document.getElementById("add-solution-button")!.style.display = "none";
             }
         }
-        console.log(this.situation_obj.actions.filter(action => action.type === "unique"))
-        console.log(this.situation_obj)
     }
 
     showAddMultiplesAction() {
@@ -157,141 +155,6 @@ export class SituationsComponent implements OnInit {
             this.isSelectionActive = false;
         }
     }
-
-    // saveSituation() {
-    //     if (!this.situation_obj.name) {
-    //         Swal.fire({
-    //             icon: 'error',
-    //             html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
-    //             confirmButtonColor: '#d74c4c',
-    //             confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-    //         });
-    //     } else {
-    //         let remove_file_obj = { remove_file: false, ex_name: "" };
-    //         let situation_name_change = false;
-    //         let ex_id = "";
-    //         if (this.situation_obj._id) {
-    //             console.log(this.situation_obj.name)
-    //             console.log(this.situation_obj._id)
-    //             if (this.situation_obj.name.replace(/ /g, "_") !== this.situation_obj._id) {
-    //                 situation_name_change = true;
-    //                 ex_id = this.situation_obj._id;
-    //                 remove_file_obj.remove_file = true;
-    //                 remove_file_obj.ex_name = this.situation_obj._id!;
-    //             }
-    //         }
-
-    //         let situation_empty = false;
-    //         this.situation_obj._id = this.situation_obj.name.replace(/ /g, "_");
-    //         this.situation_obj.situations.map((row: any) => {
-    //             row.map((situation: any) => {
-    //                 if (situation.action === undefined) situation_empty = true;
-    //             })
-    //         })
-
-    //         if (situation_empty) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau.</p>',
-    //                 confirmButtonColor: '#d74c4c',
-    //                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-    //             });
-    //         } else {
-    //             if (!this.situation_obj.dealerMissingTokens) {
-    //                 Swal.fire({
-    //                     icon: 'error',
-    //                     html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
-    //                     confirmButtonColor: '#d74c4c',
-    //                     confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-    //                 });
-    //             } else {
-    //                 const flatArray = this.situation_obj.situations.flat();
-    //                 const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
-    //                 let empty_action_input: boolean = false;
-
-    //                 uniqueActions.forEach(action => {
-    //                     let input = document.getElementById(`input_${action}`) as HTMLInputElement;
-    //                     if (input && input.value === "") {
-    //                         empty_action_input = true;
-    //                     }
-    //                 });
-    //                 if (empty_action_input) {
-    //                     Swal.fire({
-    //                         icon: 'error',
-    //                         html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom aux actions utilisées dans le tableau.</p>',
-    //                         confirmButtonColor: '#d74c4c',
-    //                         confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-    //                     });
-    //                 } else {
-    //                     console.log(ex_id)
-    //                     if (this.mode === "new") {
-    //                         console.log(remove_file_obj)
-    //                         this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
-    //                             if (data.exist) {
-    //                                 Swal.fire({
-    //                                     html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Attention, ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
-    //                                     icon: 'warning',
-    //                                     showCancelButton: true,
-    //                                     confirmButtonColor: '#3085d6',
-    //                                     cancelButtonColor: '#d74c4c',
-    //                                     confirmButtonText: 'Oui',
-    //                                     cancelButtonText: 'Non'
-    //                                 }).then((result) => {
-    //                                     if (result.isConfirmed) {
-    //                                         this.addSituation(remove_file_obj);
-    //                                     }
-    //                                 });
-    //                             } else {
-    //                                 this.addSituation(remove_file_obj);
-    //                             }
-    //                         });
-    //                     } else if (this.mode === "edit") {
-    //                         if (situation_name_change) {
-    //                             this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
-    //                                 if (data.exist) {
-    //                                     Swal.fire({
-    //                                         html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Attention, ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
-    //                                         icon: 'warning',
-    //                                         showCancelButton: true,
-    //                                         confirmButtonColor: '#3085d6',
-    //                                         cancelButtonColor: '#d74c4c',
-    //                                         confirmButtonText: 'Oui',
-    //                                         cancelButtonText: 'Non'
-    //                                     }).then((result) => {
-    //                                         if (result.isConfirmed) {
-    //                                             this.addSituation(remove_file_obj);
-    //                                         } else {
-    //                                             this.situation_obj._id = ex_id;
-    //                                             this.situation_obj.name = ex_id.replace(/_/g, ' ');
-    //                                         }
-    //                                     });
-    //                                 } else {
-    //                                     this.addSituation(remove_file_obj);
-    //                                 }
-    //                             });
-    //                         } else {
-    //                             this.addSituation(remove_file_obj);
-    //                         }
-    //                     }
-    //                     // this.apiSituation.checkSituationID(this.situation_obj._id).subscribe(data => {
-    //                     //     console.log(data)
-    //                     // });
-    //                     // this.apiSituation.addSituation(this.situation_obj, remove_file_obj);
-    //                     // Swal.fire({
-    //                     //     toast: true,
-    //                     //     position: 'top-end',
-    //                     //     icon: 'success',
-    //                     //     html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
-    //                     //     showConfirmButton: false,
-    //                     //     width: '370px',
-    //                     //     timer: 2500
-    //                     // });
-    //                     // this.router.navigate(['manage']);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     saveSituation() {
         // On check si il y a bien un nom à la situation
@@ -368,12 +231,10 @@ export class SituationsComponent implements OnInit {
                                 }
                             });
                         } else if (this.mode === "edit") {
-                            console.log(this.situation_obj._id)
                             let situation_name_change = false;
                             if (this.situation_obj._id !== this.editSituationID) {
                                 situation_name_change = true;
                             }
-                            console.log(situation_name_change)
                             if (situation_name_change) {
                                 this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
                                     if (data.exist) {
@@ -441,8 +302,6 @@ export class SituationsComponent implements OnInit {
 
     onChangeAction(e: any) {
         this.actionSelected = e.target.value;
-        console.log(this.actionSelected)
-        console.log(this.situation_objActionsRef)
     }
 
     onChangeActionName(action_id: string, e: any) {
@@ -622,7 +481,6 @@ export class SituationsComponent implements OnInit {
                     this.situation_obj.actions.push(new_obj);
                 }
                 this.situation_objActionsRef = this.situation_obj.actions.slice();
-                console.log(this.situation_objActionsRef)
                 this.resetMultipleSituation();
             }
         }
