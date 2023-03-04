@@ -461,15 +461,9 @@ button {
     animation-duration: 0.5s;
 }
 
-.error-window ion-button {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    transform: translate(50%, -50%);
-    font-size: 2em;
-    cursor: pointer;
-    color: #303030;
-    padding: 0px;
+.error-window button {
+    width: 40%;
+    margin-top: 30px;
 }
 
 .error-window h1 {
