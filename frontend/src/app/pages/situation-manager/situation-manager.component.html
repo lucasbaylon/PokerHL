@@ -1,1 +1,183 @@
-<p>situation-manager works!</p>
+<div class="header">
+    <ion-button class="backArrow" (click)="redirectTo('situations-list-manager')">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <div class="inner-header animate__animated animate__fadeInDown">
+        <h1 *ngIf="mode === 'new'">Enregistrer une nouvelle situation</h1>
+        <h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
+        <div class="div-input-text field">
+            <input [(ngModel)]="situation_obj.name" type="text" class="styled-input-text"
+                placeholder="Nom de la situation" name="situationName" id='situationName' autocomplete="off" />
+            <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
+        </div>
+    </div>
+    <div class="case-definition animate__animated animate__fadeIn">
+        <table (mouseleave)="endSelection($event)" oncontextmenu="return false;">
+            <tbody>
+                <tr *ngFor="let row of situation_obj.situations; let i = index"
+                    class="table-row animate__animated animate__fadeIn" [style.animation-delay]="0.5+i * 0.05+'s'">
+                    <td *ngFor="let item of row; let j = index" (mousedown)="startSelection($event)"
+                        (mouseenter)="updateSelection($event)" (mouseup)="endSelection($event)"
+                        [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
+                        {{item.card}} </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="solutions">
+            <h2>Solutions</h2>
+            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index"
+                class="solution-selector animate__animated animate__fadeInDown">
+                <div class="solution-selector">
+                    <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
+                        (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
+                    <div class="color-picker-square"
+                        [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"
+                        (click)="onColorAction(action.id)"></div>
+                    <label>
+                        <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
+                            (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
+                        <span class="design"></span>
+                    </label>
+                </div>
+                <div class="color-picker-div color-picker-div-closed animate__animated animate__zoomIn"
+                    [id]="'color-picker-div_' + action.id">
+                    <div class="colors">
+                        <div class="color-picker-square" style="background: #d80c05"
+                            (click)="onSelectColor(action.id, '#d80c05')"></div>
+                        <div class="color-picker-square" style="background: #ff9100"
+                            (click)="onSelectColor(action.id, '#ff9100')"></div>
+                        <div class="color-picker-square" style="background: #7a5a00"
+                            (click)="onSelectColor(action.id, '#7a5a00')"></div>
+                        <div class="color-picker-square" style="background: #3f7a89"
+                            (click)="onSelectColor(action.id, '#3f7a89')"></div>
+                        <div class="color-picker-square" style="background: #96c582"
+                            (click)="onSelectColor(action.id, '#96c582')"></div>
+                        <div class="color-picker-square" style="background: #303030"
+                            (click)="onSelectColor(action.id, '#303030')"></div>
+                        <div class="color-picker-square" style="background: #1c51ff"
+                            (click)="onSelectColor(action.id, '#1c51ff')"></div>
+                        <div class="color-picker-square" style="background: #00aeff"
+                            (click)="onSelectColor(action.id, '#00aeff')"></div>
+                        <div class="color-picker-square" style="background: #8400ff"
+                            (click)="onSelectColor(action.id, '#8400ff')"></div>
+                        <div class="color-picker-square" style="background: #e284ff"
+                            (click)="onSelectColor(action.id, '#e284ff')"></div>
+                    </div>
+                    <!-- <div class="hex-code">
+                        <div class="g-input">
+                            <input type="text" value="#ffffff" />
+                        </div>
+                    </div> -->
+                </div>
+            </ng-container>
+            <button class="fill addButton" id="add-solution-button" (click)="addUniqueAction()">Ajouter +</button>
+        </div>
+        <div class="multiples-solutions-div">
+            <h2>Solutions multiples</h2>
+            <div class="multiples-solutions-container">
+                <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')"
+                    class="multiples-solutions">
+                    <div class="multiples-solutions-name">
+                        {{action.display_name}}
+                    </div>
+                    <div class="color-picker-square"
+                        [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
+                    <label>
+                        <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
+                            (click)="onChangeAction($event)">
+                        <span class="design"></span>
+                    </label>
+                    <ion-button (click)="editMultipleSolution(action.id)">
+                        <ion-icon name="pencil-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="deleteMultipleSolution(action.id)">
+                        <ion-icon name="trash-outline"></ion-icon>
+                    </ion-button>
+                </div>
+            </div>
+            <button class="fill addButton" (click)="showAddMultiplesAction()">Ajouter +</button>
+        </div>
+        <div class="add-multiples-solutions-container">
+            <div class="add-multiples-solutions animate__animated animate__fadeInDown" id="add-multiples-solutions">
+                <ion-button (click)="resetMultipleSituation()">
+                    <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+                <h2>Ajout d'une solution multiple</h2>
+                <div class="div-input-text field input-name-multiples-solutions">
+                    <input [(ngModel)]="multipleSolutionName" type="text" class="styled-input-text" placeholder="Nom"
+                        name="multipleSolution" id='multipleSolution' autocomplete="off" />
+                    <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
+                </div>
+                <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
+                    <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
+                            [style]="'background: ' + action.color"></div>
+                        <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id"
+                            (change)="onCheckChange($event)">
+                        <label [for]="'id_check_'+ action.id" class="check">
+                            <svg width="18px" height="18px" viewBox="0 0 18 18">
+                                <path
+                                    d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z">
+                                </path>
+                                <polyline points="1 9 7 14 15 4"></polyline>
+                            </svg>
+                        </label>
+                    </div>
+                </ng-container>
+                <div *ngIf="simpleSlider" class="custom-slider">
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
+                </div>
+                <div *ngIf="multipleSlider" class="custom-slider">
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                        [options]="options"></ngx-slider>
+                </div>
+                <button class="fill addButton" id="add-multiple-solution-button"
+                    (click)="addMultipleAction()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    <div class="situationCaracteristics animate__animated animate__fadeInUp">
+        <h2>Combien de BB reste t-il au dealer ?</h2>
+        <div class="div-input-text field input-nb-bb-restants">
+            <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
+                placeholder="Nombre de jetons restants" [(ngModel)]="situation_obj.dealerMissingTokens" />
+            <label for="jetonsRestants" class="styled-input-text-label">Nombre de BB restantes</label>
+        </div>
+        <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
+        <div>
+            <button id="btn2Player" class="fill smallButton" (click)="onChangeNBPlayer(2)">2</button>
+            <button id="btn3Player" class="fill smallButton selectedButton" (click)="onChangeNBPlayer(3)">3</button>
+        </div>
+        <h2 class="lasth2">Quel joueur autour de la table est le dealer ?</h2>
+        <div>
+            <button id="btnYouDealer" class="fill smallButton selectedButton"
+                (click)="onChangeDealer('you')">Vous</button>
+            <button id="btnOpponent1Dealer" class="fill smallButton" (click)="onChangeDealer('opponent1')">Adversaire
+                1</button>
+            <button *ngIf="showOpponent2" id="btnOpponent2Dealer" class="fill smallButton"
+                (click)="onChangeDealer('opponent2')">Adversaire
+                2</button>
+        </div>
+        <h2 class="lasth2">Quel niveau ont les adversaires ?</h2>
+        <div>
+            <button id="btnFishOpponent" class="fill smallButton selectedButton"
+                (click)="onChangeOpponentLevel('fish')">Débutant</button>
+            <button id="btnSharkOpponent" class="fill smallButton"
+                (click)="onChangeOpponentLevel('shark')">Confirmé</button>
+        </div>
+    </div>
+    <button class="fill saveButton animate__animated animate__fadeInUp" (click)="saveSituation()">Enregistrer</button>
+    <div>
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+    </div>
+</div>

@@ -1,0 +1,552 @@
+@import url(//fonts.googleapis.com/css?family=Lato:300:400);
+
+* {
+    font-family: "Lato", sans-serif;
+    user-drag: none;
+}
+
+ion-icon {
+    pointer-events: none;
+}
+
+.header {
+    text-align: center;
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
+    color: white;
+    overflow: hidden;
+}
+
+.backArrow {
+    position: absolute;
+    font-size: 3.5em;
+    left: 1.5%;
+    top: 1.5%;
+    cursor: pointer;
+    transition: 0.25s linear;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+}
+
+.backArrow:hover {
+    -moz-animation: bounce 2s infinite;
+    -webkit-animation: bounce 2s infinite;
+    animation: bounce 2s infinite;
+}
+
+.backArrow:active {
+    scale: (0.8);
+    -moz-animation: none !important;
+    -webkit-animation: none !important;
+    animation: none !important;
+    transition: 0.1s linear;
+    -webkit-transition: 0.1s linear;
+    -moz-transition: 0.1s linear;
+    -ms-transition: 0.1s linear;
+    -o-transition: 0.1s linear;
+}
+
+.inner-header {
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    display: grid;
+    margin: auto;
+    align-content: center;
+}
+
+.pokerTable {
+    height: 35em;
+    width: 65em;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(rgb(0, 151, 0), black 150%);
+    border-radius: 500px;
+    border: 20px solid rgb(230, 230, 230);
+    box-shadow: 0 0 30px 5px rgb(49, 49, 49);
+}
+
+.pokerTable h1 {
+    opacity: 0.6;
+    font-style: italic;
+    font-size: 4em;
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 3px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+h1 span {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+/********************************* Cartes de jeu *********************************/
+
+img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cardContainer {
+    height: 80px;
+    width: fit-content;
+    position: absolute;
+    overflow: hidden;
+}
+
+.userCards {
+    width: fit-content;
+    top: 76.7%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: top ease 0.25s;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+}
+
+.userCards:active+hr.userHr {
+    opacity: 0;
+}
+
+.userCards:active .leftCard {
+    margin: 0;
+}
+
+.userCards:active {
+    height: 100%;
+}
+
+.oponent0Cards {
+    top: 9.2%;
+    left: 50%;
+    transform: rotate(180deg) translate(50%, -50%);
+}
+
+.oponent1Cards {
+    transform: rotate(135deg);
+    margin-top: 142px;
+    margin-right: 640px;
+    scale: 1.3;
+}
+
+.oponent2Cards {
+    transform: rotate(-135deg);
+    margin-top: 142px;
+    margin-left: 640px;
+    scale: 1.3;
+}
+
+.card {
+    width: 30%;
+    transition: top ease 0.25s;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+}
+
+.leftCard {
+    margin-right: -24%;
+}
+
+hr {
+    position: absolute;
+    border: 0;
+    width: 30%;
+    height: 2px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255, 255, 255), rgba(255, 255, 255, 0));
+    transition: 0.25s linear;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+}
+
+hr.userHr {
+    margin-top: 470px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+hr.oponent0Hr {
+    margin-top: 90px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+hr.oponent1Hr {
+    transform: rotate(-45deg);
+    margin-top: 150px;
+}
+
+hr.oponent2Hr {
+    transform: rotate(45deg);
+    margin-top: 150px;
+    left: 70%;
+}
+
+
+/********************************* Info div *********************************/
+
+.info {
+    background-color: #fff;
+    color: #303030;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 17px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.randomizer {
+    background-color: #fff;
+    color: #303030;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 17px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.stats {
+    background-color: #fff;
+    color: #303030;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 17px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+/********************************* Player boxes *********************************/
+
+.playerBox {
+    width: 115px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 25px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.8);
+    background: #fff;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    color: #303030;
+    transition: 0.25s linear;
+    -webkit-transition: 0.25s linear;
+    -moz-transition: 0.25s linear;
+    -ms-transition: 0.25s linear;
+    -o-transition: 0.25s linear;
+    transform-origin: top left;
+}
+
+.playerBox ion-icon {
+    font-size: 2.4em;
+}
+
+.playerBox h2 {
+    margin: 0;
+}
+
+.playerBox h3 {
+    font-size: 1.5em;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.userBox {
+    top: 100%;
+}
+
+.oponentBox1 {
+    top: 10%;
+    left: 5%;
+}
+
+.oponentBox2 {
+    top: 10%;
+    left: 95%;
+}
+
+.shark-fish-icon {
+    width: 40%;
+}
+
+/********************************* Boutons de réponses *********************************/
+
+.rightDiv {
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    width: 10%;
+    position: absolute;
+    top: 50%;
+    left: 84%;
+    transform: translate(-50%, -50%);
+}
+
+
+$colors: (
+    fill: #303030,
+);
+
+@each $button,
+$color in $colors {
+    .#{$button} {
+        --color: #{$color};
+        --hover: #{adjust-hue($color, 45deg)};
+    }
+}
+
+button {
+    background: none;
+    border: 2px solid;
+    margin-bottom: 20px;
+    line-height: 1;
+    font-weight: 600;
+    font-size: 1.2em;
+    padding: 1em;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
+    width: 100%;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
+}
+
+button {
+    color: var(--color);
+    transition: 0.25s;
+}
+
+.fill {
+    cursor: pointer;
+}
+
+.fill:hover {
+    box-shadow: inset 0 0 0 2em var(--hover);
+    border-color: var(--hover);
+    color: #fff;
+}
+
+/********************************* Dealer Coins *********************************/
+
+.dealer-coin {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffde00;
+    color: #303030;
+    text-align: center;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.8);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.dealer-coin-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.dealer-coin-oponent0 {
+    top: 80%;
+    left: -25%;
+}
+
+.dealer-coin-oponent1 {
+    top: 60%;
+    left: 125%;
+}
+
+.dealer-coin-oponent2 {
+    top: 60%;
+    left: -25%;
+}
+
+.dealer-coin-player {
+    top: 20%;
+    left: 125%;
+}
+
+/********************************* Animations *********************************/
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateX(-10px);
+    }
+
+    60% {
+        transform: translateX(-5px);
+    }
+}
+
+/********************************* Error Window *********************************/
+
+.error-window-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    animation: zoom-in 0.2s ease-in-out;
+    transform-origin: top left;
+}
+
+@keyframes zoom-in {
+    0% {
+        scale: 0;
+        opacity: 0;
+    }
+
+    70% {
+        scale: 1.10;
+        opacity: 0.7;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+.error-window {
+    width: fit-content;
+    background-color: #fff;
+    color: #303030;
+    border-radius: 10px;
+    padding: 20px 45px;
+    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    animation-duration: 0.5s;
+}
+
+.error-window button {
+    width: 40%;
+    margin-top: 30px;
+}
+
+.error-window h1 {
+    margin-bottom: 30px;
+}
+
+table {
+    margin: auto;
+    font-family: sans-serif;
+    border-collapse: separate;
+    border-spacing: 2px 2px;
+}
+
+table tr td {
+    border-radius: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+}
+
+table tbody td:hover {
+    background-color: rgb(218, 218, 218);
+}
+
+.color-solution-container {
+    margin-left: 20px;
+}
+
+.color-solution {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #303030;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    grid-template-columns: 80% 20%;
+    display: grid;
+}
+
+.color-picker-square {
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.25);
+    width: 30px;
+    margin-left: 12px;
+}
+
+.parent {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+/********************************* Responsive *********************************/
+
+// @media (min-width: 1921px) {
+//     .pokerTable {
+//         scale: 1.125;
+//         transform-origin: top left;
+//     }
+// }

@@ -1,1 +1,62 @@
-<p>situations-list-manager works!</p>
+<div class="header">
+    <ion-button class="backArrow" (click)="redirectTo('home')">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <div class="inner-header">
+        <h1>Gérer les situations</h1>
+        <p>Supprimez, modifiez ou créez des situations</p>
+        <div class="container">
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-1">Nom</div>
+                    <div class="col col-2">Nb BB dealer</div>
+                    <div class="col col-3">Nb joueurs</div>
+                    <div class="col col-4">Dealer</div>
+                    <div class="col col-5">Niveau</div>
+                    <div class="col col-6">Dupliquer</div>
+                    <div class="col col-7">Modifier</div>
+                    <div class="col col-8">Supprimer</div>
+                </li>
+                <div class="tableBody">
+                    <li *ngFor="let situation of situationList; let i = index" class="table-row animate__animated animate__fadeInDown" [style.animation-delay]="i * 0.1+'s'">
+                        <div class="col col-1">{{ situation.name }}</div>
+                        <div class="col col-2">{{ situation.dealerMissingTokens }}</div>
+                        <div class="col col-3">{{ situation.nbPlayer }}</div>
+                        <div class="col col-4">{{ situation.dealer! | dealer }}</div>
+                        <div class="col col-4">{{ situation.opponentLevel! | opponentLevel }}</div>
+                        <div class="col col-5">
+                            <ion-button (click)="duplicateSituation(situation._id!)" class="icon-div">
+                                <ion-icon name="copy-outline"></ion-icon>
+                            </ion-button>
+                        </div>
+                        <div class="col col-6">
+                            <ion-button (click)="editSituation(situation._id!)" class="icon-div">
+                                <ion-icon name="pencil-outline"></ion-icon>
+                            </ion-button>
+                        </div>
+                        <div class="col col-7">
+                            <ion-button (click)="removeSituation(situation._id!)" class="icon-div">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </ion-button>
+                        </div>
+                    </li>
+                </div>
+            </ul>
+        </div>
+        <button class="fill" (click)="redirectTo('situations-manager')">Créer une nouvelle situation</button>
+    </div>
+    <div>
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+    </div>
+</div>

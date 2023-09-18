@@ -5,6 +5,7 @@ import { TrainingComponent } from './pages/training/training.component';
 import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
 import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
 import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
+import { checkSituationGuard } from './guards/check-situation.guard';
 
 const routes: Routes = [
     {
@@ -27,16 +28,16 @@ const routes: Routes = [
     {
         path: 'situations-list-training',
         component: SituationsListTrainingComponent,
-        // canActivate: [
-        //     CheckSituationGuard
-        // ]
+        canActivate: [
+            checkSituationGuard
+        ]
     },
     {
         path: 'training',
         component: TrainingComponent,
-        // canActivate: [
-        //     CheckSituationGuard
-        // ]
+        canActivate: [
+            checkSituationGuard
+        ]
     }
 ];
 
