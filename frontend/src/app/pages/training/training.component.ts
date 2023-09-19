@@ -36,29 +36,20 @@ export class TrainingComponent {
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
 
     constructor(
-        private apiSituation: SituationService,
         private router: Router,
-        private _Activatedroute: ActivatedRoute
+        private activatedRoute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        Swal.fire({
-            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Chargement des situations en cours...</h1>',
-            showCancelButton: false,
-            showConfirmButton: false,
-            confirmButtonColor: '#303030'
-        });
-        Swal.showLoading();
-
-        let situationList: Situation[] = this._Activatedroute.snapshot.params["situationList"];
-
-        this.apiSituation.situationsForTraining.subscribe(data => {
-            Swal.close();
-            this.situationList = data;
+        if (this.activatedRoute.snapshot.params.hasOwnProperty('situationList')) {
+            this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
-        });
-
-        this.apiSituation.getSituationsForTraining(situationList);
+            const currentUrl = this.router.url;
+            const baseUrl = currentUrl.split(';')[0];
+            this.router.navigateByUrl(baseUrl);
+        } else {
+            this.router.navigate(['situations-list-training']);
+        }
     }
 
     filteredActionList(list: Action[], type: string) {

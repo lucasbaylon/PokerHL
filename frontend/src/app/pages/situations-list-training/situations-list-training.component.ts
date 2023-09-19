@@ -33,25 +33,12 @@ export class SituationsListTrainingComponent {
         this.apiSituation.getSituations();
     }
 
-    showSelectedSituation() {
-        console.log(this.selectedSituations);
-    }
-
     redirectTo(page: string) {
         this.router.navigate([page]);
     }
 
-    onCheckedSituationCheckbox(e: any) {
-        if (this.checkedSituations.indexOf(e.target.value) === -1) {
-            this.checkedSituations.push(e.target.value);
-        } else {
-            let index = this.checkedSituations.indexOf(e.target.value);
-            this.checkedSituations.splice(index, 1);
-        }
-    }
-
     onStartTrainingButton() {
-        if (this.checkedSituations.length === 0) {
+        if (this.selectedSituations.length === 0) {
             Swal.fire({
                 icon: 'error',
                 html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez sélectionner au moins une situation.</p>',
@@ -59,7 +46,7 @@ export class SituationsListTrainingComponent {
                 confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             })
         } else {
-            this.router.navigate(['training', { situationList: JSON.stringify(this.checkedSituations) }]);
+            this.router.navigate(['training', { situationList: JSON.stringify(this.selectedSituations) }]);
         }
     }
 

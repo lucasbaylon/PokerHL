@@ -38,8 +38,8 @@
                     </li>
                 </div>
             </ul>
-        </div>
-        <div class="buttons_container">
+        </div> -->
+        <!-- <div class="buttons_container">
             <div class="buttons">
                 <button class="fill">Filtrer</button>
                 <button class="fill">Tout cocher</button>
@@ -48,7 +48,7 @@
             </div>
         </div> -->
         <div class="container">
-            <p-table #dt1 [value]="situationList" dataKey="_id" [rows]="10" [showCurrentPageReport]="true"
+            <p-table [value]="situationList" dataKey="_id" [rows]="10" [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" [(selection)]="selectedSituations">
                 <ng-template pTemplate="header">
                     <tr>
@@ -248,6 +248,7 @@
                 </ng-template>
             </p-table>
         </div>
+        <button class="fill" (click)="onStartTrainingButton()">Lancer l'entraînement</button>
     </div>
     <div>
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
