@@ -17,8 +17,6 @@ export class SituationsListTrainingComponent {
 
     checkedSituations: number[] = [];
 
-    loading: boolean = false;
-
     constructor(
         private router: Router,
         private apiSituation: SituationService
