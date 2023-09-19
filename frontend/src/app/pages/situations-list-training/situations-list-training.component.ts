@@ -13,6 +13,8 @@ export class SituationsListTrainingComponent {
 
     situationList: Situation[] = [];
 
+    selectedSituations: Situation[] = [];
+
     checkedSituations: number[] = [];
 
     loading: boolean = false;
@@ -29,6 +31,10 @@ export class SituationsListTrainingComponent {
         });
 
         this.apiSituation.getSituations();
+    }
+
+    showSelectedSituation() {
+        console.log(this.selectedSituations);
     }
 
     redirectTo(page: string) {
