@@ -35,7 +35,11 @@
                                 "input": "node_modules/animate.css/animate.min.css"
                             }
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "lodash",
+                            "sweetalert2"
+                        ]
                     },
                     "configurations": {
                         "production": {
