@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
-import { Paginator } from 'primeng/paginator';
 
 @Component({
     selector: 'app-situations-list-training',
@@ -19,8 +18,6 @@ export class SituationsListTrainingComponent {
     checkedSituations: number[] = [];
 
     nbRowsPerPage = 10;
-
-    currentPage = 1;
 
     constructor(
         private router: Router,
@@ -46,11 +43,6 @@ export class SituationsListTrainingComponent {
         if (window.innerHeight <= 1080) {
             this.nbRowsPerPage = 7;
         }
-    }
-
-    onPageChange(event: any): void {
-        this.currentPage = event.first / event.rows + 1;
-        console.log(this.currentPage)
     }
 
     redirectTo(page: string) {

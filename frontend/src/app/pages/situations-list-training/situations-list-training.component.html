@@ -7,9 +7,9 @@
         <p>Sélectionnez les situations sur lesquelles vous souhaitez vous entraîner</p>
         <div class="container">
             <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
-                [paginator]="true" [(selection)]="selectedSituations" (onPage)="onPageChange($event)">
+                [paginator]="true" [(selection)]="selectedSituations">
                 <ng-template pTemplate="header">
-                    <tr class="animate__animated animate__fadeInDown">
+                    <tr class="animate__animated animate__fadeIn">
                         <th>
                             <div class="flex align-items-center">
                                 Nom
@@ -47,7 +47,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-situation let-i="rowIndex">
-                    <tr class="animate__animated animate__fadeInDown" [style.animation-delay]="i * 0.1+'s'">
+                    <tr class="animate__animated animate__fadeIn" [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.075 + 's'">
                         <td>
                             {{ situation.name }}
                         </td>
