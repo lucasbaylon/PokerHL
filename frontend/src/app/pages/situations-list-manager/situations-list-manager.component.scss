@@ -9,7 +9,7 @@ ion-icon {
     pointer-events: none;
 }
 
-ion-button{
+ion-button {
     cursor: pointer;
     width: fit-content;
     height: fit-content;
@@ -32,15 +32,16 @@ ion-button{
 
 h1 {
     font-weight: 300;
-    letter-spacing: 2px;
-    font-size: 3.5em;
+    letter-spacing: 1.5px;
+    font-size: 3.25em;
     margin: auto;
-    margin-top: 35px;
 }
 
 p {
-    font-size: 1.4em;
-    letter-spacing: 1px;
+    margin-top: 15px;
+    margin-bottom: 35px;
+    font-size: 1.5em;
+    letter-spacing: 0.7px;
 }
 
 /********************************* Back Arrow *********************************/
@@ -77,6 +78,7 @@ p {
 }
 
 @keyframes bounce {
+
     0%,
     20%,
     50%,
@@ -97,126 +99,9 @@ p {
 /********************************* Tableau *********************************/
 
 .container {
-    color: #303030;
-    font-weight: 600;
-    // overflow: hidden;
-    width: 75%;
+    width: 65%;
+    min-width: 525px;
     margin: auto;
-}
-
-.responsive-table {
-    padding: 0;
-
-    li {
-        border-radius: 3px;
-        padding: 25px 30px;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 25px;
-        animation-duration: 0.5s;
-    }
-
-    .table-header {
-        background-color: #303030;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        color: #ffffff;
-    }
-
-    .tableBody {
-        overflow: auto;
-        height: 400px;
-        overflow-x: hidden;
-
-        @media (min-width: 1921px) {
-            height: 440px;
-        }
-    }
-
-    .tableBody::-webkit-scrollbar {
-        display: none;
-    }
-
-    .table-row {
-        background-color: #ffffff;
-        box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
-    }
-
-    .table-row:hover {
-        background-color: #d3d3d3;
-    }
-
-    .table-row ion-icon {
-        font-size: 1.5em;
-    }
-
-    .table-row:last-child {
-        margin-bottom: 0;
-    }
-
-    .col-1 {
-        flex-basis: 16%;
-    }
-
-    .col-2 {
-        flex-basis: 10%;
-    }
-
-    .col-3 {
-        flex-basis: 10%;
-    }
-
-    .col-4 {
-        flex-basis: 8%;
-    }
-
-    .col-5 {
-        flex-basis: 8%;
-    }
-
-    .col-6 {
-        flex-basis: 8%;
-    }
-    
-    .col-7 {
-        flex-basis: 8%;
-    }
-    
-    .col-8 {
-        flex-basis: 8%;
-    }
-
-    @media all and (max-width: 767px) {
-        .table-header {
-            display: none;
-        }
-
-        li {
-            display: block;
-        }
-
-        .col {
-            flex-basis: 100%;
-        }
-
-        .col {
-            display: flex;
-            padding: 10px 0;
-
-            &:before {
-                color: #6c7a89;
-                padding-right: 10px;
-                content: attr(data-label);
-                flex-basis: 50%;
-                text-align: right;
-            }
-        }
-    }
-}
-
-.icon-div{
-    padding-top: 15px;
 }
 
 /********************************* Boutons *********************************/
@@ -237,21 +122,18 @@ button {
     border: 2px solid;
     line-height: 1;
     margin: auto;
-    margin-top: 10px;
+    margin-top: 24px;
     font-size: 1.1em;
     font-weight: 600;
     padding: 1em;
     letter-spacing: 0.5px;
     border-radius: 30px;
-    width: 400px;
+    width: 300px;
     cursor: pointer;
     -webkit-border-radius: 30px;
     -moz-border-radius: 30px;
     -ms-border-radius: 30px;
     -o-border-radius: 30px;
-}
-
-button {
     color: var(--color);
     transition: 0.25s;
 
@@ -283,27 +165,27 @@ button {
     background-color: white;
 }
 
-.parallax > use {
+.parallax>use {
     animation: move-forever 50s linear infinite;
     -webkit-animation: move-forever 50s linear infinite;
 }
 
-.parallax > use:nth-child(1) {
+.parallax>use:nth-child(1) {
     animation-delay: -4s;
     animation-duration: 14s;
 }
 
-.parallax > use:nth-child(2) {
+.parallax>use:nth-child(2) {
     animation-delay: -6s;
     animation-duration: 20s;
 }
 
-.parallax > use:nth-child(3) {
+.parallax>use:nth-child(3) {
     animation-delay: -8s;
     animation-duration: 26s;
 }
 
-.parallax > use:nth-child(4) {
+.parallax>use:nth-child(4) {
     animation-delay: -10s;
     animation-duration: 40s;
 }

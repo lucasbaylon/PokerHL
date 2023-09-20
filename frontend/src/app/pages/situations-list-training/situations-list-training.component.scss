@@ -26,15 +26,16 @@ ion-icon {
 
 h1 {
     font-weight: 300;
-    letter-spacing: 2px;
-    font-size: 3.5em;
+    letter-spacing: 1.5px;
+    font-size: 3.25em;
     margin: auto;
-    margin-top: 35px;
 }
 
 p {
-    font-size: 1.4em;
-    letter-spacing: 1px;
+    margin-top: 15px;
+    margin-bottom: 35px;
+    font-size: 1.5em;
+    letter-spacing: 0.7px;
 }
 
 /********************************* Back Arrow *********************************/
@@ -91,117 +92,9 @@ p {
 /********************************* Tableau *********************************/
 
 .container {
-    color: #303030;
-    font-weight: 600;
-    overflow: hidden;
-    width: 55%;
+    width: 60%;
+    min-width: 500px;
     margin: auto;
-}
-
-.responsive-table {
-    padding: 0;
-
-    li {
-        border-radius: 3px;
-        padding: 25px 30px;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 25px;
-        animation-duration: 0.5s;
-    }
-
-    .table-header {
-        background-color: #303030;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        color: #ffffff;
-    }
-
-    .tableBody {
-        overflow: auto;
-        height: 400px;
-        overflow-x: hidden;
-
-        @media (min-width: 1921px) {
-            height: 550px;
-        }
-    }
-
-    .tableBody::-webkit-scrollbar {
-        display: none;
-    }
-
-    .table-row {
-        background-color: #ffffff;
-        box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
-    }
-
-    .table-row:hover {
-        background-color: #d3d3d3;
-    }
-
-    .table-row ion-icon {
-        font-size: 1.6em;
-        cursor: pointer;
-        padding: 5px;
-        margin-top: -10px;
-    }
-
-    .table-row:last-child {
-        margin-bottom: 0;
-    }
-
-    .col-1 {
-        flex-basis: 18%;
-    }
-
-    .col-2 {
-        flex-basis: 15%;
-    }
-
-    .col-3 {
-        flex-basis: 15%;
-    }
-
-    .col-4 {
-        flex-basis: 15%;
-    }
-
-    .col-5 {
-        flex-basis: 10%;
-    }
-    
-    .col-6 {
-        flex-basis: 10%;
-    }
-
-    @media all and (max-width: 767px) {
-        .table-header {
-            display: none;
-        }
-
-        li {
-            display: block;
-        }
-
-        .col {
-            flex-basis: 100%;
-        }
-
-        .col {
-            display: flex;
-            padding: 10px 0;
-
-            &:before {
-                color: #6c7a89;
-                padding-right: 10px;
-                content: attr(data-label);
-                flex-basis: 50%;
-                text-align: right;
-            }
-        }
-    }
 }
 
 /********************************* Boutons *********************************/
@@ -222,7 +115,7 @@ button {
     border: 2px solid;
     line-height: 1;
     margin: auto;
-    margin-top: 10px;
+    margin-top: 24px;
     font-size: 1.1em;
     font-weight: 600;
     padding: 1em;
@@ -245,85 +138,6 @@ button {
 
 .fill:hover {
     box-shadow: inset 0 0 0 2em var(--hover);
-}
-
-.buttons_container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-    gap: 50px;
-}
-
-/********************************* Checkbox *********************************/
-
-.check {
-    cursor: pointer;
-    position: relative;
-    margin: auto;
-    width: 18px;
-    height: 18px;
-    -webkit-tap-highlight-color: transparent;
-    transform: translate3d(0, 0, 0);
-}
-
-.check:before {
-    content: "";
-    position: absolute;
-    top: -15.5px;
-    left: -15px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.check svg {
-    position: relative;
-    z-index: 1;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke: #303030;
-    stroke-width: 1.5;
-    transform: translate3d(0, 0, 0);
-    transition: all 0.2s ease;
-}
-
-.check svg path {
-    stroke-dasharray: 60;
-    stroke-dashoffset: 0;
-}
-
-.check svg polyline {
-    stroke-dasharray: 22;
-    stroke-dashoffset: 66;
-}
-
-.check:hover:before {
-    opacity: 1;
-}
-
-.cbx:checked+.check svg {
-    stroke: #303030;
-}
-
-.cbx:checked+.check svg path {
-    stroke-dashoffset: 60;
-    transition: all 0.3s linear;
-}
-
-.cbx:checked+.check svg polyline {
-    stroke-dashoffset: 42;
-    transition: all 0.2s linear;
-    transition-delay: 0.15s;
 }
 
 /********************************* Waves *********************************/
