@@ -42,7 +42,7 @@
                 <button class="fill" (click)="onStartTrainingButton()">Lancer l'entraînement</button>
         </div> -->
         <div class="container">
-            <p-table [value]="situationList" dataKey="_id" [rows]="7" [showCurrentPageReport]="true" [paginator]="true"
+            <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true" [paginator]="true"
                 [(selection)]="selectedSituations">
                 <ng-template pTemplate="header">
                     <tr class="animate__animated animate__fadeInDown">

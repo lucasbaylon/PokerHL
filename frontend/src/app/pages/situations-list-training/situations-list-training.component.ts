@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-situations-list-training',
-  templateUrl: './situations-list-training.component.html',
-  styleUrls: ['./situations-list-training.component.scss']
+    selector: 'app-situations-list-training',
+    templateUrl: './situations-list-training.component.html',
+    styleUrls: ['./situations-list-training.component.scss']
 })
 export class SituationsListTrainingComponent {
 
@@ -17,10 +17,21 @@ export class SituationsListTrainingComponent {
 
     checkedSituations: number[] = [];
 
+    nbRowsPerPage = 10;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService
     ) { }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        if (event.target.innerHeight > 1080) {
+            this.nbRowsPerPage = 10;
+        } else {
+            this.nbRowsPerPage = 7;
+        }
+    }
 
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
@@ -28,6 +39,10 @@ export class SituationsListTrainingComponent {
         });
 
         this.apiSituation.getSituations();
+
+        if (window.innerHeight <= 1080) {
+            this.nbRowsPerPage = 7;
+        }
     }
 
     redirectTo(page: string) {

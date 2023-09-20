@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
@@ -14,10 +14,21 @@ export class SituationsListManagerComponent {
 
     situationList: Situation[] = [];
 
+    nbRowsPerPage = 10;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService
     ) { }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        if (event.target.innerHeight > 1080) {
+            this.nbRowsPerPage = 10;
+        } else {
+            this.nbRowsPerPage = 7;
+        }
+    }
 
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
@@ -25,6 +36,10 @@ export class SituationsListManagerComponent {
         });
 
         this.apiSituation.getSituations();
+
+        if (window.innerHeight <= 1080) {
+            this.nbRowsPerPage = 7;
+        }
     }
 
     redirectTo(page: string) {
