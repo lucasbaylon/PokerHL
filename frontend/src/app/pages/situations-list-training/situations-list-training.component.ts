@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Situation } from 'src/app/interfaces/situation';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
+import { Paginator } from 'primeng/paginator';
 
 @Component({
     selector: 'app-situations-list-training',
@@ -19,9 +20,12 @@ export class SituationsListTrainingComponent {
 
     nbRowsPerPage = 10;
 
+    pageNumber = this.paginator.currentPage();
+
     constructor(
         private router: Router,
-        private apiSituation: SituationService
+        private apiSituation: SituationService,
+        private paginator: Paginator
     ) { }
 
     @HostListener('window:resize', ['$event'])
