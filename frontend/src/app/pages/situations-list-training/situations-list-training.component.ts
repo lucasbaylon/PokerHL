@@ -20,12 +20,11 @@ export class SituationsListTrainingComponent {
 
     nbRowsPerPage = 10;
 
-    pageNumber = this.paginator.currentPage();
+    currentPage = 1;
 
     constructor(
         private router: Router,
-        private apiSituation: SituationService,
-        private paginator: Paginator
+        private apiSituation: SituationService
     ) { }
 
     @HostListener('window:resize', ['$event'])
@@ -47,6 +46,11 @@ export class SituationsListTrainingComponent {
         if (window.innerHeight <= 1080) {
             this.nbRowsPerPage = 7;
         }
+    }
+
+    onPageChange(event: any): void {
+        this.currentPage = event.first / event.rows + 1;
+        console.log(this.currentPage)
     }
 
     redirectTo(page: string) {

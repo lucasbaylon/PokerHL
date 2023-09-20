@@ -7,7 +7,7 @@
         <p>Sélectionnez les situations sur lesquelles vous souhaitez vous entraîner</p>
         <div class="container">
             <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
-                [paginator]="true" [(selection)]="selectedSituations" [(page)]="pageNumber">
+                [paginator]="true" [(selection)]="selectedSituations" (onPage)="onPageChange($event)">
                 <ng-template pTemplate="header">
                     <tr class="animate__animated animate__fadeInDown">
                         <th>
