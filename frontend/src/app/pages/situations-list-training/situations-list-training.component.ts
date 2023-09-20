@@ -25,7 +25,6 @@ export class SituationsListTrainingComponent {
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data;
-            console.log(this.situationList)
         });
 
         this.apiSituation.getSituations();
