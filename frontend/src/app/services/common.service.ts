@@ -3,7 +3,7 @@ import { Situation } from '../interfaces/situation';
 import { Action } from '../interfaces/action';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class CommonService {
 
@@ -69,4 +69,5 @@ export class CommonService {
         }
         return '';
     }
+
 }

@@ -3,7 +3,7 @@ import { Card } from "./card";
 
 export interface Situation {
     _id?: string;
-    
+
     name?: string;
 
     nbPlayer?: number;

@@ -1,5 +1,5 @@
 # PokerTraining 1.1.0
 
-Angular version : **14.2.6**
+Angular version : **16.2.0**
 
-NodeJS version : **16.18.1**
+NodeJS version : **18.17.1**

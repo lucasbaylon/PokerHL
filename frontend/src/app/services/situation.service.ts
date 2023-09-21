@@ -4,7 +4,7 @@ import { Socket } from 'ngx-socket-io';
 import { Situation } from '../interfaces/situation';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class SituationService {
 
@@ -53,4 +53,5 @@ export class SituationService {
     duplicateSituation(id: string) {
         this.socket.emit('DuplicateSituation', id);
     }
+
 }

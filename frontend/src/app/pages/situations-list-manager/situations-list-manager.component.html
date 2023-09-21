@@ -1,0 +1,106 @@
+<div class="header">
+    <ion-button class="backArrow" (click)="redirectTo('home')">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <div class="inner-header">
+        <h1>Gérer les situations</h1>
+        <p>Supprimez, modifiez ou créez des situations</p>
+        <div class="container">
+            <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
+                [paginator]="true">
+                <ng-template pTemplate="header">
+                    <tr class="animate__animated animate__fadeIn">
+                        <th>
+                            <div class="flex align-items-center">
+                                Nom
+                                <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex align-items-center">
+                                Nb BB dealer
+                                <p-columnFilter type="numeric" field="dealerMissingTokens"
+                                    display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex align-items-center">
+                                Nb joueurs
+                                <p-columnFilter type="numeric" field="nbPlayer" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex align-items-center">
+                                Joueur Dealer
+                                <p-columnFilter type="text" field="dealer" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex align-items-center">
+                                Niveau
+                                <p-columnFilter type="text" field="opponentLevel" display="menu"></p-columnFilter>
+                                </div>
+                        </th>
+                        <th style="width: 4.5rem"></th>
+                        <th style="width: 4.5rem"></th>
+                        <th style="width: 4.5rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-situation let-i="rowIndex">
+                    <tr class="animate__animated animate__fadeIn" [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.1 + 's'">
+                        <td>
+                            {{ situation.name }}
+                        </td>
+                        <td>
+                            {{ situation.dealerMissingTokens }}
+                        </td>
+                        <td>
+                            {{ situation.nbPlayer }}
+                        </td>
+                        <td>
+                            {{ situation.dealer! | dealer }}
+                        </td>
+                        <td>
+                            {{ situation.opponentLevel! | opponentLevel }}
+                        </td>
+                        <td>
+                            <ion-button (click)="duplicateSituation(situation._id)">
+                                <ion-icon name="copy-outline"></ion-icon>
+                            </ion-button>
+                        </td>
+                        <td>
+                            <ion-button (click)="editSituation(situation._id)">
+                                <ion-icon name="pencil-outline"></ion-icon>
+                            </ion-button>
+                        </td>
+                        <td>
+                            <ion-button (click)="removeSituation(situation._id)">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </ion-button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">No customers found.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <button class="fill" (click)="redirectTo('situations-manager')">Créer une nouvelle situation</button>
+    </div>
+    <div>
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+    </div>
+</div>

@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { ManageSituationComponent } from './components/manage-situation/manage-situation.component';
-import { SituationListComponent } from './components/situation-list/situation-list.component';
-import { SituationsComponent } from './components/situations/situations.component';
-import { TrainingComponent } from './components/training/training.component';
-import { CheckSituationGuard } from './guards/check-situation.guard';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { TrainingComponent } from './pages/training/training.component';
+import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
+import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
+import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
+import { checkSituationGuard } from './guards/check-situation.guard';
 
 const routes: Routes = [
     {
@@ -18,31 +19,35 @@ const routes: Routes = [
         component: HomeComponent
     },
     {
-        path: 'situations',
-        component: SituationsComponent
+        path: 'login',
+        component: LoginComponent
     },
     {
-        path: 'manage',
-        component: ManageSituationComponent
+        path: 'situations-manager',
+        component: SituationManagerComponent
     },
     {
-        path: 'list',
-        component: SituationListComponent,
+        path: 'situations-list-manager',
+        component: SituationsListManagerComponent
+    },
+    {
+        path: 'situations-list-training',
+        component: SituationsListTrainingComponent,
         canActivate: [
-            CheckSituationGuard
+            checkSituationGuard
         ]
     },
     {
         path: 'training',
         component: TrainingComponent,
         canActivate: [
-            CheckSituationGuard
+            checkSituationGuard
         ]
     }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }
