@@ -1,4 +1,5 @@
 const express = require('express');
+cors = require('cors');
 const app = express();
 
 const fs = require('fs');
@@ -6,8 +7,16 @@ const path = require('path');
 
 const http = require('http').Server(app);
 
+app.use(cors());
+
 const optionsCors = {
-    cors: {
+    maxHttpBufferSize: 1e9,
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
+}
+
+if (process.env.NODE_ENV === 'dev') {
+    optionsCors.cors = {
         origin: 'http://localhost:4200',
         methods: ["GET", "POST"]
     }
@@ -17,14 +26,11 @@ const io = require('socket.io')(http, optionsCors);
 
 const situations_dir = './situations';
 
-// Create link to Angular build directory
-// The `ng build` command will save the result
-// under the `dist` folder.
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+app.get('/*', (req, res) => {
+    res.sendFile(__dirname + '/dist/index.html');
 });
 
 app.get("/api/check_situations_folder", function (req, res) {
@@ -59,9 +65,9 @@ app.get("/api/check_situation_id/:new_situation_id", function (req, res) {
         });
     }
     if (situation_exist) {
-        res.status(200).json({ exist: true});
+        res.status(200).json({ exist: true });
     } else {
-        res.status(200).json({ exist: false});
+        res.status(200).json({ exist: false });
     }
 });
 
