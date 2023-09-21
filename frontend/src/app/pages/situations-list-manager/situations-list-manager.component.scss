@@ -104,6 +104,14 @@ p {
     margin: auto;
 }
 
+th:first-child {
+    border-top-left-radius: 6px !important;
+}
+
+th:last-child {
+    border-top-right-radius: 6px !important;
+}
+
 /********************************* Boutons *********************************/
 
 $colors: (

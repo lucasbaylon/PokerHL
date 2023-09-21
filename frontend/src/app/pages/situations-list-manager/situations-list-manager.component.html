@@ -5,49 +5,11 @@
     <div class="inner-header">
         <h1>Gérer les situations</h1>
         <p>Supprimez, modifiez ou créez des situations</p>
-        <!-- <div class="container">
-            <ul class="responsive-table">
-                <li class="table-header">
-                    <div class="col col-1">Nom</div>
-                    <div class="col col-2">Nb BB dealer</div>
-                    <div class="col col-3">Nb joueurs</div>
-                    <div class="col col-4">Dealer</div>
-                    <div class="col col-5">Niveau</div>
-                    <div class="col col-6">Dupliquer</div>
-                    <div class="col col-7">Modifier</div>
-                    <div class="col col-8">Supprimer</div>
-                </li>
-                <div class="tableBody">
-                    <li *ngFor="let situation of situationList; let i = index" class="table-row animate__animated animate__fadeInDown" [style.animation-delay]="i * 0.1+'s'">
-                        <div class="col col-1">{{ situation.name }}</div>
-                        <div class="col col-2">{{ situation.dealerMissingTokens }}</div>
-                        <div class="col col-3">{{ situation.nbPlayer }}</div>
-                        <div class="col col-4">{{ situation.dealer! | dealer }}</div>
-                        <div class="col col-4">{{ situation.opponentLevel! | opponentLevel }}</div>
-                        <div class="col col-5">
-                            <ion-button (click)="duplicateSituation(situation._id!)" class="icon-div">
-                                <ion-icon name="copy-outline"></ion-icon>
-                            </ion-button>
-                        </div>
-                        <div class="col col-6">
-                            <ion-button (click)="editSituation(situation._id!)" class="icon-div">
-                                <ion-icon name="pencil-outline"></ion-icon>
-                            </ion-button>
-                        </div>
-                        <div class="col col-7">
-                            <ion-button (click)="removeSituation(situation._id!)" class="icon-div">
-                                <ion-icon name="trash-outline"></ion-icon>
-                            </ion-button>
-                        </div>
-                    </li>
-                </div>
-            </ul>
-        </div> -->
         <div class="container">
             <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
                 [paginator]="true">
                 <ng-template pTemplate="header">
-                    <tr>
+                    <tr class="animate__animated animate__fadeIn">
                         <th>
                             <div class="flex align-items-center">
                                 Nom
@@ -71,126 +33,21 @@
                             <div class="flex align-items-center">
                                 Joueur Dealer
                                 <p-columnFilter type="text" field="dealer" display="menu"></p-columnFilter>
-                                <!-- <p-columnFilter field="status" matchMode="equals" display="menu">
-                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                        <p-dropdown [ngModel]="value" [options]="statuses"
-                                            (onChange)="filter($event.value)" placeholder="Any">
-                                            <ng-template let-option pTemplate="item">
-                                                <p-tag [value]="option.value"
-                                                    [severity]="getSeverity(option.label)"></p-tag>
-                                            </ng-template>
-                                        </p-dropdown>
-                                    </ng-template>
-                                </p-columnFilter> -->
                             </div>
                         </th>
                         <th>
                             <div class="flex align-items-center">
                                 Niveau
                                 <p-columnFilter type="text" field="opponentLevel" display="menu"></p-columnFilter>
-                                <!-- <p-columnFilter field="status" matchMode="equals" display="menu">
-                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                        <p-dropdown [ngModel]="value" [options]="statuses"
-                                            (onChange)="filter($event.value)" placeholder="Any">
-                                            <ng-template let-option pTemplate="item">
-                                                <p-tag [value]="option.value"
-                                                    [severity]="getSeverity(option.label)"></p-tag>
-                                            </ng-template>
-                                        </p-dropdown>
-                                    </ng-template>
-                                </p-columnFilter> -->
-                            </div>
+                                </div>
                         </th>
                         <th style="width: 5rem"></th>
                         <th style="width: 5rem"></th>
                         <th style="width: 5rem"></th>
-                        <!-- <th style="min-width:15rem">
-                            <div class="flex align-items-center">
-                                Country
-                                <p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width:15rem">
-                            <div class="flex align-items-center">
-                                Agent
-                                <p-columnFilter field="representative" matchMode="in" display="menu"
-                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                                    <ng-template pTemplate="header">
-                                        <div class="px-3 pt-3 pb-0">
-                                            <span class="font-bold">Agent Picker</span>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                        <p-multiSelect [ngModel]="value" [options]="representatives" placeholder="Any"
-                                            (onChange)="filter($event.value)" optionLabel="name">
-                                            <ng-template let-option pTemplate="item">
-                                                <div class="inline-block vertical-align-middle">
-                                                    <img [alt]="option.label"
-                                                        src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}"
-                                                        width="24" class="vertical-align-middle" />
-                                                    <span class="ml-1 mt-1">{{ option.name }}</span>
-                                                </div>
-                                            </ng-template>
-                                        </p-multiSelect>
-                                    </ng-template>
-                                </p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width:10rem">
-                            <div class="flex align-items-center">
-                                Date
-                                <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width:10rem">
-                            <div class="flex align-items-center">
-                                Balance
-                                <p-columnFilter type="numeric" field="balance" display="menu"
-                                    currency="USD"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width:10rem">
-                            <div class="flex align-items-center">
-                                Status
-                                <p-columnFilter field="status" matchMode="equals" display="menu">
-                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                        <p-dropdown [ngModel]="value" [options]="statuses"
-                                            (onChange)="filter($event.value)" placeholder="Any">
-                                            <ng-template let-option pTemplate="item">
-                                                <p-tag [value]="option.value"
-                                                    [severity]="getSeverity(option.label)"></p-tag>
-                                            </ng-template>
-                                        </p-dropdown>
-                                    </ng-template>
-                                </p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width:10rem">
-                            <div class="flex align-items-center">
-                                Activity
-                                <p-columnFilter field="activity" matchMode="between" display="menu"
-                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                                    <ng-template pTemplate="filter" let-filter="filterCallback">
-                                        <p-slider [ngModel]="activityValues" [range]="true"
-                                            (onSlideEnd)="filter($event.values)" styleClass="m-3"></p-slider>
-                                        <div class="flex align-items-center px-2">
-                                            <span>{{ activityValues[0] }}</span>
-                                            <span>{{ activityValues[1] }}</span>
-                                        </div>
-                                    </ng-template>
-                                </p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="width: 3rem">
-                            <div class="flex align-items-center">
-                                Verified
-                                <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
-                            </div>
-                        </th> -->
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-situation>
-                    <tr>
+                <ng-template pTemplate="body" let-situation let-i="rowIndex">
+                    <tr class="animate__animated animate__fadeIn" [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.075 + 's'">
                         <td>
                             {{ situation.name }}
                         </td>
