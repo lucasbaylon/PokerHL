@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
 import { TrainingComponent } from './pages/training/training.component';
 import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
 import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
@@ -16,6 +17,10 @@ const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent
+    },
+    {
+        path: 'login',
+        component: LoginComponent
     },
     {
         path: 'situations-manager',

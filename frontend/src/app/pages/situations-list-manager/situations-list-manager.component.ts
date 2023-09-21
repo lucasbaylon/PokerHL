@@ -16,6 +16,8 @@ export class SituationsListManagerComponent {
 
     nbRowsPerPage = 10;
 
+    paginatorAnimationDelay = "0s"
+
     constructor(
         private router: Router,
         private apiSituation: SituationService
@@ -28,6 +30,7 @@ export class SituationsListManagerComponent {
         } else {
             this.nbRowsPerPage = 7;
         }
+        this.paginatorAnimationDelay = 0.1 + this.nbRowsPerPage * 0.075 + 's';
     }
 
     ngOnInit(): void {

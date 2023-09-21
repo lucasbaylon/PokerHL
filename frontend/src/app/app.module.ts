@@ -22,6 +22,7 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { LoginComponent } from './pages/login/login.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -35,7 +36,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         SituationsListTrainingComponent,
         DealerPipe,
         OpponentLevelPipe,
-        ActionColorPipe
+        ActionColorPipe,
+        LoginComponent
     ],
     imports: [
         FormsModule,
