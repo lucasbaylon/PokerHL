@@ -123,24 +123,26 @@ $color in $colors {
 
 button {
     background: none;
-    border: 2px solid;
-    line-height: 1;
+    border: 1px solid;
     margin: auto;
+    margin-top: 25px;
     margin-bottom: 30px;
     font-size: 1.1em;
-    font-weight: 600;
-    padding: 1em;
-    letter-spacing: 0.5px;
-    border-radius: 30px;
+    padding: 17px;
+    letter-spacing: 1px;
+    width: 300px;
+    cursor: pointer;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    color: var(--color);
+    transition: 0.25s;
+    
     width: 400px;
     cursor: pointer;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    -ms-border-radius: 30px;
-    -o-border-radius: 30px;
-}
-
-button {
+    
     color: var(--color);
     transition: 0.25s;
 
@@ -148,6 +150,11 @@ button {
         border-color: var(--hover);
         color: #303030;
     }
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
 }
 
 .fill:hover {
