@@ -112,6 +112,13 @@ th:last-child {
     border-top-right-radius: 6px !important;
 }
 
+::ng-deep .p-paginator {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
 /********************************* Boutons *********************************/
 
 $colors: (
