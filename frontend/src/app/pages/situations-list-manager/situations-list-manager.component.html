@@ -47,7 +47,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-situation let-i="rowIndex">
-                    <tr class="animate__animated animate__fadeIn" [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.075 + 's'">
+                    <tr class="animate__animated animate__fadeIn" [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.1 + 's'">
                         <td>
                             {{ situation.name }}
                         </td>
@@ -64,47 +64,20 @@
                             {{ situation.opponentLevel! | opponentLevel }}
                         </td>
                         <td>
-                            <ion-button (click)="duplicateSituation(situation._id)" class="icon-div">
+                            <ion-button (click)="duplicateSituation(situation._id)">
                                 <ion-icon name="copy-outline"></ion-icon>
                             </ion-button>
                         </td>
                         <td>
-                            <ion-button (click)="editSituation(situation._id)" class="icon-div">
+                            <ion-button (click)="editSituation(situation._id)">
                                 <ion-icon name="pencil-outline"></ion-icon>
                             </ion-button>
                         </td>
                         <td>
-                            <ion-button (click)="removeSituation(situation._id)" class="icon-div">
+                            <ion-button (click)="removeSituation(situation._id)">
                                 <ion-icon name="trash-outline"></ion-icon>
                             </ion-button>
                         </td>
-                        <!-- <td>
-                            <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                                [class]="'flag flag-' + customer.country.code" style="width: 20px" />
-                            <span class="ml-1 vertical-align-middle">{{ customer.country.name }}</span>
-                        </td>
-                        <td>
-                            <img [alt]="customer.representative.name"
-                                src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}"
-                                width="32" style="vertical-align: middle" />
-                            <span class="ml-1 vertical-align-middle">{{ customer.representative.name }}</span>
-                        </td>
-                        <td>
-                            {{ customer.date | date: 'MM/dd/yyyy' }}
-                        </td>
-                        <td>
-                            {{ customer.balance | currency: 'USD':'symbol' }}
-                        </td>
-                        <td>
-                            <p-tag [value]="customer.status" [severity]="getSeverity(customer.status)"></p-tag>
-                        </td>
-                        <td>
-                            <p-progressBar [value]="customer.activity" [showValue]="false"></p-progressBar>
-                        </td>
-                        <td class="text-center">
-                            <i class="pi"
-                                [ngClass]="{ 'text-green-500 pi-check-circle': customer.verified, 'text-red-500 pi-times-circle': !customer.verified }"></i>
-                        </td> -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">

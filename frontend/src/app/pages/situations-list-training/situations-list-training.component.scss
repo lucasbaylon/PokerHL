@@ -106,6 +106,13 @@ th:last-child {
     border-top-right-radius: 6px !important;
 }
 
+::ng-deep .p-paginator {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
 /********************************* Boutons *********************************/
 
 $colors: (
@@ -121,21 +128,19 @@ $colors: (
 
 button {
     background: none;
-    border: 2px solid;
-    line-height: 1;
+    border: 1px solid;
     margin: auto;
-    margin-top: 24px;
+    margin-top: 25px;
     font-size: 1.1em;
-    font-weight: 600;
-    padding: 1em;
-    letter-spacing: 0.5px;
-    border-radius: 30px;
+    padding: 17px;
+    letter-spacing: 1px;
     width: 300px;
     cursor: pointer;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    -ms-border-radius: 30px;
-    -o-border-radius: 30px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
     color: var(--color);
     transition: 0.25s;
 
@@ -200,11 +205,4 @@ button {
     100% {
         transform: translate3d(85px, 0, 0);
     }
-}
-
-::ng-deep .p-paginator {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
 }
