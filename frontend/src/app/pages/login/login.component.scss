@@ -67,6 +67,10 @@ h3 {
     letter-spacing: 3px;
     text-align: center;
     margin-bottom: 33px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .form-holder {
@@ -95,18 +99,41 @@ h3 {
     border-bottom: 1px solid rgb(48, 154, 253);
 }
 
-.form-holder ion-icon {
+.form-holder .icon-div {
     position: absolute;
-    top: 50%;
-    transform: translateY(-45%);
+    top: 55%;
     font-size: 17px;
-    pointer-events: none;
     left: 10px;
     color: #666;
+    transform: translateY(-45%);
     -webkit-transform: translateY(-45%);
     -moz-transform: translateY(-45%);
     -ms-transform: translateY(-45%);
     -o-transform: translateY(-45%);
+}
+
+.form-holder .icon-div:not(.right-icon-div) {
+    pointer-events: none;
+}
+
+.form-holder .right-icon-div {
+    width: fit-content;
+    position: absolute;
+    left: 270px;
+    cursor: pointer;
+    font-size: 20px;
+    pointer-events: auto;
+}
+
+input::placeholder {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+ion-icon {
+    pointer-events: none;
 }
 
 /********************************* Boutons *********************************/
@@ -146,6 +173,11 @@ button {
         border-color: var(--hover);
         color: #fff;
     }
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .fill:hover {
