@@ -30,7 +30,7 @@ h1 {
 p {
     font-size: 1.4em;
     letter-spacing: 1px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 /********************************* Boutons *********************************/
@@ -62,9 +62,6 @@ button {
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
-}
-
-button {
     color: var(--color);
     transition: 0.25s;
 
