@@ -26,12 +26,14 @@ const io = require('socket.io')(http, optionsCors);
 
 const situations_dir = './situations';
 
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir));
+if (process.env.NODE_ENV === 'production') {
+    var distDir = __dirname + "/dist/";
+    app.use(express.static(distDir));
 
-app.get('/*', (req, res) => {
-    res.sendFile(__dirname + '/dist/index.html');
-});
+    app.get('/*', (req, res) => {
+        res.sendFile(__dirname + '/dist/index.html');
+    });
+}
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
