@@ -22,6 +22,13 @@ if (process.env.NODE_ENV === 'dev') {
     }
 }
 
+if (process.env.NODE_ENV === 'production') {
+    optionsCors.cors = {
+        origin: 'https://pokertraining.lucasbaylon.fr',
+        methods: ["GET", "POST"]
+    }
+}   
+
 app.use(cors(optionsCors));
 
 const io = require('socket.io')(http, optionsCors);
