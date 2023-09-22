@@ -1,8 +1,8 @@
 <div class="header">
     <div class="inner-header">
-        <div class="wrapper">
+        <div class="wrapper animate__animated animate__fadeInDown" >
             <div class="inner">
-                <form action="">
+                <form>
                     <h3>Se connecter</h3>
                     <div class="form-holder">
                         <ion-button class="icon-div">
@@ -14,7 +14,10 @@
                         <ion-button class="icon-div">
                             <ion-icon name="lock-closed-outline"></ion-icon>
                         </ion-button>
-                        <input type="password" class="form-control" placeholder="Mot de passe">
+                        <input [type]="inputType" class="form-control" placeholder="Mot de passe">
+                        <ion-button class="icon-div right-icon-div" (click)="toggleEyeIcon()">
+                            <ion-icon [name]="eyeIcon"></ion-icon>
+                        </ion-button>
                     </div>
                     <button class="fill">Connexion</button>
                 </form>
