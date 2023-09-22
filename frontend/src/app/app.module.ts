@@ -20,6 +20,7 @@ import { NgxSliderModule } from 'ngx-slider-v2';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
@@ -52,6 +53,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         NgxSliderModule,
         TableModule,
         PaginatorModule,
+        InputSwitchModule,
         provideFirebaseApp(() => initializeApp({
             apiKey: "AIzaSyB2BrtaN_2h-T0iWEZFe3SZVNhrUxyzYV8",
             authDomain: "pokertraining-ab684.firebaseapp.com",
