@@ -7,7 +7,7 @@ const path = require('path');
 
 const http = require('http').Server(app);
 
-app.use(cors());
+app.set('port', 3000);
 
 const optionsCors = {
     maxHttpBufferSize: 1e9,
@@ -22,18 +22,20 @@ if (process.env.NODE_ENV === 'dev') {
     }
 }
 
+app.use(cors(optionsCors));
+
 const io = require('socket.io')(http, optionsCors);
 
-const situations_dir = './situations';
-
 if (process.env.NODE_ENV === 'production') {
-    var distDir = __dirname + "/dist/";
+    const distDir = __dirname + "/dist/";
     app.use(express.static(distDir));
 
     app.get('/*', (req, res) => {
         res.sendFile(__dirname + '/dist/index.html');
     });
 }
+
+const situations_dir = './situations';
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
