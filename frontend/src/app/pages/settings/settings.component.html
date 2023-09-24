@@ -17,20 +17,16 @@
                             </div>
                             <h4>Entraînement</h4>
                             <div class="switch-container">
-                                <div class="setting-description">Afficher la solution lors d'une erreur</div>
+                                <div class="setting-description">Solution lors d'une erreur</div>
                                 <p-inputSwitch [(ngModel)]="displaySolutionOnError"></p-inputSwitch>
                             </div>
                             <div class="switch-container">
-                                <div class="setting-description">Activer le contraste élevé sur les cartes</div>
-                                <p-inputSwitch [(ngModel)]="highContrastCards"></p-inputSwitch>
+                                <div class="setting-description">Style des cartes</div>
+                                <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"></p-dropdown>
                             </div>
                             <div class="switch-container">
                                 <div class="setting-description">Couleur du tapis de jeu</div>
-                                <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
-                            </div>
-                            <div class="switch-container">
-                                <div class="setting-description">Activer le mode sombre</div>
-                                <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+                                <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"></p-dropdown>
                             </div>
                         </div>
                         <div class="settings-second-part">

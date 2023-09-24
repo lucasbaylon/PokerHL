@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -21,6 +21,7 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { DropdownModule } from 'primeng/dropdown';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
@@ -54,6 +55,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         TableModule,
         PaginatorModule,
         InputSwitchModule,
+        DropdownModule,
         provideFirebaseApp(() => initializeApp({
             apiKey: "AIzaSyB2BrtaN_2h-T0iWEZFe3SZVNhrUxyzYV8",
             authDomain: "pokertraining-ab684.firebaseapp.com",

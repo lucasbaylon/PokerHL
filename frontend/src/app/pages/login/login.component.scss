@@ -107,7 +107,7 @@ h3 {
 .form-holder .right-icon-div {
     width: fit-content;
     position: absolute;
-    left: 270px;
+    left: 245px;
     cursor: pointer;
     font-size: 20px;
     pointer-events: auto;
@@ -127,14 +127,14 @@ ion-icon {
 /********************************* Boutons *********************************/
 
 $colors: (
-    fill: #303030,
+    fill: #3B82F6,
 );
 
 @each $button,
 $color in $colors {
     .#{$button} {
-        --color: #{$color};
-        --hover: #{adjust-hue($color, 45deg)};
+        --color: #303030;
+        --hover: #{$color};
     }
 }
 
@@ -144,9 +144,9 @@ button {
     margin: auto;
     margin-top: 25px;
     font-size: 1.1em;
-    padding: 17px;
+    padding: 15px;
     letter-spacing: 1px;
-    width: 300px;
+    width: 275px;
     cursor: pointer;
     border-radius: 10px;
     -webkit-border-radius: 10px;
