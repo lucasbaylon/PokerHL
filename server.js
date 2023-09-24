@@ -20,27 +20,11 @@ if (process.env.NODE_ENV === 'dev') {
         origin: 'http://localhost:4200',
         methods: ["GET", "POST"]
     }
-}
-
-if (process.env.NODE_ENV === 'production') {
-    optionsCors.cors = {
-        origin: 'https://pokertraining.lucasbaylon.fr',
-        methods: ["GET", "POST"]
-    }
-}   
+} 
 
 app.use(cors(optionsCors));
 
 const io = require('socket.io')(http, optionsCors);
-
-if (process.env.NODE_ENV === 'production') {
-    const distDir = __dirname + "/dist/";
-    app.use(express.static(distDir));
-
-    app.get('/*', (req, res) => {
-        res.sendFile(__dirname + '/dist/index.html');
-    });
-}
 
 const situations_dir = './situations';
 
@@ -92,6 +76,15 @@ function getSituations() {
         })
     }
     return situationsList;
+}
+
+if (process.env.NODE_ENV === 'production') {
+    const distDir = __dirname + "/dist/";
+    app.use(express.static(distDir));
+
+    app.get('/*', (req, res) => {
+        res.sendFile(__dirname + '/dist/index.html');
+    });
 }
 
 io.on('connection', (socket) => {
