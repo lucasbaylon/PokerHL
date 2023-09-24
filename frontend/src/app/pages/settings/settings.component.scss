@@ -91,9 +91,9 @@ ion-button {
     justify-content: center;
 }
 
-.settings-card {
+.settings-div {
     margin: 0;
-    width: 550px;
+    width: fit-content;
     padding: 50px;
     background: #fff;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
@@ -121,6 +121,24 @@ h3 {
     -ms-user-select: none;
 }
 
+.flex-container {
+    display: flex;
+}
+
+.settings-first-part,
+.settings-second-part {
+    width: 50%;
+    min-width: 400px;
+}
+
+.settings-first-part{
+    margin-right: 25px;
+}
+
+.settings-second-part{
+    margin-left: 25px;
+}
+
 h4 {
     margin: 0;
     margin-top: 40px;
@@ -134,7 +152,7 @@ h4 {
     -ms-user-select: none;
 }
 
-p{
+p {
     color: rgb(141, 141, 141);
     font-size: 17px;
     margin-top: 10px;
@@ -176,21 +194,17 @@ p{
     width: 100%;
 }
 
-.center-button {
-    margin-top: 10px;
-}
-
 /********************************* Boutons *********************************/
 
 $colors: (
-    fill: #303030,
+    fill: #3B82F6,
 );
 
 @each $button,
 $color in $colors {
     .#{$button} {
-        --color: #{$color};
-        --hover: #{adjust-hue($color, 45deg)};
+        --color: #303030;
+        --hover: #{$color};
     }
 }
 
@@ -202,7 +216,7 @@ button {
     font-size: 1.1em;
     padding: 15px;
     letter-spacing: 1px;
-    width: 200px;
+    width: 175px;
     cursor: pointer;
     border-radius: 10px;
     -webkit-border-radius: 10px;

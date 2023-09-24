@@ -5,42 +5,49 @@
     <div class="inner-header">
         <div class="settings-container animate__animated animate__fadeInDown">
             <div>
-                <div class="settings-card">
+                <div class="settings-div">
                     <h3>Paramètres</h3>
                     <p>Ajustez les paramètres selon vos préférences.</p>
-                    <h4>Global</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="darkMode"></p-inputSwitch>
-                    </div>
-                    <h4>Entraînement</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Afficher la solution lors d'une erreur</div>
-                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"></p-inputSwitch>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Activer le contraste élevé sur les cartes</div>
-                        <p-inputSwitch [(ngModel)]="highContrastCards"></p-inputSwitch>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
-                    </div>
-                    <h4>Situations</h4>
-                    <div class="buttons-container">
-                        <div class="side-buttons">
-                            <button class="fill">Importer</button>
-                            <button class="fill">Exporter</button>
+                    <div class="flex-container">
+                        <div class="settings-first-part">
+                            <h4>Global</h4>
+                            <div class="switch-container">
+                                <div class="setting-description">Activer le mode sombre</div>
+                                <p-inputSwitch [(ngModel)]="darkMode"></p-inputSwitch>
+                            </div>
+                            <h4>Entraînement</h4>
+                            <div class="switch-container">
+                                <div class="setting-description">Afficher la solution lors d'une erreur</div>
+                                <p-inputSwitch [(ngModel)]="displaySolutionOnError"></p-inputSwitch>
+                            </div>
+                            <div class="switch-container">
+                                <div class="setting-description">Activer le contraste élevé sur les cartes</div>
+                                <p-inputSwitch [(ngModel)]="highContrastCards"></p-inputSwitch>
+                            </div>
+                            <div class="switch-container">
+                                <div class="setting-description">Couleur du tapis de jeu</div>
+                                <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+                            </div>
+                            <div class="switch-container">
+                                <div class="setting-description">Activer le mode sombre</div>
+                                <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+                            </div>
                         </div>
-                    </div>
-                    <h4>Compte</h4>
-                    <div class="buttons-container">
-                        <div class="center-button">
-                            <button class="fill">Se déconnecter</button>
+                        <div class="settings-second-part">
+                            <h4>Situations</h4>
+                            <div class="buttons-container">
+                                <div class="side-buttons">
+                                    <button class="fill">Importer</button>
+                                    <button class="fill">Exporter</button>
+                                </div>
+                            </div>
+                            <h4>Compte</h4>
+                            <div class="buttons-container">
+                                <div class="side-buttons">
+                                    <button class="fill">Changer le MDP</button>
+                                    <button class="fill">Se déconnecter</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
