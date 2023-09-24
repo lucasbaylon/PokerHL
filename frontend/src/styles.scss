@@ -1,4 +1,10 @@
 @import '~animate.css/animate.min.css';
+@import url(//fonts.googleapis.com/css?family=Lato:300:400);
+
+* {
+    font-family: 'Lato', sans-serif;
+    user-drag: none;
+}
 
 body {
     margin: 0;
