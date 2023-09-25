@@ -75,7 +75,6 @@
             <hr class="userHr">
         </div>
         <div class="rightDiv">
-            <br>
             <div *ngFor="let action of filteredActionList(activeSituation.actions, 'unique')">
                 <button *ngIf="action.display_name" class="fill" [id]="'button_' + action.id"
                     (click)="checkResultCase(action.id)">{{action.display_name}}</button>
