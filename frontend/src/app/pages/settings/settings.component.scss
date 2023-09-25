@@ -118,13 +118,10 @@ h3 {
     margin-left: 25px;
 }
 
-.settings-first-part h4{
-    margin-bottom: 18px;
-}
-
 h4 {
     margin: 0;
     margin-top: 40px;
+    margin-bottom: 15px;
     text-align: left !important;
     text-transform: uppercase;
     color: #333;
@@ -135,11 +132,16 @@ h4 {
     -ms-user-select: none;
 }
 
+.buttons-only-div {
+    margin-bottom: 8px;
+}
+
 p {
     color: rgb(141, 141, 141);
     font-size: 17px;
     margin-top: 10px;
     text-align: left;
+    margin-bottom: -10px;
 }
 
 .switch-container {
