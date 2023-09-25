@@ -8,7 +8,7 @@ import { SituationManagerComponent } from './pages/situation-manager/situation-m
 import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
 import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
 import { checkSituationGuard } from './guards/check-situation.guard';
-
+import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
     {
         path: '',
@@ -17,7 +17,8 @@ const routes: Routes = [
     },
     {
         path: 'home',
-        component: HomeComponent
+        component: HomeComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'login',

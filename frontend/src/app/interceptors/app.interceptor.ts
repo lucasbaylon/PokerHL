@@ -19,8 +19,8 @@ export class AppInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return from(this.auth.currentUser?.getIdToken() || Promise.resolve(null)).pipe(
             switchMap((token) => {
-                console.log(token); // Vous devriez maintenant voir le token lui-même dans la console
                 if (token) {
+                    console.log(token);
                     request = request.clone({
                         setHeaders: {
                             Authorization: `Bearer ${token}`,
