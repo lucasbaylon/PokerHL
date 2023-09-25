@@ -16,6 +16,7 @@ export class SettingsComponent {
   darkMode: boolean = false;
   displaySolutionOnError: boolean = true;
   highContrastCards: boolean = false;
+  autoNameMultipleSituation: boolean = false;
   availableCardsStyles: any[] = [];
   cardsStyle: any;
   availablePokerTableColors: any[] = [];
