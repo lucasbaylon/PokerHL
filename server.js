@@ -4,10 +4,17 @@ const app = express();
 
 const fs = require('fs');
 const path = require('path');
+const admin = require('firebase-admin');
 
 const http = require('http').Server(app);
 
-app.use(cors());
+const serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+app.set('port', 3000);
 
 const optionsCors = {
     maxHttpBufferSize: 1e9,
@@ -22,9 +29,33 @@ if (process.env.NODE_ENV === 'dev') {
     }
 }
 
+app.use(cors(optionsCors));
+
 const io = require('socket.io')(http, optionsCors);
 
 const situations_dir = './situations';
+
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split('Bearer ')[1];
+
+    if (!token) return res.status(401).send('Unauthorized');
+
+    console.log(token);
+
+    admin
+        .auth()
+        .verifyIdToken(token)
+        .then((decodedToken) => {
+            req.user = decodedToken;
+            next();
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(401).send('Unauthorized');
+        });
+};
+
+app.use(authMiddleware);
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
