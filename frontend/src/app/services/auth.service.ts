@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
+authState
 import { Router } from '@angular/router';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -8,16 +10,31 @@ import { Router } from '@angular/router';
 export class AuthService {
 
     private auth: Auth = inject(Auth);
+    authState$ = authState(this.auth);
+    authStateSubscription: Subscription;
 
     private user: User | null = null;
 
-    constructor(private router: Router) {
-        // this.auth.onAuthStateChanged((user) => {
-        //     if (user) this.user = user;
-        // });
-        this.auth.onAuthStateChanged((user) => {
-            this.user = user;
-            if (user) {
+    isLoading = new BehaviorSubject<boolean>(true);
+
+    constructor(
+        private router: Router
+    ) {
+        // this.authStateSubscription = this.authState$.subscribe((aUser: User | null) => {
+        //     console.log(aUser);
+        //     this.user = aUser;
+        //     if (aUser) {
+        //         this.router.navigate(['home']);
+        //     } else {
+        //         this.router.navigate(['login']);
+        //     }
+        // })
+
+        this.authStateSubscription = this.authState$.subscribe((aUser: User | null) => {
+            console.log(aUser);
+            this.user = aUser;
+            this.isLoading.next(false);
+            if (aUser) {
                 this.router.navigate(['home']);
             } else {
                 this.router.navigate(['login']);
@@ -25,15 +42,15 @@ export class AuthService {
         });
     }
 
+    ngOnDestroy() {
+        this.authStateSubscription.unsubscribe();
+    }
+
     signIn(email: string, password: string) {
-        // signInWithEmailAndPassword(this.auth, email, password).then(() => {
-        //     this.router.navigate(['home']);
-        // });
         return signInWithEmailAndPassword(this.auth, email, password);
     }
 
     signOut() {
-        // signOut(this.auth).then(() => this.router.navigate(['login']));
         return signOut(this.auth);
     }
 

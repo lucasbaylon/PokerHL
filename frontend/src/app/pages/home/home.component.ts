@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -9,11 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeComponent {
 
-    constructor(private router: Router, private apiAuth: AuthService) { }
-
-    ngOnInit() {
-        console.log(this.apiAuth.isLoggedIn());
-    }
+    constructor(private router: Router) { }
 
     redirectTo(page: string) {
         this.router.navigate([page]);
