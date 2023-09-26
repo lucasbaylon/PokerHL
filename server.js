@@ -4,8 +4,15 @@ const app = express();
 
 const fs = require('fs');
 const path = require('path');
+const admin = require('firebase-admin');
 
 const http = require('http').Server(app);
+
+const serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
 app.set('port', 3000);
 
@@ -20,13 +27,18 @@ if (process.env.NODE_ENV === 'dev') {
         origin: 'http://localhost:4200',
         methods: ["GET", "POST"]
     }
-} 
-
-app.use(cors(optionsCors));
+}
 
 const io = require('socket.io')(http, optionsCors);
 
 const situations_dir = './situations';
+
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
+
+app.get('/*', (req, res) => {
+    res.sendFile(__dirname + '/dist/index.html');
+});
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
@@ -76,15 +88,6 @@ function getSituations() {
         })
     }
     return situationsList;
-}
-
-if (process.env.NODE_ENV === 'production') {
-    const distDir = __dirname + "/dist/";
-    app.use(express.static(distDir));
-
-    app.get('/*', (req, res) => {
-        res.sendFile(__dirname + '/dist/index.html');
-    });
 }
 
 io.on('connection', (socket) => {

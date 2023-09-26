@@ -1,40 +1,6 @@
-@import url(//fonts.googleapis.com/css?family=Lato:300:400);
-
-* {
-    font-family: 'Lato', sans-serif;
-    user-drag: none;
-}
-
-.header {
-    text-align: center;
-    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
-    color: white;
-    overflow: hidden;
-}
-
-.inner-header {
-    height: 85vh;
-    width: 100%;
-    display: grid;
-    margin: auto;
-    align-content: center;
-}
-
 /********************************* Login div *********************************/
 
 .login-container {
-    width: 500px;
-    margin: auto;
-    background-color: #fff;
-    color: #303030;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 17px;
-    box-shadow: 0 3px 5px rgba(43, 43, 43, 0.5);
-    border-radius: 10px;
-}
-
-.wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -63,6 +29,7 @@ h3 {
     margin: 0;
     text-transform: uppercase;
     font-size: 25px;
+    font-weight: normal;
     color: #333;
     letter-spacing: 3px;
     text-align: center;
@@ -119,7 +86,7 @@ h3 {
 .form-holder .right-icon-div {
     width: fit-content;
     position: absolute;
-    left: 270px;
+    left: 245px;
     cursor: pointer;
     font-size: 20px;
     pointer-events: auto;
@@ -139,14 +106,14 @@ ion-icon {
 /********************************* Boutons *********************************/
 
 $colors: (
-    fill: #303030,
+    fill: #3B82F6,
 );
 
 @each $button,
 $color in $colors {
     .#{$button} {
-        --color: #{$color};
-        --hover: #{adjust-hue($color, 45deg)};
+        --color: #303030;
+        --hover: #{$color};
     }
 }
 
@@ -156,9 +123,9 @@ button {
     margin: auto;
     margin-top: 25px;
     font-size: 1.1em;
-    padding: 17px;
+    padding: 15px;
     letter-spacing: 1px;
-    width: 300px;
+    width: 275px;
     cursor: pointer;
     border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -182,58 +149,4 @@ button {
 
 .fill:hover {
     box-shadow: inset 0 0 0 2em var(--hover);
-}
-
-/********************************* Waves *********************************/
-
-.waves {
-    position: relative;
-    width: 100%;
-    height: 15vh;
-    margin-bottom: -7px;
-    min-height: 100px;
-    max-height: 150px;
-}
-
-.content {
-    position: relative;
-    height: 20vh;
-    text-align: center;
-    background-color: white;
-}
-
-
-.parallax>use {
-    animation: move-forever 50s linear infinite;
-    -webkit-animation: move-forever 50s linear infinite;
-}
-
-.parallax>use:nth-child(1) {
-    animation-delay: -4s;
-    animation-duration: 14s;
-}
-
-.parallax>use:nth-child(2) {
-    animation-delay: -6s;
-    animation-duration: 20s;
-}
-
-.parallax>use:nth-child(3) {
-    animation-delay: -8s;
-    animation-duration: 26s;
-}
-
-.parallax>use:nth-child(4) {
-    animation-delay: -10s;
-    animation-duration: 40s;
-}
-
-@keyframes move-forever {
-    0% {
-        transform: translate3d(-90px, 0, 0);
-    }
-
-    100% {
-        transform: translate3d(85px, 0, 0);
-    }
 }

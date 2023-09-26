@@ -1,0 +1,50 @@
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+$color: white;
+$dot-size: 10px;
+$dot-margin: 5px;
+$no-of-dots: 5;
+
+@keyframes scaling-dots {
+
+    0%,
+    100% {
+        transform: scale(0);
+    }
+
+    40%,
+    60% {
+        transform: scale(1);
+    }
+}
+
+.scaling-dots {
+    display: grid;
+    height: $dot-size;
+    grid-gap: $dot-margin;
+    grid-template-columns: repeat($no-of-dots, $dot-size);
+
+    div {
+        animation: scaling-dots 1s infinite ease backwards;
+        background: $color;
+        border-radius: 100%;
+        height: $dot-size;
+        width: $dot-size;
+
+        @for $el from 1 through $no-of-dots {
+            &:nth-child(#{$el}) {
+                animation-delay: #{($el * .1s)};
+            }
+        }
+    }
+}

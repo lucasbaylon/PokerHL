@@ -1,0 +1,55 @@
+<ion-button class="backArrow" (click)="redirectTo('home')">
+    <ion-icon name="arrow-back-outline"></ion-icon>
+</ion-button>
+<div class="settings-container animate__animated animate__fadeInDown">
+    <div>
+        <div class="settings-div">
+            <h3>Paramètres</h3>
+            <p>Ajustez les paramètres selon vos préférences.</p>
+            <div class="flex-container">
+                <div class="settings-first-part">
+                    <h4>Global</h4>
+                    <div class="switch-container">
+                        <div class="setting-description">Activer le mode sombre</div>
+                        <p-inputSwitch [(ngModel)]="darkMode"></p-inputSwitch>
+                    </div>
+                    <h4>Entraînement</h4>
+                    <div class="switch-container">
+                        <div class="setting-description">Solution lors d'une erreur</div>
+                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"></p-inputSwitch>
+                    </div>
+                    <div class="switch-container">
+                        <div class="setting-description">Style des cartes</div>
+                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles"
+                            optionLabel="name"></p-dropdown>
+                    </div>
+                    <div class="switch-container">
+                        <div class="setting-description">Couleur du tapis de jeu</div>
+                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
+                            optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+                <div class="settings-second-part">
+                    <h4>Situations</h4>
+                    <div class="switch-container">
+                        <div class="setting-description">Nom de solution multiple auto</div>
+                        <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
+                    </div>
+                    <div class="buttons-container">
+                        <div class="side-buttons">
+                            <button class="fill">Importer</button>
+                            <button class="fill">Exporter</button>
+                        </div>
+                    </div>
+                    <h4 class="buttons-only-div">Compte</h4>
+                    <div class="buttons-container">
+                        <div class="side-buttons">
+                            <button class="fill">Changer le MDP</button>
+                            <button class="fill" (click)="apiAuth.signOut()">Se déconnecter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@
 * {
     font-family: "Lato", sans-serif;
     user-drag: none;
+    box-sizing: unset !important;
 }
 
 ion-icon {
@@ -66,7 +67,7 @@ ion-icon {
     background: radial-gradient(rgb(0, 151, 0), black 150%);
     border-radius: 500px;
     border: 20px solid rgb(230, 230, 230);
-    box-shadow: 0 0 30px 5px rgb(49, 49, 49);
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.3);
 }
 
 .pokerTable h1 {
@@ -118,10 +119,6 @@ img {
     transform: translate(-50%, -50%);
     cursor: pointer;
     transition: top ease 0.25s;
-    -webkit-transition: 0.25s linear;
-    -moz-transition: 0.25s linear;
-    -ms-transition: 0.25s linear;
-    -o-transition: 0.25s linear;
 }
 
 .userCards:active+hr.userHr {
@@ -309,51 +306,66 @@ hr.oponent2Hr {
 .rightDiv {
     background-color: #fff;
     color: #303030;
-    border-radius: 10px;
-    padding: 20px 45px;
+    border-radius: 6px;
+    padding: 20px;
     box-shadow: 0 3px 25px rgba(0, 0, 0, 0.3);
-    width: 10%;
+    width: 200px;
     position: absolute;
     top: 50%;
     left: 84%;
     transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
 }
 
 
 $colors: (
-    fill: #303030,
+    fill: #3B82F6,
 );
 
 @each $button,
 $color in $colors {
     .#{$button} {
-        --color: #{$color};
-        --hover: #{adjust-hue($color, 45deg)};
+        --color: #303030;
+        --hover: #{$color};
     }
 }
 
 button {
     background: none;
-    border: 2px solid;
-    margin-bottom: 20px;
-    line-height: 1;
-    font-weight: 600;
-    font-size: 1.2em;
-    padding: 1em;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    letter-spacing: 0.5px;
-    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid;
+    font-size: 1.1em;
+    padding: 15px;
+    letter-spacing: 1px;
+    width: fit-content;
+    min-width: 150px;
+    cursor: pointer;
+    align-self: center;
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
-}
 
-button {
     color: var(--color);
     transition: 0.25s;
+
+    &:hover {
+        border-color: var(--hover);
+        color: #fff;
+    }
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .fill {
@@ -374,10 +386,10 @@ button {
     height: 50px;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ffde00;
+    background-color: #3B82F6;
     color: #303030;
     text-align: center;
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -387,8 +399,9 @@ button {
 }
 
 .dealer-coin-text {
+    color: #fff;
     position: absolute;
-    top: 50%;
+    top: 47%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 27px;

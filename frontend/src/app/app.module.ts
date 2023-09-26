@@ -1,6 +1,6 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -20,9 +20,14 @@ import { NgxSliderModule } from 'ngx-slider-v2';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { DropdownModule } from 'primeng/dropdown';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { AppInterceptor } from './interceptors/app.interceptor';
+import { LoadingComponent } from './components/loading/loading.component';
 
 const config: SocketIoConfig = { url: 'https://pokertraining.lucasbaylon.fr', options: {} };
 
@@ -37,7 +42,9 @@ const config: SocketIoConfig = { url: 'https://pokertraining.lucasbaylon.fr', op
         DealerPipe,
         OpponentLevelPipe,
         ActionColorPipe,
-        LoginComponent
+        LoginComponent,
+        SettingsComponent,
+        LoadingComponent
     ],
     imports: [
         FormsModule,
@@ -50,6 +57,8 @@ const config: SocketIoConfig = { url: 'https://pokertraining.lucasbaylon.fr', op
         NgxSliderModule,
         TableModule,
         PaginatorModule,
+        InputSwitchModule,
+        DropdownModule,
         provideFirebaseApp(() => initializeApp({
             apiKey: "AIzaSyB2BrtaN_2h-T0iWEZFe3SZVNhrUxyzYV8",
             authDomain: "pokertraining-ab684.firebaseapp.com",
@@ -58,9 +67,11 @@ const config: SocketIoConfig = { url: 'https://pokertraining.lucasbaylon.fr', op
             messagingSenderId: "812892987669",
             appId: "1:812892987669:web:911a0142ec81c1429b091c"
         })),
-        provideAuth(() => getAuth()),
+        provideAuth(() => getAuth())
     ],
-    providers: [],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true },
+    ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
