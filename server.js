@@ -29,16 +29,33 @@ if (process.env.NODE_ENV === 'dev') {
     }
 }
 
+app.use(cors(optionsCors));
+
 const io = require('socket.io')(http, optionsCors);
 
 const situations_dir = './situations';
 
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir));
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split('Bearer ')[1];
 
-app.get('/*', (req, res) => {
-    res.sendFile(__dirname + '/dist/index.html');
-});
+    if (!token) return res.status(401).send('Unauthorized');
+
+    console.log(token);
+
+    admin
+        .auth()
+        .verifyIdToken(token)
+        .then((decodedToken) => {
+            req.user = decodedToken;
+            next();
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(401).send('Unauthorized');
+        });
+};
+
+app.use(authMiddleware);
 
 app.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
@@ -88,6 +105,15 @@ function getSituations() {
         })
     }
     return situationsList;
+}
+
+if (process.NODE_ENV === 'production') {
+    var distDir = __dirname + "/dist/";
+    app.use(express.static(distDir));
+
+    app.get('/*', (req, res) => {
+        res.sendFile(__dirname + '/dist/index.html');
+    });
 }
 
 io.on('connection', (socket) => {
