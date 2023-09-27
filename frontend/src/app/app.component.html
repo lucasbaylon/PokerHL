@@ -18,6 +18,8 @@
     </div>
 </div> -->
 
+<p-toast></p-toast>
+
 <ng-container *ngIf="authService.isLoading | async; else content">
     <app-loading></app-loading>
 </ng-container>
