@@ -55,9 +55,13 @@ const authMiddleware = (req, res, next) => {
         });
 };
 
-app.use(authMiddleware);
+// app.use(authMiddleware);
 
-app.get("/api/check_situations_folder", function (req, res) {
+const protectedRouter = express.Router();
+
+protectedRouter.use(authMiddleware);
+
+protectedRouter.get("/api/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
         // Directory exists!
         fs.readdir(situations_dir, function (err, data) {
@@ -75,7 +79,7 @@ app.get("/api/check_situations_folder", function (req, res) {
     }
 });
 
-app.get("/api/check_situation_id/:new_situation_id", function (req, res) {
+protectedRouter.get("/api/check_situation_id/:new_situation_id", function (req, res) {
     let new_situation_id = req.params.new_situation_id
     let situations_files = fs.readdirSync(situations_dir);
     let situation_exist = false;
@@ -107,11 +111,11 @@ function getSituations() {
     return situationsList;
 }
 
-if (process.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     var distDir = __dirname + "/dist/";
     app.use(express.static(distDir));
 
-    app.get('/*', (req, res) => {
+    app.get('*', (req, res) => {
         res.sendFile(__dirname + '/dist/index.html');
     });
 }

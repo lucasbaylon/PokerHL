@@ -24,7 +24,7 @@ New-Item -ItemType "directory" -Path $prod
 Copy-Item $distFolder -Destination (Join-Path $prod "\dist") -Recurse
 
 # on copie les fichiers et dossier du backend dans le dossier de prod
-Copy-Item './server.js', './package.json', './node_modules', './run.bat' -Destination $prod -Exclude "frontend/" -Recurse
+Copy-Item './server.js', './package.json', './node_modules', './serviceAccountKey.json' -Destination $prod -Exclude "frontend/" -Recurse
 
 # On créer le dossier Situations
 New-Item -ItemType Directory -Path (Join-Path $prod "\situations")
@@ -33,4 +33,4 @@ New-Item -ItemType Directory -Path (Join-Path $prod "\situations")
 # Remove-Item -Path (Join-Path $dossierCourant "\PokerTraining.zip") -Force
 
 # Création du zip final
-Compress-Archive -Path $prod -DestinationPath (Join-Path $dossierCourant "\PokerTraining.zip")
+# Compress-Archive -Path $prod -DestinationPath (Join-Path $dossierCourant "\PokerTraining.zip")
