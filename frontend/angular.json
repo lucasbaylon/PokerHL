@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/frontend",
+                        "outputPath": "dist",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": [
@@ -53,8 +53,8 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "10kb",
-                                    "maximumError": "20kb"
+                                    "maximumWarning": "20kb",
+                                    "maximumError": "40kb"
                                 }
                             ],
                             "outputHashing": "all"
@@ -109,5 +109,8 @@
                 }
             }
         }
+    },
+    "cli": {
+        "analytics": false
     }
 }

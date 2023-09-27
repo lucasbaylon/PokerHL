@@ -279,7 +279,7 @@ export class SituationManagerComponent {
             width: '370px',
             timer: 2500
         });
-        this.router.navigate(['situation-list-manager']);
+        this.router.navigate(['situations-list-manager']);
     }
 
     editSituation(ex_id?: string) {
@@ -297,7 +297,7 @@ export class SituationManagerComponent {
             width: '339px',
             timer: 2500
         });
-        this.router.navigate(['situation-list-manager']);
+        this.router.navigate(['situations-list-manager']);
     }
 
     onChangeAction(e: any) {
