@@ -171,9 +171,12 @@ export class TrainingComponent {
                 position: 'top-end',
                 toast: true,
                 icon: 'success',
-                html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Bonne réponse !</h2>',
+                title: 'Bonne réponse !',
                 showConfirmButton: false,
                 width: '305px',
+                customClass: { 
+                    title: "custom-swal"
+                },
                 timer: 2500
             });
             this.generateSituation();
