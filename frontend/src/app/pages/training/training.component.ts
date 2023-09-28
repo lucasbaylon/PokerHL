@@ -175,7 +175,7 @@ export class TrainingComponent {
                 showConfirmButton: false,
                 width: '305px',
                 customClass: { 
-                    title: "custom-swal"
+                    container: "custom-swal"
                 },
                 timer: 2500
             });
