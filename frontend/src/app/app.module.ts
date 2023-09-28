@@ -32,7 +32,9 @@ import { AppInterceptor } from './interceptors/app.interceptor';
 import { LoadingComponent } from './components/loading/loading.component';
 import { AuthService } from './services/auth.service';
 
-const config: SocketIoConfig = { url: 'https://pokertraining.lucasbaylon.fr', options: {} };
+import { environment } from '../environments/environment';
+
+const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
 
 @NgModule({
     declarations: [

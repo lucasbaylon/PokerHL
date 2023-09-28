@@ -26,20 +26,24 @@ const routes: Routes = [
     },
     {
         path: 'settings',
-        component: SettingsComponent
+        component: SettingsComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'situations-manager',
-        component: SituationManagerComponent
+        component: SituationManagerComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'situations-list-manager',
-        component: SituationsListManagerComponent
+        component: SituationsListManagerComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'situations-list-training',
         component: SituationsListTrainingComponent,
         canActivate: [
+            AuthGuard,
             checkSituationGuard
         ]
     },
