@@ -121,10 +121,6 @@ img {
     transition: top ease 0.25s;
 }
 
-.userCards:active+hr.userHr {
-    opacity: 0;
-}
-
 .userCards:active .leftCard {
     margin: 0;
 }
@@ -163,7 +159,7 @@ img {
 }
 
 .leftCard {
-    margin-right: -24%;
+    margin-right: -24.5%;
 }
 
 hr {
