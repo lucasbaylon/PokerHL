@@ -22,14 +22,19 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { AppInterceptor } from './interceptors/app.interceptor';
 import { LoadingComponent } from './components/loading/loading.component';
+import { AuthService } from './services/auth.service';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+import { environment } from '../environments/environment';
+
+const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
 
 @NgModule({
     declarations: [
@@ -59,6 +64,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
         PaginatorModule,
         InputSwitchModule,
         DropdownModule,
+        ToastModule,
         provideFirebaseApp(() => initializeApp({
             apiKey: "AIzaSyB2BrtaN_2h-T0iWEZFe3SZVNhrUxyzYV8",
             authDomain: "pokertraining-ab684.firebaseapp.com",
@@ -71,6 +77,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true },
+        MessageService,
+        AuthService
     ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

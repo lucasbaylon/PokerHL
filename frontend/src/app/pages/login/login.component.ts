@@ -13,8 +13,8 @@ export class LoginComponent {
     eyeIcon: string = 'eye-outline';
     inputType: string = 'password';
 
-    email: string = 'thezartop@gmail.com';
-    password: string = 'lucas64';
+    email: string = '';
+    password: string = '';
 
     toggleEyeIcon(): void {
         if (this.eyeIcon === 'eye-outline') {
@@ -27,7 +27,7 @@ export class LoginComponent {
     }
 
     login(): void {
-        this.authService.signIn(this.email, this.password);
+        if (this.email && this.password) this.authService.signIn(this.email, this.password);
     }
 
 }
