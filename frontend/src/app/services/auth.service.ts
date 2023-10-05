@@ -23,7 +23,6 @@ export class AuthService {
         private messageService: MessageService
     ) {
         this.authStateSubscription = this.authState$.subscribe((aUser: User | null) => {
-            console.log(aUser);
             this.user = aUser;
             this.isLoading.next(false);
             if (aUser) {
