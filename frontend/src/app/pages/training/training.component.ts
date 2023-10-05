@@ -44,6 +44,8 @@ export class TrainingComponent {
 
     backgroundColor!: string;
 
+    cardStyle!: string;
+
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute
@@ -58,6 +60,8 @@ export class TrainingComponent {
             this.backgroundColor = tableColor ?
                 `radial-gradient(${tableColor}, black 150%)` :
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
+            
+            this.cardStyle = userParams.cardStyle;
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
