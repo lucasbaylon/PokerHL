@@ -39,9 +39,7 @@ const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1];
 
     if (!token) return res.status(401).send('Unauthorized');
-
-    console.log(token);
-
+    
     admin
         .auth()
         .verifyIdToken(token)

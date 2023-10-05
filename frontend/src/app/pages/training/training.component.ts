@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Action } from 'src/app/interfaces/action';
 import { ActiveSituation } from 'src/app/interfaces/active-situation';
 import { Situation } from 'src/app/interfaces/situation';
+import { UserParams } from 'src/app/interfaces/user-params';
 import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 
@@ -35,6 +36,14 @@ export class TrainingComponent {
 
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
 
+    tableColors = {
+        "green": "rgb(0, 151, 0)",
+        "red": "rgb(255, 0, 0)",
+        "blue": "rgb(0, 0, 255)"
+    }
+
+    backgroundColor!: string;
+
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute
@@ -42,6 +51,14 @@ export class TrainingComponent {
 
     ngOnInit(): void {
         if (this.activatedRoute.snapshot.params.hasOwnProperty('situationList')) {
+
+            const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+            const tableColor = this.tableColors[userParams.playmatColor];
+
+            this.backgroundColor = tableColor ?
+                `radial-gradient(${tableColor}, black 150%)` :
+                'radial-gradient(rgb(0, 151, 0), black 150%)';
+
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
             const currentUrl = this.router.url;

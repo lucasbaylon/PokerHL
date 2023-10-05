@@ -16,33 +16,51 @@ export class SettingsComponent {
     ) { }
 
     darkMode: boolean = false;
+
     displaySolutionOnError: boolean = true;
+
     highContrastCards: boolean = false;
+
     autoNameMultipleSituation: boolean = false;
-    availableCardsStyles: any[] = [];
-    cardsStyle: any;
-    availablePokerTableColors: any[] = [];
-    pokerTableColor: any;
+
+    availableCardsStyles: any[] = [
+        { name: 'Standard', code: 'default' },
+        { name: 'Contraste', code: 'contrast' },
+        // { name: 'Winamax', code: 'WNX' },
+        // { name: 'Poker Star', code: 'PKS' },
+        // { name: 'UniBet', code: 'UNB' },
+    ];
+
+    cardsStyle: { name: string, code: string } = { name: 'Standard', code: 'default' };
+
+    availablePokerTableColors: any[] = [
+        { name: 'Vert', code: 'green' },
+        { name: 'Bleu', code: 'blue' },
+        { name: 'Rouge', code: 'red' },
+    ];
+
+    pokerTableColor: { name: string, code: string } = { name: 'Vert', code: 'green'};
 
     ngOnInit() {
-        this.availableCardsStyles = [
-            { name: 'Standard', code: 'STD' },
-            { name: 'Contraste', code: 'CTR' },
-            { name: 'Winamax', code: 'WNX' },
-            { name: 'Poker Star', code: 'PKS' },
-            { name: 'UniBet', code: 'UNB' },
-        ];
-
-        this.availablePokerTableColors = [
-            { name: 'Vert', code: 'VRT' },
-            { name: 'Bleu', code: 'BLU' },
-            { name: 'Rouge', code: 'RGU' },
-            { name: 'Noir', code: 'NOR' },
-        ];
+        const userParams = JSON.parse(localStorage.getItem('userParams')!);
+        userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
+        userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
     }
 
     redirectTo(page: string) {
         this.router.navigate([page]);
+    }
+
+    onChangeDropdownCardsStyle() {
+        const userParams = JSON.parse(localStorage.getItem('userParams')!);
+        userParams.cardStyle = this.cardsStyle.code;
+        localStorage.setItem('userParams', JSON.stringify(userParams));
+    }
+
+    onChangeDropdownTableColor() {
+        const userParams = JSON.parse(localStorage.getItem('userParams')!);
+        userParams.playmatColor = this.pokerTableColor.code;
+        localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
 }

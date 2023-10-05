@@ -21,12 +21,12 @@
                     <div class="switch-container">
                         <div class="setting-description">Style des cartes</div>
                         <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles"
-                            optionLabel="name"></p-dropdown>
+                            optionLabel="name" (onChange)="onChangeDropdownCardsStyle()"></p-dropdown>
                     </div>
                     <div class="switch-container">
                         <div class="setting-description">Couleur du tapis de jeu</div>
                         <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
-                            optionLabel="name"></p-dropdown>
+                            optionLabel="name" (onChange)="onChangeDropdownTableColor()"></p-dropdown>
                     </div>
                 </div>
                 <div class="settings-second-part">
