@@ -27,6 +27,9 @@ export class AuthService {
             this.user = aUser;
             this.isLoading.next(false);
             if (aUser) {
+                if (!localStorage.getItem('userParams')) {
+                    localStorage.setItem('userParams', JSON.stringify({darkMode: false, cardStyle: 'default', playmatColor: 'green'}));
+                }
                 this.router.navigate(['home']);
             } else {
                 this.router.navigate(['login']);
