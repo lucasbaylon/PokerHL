@@ -6,6 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
 
+// const mysql = require('mysql2');
+
 const http = require('http').Server(app);
 
 const serviceAccount = require('./serviceAccountKey.json');
@@ -39,7 +41,7 @@ const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1];
 
     if (!token) return res.status(401).send('Unauthorized');
-    
+
     admin
         .auth()
         .verifyIdToken(token)
@@ -194,6 +196,33 @@ io.on('connection', (socket) => {
         socket.emit('SituationsForTraining', situationsListForTraining);
     });
 });
+
+// const db = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'zartop',
+//     password: '#$W&5*grhqd^BScca6kg',
+//     database: 'pokertraining'
+// });
+
+// db.connect(err => {
+//     if (err) throw err;
+//     console.log('Connecté à la base de données MySQL!');
+// });
+
+// const utilisateur = {
+//     nom: 'Dupont',
+//     email: 'dupont@example.com'
+// };
+
+// db.query('INSERT INTO utilisateurs SET ?', utilisateur, (err, results) => {
+//     if (err) throw err;
+//     console.log('Données insérées:', results);
+// });
+
+// db.query('SELECT * FROM utilisateurs', (err, results) => {
+//     if (err) throw err;
+//     console.log(results);
+// });
 
 http.listen(3000, () => {
     console.log('listening on http://localhost:3000');
