@@ -121,10 +121,6 @@ img {
     transition: top ease 0.25s;
 }
 
-.userCards:active+hr.userHr {
-    opacity: 0;
-}
-
 .userCards:active .leftCard {
     margin: 0;
 }
@@ -163,7 +159,7 @@ img {
 }
 
 .leftCard {
-    margin-right: -24%;
+    margin-right: -24.5%;
 }
 
 hr {
@@ -381,12 +377,9 @@ button {
 /********************************* Sweet alerts *********************************/
 
 .custom-swal {
-    padding: 100px !important;
-}
-
-.custom-swal h2 {
-    font-size: 1em !important;
+    padding: 10px !important;
     margin: 0 !important;
+    font-size: 100px !important;
 }
 
 /********************************* Dealer Coins *********************************/

@@ -191,8 +191,8 @@ export class TrainingComponent {
                 title: 'Bonne réponse !',
                 showConfirmButton: false,
                 width: '305px',
-                customClass: {
-                    title: "custom-swal"
+                customClass: { 
+                    container: "custom-swal"
                 },
                 timer: 2500
             });
