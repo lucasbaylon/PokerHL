@@ -11,7 +11,7 @@
                     <h4>Global</h4>
                     <div class="switch-container">
                         <div class="setting-description">Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="darkMode"></p-inputSwitch>
+                        <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
                     </div>
                     <h4>Entraînement</h4>
                     <div class="switch-container">
