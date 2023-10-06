@@ -20,7 +20,6 @@ export class AppInterceptor implements HttpInterceptor {
         return from(this.auth.currentUser?.getIdToken() || Promise.resolve(null)).pipe(
             switchMap((token) => {
                 if (token) {
-                    console.log(token);
                     request = request.clone({
                         setHeaders: {
                             Authorization: `Bearer ${token}`,

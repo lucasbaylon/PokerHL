@@ -45,10 +45,17 @@ export class SettingsComponent {
         const userParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
+        userParams.darkMode ? this.darkMode = userParams.darkMode : this.darkMode = false;
     }
 
     redirectTo(page: string) {
         this.router.navigate([page]);
+    }
+
+    onChangeDarkMode() {
+        const userParams = JSON.parse(localStorage.getItem('userParams')!);
+        userParams.darkMode = this.darkMode;
+        localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
     onChangeDropdownCardsStyle() {
