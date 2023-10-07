@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
 
-const mysql = require('mysql2');
+const { getConnection } = require('./database');
 
 const http = require('http').Server(app);
 
@@ -79,57 +79,26 @@ protectedRouter.get("/check_situations_folder", function (req, res) {
     }
 });
 
-// protectedRouter.get("/check_situation_id/:new_situation_id", function (req, res) {
-//     let new_situation_id = req.params.new_situation_id
-//     let situations_files = fs.readdirSync(situations_dir);
-//     let situation_exist = false;
-//     if (situations_files.length > 0) {
-//         situations_files.forEach(situation => {
-//             const situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
-//             let situation_obj = JSON.parse(situation_string);
-//             if (new_situation_id === situation_obj._id) {
-//                 situation_exist = true;
-//             }
-//         });
-//     }
-//     if (situation_exist) {
-//         res.status(200).json({ exist: true });
-//     } else {
-//         res.status(200).json({ exist: false });
-//     }
-// });
-
-protectedRouter.get("/check_situation_name/:new_situation_name/:user", function (req, res) {
+protectedRouter.get("/check_situation_name/:new_situation_name/:user", async function (req, res) {
     let new_situation_name = req.params.new_situation_name;
     let user = req.params.user;
-    db.query('SELECT * FROM situations WHERE user = ?', [user], (err, results) => {
-        if (err) throw err;
+
+    try {
+        const connection = await getConnection();
+        const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
+
         const situation_exist = results.some(situation => {
             let situation_obj = JSON.parse(situation.json);
-            if (new_situation_name === situation_obj.name) {
-                return true;
-            }
-            return false;
+            return new_situation_name === situation_obj.name;
         });
-        if (situation_exist) {
-            res.status(200).json({ exist: true });
-        } else {
-            res.status(200).json({ exist: false });
-        }
-    });
-});
 
-function getSituations() {
-    let situations_files = fs.readdirSync(situations_dir);
-    let situationsList = [];
-    if (situations_files.length > 0) {
-        situations_files.forEach(situation => {
-            const situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
-            situationsList.push(JSON.parse(situation_string));
-        })
+        res.status(200).json({ exist: situation_exist });
+    } catch (error) {
+        console.error('Error querying the database:', error);
+        // En cas d'erreur, envoyez une réponse 500 au client
+        // res.status(500).json({ error: 'An error occurred while checking the situation name' });
     }
-    return situationsList;
-}
+});
 
 app.use('/api', protectedRouter);
 
@@ -143,19 +112,22 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 io.on('connection', (socket) => {
-    socket.on('AddSituation', (data) => {
+    socket.on('AddSituation', async (data) => {
         let situation = data.data;
-        // let file_name = situation._id;
 
         let json = JSON.stringify(situation);
 
-        const sql = 'INSERT INTO situations (json, user) VALUES (?, ?)';
+        try {
+            const connection = await getConnection();
 
-        db.query(sql, [json, data.user], function (error, results, fields) {
-            if (error) throw error;
-            console.log('Ligne insérée avec ID:', results.insertId);
-        });
-        // fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+            await connection.execute("INSERT INTO situations (json, user) VALUES (?, ?)", [json, data.user], function (error, results, fields) {
+                if (error) throw error;
+                console.log('Ligne insérée avec ID:', results.insertId);
+            });
+        } catch (error) {
+            console.error('An error occurred:', error);
+            // socket.emit('Error', 'An error occurred while duplicating the situation.');
+        }
     });
 
     socket.on('EditSituation', (data) => {
@@ -176,42 +148,97 @@ io.on('connection', (socket) => {
         fs.unlinkSync(`${situations_dir}/${ex_id_to_remove}.json`);
     });
 
-    socket.on('DuplicateSituation', (id) => {
-        let new_id = "";
-        if (fs.existsSync(`${situations_dir}/${id}_copy.json`)) {
-            let situation_files = fs.readdirSync(situations_dir);
-            let matchingFiles = situation_files.filter(file => file.startsWith(`${id}_copy`));
-            new_id = `${id}_copy_${matchingFiles.length}`;
-        } else {
-            new_id = `${id}_copy`;
-        }
+    socket.on('DuplicateSituation', async (data) => {
+        const id = data.id;
+        const user = data.user;
 
-        let situation_string = fs.readFileSync(`${situations_dir}/${id}.json`, 'utf8');
-        let situation_obj = JSON.parse(situation_string);
-        situation_obj._id = new_id;
-        let new_name = new_id.replace(/_/g, " ");
-        situation_obj.name = new_name;
-        let situation_str = JSON.stringify(situation_obj);
-        fs.writeFileSync(`${situations_dir}/${new_id}.json`, situation_str, 'utf8');
-        socket.emit('Situations', getSituations());
-    });
+        try {
+            const connection = await getConnection();
+            // Récupérer l'objet situation original
+            const [originalRows] = await connection.execute('SELECT json FROM situations WHERE id = ? AND user = ?', [id, user]);
+            if (originalRows.length === 0) {
+                throw new Error('Original situation not found');
+            }
+            const originalSituation = JSON.parse(originalRows[0].json);
+            // console.log(originalSituation)
 
-    socket.on('RemoveSituation', (id) => {
-        fs.unlinkSync(`${situations_dir}/${id}.json`);
-        socket.emit('Situations', getSituations());
-    });
+            // Récupérer tous les noms de situations pour l'utilisateur
+            const [allSituations] = await connection.execute(
+                'SELECT json FROM situations WHERE user = ?',
+                [user]
+            );
+            const allNames = allSituations.map(situation => JSON.parse(situation.json).name);
+            console.log(allNames)
 
-    socket.on('GetSituations', (user) => {
-        db.query('SELECT * FROM situations WHERE user = ?', [user], (err, results) => {
-            if (err) throw err;
-            console.log(results)
-            let situations = results.map((situationObj) => {
+            // Générer un nouveau nom unique
+            let newName = `${originalSituation.name} copy`;
+            let copyNumber = 1;
+            while (allNames.includes(newName)) {
+                copyNumber += 1;
+                newName = `${originalSituation.name} copy ${copyNumber}`;
+            }
+
+            // Mettre à jour le nouvel objet situation
+            originalSituation.name = newName;
+
+            // Sauvegarder le nouvel objet situation
+            await connection.execute('INSERT INTO situations (json, user) VALUES (?, ?)', [JSON.stringify(originalSituation), user]);
+
+            // Récupérer toutes les situations et émettre l'événement socket
+            const [newAllSituations] = await connection.execute(
+                'SELECT * FROM situations WHERE user = ?',
+                [user]
+            );
+            const situations = newAllSituations.map((situationObj) => {
                 let parsedSituationJson = JSON.parse(situationObj.json);
                 return { ...parsedSituationJson, id: situationObj.id };
             });
             socket.emit('Situations', situations);
-        });
-        // socket.emit('Situations', getSituations());
+        } catch (error) {
+            console.error('An error occurred:', error);
+            // socket.emit('Error', 'An error occurred while duplicating the situation.');
+        }
+    });
+
+    socket.on('RemoveSituation', async (data) => {
+        const id = data.id;
+        const user = data.user;
+        try {
+            const connection = await getConnection();
+            const [deleteResult] = await connection.execute('DELETE FROM situations WHERE id = ?', [id]);
+
+            console.log('Nombre de lignes supprimées :', deleteResult.affectedRows);
+
+            const [situationsResults] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
+            let situations = situationsResults.map((situationObj) => {
+                let parsedSituationJson = JSON.parse(situationObj.json);
+                return { ...parsedSituationJson, id: situationObj.id };
+            });
+
+            socket.emit('Situations', situations);
+        } catch (error) {
+            console.error('Erreur lors de la suppression ou de la récupération des situations :', error);
+            // Gérer l'erreur en informant également le client
+            socket.emit('Error', 'An error occurred while removing or fetching situations');  // Vous pouvez ajuster ce message d'erreur selon vos besoins
+        }
+    });
+
+    socket.on('GetSituations', async (user) => {
+        try {
+            const connection = await getConnection();
+            const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
+
+            let situations = results.map((situationObj) => {
+                let parsedSituationJson = JSON.parse(situationObj.json);
+                return { ...parsedSituationJson, id: situationObj.id };
+            });
+
+            socket.emit('Situations', situations);
+        } catch (error) {
+            console.error('Error querying the database:', error);
+            // Gérez l'erreur comme vous le souhaitez, peut-être envoyer une réponse au client également
+            // socket.emit('Error', 'An error occurred while fetching situations');  // Vous pouvez ajuster ce message d'erreur selon vos besoins
+        }
     });
 
     socket.on('GetSituation', (id) => {
@@ -234,37 +261,6 @@ io.on('connection', (socket) => {
         socket.emit('SituationsForTraining', situationsListForTraining);
     });
 });
-
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: process.env.NODE_ENV === 'production' ? "zartop" : "root",
-    password: process.env.NODE_ENV === 'production' ? "#$W&5*grhqd^BScca6kg" : "",
-    database: 'pokertraining'
-});
-
-db.connect(err => {
-    if (err) throw err;
-    console.log('Connecté à la base de données MySQL!');
-});
-
-// const utilisateur = {
-//     nom: 'Dupont',
-//     email: 'dupont@example.com'
-// };
-
-// db.query('INSERT INTO utilisateurs SET ?', utilisateur, (err, results) => {
-//     if (err) throw err;
-//     console.log('Données insérées:', results);
-// });
-
-// db.query('SELECT * FROM utilisateurs', (err, results) => {
-//     if (err) throw err;
-//     console.log(results);
-// });
-// db.query('SELECT * FROM situations', (err, results) => {
-//     if (err) throw err;
-//     console.log(results);
-// });
 
 http.listen(3000, () => {
     console.log('listening on http://localhost:3000');

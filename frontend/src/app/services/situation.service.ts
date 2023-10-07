@@ -55,11 +55,13 @@ export class SituationService {
     }
 
     removeSituation(id: string) {
-        this.socket.emit('RemoveSituation', id);
+        const actualUser = this.auth.getUser();
+        this.socket.emit('RemoveSituation', {id: id, user: actualUser?.email});
     }
 
     duplicateSituation(id: string) {
-        this.socket.emit('DuplicateSituation', id);
+        const actualUser = this.auth.getUser();
+        this.socket.emit('DuplicateSituation', {id: id, user: actualUser?.email});
     }
 
 }
