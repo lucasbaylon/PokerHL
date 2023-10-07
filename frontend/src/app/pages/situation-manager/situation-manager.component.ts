@@ -209,9 +209,9 @@ export class SituationManagerComponent {
                             confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                         });
                     } else {
-                        this.situation_obj._id = this.situation_obj.name.replace(/ /g, "_");
+                        // this.situation_obj._id = this.situation_obj.name.replace(/ /g, "_");
                         if (this.mode === "new") {
-                            this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                            this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
                                     Swal.fire({
                                         html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
@@ -230,38 +230,39 @@ export class SituationManagerComponent {
                                     this.addSituation();
                                 }
                             });
-                        } else if (this.mode === "edit") {
-                            let situation_name_change = false;
-                            if (this.situation_obj._id !== this.editSituationID) {
-                                situation_name_change = true;
-                            }
-                            if (situation_name_change) {
-                                this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
-                                    if (data.exist) {
-                                        Swal.fire({
-                                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#3085d6',
-                                            cancelButtonColor: '#d74c4c',
-                                            confirmButtonText: 'Oui',
-                                            cancelButtonText: 'Non'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                this.editSituation(this.editSituationID);
-                                            } else {
-                                                this.situation_obj._id = this.editSituationID;
-                                                this.situation_obj.name = this.editSituationID!.replace(/_/g, ' ');
-                                            }
-                                        });
-                                    } else {
-                                        this.editSituation(this.editSituationID);
-                                    }
-                                });
-                            } else {
-                                this.editSituation();
-                            }
                         }
+                        // else if (this.mode === "edit") {
+                        //     let situation_name_change = false;
+                        //     if (this.situation_obj._id !== this.editSituationID) {
+                        //         situation_name_change = true;
+                        //     }
+                        //     if (situation_name_change) {
+                        //         this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                        //             if (data.exist) {
+                        //                 Swal.fire({
+                        //                     html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
+                        //                     icon: 'warning',
+                        //                     showCancelButton: true,
+                        //                     confirmButtonColor: '#3085d6',
+                        //                     cancelButtonColor: '#d74c4c',
+                        //                     confirmButtonText: 'Oui',
+                        //                     cancelButtonText: 'Non'
+                        //                 }).then((result) => {
+                        //                     if (result.isConfirmed) {
+                        //                         this.editSituation(this.editSituationID);
+                        //                     } else {
+                        //                         this.situation_obj._id = this.editSituationID;
+                        //                         this.situation_obj.name = this.editSituationID!.replace(/_/g, ' ');
+                        //                     }
+                        //                 });
+                        //             } else {
+                        //                 this.editSituation(this.editSituationID);
+                        //             }
+                        //         });
+                        //     } else {
+                        //         this.editSituation();
+                        //     }
+                        // }
                     }
                 }
             }

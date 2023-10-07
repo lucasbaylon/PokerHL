@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
 
-// const mysql = require('mysql2');
+const mysql = require('mysql2');
 
 const http = require('http').Server(app);
 
@@ -57,7 +57,9 @@ const authMiddleware = (req, res, next) => {
 
 const protectedRouter = express.Router();
 
-protectedRouter.use(authMiddleware);
+if (process.env.NODE_ENV !== 'dev') {
+    protectedRouter.use(authMiddleware);
+}
 
 protectedRouter.get("/check_situations_folder", function (req, res) {
     if (fs.existsSync(situations_dir)) {
@@ -77,24 +79,44 @@ protectedRouter.get("/check_situations_folder", function (req, res) {
     }
 });
 
-protectedRouter.get("/check_situation_id/:new_situation_id", function (req, res) {
-    let new_situation_id = req.params.new_situation_id
-    let situations_files = fs.readdirSync(situations_dir);
-    let situation_exist = false;
-    if (situations_files.length > 0) {
-        situations_files.forEach(situation => {
-            const situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
-            let situation_obj = JSON.parse(situation_string);
-            if (new_situation_id === situation_obj._id) {
-                situation_exist = true;
+// protectedRouter.get("/check_situation_id/:new_situation_id", function (req, res) {
+//     let new_situation_id = req.params.new_situation_id
+//     let situations_files = fs.readdirSync(situations_dir);
+//     let situation_exist = false;
+//     if (situations_files.length > 0) {
+//         situations_files.forEach(situation => {
+//             const situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
+//             let situation_obj = JSON.parse(situation_string);
+//             if (new_situation_id === situation_obj._id) {
+//                 situation_exist = true;
+//             }
+//         });
+//     }
+//     if (situation_exist) {
+//         res.status(200).json({ exist: true });
+//     } else {
+//         res.status(200).json({ exist: false });
+//     }
+// });
+
+protectedRouter.get("/check_situation_name/:new_situation_name/:user", function (req, res) {
+    let new_situation_name = req.params.new_situation_name;
+    let user = req.params.user;
+    db.query('SELECT * FROM situations WHERE user = ?', [user], (err, results) => {
+        if (err) throw err;
+        const situation_exist = results.some(situation => {
+            let situation_obj = JSON.parse(situation.json);
+            if (new_situation_name === situation_obj.name) {
+                return true;
             }
+            return false;
         });
-    }
-    if (situation_exist) {
-        res.status(200).json({ exist: true });
-    } else {
-        res.status(200).json({ exist: false });
-    }
+        if (situation_exist) {
+            res.status(200).json({ exist: true });
+        } else {
+            res.status(200).json({ exist: false });
+        }
+    });
 });
 
 function getSituations() {
@@ -123,10 +145,17 @@ if (process.env.NODE_ENV === 'production') {
 io.on('connection', (socket) => {
     socket.on('AddSituation', (data) => {
         let situation = data.data;
-        let file_name = situation._id;
+        // let file_name = situation._id;
 
         let json = JSON.stringify(situation);
-        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
+
+        const sql = 'INSERT INTO situations (json, user) VALUES (?, ?)';
+
+        db.query(sql, [json, data.user], function (error, results, fields) {
+            if (error) throw error;
+            console.log('Ligne insérée avec ID:', results.insertId);
+        });
+        // fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
     });
 
     socket.on('EditSituation', (data) => {
@@ -172,8 +201,17 @@ io.on('connection', (socket) => {
         socket.emit('Situations', getSituations());
     });
 
-    socket.on('GetSituations', () => {
-        socket.emit('Situations', getSituations());
+    socket.on('GetSituations', (user) => {
+        db.query('SELECT * FROM situations WHERE user = ?', [user], (err, results) => {
+            if (err) throw err;
+            console.log(results)
+            let situations = results.map((situationObj) => {
+                let parsedSituationJson = JSON.parse(situationObj.json);
+                return { ...parsedSituationJson, id: situationObj.id };
+            });
+            socket.emit('Situations', situations);
+        });
+        // socket.emit('Situations', getSituations());
     });
 
     socket.on('GetSituation', (id) => {
@@ -197,17 +235,17 @@ io.on('connection', (socket) => {
     });
 });
 
-// const db = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'zartop',
-//     password: '#$W&5*grhqd^BScca6kg',
-//     database: 'pokertraining'
-// });
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: process.env.NODE_ENV === 'production' ? "zartop" : "root",
+    password: process.env.NODE_ENV === 'production' ? "#$W&5*grhqd^BScca6kg" : "",
+    database: 'pokertraining'
+});
 
-// db.connect(err => {
-//     if (err) throw err;
-//     console.log('Connecté à la base de données MySQL!');
-// });
+db.connect(err => {
+    if (err) throw err;
+    console.log('Connecté à la base de données MySQL!');
+});
 
 // const utilisateur = {
 //     nom: 'Dupont',
@@ -220,6 +258,10 @@ io.on('connection', (socket) => {
 // });
 
 // db.query('SELECT * FROM utilisateurs', (err, results) => {
+//     if (err) throw err;
+//     console.log(results);
+// });
+// db.query('SELECT * FROM situations', (err, results) => {
 //     if (err) throw err;
 //     console.log(results);
 // });

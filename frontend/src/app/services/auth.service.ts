@@ -82,4 +82,8 @@ export class AuthService {
     isLoggedIn(): boolean {
         return this.user !== null;
     }
+
+    getUser(): User | null {
+        return this.user;
+    }
 }
