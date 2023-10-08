@@ -4,7 +4,7 @@
 <h1>Gérer les situations</h1>
 <p>Supprimez, modifiez ou créez des situations</p>
 <div class="container">
-    <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
+    <p-table [value]="situationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
         [paginator]="true">
         <ng-template pTemplate="header">
             <tr class="animate__animated animate__fadeIn">
@@ -62,17 +62,17 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td>
-                    <ion-button class="icon-div" (click)="duplicateSituation(situation._id)">
+                    <ion-button class="icon-div" (click)="duplicateSituation(situation.id)">
                         <ion-icon name="copy-outline"></ion-icon>
                     </ion-button>
                 </td>
                 <td>
-                    <ion-button class="icon-div" (click)="editSituation(situation._id)">
+                    <ion-button class="icon-div" (click)="editSituation(situation.id)">
                         <ion-icon name="pencil-outline"></ion-icon>
                     </ion-button>
                 </td>
                 <td>
-                    <ion-button class="icon-div" (click)="removeSituation(situation._id)">
+                    <ion-button class="icon-div" (click)="removeSituation(situation.id)">
                         <ion-icon name="trash-outline"></ion-icon>
                     </ion-button>
                 </td>

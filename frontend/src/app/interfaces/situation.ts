@@ -2,7 +2,7 @@ import { Action } from "./action";
 import { Card } from "./card";
 
 export interface Situation {
-    _id?: string;
+    id?: number;
 
     name?: string;
 

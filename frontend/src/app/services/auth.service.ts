@@ -27,7 +27,7 @@ export class AuthService {
             this.isLoading.next(false);
             if (aUser) {
                 if (!localStorage.getItem('userParams')) {
-                    localStorage.setItem('userParams', JSON.stringify({darkMode: false, cardStyle: 'default', playmatColor: 'green'}));
+                    localStorage.setItem('userParams', JSON.stringify({darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false}));
                 }
                 this.router.navigate(['home']);
             } else {
@@ -81,5 +81,9 @@ export class AuthService {
 
     isLoggedIn(): boolean {
         return this.user !== null;
+    }
+
+    getUser(): User | null {
+        return this.user;
     }
 }

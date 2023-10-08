@@ -55,7 +55,7 @@ export class SituationManagerComponent {
 
     multipleSituationId?: string;
 
-    editSituationID?: string;
+    editSituationName?: string;
 
     availableNbPlayersTable: any[] = [
         { name: '2', code: 'two' },
@@ -90,7 +90,7 @@ export class SituationManagerComponent {
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
-            this.editSituationID = this.situation_obj._id;
+            this.editSituationName = this.situation_obj.name;
             this.situation_objActionsRef = this.situation_obj.actions.slice();
             this.changeNBPlayer(this.situation_obj.nbPlayer!)
             this.changeDealer(this.situation_obj.dealer!);
@@ -225,22 +225,13 @@ export class SituationManagerComponent {
                             confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                         });
                     } else {
-                        this.situation_obj._id = this.situation_obj.name.replace(/ /g, "_");
                         if (this.mode === "new") {
-                            this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                            this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
                                     Swal.fire({
-                                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d74c4c',
-                                        confirmButtonText: 'Oui',
-                                        cancelButtonText: 'Non'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            this.addSituation();
-                                        }
+                                        icon: 'error',
+                                        title: 'Attention',
+                                        text: 'Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.'
                                     });
                                 } else {
                                     this.addSituation();
@@ -248,30 +239,19 @@ export class SituationManagerComponent {
                             });
                         } else if (this.mode === "edit") {
                             let situation_name_change = false;
-                            if (this.situation_obj._id !== this.editSituationID) {
+                            if (this.situation_obj.name !== this.editSituationName) {
                                 situation_name_change = true;
                             }
                             if (situation_name_change) {
-                                this.apiSituation.checkSituationID(this.situation_obj._id).subscribe((data: any) => {
+                                this.apiSituation.checkChangeSituationNameFromUser(this.situation_obj.id!, this.situation_obj.name).subscribe((data: any) => {
                                     if (data.exist) {
                                         Swal.fire({
-                                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Ce nom de situation existe déjà. Voulez vous vraiment utiliser ce nom ? Cela écrasera l\'autre situation.</p>',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#3085d6',
-                                            cancelButtonColor: '#d74c4c',
-                                            confirmButtonText: 'Oui',
-                                            cancelButtonText: 'Non'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                this.editSituation(this.editSituationID);
-                                            } else {
-                                                this.situation_obj._id = this.editSituationID;
-                                                this.situation_obj.name = this.editSituationID!.replace(/_/g, ' ');
-                                            }
+                                            icon: 'error',
+                                            title: 'Attention',
+                                            text: 'Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.'
                                         });
                                     } else {
-                                        this.editSituation(this.editSituationID);
+                                        this.editSituation();
                                     }
                                 });
                             } else {
@@ -298,12 +278,8 @@ export class SituationManagerComponent {
         this.router.navigate(['situations-list-manager']);
     }
 
-    editSituation(ex_id?: string) {
-        if (ex_id) {
-            this.apiSituation.editSituationWithRemove(this.situation_obj, ex_id);
-        } else {
-            this.apiSituation.editSituation(this.situation_obj);
-        }
+    editSituation() {
+        this.apiSituation.editSituation(this.situation_obj);
         Swal.fire({
             toast: true,
             position: 'top-end',
