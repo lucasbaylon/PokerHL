@@ -79,6 +79,28 @@ protectedRouter.get("/check_situations_folder", function (req, res) {
     }
 });
 
+protectedRouter.get("/check_change_situation_name/:id/:new_situation_name/:user", async function (req, res) {
+    const id = req.params.id;
+    const new_situation_name = req.params.new_situation_name;
+    const user = req.params.user;
+
+    try {
+        const connection = await getConnection();
+        const [results] = await connection.execute('SELECT * FROM situations WHERE id != ? AND user = ?', [id, user]);
+
+        const situation_exist = results.some(situation => {
+            let situation_obj = JSON.parse(situation.json);
+            return new_situation_name === situation_obj.name;
+        });
+
+        res.status(200).json({ exist: situation_exist });
+    } catch (error) {
+        console.error('Error querying the database:', error);
+        // En cas d'erreur, envoyez une réponse 500 au client
+        // res.status(500).json({ error: 'An error occurred while checking the situation name' });
+    }
+});
+
 protectedRouter.get("/check_situation_name/:new_situation_name/:user", async function (req, res) {
     let new_situation_name = req.params.new_situation_name;
     let user = req.params.user;
@@ -98,6 +120,17 @@ protectedRouter.get("/check_situation_name/:new_situation_name/:user", async fun
         // En cas d'erreur, envoyez une réponse 500 au client
         // res.status(500).json({ error: 'An error occurred while checking the situation name' });
     }
+});
+
+protectedRouter.get("/test", async function (req, res) {
+
+    const id = 5;
+    const user = 'thezartop@gmail.com';
+
+    const connection = await getConnection();
+    const [results] = await connection.execute('SELECT * FROM situations WHERE id != ? AND user = ?', [id, user]);
+    console.log(results)
+    res.json("ok")
 });
 
 app.use('/api', protectedRouter);
@@ -130,22 +163,24 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('EditSituation', (data) => {
-        let situation = data.data;
-        let file_name = situation._id;
+    socket.on('EditSituation', async (data) => {
+        const situation = data.data;
+        const situation_id = situation.id;
 
-        let json = JSON.stringify(situation);
-        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
-    });
+        delete situation.id;
 
-    socket.on('EditSituationWithRemove', (data) => {
-        let situation = data.data;
-        let ex_id_to_remove = data.ex_id;
-        let file_name = situation._id;
+        try {
+            const connection = await getConnection();
 
-        let json = JSON.stringify(situation);
-        fs.writeFileSync(`${situations_dir}/${file_name}.json`, json, 'utf8');
-        fs.unlinkSync(`${situations_dir}/${ex_id_to_remove}.json`);
+            await connection.execute("UPDATE situations SET json = ? WHERE id = ?", [JSON.stringify(situation), situation_id], function (error, results, fields) {
+                if (error) throw error;
+                console.log('Ligne mise à jour avec ID:', data.id);
+                console.log('Nombre de lignes affectées:', results.affectedRows);
+            });
+        } catch (error) {
+            console.error('An error occurred:', error);
+            // socket.emit('Error', 'An error occurred while updating the situation.');
+        }
     });
 
     socket.on('DuplicateSituation', async (data) => {
@@ -241,9 +276,13 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('GetSituation', (id) => {
-        let situation_string = fs.readFileSync(`${situations_dir}/${id}.json`, 'utf8');
-        socket.emit('Situation', situation_string);
+    socket.on('GetSituation', async (id) => {
+        // let situation_string = fs.readFileSync(`${situations_dir}/${id}.json`, 'utf8');
+        const connection = await getConnection();
+        const [results] = await connection.execute('SELECT * FROM situations WHERE id = ?', [id]);
+        let parsedSituationJson = JSON.parse(results[0].json);
+        const situationObj = { id: results[0].id, ...parsedSituationJson };
+        socket.emit('Situation', JSON.stringify(situationObj));
     });
 
     socket.on('GetSituationsForTraining', (situationsListParam) => {

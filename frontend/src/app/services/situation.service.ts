@@ -19,13 +19,14 @@ export class SituationService {
         return this.http.get("/api/check_situations_folder");
     }
 
-    // checkSituationID(id: string) {
-    //     return this.http.get(`/api/check_situation_id/${id}`);
-    // }
-
     checkSituationNameFromUser(name: string) {
         const actualUser = this.auth.getUser();
         return this.http.get(`/api/check_situation_name/${name}/${actualUser?.email}`);
+    }
+
+    checkChangeSituationNameFromUser(id: number, name: string) {
+        const actualUser = this.auth.getUser();
+        return this.http.get(`/api/check_change_situation_name/${id}/${name}/${actualUser?.email}`);
     }
 
     getSituations() {
@@ -48,10 +49,6 @@ export class SituationService {
 
     editSituation(data: Situation) {
         this.socket.emit('EditSituation', {data: data});
-    }
-
-    editSituationWithRemove(data: Situation, ex_id: string) {
-        this.socket.emit('EditSituationWithRemove', {data: data, ex_id: ex_id});
     }
 
     removeSituation(id: string) {

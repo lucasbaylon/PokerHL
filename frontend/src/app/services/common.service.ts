@@ -8,7 +8,7 @@ import { Action } from '../interfaces/action';
 export class CommonService {
 
     empty_situation_obj: Situation = {
-        _id: undefined,
+        id: undefined,
         name: undefined,
         nbPlayer: 3,
         dealerMissingTokens: 0,
