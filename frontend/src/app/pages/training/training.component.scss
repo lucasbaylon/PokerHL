@@ -58,7 +58,7 @@ ion-icon {
 
 .flex_container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     height: 100vh;
 }
@@ -66,10 +66,10 @@ ion-icon {
 /********************************* Table de poker *********************************/
 
 .poker_table_container {
-    flex-basis: 70%;
+    flex-basis: 60%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .poker_table {
@@ -270,9 +270,9 @@ hr.oponent2Hr {
 /********************************* Boutons de réponses *********************************/
 
 .answer_div_container {
-    flex-grow: 1;
+    flex-basis: 30%;
     display: flex;
-    justify-content: left;
+    justify-content: center;
 }
 
 .answer_div {
