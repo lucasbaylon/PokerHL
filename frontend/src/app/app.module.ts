@@ -22,6 +22,7 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -64,6 +65,7 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
         PaginatorModule,
         InputSwitchModule,
         DropdownModule,
+        InputNumberModule,
         ToastModule,
         provideFirebaseApp(() => initializeApp({
             apiKey: "AIzaSyB2BrtaN_2h-T0iWEZFe3SZVNhrUxyzYV8",

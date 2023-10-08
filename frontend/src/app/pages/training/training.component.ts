@@ -39,7 +39,7 @@ export class TrainingComponent {
     tableColors = {
         "green": "rgb(0, 151, 0)",
         "red": "rgb(255, 0, 0)",
-        "blue": "rgb(0, 0, 255)"
+        "blue": "#3B82F6"
     }
 
     backgroundColor!: string;

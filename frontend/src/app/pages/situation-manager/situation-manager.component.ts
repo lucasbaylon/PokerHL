@@ -57,6 +57,22 @@ export class SituationManagerComponent {
 
     editSituationName?: string;
 
+    availableNbPlayersTable: any[] = [
+        { name: '2', code: 'two' },
+        { name: '3', code: 'three' }
+    ];
+
+    availableDealerPlayer: any[] = [
+        { name: 'Vous', code: 'you' },
+        { name: 'Adversaire 1', code: 'op1' },
+        { name: 'Adversaire 2', code: 'op2' }
+    ];
+
+    availablePlayersLevel: any[] = [
+        { name: 'Débutant', code: 'fish' },
+        { name: 'Confirmé', code: 'shark' }
+    ];
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
