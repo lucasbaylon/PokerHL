@@ -60,7 +60,7 @@ export class TrainingComponent {
             this.backgroundColor = tableColor ?
                 `radial-gradient(${tableColor}, black 150%)` :
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
-            
+
             this.cardStyle = userParams.cardStyle;
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
@@ -195,7 +195,7 @@ export class TrainingComponent {
                 title: 'Bonne réponse !',
                 showConfirmButton: false,
                 width: '305px',
-                customClass: { 
+                customClass: {
                     container: "custom-swal"
                 },
                 timer: 2500
@@ -204,15 +204,32 @@ export class TrainingComponent {
         } else {
             if (this.countResult) this.BadResponse += 1;
             if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
-            this.countResult = false;
-            let situationTable = document.getElementById("error-window-container");
-            situationTable!.style.display = "block";
-            let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
-            uniqueActionList.map(action => {
-                let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
-                button!.classList.remove("fill");
-                button.disabled = true;
-            });
+            const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+            if (userParams.displaySolution) {
+                this.countResult = false;
+                let situationTable = document.getElementById("error-window-container");
+                situationTable!.style.display = "block";
+                let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
+                uniqueActionList.map(action => {
+                    let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
+                    button!.classList.remove("fill");
+                    button.disabled = true;
+                });
+            } else {
+                Swal.fire({
+                    position: 'top-end',
+                    toast: true,
+                    icon: 'error',
+                    title: 'Mauvaise réponse !',
+                    showConfirmButton: false,
+                    width: '305px',
+                    customClass: {
+                        container: "custom-swal"
+                    },
+                    timer: 2500
+                });
+                this.generateSituation();
+            }
         }
     }
 

@@ -16,7 +16,7 @@
                     <h4>Entraînement</h4>
                     <div class="switch-container">
                         <div class="setting-description">Solution lors d'une erreur</div>
-                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"></p-inputSwitch>
+                        <p-inputSwitch [(ngModel)]="displaySolutionOnError" (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
                     </div>
                     <div class="switch-container">
                         <div class="setting-description">Style des cartes</div>
