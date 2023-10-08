@@ -35,8 +35,6 @@ app.use(cors(optionsCors));
 
 const io = require('socket.io')(http, optionsCors);
 
-const situations_dir = './situations';
-
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1];
 
@@ -122,20 +120,9 @@ protectedRouter.get("/check_situation_name/:new_situation_name/:user", async fun
     }
 });
 
-protectedRouter.get("/test", async function (req, res) {
-
-    const id = 5;
-    const user = 'thezartop@gmail.com';
-
-    const connection = await getConnection();
-    const [results] = await connection.execute('SELECT * FROM situations WHERE id != ? AND user = ?', [id, user]);
-    console.log(results)
-    res.json("ok")
-});
-
 app.use('/api', protectedRouter);
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'dev') {
     var distDir = __dirname + "/dist/";
     app.use(express.static(distDir));
 
@@ -277,27 +264,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on('GetSituation', async (id) => {
-        // let situation_string = fs.readFileSync(`${situations_dir}/${id}.json`, 'utf8');
         const connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE id = ?', [id]);
         let parsedSituationJson = JSON.parse(results[0].json);
         const situationObj = { id: results[0].id, ...parsedSituationJson };
         socket.emit('Situation', JSON.stringify(situationObj));
-    });
-
-    socket.on('GetSituationsForTraining', (situationsListParam) => {
-        let situationsList = JSON.parse(situationsListParam);
-        let situations_files = fs.readdirSync(situations_dir);
-        let situationsListForTraining = [];
-        situations_files.forEach(situation => {
-            let fileInfo = path.parse(`${situations_dir}/${situation}`);
-            let situation_name = fileInfo.name;
-            if (situationsList.includes(situation_name)) {
-                let situation_string = fs.readFileSync(`${situations_dir}/${situation}`, 'utf8');
-                situationsListForTraining.push(JSON.parse(situation_string));
-            }
-        })
-        socket.emit('SituationsForTraining', situationsListForTraining);
     });
 });
 
