@@ -24,4 +24,4 @@ New-Item -ItemType "directory" -Path $prod
 Copy-Item $distFolder -Destination (Join-Path $prod "\dist") -Recurse
 
 # on copie les fichiers et dossier du backend dans le dossier de prod
-Copy-Item './server.js', './node_modules', './serviceAccountKey.json', './ecosystem_production.config.js' -Destination $prod -Exclude "frontend/" -Recurse
+Copy-Item './server.js', './node_modules', './serviceAccountKey.json', './databse.js' -Destination $prod -Exclude "frontend/" -Recurse
