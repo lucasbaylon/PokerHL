@@ -27,7 +27,7 @@ mkdir -p $prod
 cp -r $distFolder $prod/dist
 
 # Copiez les fichiers et dossiers du backend dans le dossier prod
-cp -r server.js databse.js node_modules serviceAccountKey.json ecosystem_production.config.js $prod
+cp -r server.js database.js node_modules serviceAccountKey.json ecosystem_production.config.js $prod
 
 # Créez le dossier Situations
 mkdir -p $prod/situations
