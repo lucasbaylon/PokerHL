@@ -60,11 +60,6 @@
                     <div class="color-picker-square" style="background: #e284ff"
                         (click)="onSelectColor(action.id, '#e284ff')"></div>
                 </div>
-                <!-- <div class="hex-code">
-                        <div class="g-input">
-                            <input type="text" value="#ffffff" />
-                        </div>
-                    </div> -->
             </div>
         </ng-container>
         <button class="fill addButton" id="add-solution-button" (click)="addUniqueAction()">Ajouter +</button>
@@ -130,33 +125,26 @@
         </div>
     </div>
 </div>
-<div class="situationCaracteristics animate__animated animate__fadeInUp">
-    <h2>Combien de BB reste t-il au dealer ?</h2>
-    <div class="div-input-text field input-nb-bb-restants">
-        <input type="number" min="1" step="1" class="styled-input-text" id="jetonsRestants" name="jetonsRestants"
-            placeholder="Nombre de jetons restants" [(ngModel)]="situation_obj.dealerMissingTokens" />
-        <label for="jetonsRestants" class="styled-input-text-label">Nombre de BB restantes</label>
+<div class="situation-caracteristics">
+    <h2>Caractéristiques de la situation</h2>
+    <div class="caracteristic-container">
+        <div class="caracteristic-description">Nombre de BB restantes du dealer</div>
+        <p-inputNumber inputId="integeronly" [size]="10" [(ngModel)]="situation_obj.dealerMissingTokens"> </p-inputNumber>
     </div>
-    <h2 class="middleh2">Combien de joueurs y a-t-il autour de la table ?</h2>
-    <div>
-        <button id="btn2Player" class="fill smallButton" (click)="onChangeNBPlayer(2)">2</button>
-        <button id="btn3Player" class="fill smallButton selectedButton" (click)="onChangeNBPlayer(3)">3</button>
+    <div class="caracteristic-container">
+        <div class="caracteristic-description">Nombre de joueurs sur la table</div>
+        <p-dropdown [(ngModel)]="situation_obj.nbPlayer" [options]="availableNbPlayersTable"
+            optionLabel="name"></p-dropdown>
     </div>
-    <h2 class="lasth2">Quel joueur autour de la table est le dealer ?</h2>
-    <div>
-        <button id="btnYouDealer" class="fill smallButton selectedButton" (click)="onChangeDealer('you')">Vous</button>
-        <button id="btnOpponent1Dealer" class="fill smallButton" (click)="onChangeDealer('opponent1')">Adversaire
-            1</button>
-        <button *ngIf="showOpponent2" id="btnOpponent2Dealer" class="fill smallButton"
-            (click)="onChangeDealer('opponent2')">Adversaire
-            2</button>
+    <div class="caracteristic-container">
+        <div class="caracteristic-description">Joueur dealer</div>
+        <p-dropdown [(ngModel)]="situation_obj.dealer" [options]="availableDealerPlayer"
+            optionLabel="name"></p-dropdown>
     </div>
-    <h2 class="lasth2">Quel niveau ont les adversaires ?</h2>
-    <div>
-        <button id="btnFishOpponent" class="fill smallButton selectedButton"
-            (click)="onChangeOpponentLevel('fish')">Débutant</button>
-        <button id="btnSharkOpponent" class="fill smallButton"
-            (click)="onChangeOpponentLevel('shark')">Confirmé</button>
+    <div class="caracteristic-container">
+        <div class="caracteristic-description">Niveau des adversaires</div>
+        <p-dropdown [(ngModel)]="situation_obj.opponentLevel" [options]="availablePlayersLevel"
+            optionLabel="name"></p-dropdown>
     </div>
 </div>
 <button class="fill saveButton animate__animated animate__fadeInUp" (click)="saveSituation()">Enregistrer</button>
