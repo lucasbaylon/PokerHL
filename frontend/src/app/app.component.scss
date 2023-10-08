@@ -6,7 +6,8 @@
 }
 
 .inner-main {
-    height: 85vh;
+    height: fit-content;
+    min-height: 85vh;
     width: 100%;
     display: grid;
     margin: auto;

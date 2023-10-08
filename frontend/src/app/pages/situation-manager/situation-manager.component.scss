@@ -7,7 +7,7 @@
 }
 
 .main{
-    overflow: auto !important;
+    overflow: unset !important;
 }
 
 .animate__animated {
@@ -31,7 +31,7 @@ h1 {
     letter-spacing: 2px;
     font-size: 3em;
     margin: auto;
-    margin-top: 25%;
+    margin-top: 2%;
 }
 
 .case-definition {
