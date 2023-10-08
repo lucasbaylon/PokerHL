@@ -4,7 +4,7 @@
 <h1>Débuter une cession d'entraînement</h1>
 <p>Sélectionnez les situations sur lesquelles vous souhaitez vous entraîner</p>
 <div class="container">
-    <p-table [value]="situationList" dataKey="_id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
+    <p-table [value]="situationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
         [paginator]="true" [(selection)]="selectedSituations">
         <ng-template pTemplate="header">
             <tr class="animate__animated animate__fadeIn">

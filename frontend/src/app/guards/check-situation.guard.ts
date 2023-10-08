@@ -8,7 +8,7 @@ export const checkSituationGuard: CanActivateFn = (route: ActivatedRouteSnapshot
 
     const apiSituation = inject(SituationService);
 
-    return apiSituation.checkSituation().pipe(map((data: any) => {
+    return apiSituation.checkSituationForUser().pipe(map((data: any) => {
         if (data.authorized) {
             return true;
         } else {

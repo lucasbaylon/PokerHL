@@ -61,21 +61,21 @@ if (process.env.NODE_ENV !== 'dev') {
     protectedRouter.use(authMiddleware);
 }
 
-protectedRouter.get("/check_situations_folder", function (req, res) {
-    if (fs.existsSync(situations_dir)) {
-        // Directory exists!
-        fs.readdir(situations_dir, function (err, data) {
-            if (data.length == 0) {
-                // Directory is empty!
-                res.status(200).json({ authorized: false, message: "DIRECTORY_EMPTY" });
-            } else {
-                // Directory is not empty!
-                res.status(200).json({ authorized: true, message: "OK" });
-            }
-        });
-    } else {
-        // Directory not found.
-        res.status(200).json({ authorized: false, message: "DIRECTORY_NOT_FOUND" });
+protectedRouter.get("/check_situations_for_user/:user", async function (req, res) {
+    const user = req.params.user;
+    try {
+        const connection = await getConnection();
+        const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
+
+        if (results.length === 0) {
+            res.status(200).json({ authorized: false, message: "NO_SITUATION" });
+        } else {
+            res.status(200).json({ authorized: true, message: "OK" });
+        }
+    } catch (error) {
+        console.error('Error querying the database:', error);
+        // En cas d'erreur, envoyez une réponse 500 au client
+        // res.status(500).json({ error: 'An error occurred while checking the situation name' });
     }
 });
 

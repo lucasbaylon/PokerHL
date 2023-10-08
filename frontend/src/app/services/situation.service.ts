@@ -15,8 +15,9 @@ export class SituationService {
 
     constructor(private http: HttpClient, private socket: Socket, private auth: AuthService) { }
 
-    checkSituation() {
-        return this.http.get("/api/check_situations_folder");
+    checkSituationForUser() {
+        const actualUser = this.auth.getUser();
+        return this.http.get(`/api/check_situations_for_user/${actualUser?.email}`);
     }
 
     checkSituationNameFromUser(name: string) {
