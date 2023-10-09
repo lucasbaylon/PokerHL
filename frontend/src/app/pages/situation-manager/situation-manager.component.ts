@@ -69,7 +69,6 @@ export class SituationManagerComponent {
     availableDealerPlayer: any[] = [
         { name: 'Vous', code: 'you' },
         { name: 'Adversaire 1', code: 'opponent1' },
-        { name: 'Adversaire 1', code: 'opponent1' },
         { name: 'Adversaire 2', code: 'opponent2' }
     ];
 
