@@ -190,7 +190,6 @@ io.on('connection', (socket) => {
                 [user]
             );
             const allNames = allSituations.map(situation => JSON.parse(situation.json).name);
-            console.log(allNames)
 
             // Générer un nouveau nom unique
             let newName = `${originalSituation.name} copy`;

@@ -57,18 +57,23 @@ export class SituationManagerComponent {
 
     editSituationName?: string;
 
+    nbPlayer: { name: string, code: number } = { name: '2', code: 2 };
+    dealer: { name: string, code: string } = { name: 'Vous', code: 'you' };
+    opponentLevel: { name: string, code: string } = { name: 'Débutant', code: 'fish' };
+
     availableNbPlayersTable: any[] = [
-        { name: '2', code: 'two' },
-        { name: '3', code: 'three' }
+        { name: '2', code: 2 },
+        { name: '3', code: 3 }
     ];
 
     availableDealerPlayer: any[] = [
         { name: 'Vous', code: 'you' },
-        { name: 'Adversaire 1', code: 'op1' },
-        { name: 'Adversaire 2', code: 'op2' }
+        { name: 'Adversaire 1', code: 'opponent1' },
+        { name: 'Adversaire 1', code: 'opponent1' },
+        { name: 'Adversaire 2', code: 'opponent2' }
     ];
 
-    availablePlayersLevel: any[] = [
+    availableOpponentsPlayersLevel: any[] = [
         { name: 'Débutant', code: 'fish' },
         { name: 'Confirmé', code: 'shark' }
     ];
@@ -92,9 +97,9 @@ export class SituationManagerComponent {
             this.situation_obj = JSON.parse(situation_str);
             this.editSituationName = this.situation_obj.name;
             this.situation_objActionsRef = this.situation_obj.actions.slice();
-            this.changeNBPlayer(this.situation_obj.nbPlayer!)
-            this.changeDealer(this.situation_obj.dealer!);
-            this.onChangeOpponentLevel(this.situation_obj.opponentLevel!);
+            this.nbPlayer = this.availableNbPlayersTable.find((nbPlayer) => nbPlayer.code === this.situation_obj.nbPlayer);
+            this.dealer = this.availableDealerPlayer.find((dealer) => dealer.code === this.situation_obj.dealer);
+            this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
 
             let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
             this.countMultipleSolution = actionList.length;
@@ -326,25 +331,6 @@ export class SituationManagerComponent {
         }
     }
 
-    onChangeDealer(dealer: string) {
-        this.changeDealer(dealer);
-        this.situation_obj.dealer = dealer;
-    }
-
-    changeDealer(dealer: string) {
-        const buttonIds = ["btnYouDealer", "btnOpponent1Dealer", "btnOpponent2Dealer"];
-        for (const id of buttonIds) {
-            document.getElementById(id)?.classList.remove("selectedButton");
-        }
-        document.getElementById(`btn${dealer[0].toUpperCase() + dealer.slice(1)}Dealer`)?.classList.add("selectedButton");
-    }
-
-    onChangeOpponentLevel(opponentLevel: string) {
-        this.situation_obj.opponentLevel = opponentLevel;
-        this.setSelectedButton("fish", "btnFishOpponent", opponentLevel === "fish");
-        this.setSelectedButton("shark", "btnSharkOpponent", opponentLevel === "shark");
-    }
-
     setSelectedButton(opponentLevel: string, buttonId: string, isSelected: boolean) {
         const button = document.getElementById(buttonId);
         if (button) {
@@ -522,6 +508,18 @@ export class SituationManagerComponent {
             this.situation_obj.actions.splice(index, 1);
         }
         this.situation_objActionsRef = this.situation_obj.actions.slice();
+    }
+
+    onChangeNbPlayersTable() {
+        this.situation_obj.nbPlayer = this.nbPlayer.code;
+    }
+
+    onChangeDealer() {
+        this.situation_obj.dealer = this.dealer.code;
+    }
+
+    onChangeOpponentLevel() {
+        this.situation_obj.opponentLevel = this.opponentLevel.code;
     }
 
 }

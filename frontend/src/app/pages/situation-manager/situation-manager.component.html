@@ -133,17 +133,17 @@
     </div>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Nombre de joueurs sur la table</div>
-        <p-dropdown [(ngModel)]="situation_obj.nbPlayer" [options]="availableNbPlayersTable"
+        <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
             optionLabel="name"></p-dropdown>
     </div>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Joueur dealer</div>
-        <p-dropdown [(ngModel)]="situation_obj.dealer" [options]="availableDealerPlayer"
+        <p-dropdown [(ngModel)]="dealer" [options]="availableDealerPlayer" (onChange)="onChangeDealer()"
             optionLabel="name"></p-dropdown>
     </div>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Niveau des adversaires</div>
-        <p-dropdown [(ngModel)]="situation_obj.opponentLevel" [options]="availablePlayersLevel"
+        <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel" (onChange)="onChangeOpponentLevel()"
             optionLabel="name"></p-dropdown>
     </div>
 </div>
