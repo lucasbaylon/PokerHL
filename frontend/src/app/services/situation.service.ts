@@ -39,10 +39,6 @@ export class SituationService {
         this.socket.emit('GetSituation', id);
     }
 
-    getSituationsForTraining(situationsList: Situation[]) {
-        this.socket.emit('GetSituationsForTraining', situationsList);
-    }
-
     addSituation(data: Situation) {
         const actualUser = this.auth.getUser();
         this.socket.emit('AddSituation', {data: data, user: actualUser?.email});
