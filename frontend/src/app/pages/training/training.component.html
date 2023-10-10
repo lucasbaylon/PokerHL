@@ -11,13 +11,16 @@
 
                 <!-- Adversaire du milieu  -->
                 <div *ngIf="activeSituation.nbPlayer == 2">
-                    <div class="playerBox">
-                        <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                        <h2>Adversaire</h2>
-                        <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                        <div *ngIf="activeSituation.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent0">
-                            <span class="dealer-coin-text">D</span>
+                    <div class="playerBox oponentBox0">
+                        <div>
+                            <img class="shark-fish-icon"
+                                src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
+                            <h2>Adversaire</h2>
+                            <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                         </div>
+                    </div>
+                    <div *ngIf="activeSituation.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent0">
+                        <span class="dealer-coin-text">D</span>
                     </div>
                     <hr class="oponent0Hr">
                     <div class="cardContainer oponent0Cards">
@@ -34,11 +37,10 @@
                                 src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
                             <h2>Adversaire</h2>
                             <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                            <div *ngIf="activeSituation?.dealer == 'opponent1'"
-                                class="dealer-coin dealer-coin-oponent1">
-                                <span class="dealer-coin-text">D</span>
-                            </div>
                         </div>
+                    </div>
+                    <div *ngIf="activeSituation?.dealer == 'opponent1'" class="dealer-coin dealer-coin-oponent1">
+                        <span class="dealer-coin-text">D</span>
                     </div>
                     <hr class="oponent1Hr">
                     <div class="cardContainer oponent1Cards">
@@ -55,11 +57,10 @@
                                 src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
                             <h2>Adversaire</h2>
                             <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                            <div *ngIf="activeSituation?.dealer == 'opponent2'"
-                                class="dealer-coin dealer-coin-oponent2">
-                                <span class="dealer-coin-text">D</span>
-                            </div>
                         </div>
+                    </div>
+                    <div *ngIf="activeSituation?.dealer == 'opponent2'" class="dealer-coin dealer-coin-oponent2">
+                        <span class="dealer-coin-text">D</span>
                     </div>
                     <hr class="oponent2Hr">
                     <div class="cardContainer oponent2Cards">

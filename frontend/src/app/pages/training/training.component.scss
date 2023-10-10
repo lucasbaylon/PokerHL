@@ -112,14 +112,12 @@ img {
 
 .cardContainer {
     height: 4.5vw;
-    width: fit-content;
     position: absolute;
     overflow: hidden;
 }
 
 .userCards {
-    width: fit-content;
-    top: 77.01%;
+    top: 77.1%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
@@ -135,15 +133,14 @@ img {
 }
 
 .oponent0Cards {
-    top: 9.2%;
-    left: 50%;
+    top: 10%;
     transform: rotate(180deg);
 }
 
 .oponent1Cards {
     top: 22%;
     transform: rotate(135deg);
-    margin-right: 29vw;
+    margin-right: 30vw;
 }
 
 .oponent2Cards {
@@ -187,7 +184,8 @@ hr.userHr {
 }
 
 hr.oponent0Hr {
-    margin-top: 90px;
+    transform: translate(-50%, -50%);
+    top: 13.05%;
     left: 50%;
 }
 
@@ -241,6 +239,12 @@ hr.oponent2Hr {
     transform: translateX(-50%);
 }
 
+.oponentBox0{
+    top: -15%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .oponentBox1 {
     top: -5%;
 }
@@ -259,6 +263,56 @@ hr.oponent2Hr {
     width: 2.6vw;
     margin-top: -0.3vw;
 }
+
+/********************************* Dealer Coins *********************************/
+
+.dealer-coin {
+    position: absolute;
+    width: 2.5vw;
+    height: 2.5vw;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #3B82F6;
+    text-align: center;
+    box-shadow: inset 0 0px 5px rgba(0, 0, 0, 0.8);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.dealer-coin-text {
+    color: #fff;
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.25vw;
+    font-weight: bold;
+}
+
+.dealer-coin-oponent0 {
+    top: 7%;
+    left: 38%;
+}
+
+.dealer-coin-oponent1 {
+    top: 60%;
+    left: 125%;
+}
+
+.dealer-coin-oponent2 {
+    top: 60%;
+    left: -25%;
+}
+
+.dealer-coin-player {
+    top: 15%;
+    left: 130%;
+}
+
 
 /********************************* Boutons de réponses *********************************/
 
@@ -376,55 +430,6 @@ button {
     padding: 10px !important;
     margin: 0 !important;
     font-size: 100px !important;
-}
-
-/********************************* Dealer Coins *********************************/
-
-.dealer-coin {
-    position: absolute;
-    width: 2.5vw;
-    height: 2.5vw;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #3B82F6;
-    text-align: center;
-    box-shadow: inset 0 0px 5px rgba(0, 0, 0, 0.8);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.dealer-coin-text {
-    color: #fff;
-    position: absolute;
-    top: 47%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.25vw;
-    font-weight: bold;
-}
-
-.dealer-coin-oponent0 {
-    top: 80%;
-    left: -25%;
-}
-
-.dealer-coin-oponent1 {
-    top: 60%;
-    left: 125%;
-}
-
-.dealer-coin-oponent2 {
-    top: 60%;
-    left: -25%;
-}
-
-.dealer-coin-player {
-    top: 15%;
-    left: 130%;
 }
 
 /********************************* Error Window *********************************/
