@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserParams } from 'src/app/interfaces/user-params';
 import { AuthService } from 'src/app/services/auth.service';
+import { SituationService } from 'src/app/services/situation.service';
 
 @Component({
     selector: 'app-settings',
@@ -13,6 +14,7 @@ export class SettingsComponent {
 
     constructor(
         public apiAuth: AuthService,
+        private apiSituation: SituationService,
         private router: Router
     ) { }
 
@@ -40,7 +42,7 @@ export class SettingsComponent {
         { name: 'Rouge', code: 'red' },
     ];
 
-    pokerTableColor: { name: string, code: string } = { name: 'Vert', code: 'green'};
+    pokerTableColor: { name: string, code: string } = { name: 'Vert', code: 'green' };
 
     ngOnInit() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
@@ -76,6 +78,15 @@ export class SettingsComponent {
         const userParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.playmatColor = this.pokerTableColor.code;
         localStorage.setItem('userParams', JSON.stringify(userParams));
+    }
+
+    onClickFileImport(event: any) {
+        const file = event.target.files[0];
+        console.log(file);
+    }
+
+    onClickFileExport() {
+        this.apiSituation.exportSituationForUser();
     }
 
 }

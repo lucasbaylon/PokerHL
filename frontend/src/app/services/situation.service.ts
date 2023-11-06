@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Socket } from 'ngx-socket-io';
 import { Situation } from '../interfaces/situation';
 import { AuthService } from './auth.service';
+import { saveAs } from 'file-saver';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class SituationService {
 
@@ -41,21 +42,28 @@ export class SituationService {
 
     addSituation(data: Situation) {
         const actualUser = this.auth.getUser();
-        this.socket.emit('AddSituation', {data: data, user: actualUser?.email});
+        this.socket.emit('AddSituation', { data: data, user: actualUser?.email });
     }
 
     editSituation(data: Situation) {
-        this.socket.emit('EditSituation', {data: data});
+        this.socket.emit('EditSituation', { data: data });
     }
 
     removeSituation(id: string) {
         const actualUser = this.auth.getUser();
-        this.socket.emit('RemoveSituation', {id: id, user: actualUser?.email});
+        this.socket.emit('RemoveSituation', { id: id, user: actualUser?.email });
     }
 
     duplicateSituation(id: string) {
         const actualUser = this.auth.getUser();
-        this.socket.emit('DuplicateSituation', {id: id, user: actualUser?.email});
+        this.socket.emit('DuplicateSituation', { id: id, user: actualUser?.email });
+    }
+
+    exportSituationForUser() {
+        const actualUser = this.auth.getUser();
+        this.http.get(`/api/export_situation/${actualUser?.email}`, { responseType: 'blob' }).subscribe(blob => {
+            saveAs(blob, 'situations.zip');
+        });
     }
 
 }

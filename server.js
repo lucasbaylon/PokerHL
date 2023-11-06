@@ -2,8 +2,7 @@ const express = require('express');
 cors = require('cors');
 const app = express();
 
-const fs = require('fs');
-const path = require('path');
+const archiver = require('archiver');
 const admin = require('firebase-admin');
 
 const { getConnection } = require('./database');
@@ -113,6 +112,39 @@ protectedRouter.get("/check_situation_name/:new_situation_name/:user", async fun
         });
 
         res.status(200).json({ exist: situation_exist });
+    } catch (error) {
+        console.error('Error querying the database:', error);
+        // En cas d'erreur, envoyez une réponse 500 au client
+        // res.status(500).json({ error: 'An error occurred while checking the situation name' });
+    }
+});
+
+protectedRouter.get("/export_situation/:user", async function (req, res) {
+    let user = req.params.user;
+
+    try {
+        const connection = await getConnection();
+        const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
+
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', 'attachment; filename=situations.zip');
+
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+
+        archive.on('error', function (err) {
+            throw err;
+        });
+
+        archive.pipe(res);
+
+        results.forEach((obj) => {
+            const jsonObj = JSON.parse(obj.json);
+            archive.append(obj.json, { name: `${jsonObj.name}.json` });
+        });
+
+        archive.finalize();
     } catch (error) {
         console.error('Error querying the database:', error);
         // En cas d'erreur, envoyez une réponse 500 au client
