@@ -16,8 +16,6 @@ export class AuthService {
 
     private userSubject = new BehaviorSubject<User | null>(null);
 
-    // private user: User | null = null;
-
     isLoading = new BehaviorSubject<boolean>(true);
 
     constructor(
@@ -28,13 +26,21 @@ export class AuthService {
             this.userSubject.next(aUser);
             this.isLoading.next(false);
 
-            if (aUser && !localStorage.getItem('userParams')) {
-                localStorage.setItem(
-                    'userParams',
-                    JSON.stringify({ darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false })
-                );
-                this.router.navigate(['home']);
-            } else if (!aUser) {
+            const currentUrl = this.router.url;
+            if (aUser) {
+                if (!localStorage.getItem('userParams')) {
+                    localStorage.setItem(
+                        'userParams',
+                        JSON.stringify({ darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false })
+                    );
+                }
+                if (currentUrl.startsWith('/login')) {
+                    this.router.navigate(['home']);
+                }
+                else if (!localStorage.getItem('userParams')) {
+                    this.router.navigate(['home']);
+                }
+            } else {
                 this.router.navigate(['login']);
             }
         });
