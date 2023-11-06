@@ -14,7 +14,9 @@ export class AuthService {
     authState$ = authState(this.auth);
     authStateSubscription: Subscription;
 
-    private user: User | null = null;
+    private userSubject = new BehaviorSubject<User | null>(null);
+
+    // private user: User | null = null;
 
     isLoading = new BehaviorSubject<boolean>(true);
 
@@ -22,15 +24,17 @@ export class AuthService {
         private router: Router,
         private messageService: MessageService
     ) {
-        this.authStateSubscription = this.authState$.subscribe((aUser: User | null) => {
-            this.user = aUser;
+        this.authStateSubscription = authState(this.auth).subscribe((aUser: User | null) => {
+            this.userSubject.next(aUser);
             this.isLoading.next(false);
-            if (aUser) {
-                if (!localStorage.getItem('userParams')) {
-                    localStorage.setItem('userParams', JSON.stringify({darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false}));
-                }
+
+            if (aUser && !localStorage.getItem('userParams')) {
+                localStorage.setItem(
+                    'userParams',
+                    JSON.stringify({ darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false })
+                );
                 this.router.navigate(['home']);
-            } else {
+            } else if (!aUser) {
                 this.router.navigate(['login']);
             }
         });
@@ -42,7 +46,6 @@ export class AuthService {
 
     signIn(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password).then((result) => {
-            // La connexion est réussie !
             this.messageService.add({
                 severity: 'success',
                 summary: 'Connexion Réussie',
@@ -70,7 +73,6 @@ export class AuthService {
 
     signOut() {
         return signOut(this.auth).then((result) => {
-            // La connexion est réussie !
             this.messageService.add({
                 severity: 'success',
                 summary: 'Déconnexion Réussie',
@@ -80,10 +82,10 @@ export class AuthService {
     }
 
     isLoggedIn(): boolean {
-        return this.user !== null;
+        return this.userSubject.value !== null;
     }
 
     getUser(): User | null {
-        return this.user;
+        return this.userSubject.value;
     }
 }
