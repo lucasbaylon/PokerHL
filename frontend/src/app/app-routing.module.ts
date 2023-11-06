@@ -9,6 +9,7 @@ import { SituationsListManagerComponent } from './pages/situations-list-manager/
 import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
 import { checkSituationGuard } from './guards/check-situation.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 const routes: Routes = [
     {
         path: '',
@@ -16,9 +17,33 @@ const routes: Routes = [
         pathMatch: 'full'
     },
     {
-        path: 'home',
-        component: HomeComponent,
-        canActivate: [AuthGuard]
+        path: '',
+        component: BaseLayoutComponent,
+        children: [
+            {
+                path: 'home',
+                component: HomeComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'situations-manager',
+                component: SituationManagerComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'situations-list-manager',
+                component: SituationsListManagerComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'situations-list-training',
+                component: SituationsListTrainingComponent,
+                canActivate: [
+                    AuthGuard,
+                    checkSituationGuard
+                ]
+            },
+        ]
     },
     {
         path: 'login',
@@ -30,24 +55,6 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'situations-manager',
-        component: SituationManagerComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'situations-list-manager',
-        component: SituationsListManagerComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'situations-list-training',
-        component: SituationsListTrainingComponent,
-        canActivate: [
-            AuthGuard,
-            checkSituationGuard
-        ]
-    },
-    {
         path: 'training',
         component: TrainingComponent,
         canActivate: [
@@ -57,7 +64,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }

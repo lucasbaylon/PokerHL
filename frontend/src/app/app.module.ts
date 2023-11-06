@@ -34,6 +34,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { AuthService } from './services/auth.service';
 
 import { environment } from '../environments/environment';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 
 const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
 
@@ -50,7 +51,8 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
         ActionColorPipe,
         LoginComponent,
         SettingsComponent,
-        LoadingComponent
+        LoadingComponent,
+        BaseLayoutComponent
     ],
     imports: [
         FormsModule,
