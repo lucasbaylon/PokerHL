@@ -129,7 +129,7 @@
     <h2>Caractéristiques de la situation</h2>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Nombre de BB restantes du dealer</div>
-        <p-inputNumber inputId="integeronly" [size]="10" [(ngModel)]="situation_obj.dealerMissingTokens"> </p-inputNumber>
+        <p-inputNumber inputId="integeronly" [size]="10" [min]="0" [(ngModel)]="situation_obj.dealerMissingTokens"> </p-inputNumber>
     </div>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Nombre de joueurs sur la table</div>
