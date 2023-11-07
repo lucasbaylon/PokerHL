@@ -49,11 +49,11 @@ const routes: Routes = [
                 component: SettingsComponent,
                 canActivate: [AuthGuard]
             },
+            {
+                path: 'login',
+                component: LoginComponent
+            }
         ]
-    },
-    {
-        path: 'login',
-        component: LoginComponent
     },
     {
         path: 'training',
