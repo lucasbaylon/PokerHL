@@ -75,7 +75,7 @@ export class SituationsListManagerComponent {
                     icon: 'success',
                     title: '<span style="font-size: 24px;">Situation supprimée !</span>',
                     showConfirmButton: false,
-                    width: '359px',
+                    width: '350px',
                     timer: 2500
                 });
             }

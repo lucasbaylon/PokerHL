@@ -217,9 +217,9 @@ export class TrainingComponent {
                     position: 'top-end',
                     toast: true,
                     icon: 'error',
-                    title: 'Mauvaise réponse !',
+                    title: '<span style="font-size: 24px;">Mauvaise réponse !</span>',
                     showConfirmButton: false,
-                    width: '305px',
+                    width: '335px',
                     timer: 2500
                 });
                 this.generateSituation();

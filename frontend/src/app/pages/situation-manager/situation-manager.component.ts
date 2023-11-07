@@ -290,7 +290,7 @@ export class SituationManagerComponent {
             icon: 'success',
             title: '<span style="font-size: 24px;">Situation modifiée !</span>',
             showConfirmButton: false,
-            width: '339px',
+            width: '330px',
             timer: 2500
         });
         this.router.navigate(['situations-list-manager']);
@@ -330,7 +330,7 @@ export class SituationManagerComponent {
         }
     }
 
-    setSelectedButton(opponentLevel: string, buttonId: string, isSelected: boolean) {
+    setSelectedButton(buttonId: string, isSelected: boolean) {
         const button = document.getElementById(buttonId);
         if (button) {
             if (isSelected) {
