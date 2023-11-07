@@ -288,7 +288,7 @@ export class SituationManagerComponent {
             toast: true,
             position: 'top-end',
             icon: 'success',
-            html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation modifiée !</h3>',
+            title: '<span style="font-size: 24px;">Situation modifiée !</span>',
             showConfirmButton: false,
             width: '339px',
             timer: 2500

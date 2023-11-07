@@ -192,12 +192,9 @@ export class TrainingComponent {
                 position: 'top-end',
                 toast: true,
                 icon: 'success',
-                title: 'Bonne réponse !',
+                title: '<span style="font-size: 24px;">Bonne réponse !</span>',
                 showConfirmButton: false,
-                width: '305px',
-                customClass: {
-                    container: "custom-swal"
-                },
+                width: '300px',
                 timer: 2500
             });
             this.generateSituation();
@@ -223,9 +220,6 @@ export class TrainingComponent {
                     title: 'Mauvaise réponse !',
                     showConfirmButton: false,
                     width: '305px',
-                    customClass: {
-                        container: "custom-swal"
-                    },
                     timer: 2500
                 });
                 this.generateSituation();
