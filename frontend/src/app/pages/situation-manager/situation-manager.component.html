@@ -8,7 +8,8 @@
         name="situationName" id='situationName' autocomplete="off" />
     <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
 </div>
-<div class="case-definition animate__animated animate__fadeIn">
+<!-- <div class="case-definition animate__animated animate__fadeIn"> -->
+<div class="case-definition">
     <table (mouseleave)="endSelection($event)" oncontextmenu="return false;">
         <tbody>
             <tr *ngFor="let row of situation_obj.situations; let i = index"
@@ -22,8 +23,7 @@
     </table>
     <div class="solutions">
         <h2>Solutions</h2>
-        <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index"
-            class="solution-selector animate__animated animate__fadeInDown">
+        <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index" class="solution-selector">
             <div class="solution-selector">
                 <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                     (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
@@ -93,7 +93,7 @@
             <ion-button (click)="resetMultipleSituation()">
                 <ion-icon name="close-outline"></ion-icon>
             </ion-button>
-            <h2>Ajout d'une solution multiple</h2>
+            <h2 class="add-multiples-solutions-h2">Ajout d'une solution multiple</h2>
             <div class="div-input-text field input-name-multiples-solutions">
                 <input [(ngModel)]="multipleSolutionName" type="text" class="styled-input-text" placeholder="Nom"
                     name="multipleSolution" id='multipleSolution' autocomplete="off" />
