@@ -4,6 +4,7 @@ import { Socket } from 'ngx-socket-io';
 import { Situation } from '../interfaces/situation';
 import { AuthService } from './auth.service';
 import { saveAs } from 'file-saver';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -59,10 +60,21 @@ export class SituationService {
         this.socket.emit('DuplicateSituation', { id: id, user: actualUser?.email });
     }
 
-    exportSituationForUser() {
+    exportSituationsForUser() {
         const actualUser = this.auth.getUser();
         this.http.get(`/api/export_situation/${actualUser?.email}`, { responseType: 'blob' }).subscribe(blob => {
             saveAs(blob, 'situations.zip');
+        });
+    }
+
+    importSituationsForUser(file: Blob): Observable<any> {
+        const actualUser = this.auth.getUser();
+        
+        const formData: FormData = new FormData();
+        formData.append('file', file, 'situations.zip');
+
+        return this.http.post(`/api/import_situation/${actualUser?.email}`, formData, {
+            responseType: 'json'
         });
     }
 

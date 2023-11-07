@@ -3,6 +3,8 @@ cors = require('cors');
 const app = express();
 
 const JSZip = require('jszip');
+const multer = require('multer');
+
 const admin = require('firebase-admin');
 
 const { getConnection } = require('./database');
@@ -10,6 +12,10 @@ const { getConnection } = require('./database');
 const http = require('http').Server(app);
 
 const serviceAccount = require('./serviceAccountKey.json');
+
+// Configuration de multer pour le stockage en mémoire
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -142,6 +148,73 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
         console.error('Erreur lors de la création du fichier ZIP:', err);
         res.status(500).send('Erreur du serveur');
     }
+});
+
+protectedRouter.post("/import_situation/:user", upload.single('file'), async function (req, res) {
+    let user = req.params.user;
+
+    if (!req.file) {
+        return res.status(400).send('Aucun fichier n\'a été téléchargé.');
+    }
+
+    // Récupérer le buffer contenant le contenu du fichier ZIP
+    const zipBuffer = req.file.buffer;
+
+    // Utiliser JSZip pour lire le contenu du ZIP à partir du buffer
+    JSZip.loadAsync(zipBuffer)
+        .then(zip => {
+            // Traiter chaque fichier contenu dans le ZIP
+            const jsonFilesPromises = Object.keys(zip.files).filter(fileName => {
+                // Filtrer pour obtenir uniquement les fichiers .json
+                return fileName.endsWith('.json');
+            }).map(fileName => {
+                // Extraire le contenu des fichiers .json
+                return zip.file(fileName).async('string').then(content => {
+                    // console.log(JSON.parse(content));
+                    // Faire quelque chose avec le contenu JSON
+                    // console.log(`Contenu du fichier ${fileName}:`, content);
+                    return { fileName, content }; // Retourner le contenu sous forme d'objet
+                });
+            });
+
+            // Attendre que tous les fichiers JSON soient traités
+            return Promise.all(jsonFilesPromises);
+        })
+        .then(async (filesContents) => {
+            // Tous les contenus de fichiers JSON sont maintenant dans filesContents
+            // Vous pouvez maintenant répondre à la requête ou effectuer d'autres actions
+            // res.json(filesContents.length);
+            // Assurez-vous d'abord d'avoir une instance de connexion à la base de données
+            const connection = await getConnection();
+
+            try {
+                // Démarrez une transaction
+                await connection.beginTransaction();
+
+                // Insérez chaque contenu de fichier en base de données
+                for (const content of filesContents) {
+                    // Votre logique d'insertion ici
+                    await connection.execute('INSERT INTO situations (json, user) VALUES (?, ?)', [content.content, user]);
+                }
+
+                // Validez la transaction si tout est en ordre
+                await connection.commit();
+
+                // Répondez à la requête HTTP
+                res.json({ success: true, count: filesContents.length });
+            } catch (error) {
+                // Si une erreur survient, annulez la transaction
+                await connection.rollback();
+
+                // Log et réponse d'erreur
+                console.error('Erreur lors de l\'insertion des données:', error);
+                res.status(500).json({ success: false, message: 'Erreur lors de l\'insertion des données' });
+            }
+        })
+        .catch(err => {
+            console.error('Erreur lors de la lecture du fichier ZIP:', err);
+            res.status(500).send('Erreur lors de la lecture du fichier ZIP.');
+        });
 });
 
 app.use('/api', protectedRouter);
