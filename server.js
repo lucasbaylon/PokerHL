@@ -2,7 +2,7 @@ const express = require('express');
 cors = require('cors');
 const app = express();
 
-const archiver = require('archiver');
+const JSZip = require('jszip');
 const admin = require('firebase-admin');
 
 const { getConnection } = require('./database');
@@ -126,27 +126,21 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
         const connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
 
-        res.setHeader('Content-Type', 'application/zip');
-        res.setHeader('Content-Disposition', 'attachment; filename=situations.zip');
-
-        const archive = archiver('zip', {
-            zlib: { level: 9 }
-        });
-
-        archive.on('error', function (err) {
-            throw err;
-        });
-
-        archive.pipe(res);
+        const zip = new JSZip();
 
         results.forEach((obj) => {
             const jsonObj = JSON.parse(obj.json);
-            archive.append(obj.json, { name: `${jsonObj.name}.json` });
+            zip.file(`${jsonObj.name}.json`, obj.json);
         });
 
-        archive.finalize();
+        zip.generateAsync({ type: 'nodebuffer' }).then(function (content) {
+            res.setHeader('Content-Type', 'application/zip');
+            res.setHeader('Content-Disposition', 'attachment; filename=situations.zip');
+            res.send(content);
+        });
     } catch (error) {
-        console.error('Error querying the database:', error);
+        console.error('Erreur lors de la création du fichier ZIP:', err);
+        res.status(500).send('Erreur du serveur');
     }
 });
 
