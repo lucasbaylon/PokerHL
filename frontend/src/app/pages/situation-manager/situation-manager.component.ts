@@ -68,8 +68,7 @@ export class SituationManagerComponent {
 
     availableDealerPlayer: any[] = [
         { name: 'Vous', code: 'you' },
-        { name: 'Adversaire 1', code: 'opponent1' },
-        { name: 'Adversaire 2', code: 'opponent2' }
+        { name: 'Adversaire 1', code: 'opponent1' }
     ];
 
     availableOpponentsPlayersLevel: any[] = [
@@ -305,42 +304,6 @@ export class SituationManagerComponent {
         actionList.display_name = e.target.value;
     }
 
-    onChangeNBPlayer(nb_player: number) {
-        this.changeNBPlayer(nb_player);
-        this.situation_obj.nbPlayer = nb_player;
-    }
-
-    changeNBPlayer(nb_player: number) {
-        const btn2Player = document.getElementById("btn2Player");
-        const btn3Player = document.getElementById("btn3Player");
-        const btnOpponent2Dealer = document.getElementById("btnOpponent2Dealer");
-
-        if (nb_player === 2) {
-            this.showOpponent2 = false;
-            if (this.situation_obj.dealer === "opponent2") {
-                btnOpponent2Dealer?.classList.remove("selectedButton");
-                this.situation_obj.dealer = undefined;
-            }
-            btn2Player?.classList.add("selectedButton");
-            btn3Player?.classList.remove("selectedButton");
-        } else if (nb_player === 3) {
-            this.showOpponent2 = true;
-            btn2Player?.classList.remove("selectedButton");
-            btn3Player?.classList.add("selectedButton");
-        }
-    }
-
-    setSelectedButton(buttonId: string, isSelected: boolean) {
-        const button = document.getElementById(buttonId);
-        if (button) {
-            if (isSelected) {
-                button.classList.add("selectedButton");
-            } else {
-                button.classList.remove("selectedButton");
-            }
-        }
-    }
-
     filteredActionList(list: Action[], type: string) {
         return list.filter(item => item.type === type);
     }
@@ -511,6 +474,7 @@ export class SituationManagerComponent {
 
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
+        this.nbPlayer.code === 2 ? this.availableDealerPlayer.splice(2, 1) : this.availableDealerPlayer.push({ name: 'Adversaire 2', code: 'opponent2' });
     }
 
     onChangeDealer() {

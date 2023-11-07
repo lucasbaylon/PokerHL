@@ -147,8 +147,6 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
         archive.finalize();
     } catch (error) {
         console.error('Error querying the database:', error);
-        // En cas d'erreur, envoyez une réponse 500 au client
-        // res.status(500).json({ error: 'An error occurred while checking the situation name' });
     }
 });
 
