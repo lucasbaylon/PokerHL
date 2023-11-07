@@ -10,6 +10,7 @@ import { SituationsListTrainingComponent } from './pages/situations-list-trainin
 import { checkSituationGuard } from './guards/check-situation.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
+
 const routes: Routes = [
     {
         path: '',
@@ -43,16 +44,16 @@ const routes: Routes = [
                     checkSituationGuard
                 ]
             },
+            {
+                path: 'settings',
+                component: SettingsComponent,
+                canActivate: [AuthGuard]
+            },
         ]
     },
     {
         path: 'login',
         component: LoginComponent
-    },
-    {
-        path: 'settings',
-        component: SettingsComponent,
-        canActivate: [AuthGuard]
     },
     {
         path: 'training',
