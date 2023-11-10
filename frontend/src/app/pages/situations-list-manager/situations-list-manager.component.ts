@@ -73,9 +73,9 @@ export class SituationsListManagerComponent {
                     toast: true,
                     position: 'top-end',
                     icon: 'success',
-                    title: '<span style="font-size: 24px;">Situation supprimée !</span>',
+                    title: '<span style="font-size: 1.3vw;">Situation supprimée !</span>',
                     showConfirmButton: false,
-                    width: '350px',
+                    width: '18.7vw',
                     timer: 2500
                 });
             }

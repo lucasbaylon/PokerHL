@@ -287,9 +287,9 @@ export class SituationManagerComponent {
             toast: true,
             position: 'top-end',
             icon: 'success',
-            title: '<span style="font-size: 24px;">Situation modifiée !</span>',
+            title: '<span style="font-size: 1.3vw;">Situation modifiée !</span>',
             showConfirmButton: false,
-            width: '330px',
+            width: '17.6vw',
             timer: 2500
         });
         this.router.navigate(['situations-list-manager']);

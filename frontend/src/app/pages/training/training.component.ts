@@ -192,9 +192,9 @@ export class TrainingComponent {
                 position: 'top-end',
                 toast: true,
                 icon: 'success',
-                title: '<span style="font-size: 24px;">Bonne réponse !</span>',
+                title: '<span style="font-size: 1.3vw;">Bonne réponse !</span>',
                 showConfirmButton: false,
-                width: '300px',
+                width: '15.8vw',
                 timer: 2500
             });
             this.generateSituation();
@@ -217,9 +217,9 @@ export class TrainingComponent {
                     position: 'top-end',
                     toast: true,
                     icon: 'error',
-                    title: '<span style="font-size: 24px;">Mauvaise réponse !</span>',
+                    title: '<span style="font-size: 1.3vw;">Mauvaise réponse !</span>',
                     showConfirmButton: false,
-                    width: '335px',
+                    width: '17.7vw',
                     timer: 2500
                 });
                 this.generateSituation();
