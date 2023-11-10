@@ -82,9 +82,8 @@ export class SettingsComponent {
 
     onClickFileImport(event: any) {
         const file = event.target.files[0];
-        console.log(file);
+
         if (file) {
-            // Convertit le fichier en blob et l'envoie
             const blob = new Blob([file], { type: 'application/zip' });
 
             this.apiSituation.importSituationsForUser(blob).subscribe({
