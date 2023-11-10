@@ -194,7 +194,7 @@ export class TrainingComponent {
                 icon: 'success',
                 title: '<span style="font-size: 1.3vw;">Bonne réponse !</span>',
                 showConfirmButton: false,
-                width: '15.8vw',
+                width: '16vw',
                 timer: 2500
             });
             this.generateSituation();
