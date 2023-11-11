@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserParams } from 'src/app/interfaces/user-params';
 import { AuthService } from 'src/app/services/auth.service';
 import { SituationService } from 'src/app/services/situation.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-settings',
@@ -29,9 +30,6 @@ export class SettingsComponent {
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
         { name: 'Contraste', code: 'contrast' },
-        // { name: 'Winamax', code: 'WNX' },
-        // { name: 'Poker Star', code: 'PKS' },
-        // { name: 'UniBet', code: 'UNB' },
     ];
 
     cardsStyle: { name: string, code: string } = { name: 'Standard', code: 'default' };
@@ -88,10 +86,28 @@ export class SettingsComponent {
 
             this.apiSituation.importSituationsForUser(blob).subscribe({
                 next: (response) => {
-                    console.log(`${response.count} fichier(s) téléchargé(s) avec succès`);
+                    console.log(`${response.count} fichier(s) importé(s)`);
+                    Swal.fire({
+                        position: 'top-end',
+                        toast: true,
+                        icon: 'success',
+                        title: `<span style="font-size: 1.3vw;">${response.count} fichier(s) importé(s) !</span>`,
+                        showConfirmButton: false,
+                        width: 'auto',
+                        timer: 2500
+                    });
                 },
                 error: (error) => {
-                    console.error('Erreur lors du téléchargement du fichier', error);
+                    console.error('Échec de l\'import', error);
+                    Swal.fire({
+                        position: 'top-end',
+                        toast: true,
+                        icon: 'error',
+                        title: '<span style="font-size: 1.3vw;">Échec de l\'import</span>',
+                        showConfirmButton: false,
+                        width: 'auto',
+                        timer: 2500
+                    });
                 }
             });
         }
@@ -99,6 +115,15 @@ export class SettingsComponent {
 
     onClickFileExport() {
         this.apiSituation.exportSituationsForUser();
+        Swal.fire({
+            position: 'top-end',
+            toast: true,
+            icon: 'success',
+            title: `<span style="font-size: 1.3vw;">Situations exportées !</span>`,
+            showConfirmButton: false,
+            width: 'auto',
+            timer: 2500
+        });
     }
 
 }
