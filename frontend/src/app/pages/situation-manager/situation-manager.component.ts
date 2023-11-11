@@ -289,7 +289,7 @@ export class SituationManagerComponent {
             icon: 'success',
             title: '<span style="font-size: 1.3vw;">Situation modifiée !</span>',
             showConfirmButton: false,
-            width: '17.6vw',
+            width: 'auto',
             timer: 2500
         });
         this.router.navigate(['situations-list-manager']);
