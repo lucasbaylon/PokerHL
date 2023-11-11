@@ -4,7 +4,6 @@ import { Action } from 'src/app/interfaces/action';
 import { ActiveSituation } from 'src/app/interfaces/active-situation';
 import { Situation } from 'src/app/interfaces/situation';
 import { UserParams } from 'src/app/interfaces/user-params';
-import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 
 @Component({
