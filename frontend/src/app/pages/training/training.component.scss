@@ -240,7 +240,7 @@ hr.oponent2Hr {
     transform: translateX(-50%);
 }
 
-.oponentBox0{
+.oponentBox0 {
     top: -15%;
     left: 50%;
     transform: translateX(-50%);
@@ -527,8 +527,13 @@ table tbody td:hover {
         justify-content: center;
     }
 
+    .answer_div_container {
+        scale: 1.25;
+    }
+
     .poker_table {
-        max-width: 75vw;
+        width: 75vw;
+        scale: 1.25;
     }
 }
 
