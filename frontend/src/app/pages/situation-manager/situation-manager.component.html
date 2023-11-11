@@ -13,7 +13,7 @@
     <table (mouseleave)="endSelection($event)" oncontextmenu="return false;">
         <tbody>
             <tr *ngFor="let row of situation_obj.situations; let i = index"
-                class="table-row animate__animated animate__fadeIn" [style.animation-delay]="0.5+i * 0.05+'s'">
+                class="table-row animate__animated animate__fadeIn" [style.animation-delay]="i * 0.05+'s'">
                 <td *ngFor="let item of row; let j = index" (mousedown)="startSelection($event)"
                     (mouseenter)="updateSelection($event)" (mouseup)="endSelection($event)"
                     [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
