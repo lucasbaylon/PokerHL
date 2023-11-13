@@ -268,8 +268,8 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
     }
 });
 
-protectedRouter.post("/import_zip_situation/:user", upload.single('file'), async function (req, res) {
-    let user = req.params.user;
+protectedRouter.post("/import_zip_situation", upload.single('file'), async function (req, res) {
+    const user = req.body.user;
 
     if (!req.file) {
         return res.status(400).send('Aucun fichier n\'a été téléchargé.');
@@ -301,125 +301,13 @@ protectedRouter.post("/import_zip_situation/:user", upload.single('file'), async
         .then(async (filesContents) => {
 
             // Vérifier que les fichiers JSON sont valides
-            const champsValides = ["name", "nbPlayer", "dealerMissingTokens", "dealer", "opponentLevel", "actions", "situations"];
             for (const fileContent of filesContents) {
-                const jsonData = JSON.parse(fileContent.content);
+                const validationResult = validateJsonContent(fileContent.fileName, fileContent.content);
 
-                // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
-                const champsJson = Object.keys(jsonData);
-                const isChampManquant = champsValides.some(champ => !champsJson.includes(champ));
-                const isChampInvalide = champsJson.some(champ => !champsValides.includes(champ));
+                console.log(validationResult);
 
-                if (isChampManquant) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`
-                    });
-                }
-
-                if (isChampInvalide) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`
-                    });
-                }
-
-                const validations = {
-                    name: val => typeof val === 'string',
-                    nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
-                    dealerMissingTokens: val => typeof val === 'number',
-                    dealer: val => typeof val === 'string' && ['you', 'opponent1', 'opponent2'].includes(val),
-                    opponentLevel: val => typeof val === 'string' && ['fish', 'shark'].includes(val),
-                };
-
-                for (const [key, validator] of Object.entries(validations)) {
-                    if (!validator(jsonData[key])) {
-                        return res.status(400).json({
-                            success: false,
-                            message: `Le champ '${key}' est invalide dans le fichier ${fileContent.fileName}.`
-                        });
-                    }
-                }
-
-                // Validation spécifique pour le champ 'actions'
-                if (!Array.isArray(jsonData.actions)) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Le champ 'actions' doit être un tableau dans le fichier ${fileContent.fileName}.`
-                    });
-                }
-
-                let actionErrors = [];
-                jsonData.actions.forEach((action, index) => {
-                    if (!/^(unique_action_|mixed_action_)\d+$/.test(action.id)) {
-                        actionErrors.push(`Action ${index}: 'id' invalide.`);
-                    }
-
-                    if (!['unique', 'mixed'].includes(action.type)) {
-                        actionErrors.push(`Action ${index}: 'type' invalide.`);
-                    }
-
-                    if (typeof action.display_name !== 'string') {
-                        actionErrors.push(`Action ${index}: 'display_name' doit être une chaîne de caractères.`);
-                    }
-
-                    if (typeof action.color === 'string') {
-                        if (!/^#[0-9A-Fa-f]{6}$/.test(action.color)) {
-                            actionErrors.push(`Action ${index}: 'color' doit être au format hexadécimal.`);
-                        }
-                    } else if (Array.isArray(action.colorList)) {
-                        action.colorList.forEach((colorItem, colorIndex) => {
-                            if (!/^unique_action_\d+$/.test(colorItem.color)) {
-                                actionErrors.push(`Action ${index}, Color ${colorIndex}: 'color' invalide.`);
-                            }
-                            if (typeof colorItem.percent !== 'number' || colorItem.percent < 0 || colorItem.percent > 100) {
-                                actionErrors.push(`Action ${index}, Color ${colorIndex}: 'percent' doit être un nombre entre 0 et 100.`);
-                            }
-                        });
-                    } else {
-                        actionErrors.push(`Action ${index}: doit avoir un 'color' hexadécimal ou une 'colorList'.`);
-                    }
-                });
-
-                if (actionErrors.length > 0) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Erreurs détectées dans le champ 'actions' du fichier ${fileContent.fileName}:`,
-                        errors: actionErrors
-                    });
-                }
-
-                // Validation spécifique pour le champ 'situations'
-                if (!Array.isArray(jsonData.situations) || jsonData.situations.length !== 13) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Le champ 'situations' doit être un tableau de 13 éléments dans le fichier ${fileContent.fileName}.`
-                    });
-                }
-
-                let situationErrors = [];
-                jsonData.situations.forEach((situationGroup, groupIndex) => {
-                    if (!Array.isArray(situationGroup) || situationGroup.length !== 13) {
-                        situationErrors.push(`Groupe ${groupIndex} dans 'situations' doit être un tableau de 13 éléments dans le fichier ${fileContent.fileName}.`);
-                        return;
-                    }
-
-                    situationGroup.forEach((situation, situationIndex) => {
-                        if (typeof situation.card !== 'string') {
-                            situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'card' doit être une chaîne de caractères.`);
-                        }
-                        if (!/^(unique_action_|mixed_action_)\d+$/.test(situation.action)) {
-                            situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'action' invalide.`);
-                        }
-                    });
-                });
-
-                if (situationErrors.length > 0) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Erreurs détectées dans le champ 'situations' pour le fichier ${fileContent.fileName} :`,
-
-                    });
+                if (!validationResult.isValid) {
+                    return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
                 }
             }
 
@@ -427,16 +315,16 @@ protectedRouter.post("/import_zip_situation/:user", upload.single('file'), async
 
             try {
                 // Démarrez une transaction
-                // await connection.beginTransaction();
+                await connection.beginTransaction();
 
-                // // Insérez chaque contenu de fichier en base de données
-                // for (const content of filesContents) {
-                //     // Votre logique d'insertion ici
-                //     await connection.execute('INSERT INTO situations (json, user) VALUES (?, ?)', [content.content, user]);
-                // }
+                // Insérez chaque contenu de fichier en base de données
+                for (const content of filesContents) {
+                    // Votre logique d'insertion ici
+                    await connection.execute('INSERT INTO situations (json, user) VALUES (?, ?)', [content.content, user]);
+                }
 
-                // // Validez la transaction si tout est en ordre
-                // await connection.commit();
+                // Validez la transaction si tout est en ordre
+                await connection.commit();
 
                 // Répondez à la requête HTTP
                 res.json({ success: true, count: filesContents.length });
@@ -455,38 +343,44 @@ protectedRouter.post("/import_zip_situation/:user", upload.single('file'), async
         });
 });
 
-protectedRouter.post("/import_json_situation/:user", upload.single('file'), async function (req, res) {
-    let user = req.params.user;
-
-    console.log(req.file);
+protectedRouter.post("/import_json_situation", upload.single('file'), async function (req, res) {
+    const user = req.body.user;
+    const fileName = req.body.fileName;
 
     if (!req.file) {
         return res.status(400).send('Aucun fichier n\'a été téléchargé.');
     }
 
-    const fileName = req.file.originalname;
-    console.log(fileName);
-
     // Récupérer le contenu du fichier JSON
     const jsonContent = req.file.buffer.toString();
 
     try {
-        const jsonData = JSON.parse(jsonContent);
+        const validationResult = validateJsonContent(fileName, jsonContent);
 
-        // console.log(jsonData);
+        if (!validationResult.isValid) {
+            return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
+        }
 
-        // Votre logique de validation ici (identique à celle utilisée pour les fichiers JSON dans le ZIP)
+        const connection = await getConnection();
 
-        // Ici, vous pouvez insérer les données en base de données comme vous le faites dans votre autre route
+        try {
+            await connection.execute('INSERT INTO situations (json, user) VALUES (?, ?)', [jsonContent, user]);
 
-        res.json({ success: true });
+            // Répondez à la requête HTTP
+            res.json({ success: true });
+        } catch (error) {
+
+            // Log et réponse d'erreur
+            console.error('Erreur lors de l\'insertion des données:', error);
+            res.status(500).json({ success: false, message: 'Erreur lors de l\'insertion des données' });
+        }
     } catch (error) {
         console.error('Erreur lors de la lecture ou du traitement du fichier JSON:', error);
         res.status(500).json({ success: false, message: 'Erreur lors de la lecture ou du traitement du fichier JSON' });
     }
 });
 
-function validateJsonContent(jsonContent) {
+function validateJsonContent(fileName, jsonContent) {
     try {
         const jsonData = JSON.parse(jsonContent);
 
@@ -498,24 +392,114 @@ function validateJsonContent(jsonContent) {
         const isChampInvalide = champsJson.some(champ => !champsValides.includes(champ));
 
         if (isChampManquant) {
-            // return res.status(400).json({
-            //     success: false,
-            //     message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`
-            // });
             return {
                 isValid: false,
-                message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`
+                message: `Il manque un ou plusieurs champs requis dans le fichier ${fileName}.`
             };
         }
 
         if (isChampInvalide) {
-            // return res.status(400).json({
-            //     success: false,
-            //     message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`
-            // });
             return {
                 isValid: false,
-                message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`
+                message: `Le fichier ${fileName} contient des champs non attendus.`
+            };
+        }
+
+        const validations = {
+            name: val => typeof val === 'string',
+            nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
+            dealerMissingTokens: val => typeof val === 'number',
+            dealer: val => typeof val === 'string' && ['you', 'opponent1', 'opponent2'].includes(val),
+            opponentLevel: val => typeof val === 'string' && ['fish', 'shark'].includes(val),
+        };
+
+        for (const [key, validator] of Object.entries(validations)) {
+            if (!validator(jsonData[key])) {
+                return {
+                    isValid: false,
+                    message: `Le champ '${key}' est invalide dans le fichier ${fileName}.`
+                };
+            }
+        }
+
+        // Validation spécifique pour le champ 'actions'
+        if (!Array.isArray(jsonData.actions)) {
+            return {
+                isValid: false,
+                message: `Le champ 'actions' doit être un tableau dans le fichier ${fileName}.`
+            };
+        }
+
+        const actionErrors = [];
+        jsonData.actions.forEach((action, index) => {
+            if (!/^(unique_action_|mixed_action_)\d+$/.test(action.id)) {
+                actionErrors.push(`Action ${index}: 'id' invalide.`);
+            }
+
+            if (!['unique', 'mixed'].includes(action.type)) {
+                actionErrors.push(`Action ${index}: 'type' invalide.`);
+            }
+
+            if (typeof action.display_name !== 'string') {
+                actionErrors.push(`Action ${index}: 'display_name' doit être une chaîne de caractères.`);
+            }
+
+            if (typeof action.color === 'string') {
+                if (!/^#[0-9A-Fa-f]{6}$/.test(action.color)) {
+                    actionErrors.push(`Action ${index}: 'color' doit être au format hexadécimal.`);
+                }
+            } else if (Array.isArray(action.colorList)) {
+                action.colorList.forEach((colorItem, colorIndex) => {
+                    if (!/^unique_action_\d+$/.test(colorItem.color)) {
+                        actionErrors.push(`Action ${index}, Color ${colorIndex}: 'color' invalide.`);
+                    }
+                    if (typeof colorItem.percent !== 'number' || colorItem.percent < 0 || colorItem.percent > 100) {
+                        actionErrors.push(`Action ${index}, Color ${colorIndex}: 'percent' doit être un nombre entre 0 et 100.`);
+                    }
+                });
+            } else {
+                actionErrors.push(`Action ${index}: doit avoir un 'color' hexadécimal ou une 'colorList'.`);
+            }
+        });
+
+        if (actionErrors.length > 0) {
+            return {
+                isValid: false,
+                message: `Erreurs détectées dans le champ 'actions' du fichier ${fileName}`,
+                errors: actionErrors
+            };
+        }
+
+        // Validation spécifique pour le champ 'situations'
+        if (!Array.isArray(jsonData.situations) || jsonData.situations.length !== 13) {
+            return {
+                isValid: false,
+                message: `Le champ 'situations' doit être un tableau de 13 éléments dans le fichier ${fileName}.`
+            };
+        }
+
+        const situationErrors = [];
+        jsonData.situations.forEach((situationGroup, groupIndex) => {
+            if (!Array.isArray(situationGroup) || situationGroup.length !== 13) {
+                situationErrors.push(`Groupe ${groupIndex} dans 'situations' doit être un tableau de 13 éléments dans le fichier ${fileName}.`);
+                return;
+            }
+
+            situationGroup.forEach((situation, situationIndex) => {
+                if (typeof situation.card !== 'string') {
+                    situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'card' doit être une chaîne de caractères.`);
+                }
+                if (!/^(unique_action_|mixed_action_)\d+$/.test(situation.action)) {
+                    situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'action' invalide.`);
+                }
+            });
+        });
+
+        if (situationErrors.length > 0) {
+            return {
+                isValid: false,
+                message: `Erreurs détectées dans le champ 'situations' pour le fichier ${fileName}`,
+                errors: situationErrors
             };
         }
 

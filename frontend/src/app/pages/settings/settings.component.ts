@@ -80,11 +80,10 @@ export class SettingsComponent {
 
     onClickFileImport(event: any) {
         const fileList = event.target.files;
-        // fileList.forEach((file: any) => {
         for (const file of fileList) {
             if (file) {
                 // Vérifier le type de fichier
-                if (file.type === 'application/zip' || file.type === 'application/x-zip-compressed') {
+                if (file.type === 'application/zip' || file.type === 'application/x-compressed' || file.type === 'application/x-zip-compressed') {
                     const blob = new Blob([file], { type: 'application/zip' });
 
                     this.apiSituation.importZIPSituationsForUser(blob).subscribe({
@@ -98,7 +97,7 @@ export class SettingsComponent {
                 } else if (file.type === 'application/json') {
                     // Traiter le fichier json
                     const blob = new Blob([file], { type: 'application/json' });
-                    this.apiSituation.importJSONSituationsForUser(blob).subscribe({
+                    this.apiSituation.importJSONSituationsForUser(file.name, blob).subscribe({
                         next: (response) => {
                             console.log(response);
                             console.log(`Fichier JSON téléchargé avec succès.`);
@@ -168,6 +167,7 @@ export class SettingsComponent {
         //         console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier .zip ou .json.');
         //     }
         // }
+        event.target.value = '';
     }
 
     onClickFileExport() {

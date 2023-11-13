@@ -72,20 +72,23 @@ export class SituationService {
 
         const formData: FormData = new FormData();
         formData.append('file', file, 'situations.zip');
+        formData.append('user', actualUser?.email!);
 
-        return this.http.post(`/api/import_zip_situation/${actualUser?.email}`, formData, {
+        return this.http.post(`/api/import_zip_situation`, formData, {
             responseType: 'json'
         });
     }
 
-    importJSONSituationsForUser(file: Blob): Observable<any> {
+    importJSONSituationsForUser(fileName: string, file: Blob): Observable<any> {
         const actualUser = this.auth.getUser();
         console.log(file as File);
 
         const formData: FormData = new FormData();
         formData.append('file', file);
+        formData.append('user', actualUser?.email!);
+        formData.append('fileName', fileName);
 
-        return this.http.post(`/api/import_json_situation/${actualUser?.email}`, formData, {
+        return this.http.post(`/api/import_json_situation`, formData, {
             responseType: 'json'
         });
     }
