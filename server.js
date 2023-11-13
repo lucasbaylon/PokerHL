@@ -268,7 +268,7 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
     }
 });
 
-protectedRouter.post("/import_situation/:user", upload.single('file'), async function (req, res) {
+protectedRouter.post("/import_zip_situation/:user", upload.single('file'), async function (req, res) {
     let user = req.params.user;
 
     if (!req.file) {
@@ -313,14 +313,14 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
                 if (isChampManquant) {
                     return res.status(400).json({
                         success: false,
-                        message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`,
+                        message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`
                     });
                 }
 
                 if (isChampInvalide) {
                     return res.status(400).json({
                         success: false,
-                        message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`,
+                        message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`
                     });
                 }
 
@@ -336,7 +336,7 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
                     if (!validator(jsonData[key])) {
                         return res.status(400).json({
                             success: false,
-                            message: `Le champ '${key}' est invalide dans le fichier ${fileContent.fileName}.`,
+                            message: `Le champ '${key}' est invalide dans le fichier ${fileContent.fileName}.`
                         });
                     }
                 }
@@ -345,7 +345,7 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
                 if (!Array.isArray(jsonData.actions)) {
                     return res.status(400).json({
                         success: false,
-                        message: `Le champ 'actions' doit être un tableau dans le fichier ${fileContent.fileName}.`,
+                        message: `Le champ 'actions' doit être un tableau dans le fichier ${fileContent.fileName}.`
                     });
                 }
 
@@ -385,7 +385,7 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
                     return res.status(400).json({
                         success: false,
                         message: `Erreurs détectées dans le champ 'actions' du fichier ${fileContent.fileName}:`,
-                        errors: actionErrors,
+                        errors: actionErrors
                     });
                 }
 
@@ -393,7 +393,7 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
                 if (!Array.isArray(jsonData.situations) || jsonData.situations.length !== 13) {
                     return res.status(400).json({
                         success: false,
-                        message: `Le champ 'situations' doit être un tableau de 13 éléments dans le fichier ${fileContent.fileName}.`,
+                        message: `Le champ 'situations' doit être un tableau de 13 éléments dans le fichier ${fileContent.fileName}.`
                     });
                 }
 
@@ -418,7 +418,7 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
                     return res.status(400).json({
                         success: false,
                         message: `Erreurs détectées dans le champ 'situations' pour le fichier ${fileContent.fileName} :`,
-                        errors: situationErrors,
+
                     });
                 }
             }
@@ -455,9 +455,81 @@ protectedRouter.post("/import_situation/:user", upload.single('file'), async fun
         });
 });
 
-// function checkJSON(json) {
+protectedRouter.post("/import_json_situation/:user", upload.single('file'), async function (req, res) {
+    let user = req.params.user;
 
-// }
+    console.log(req.file);
+
+    if (!req.file) {
+        return res.status(400).send('Aucun fichier n\'a été téléchargé.');
+    }
+
+    const fileName = req.file.originalname;
+    console.log(fileName);
+
+    // Récupérer le contenu du fichier JSON
+    const jsonContent = req.file.buffer.toString();
+
+    try {
+        const jsonData = JSON.parse(jsonContent);
+
+        // console.log(jsonData);
+
+        // Votre logique de validation ici (identique à celle utilisée pour les fichiers JSON dans le ZIP)
+
+        // Ici, vous pouvez insérer les données en base de données comme vous le faites dans votre autre route
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Erreur lors de la lecture ou du traitement du fichier JSON:', error);
+        res.status(500).json({ success: false, message: 'Erreur lors de la lecture ou du traitement du fichier JSON' });
+    }
+});
+
+function validateJsonContent(jsonContent) {
+    try {
+        const jsonData = JSON.parse(jsonContent);
+
+        const champsValides = ["name", "nbPlayer", "dealerMissingTokens", "dealer", "opponentLevel", "actions", "situations"];
+
+        // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
+        const champsJson = Object.keys(jsonData);
+        const isChampManquant = champsValides.some(champ => !champsJson.includes(champ));
+        const isChampInvalide = champsJson.some(champ => !champsValides.includes(champ));
+
+        if (isChampManquant) {
+            // return res.status(400).json({
+            //     success: false,
+            //     message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`
+            // });
+            return {
+                isValid: false,
+                message: `Il manque un ou plusieurs champs requis dans le fichier ${fileContent.fileName}.`
+            };
+        }
+
+        if (isChampInvalide) {
+            // return res.status(400).json({
+            //     success: false,
+            //     message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`
+            // });
+            return {
+                isValid: false,
+                message: `Le fichier ${fileContent.fileName} contient des champs non attendus.`
+            };
+        }
+
+        // Si tout est valide
+        return { isValid: true };
+    } catch (error) {
+        console.error('Erreur lors de la validation du JSON:', error);
+        // Retourner un objet indiquant une erreur avec le message
+        return {
+            isValid: false,
+            message: 'Le fichier fourni n\'est pas un JSON valide ou contient des erreurs.'
+        };
+    }
+}
 
 app.use('/api', protectedRouter);
 

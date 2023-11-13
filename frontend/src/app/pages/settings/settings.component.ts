@@ -81,20 +81,63 @@ export class SettingsComponent {
     }
 
     onClickFileImport(event: any) {
-        const file = event.target.files[0];
+        const fileList = event.target.files;
+        // fileList.forEach((file: any) => {
+        for (const file of fileList) {
+            if (file) {
+                // Vérifier le type de fichier
+                if (file.type === 'application/zip' || file.type === 'application/x-zip-compressed') {
+                    const blob = new Blob([file], { type: 'application/zip' });
 
-        if (file) {
-            const blob = new Blob([file], { type: 'application/zip' });
-
-            this.apiSituation.importSituationsForUser(blob).subscribe({
-                next: (response) => {
-                    console.log(`${response.count} fichier(s) téléchargé(s) avec succès`);
-                },
-                error: (error) => {
-                    console.error('Erreur lors du téléchargement du fichier', error);
+                    this.apiSituation.importZIPSituationsForUser(blob).subscribe({
+                        next: (response) => {
+                            console.log(`${response.count} fichier(s) téléchargé(s) avec succès`);
+                        },
+                        error: (error) => {
+                            console.error('Erreur lors du téléchargement du fichier', error);
+                        }
+                    });
+                } else if (file.type === 'application/json') {
+                    // Traiter le fichier json
+                    const blob = new Blob([file], { type: 'application/json' });
+                    this.apiSituation.importJSONSituationsForUser(blob).subscribe({
+                        next: (response) => {
+                            console.log(response);
+                            console.log(`Fichier JSON téléchargé avec succès.`);
+                        },
+                        error: (error) => {
+                            console.error('Erreur lors du téléchargement du fichier JSON', error);
+                        }
+                    });
+                } else {
+                    // Afficher un message d'erreur pour les types de fichiers non pris en charge
+                    console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier .zip ou .json.');
                 }
-            });
-        }
+            }
+        };
+        // const file = event.target.files[0];
+
+        // if (file) {
+        //     // Vérifier le type de fichier
+        //     if (file.type === 'application/zip') {
+        //         const blob = new Blob([file], { type: 'application/zip' });
+
+        //         this.apiSituation.importZIPSituationsForUser(blob).subscribe({
+        //             next: (response) => {
+        //                 console.log(`${response.count} fichier(s) téléchargé(s) avec succès`);
+        //             },
+        //             error: (error) => {
+        //                 console.error('Erreur lors du téléchargement du fichier', error);
+        //             }
+        //         });
+        //     } else if (file.type === 'application/json') {
+        //         // Traiter le fichier json
+        //         console.log("jsn");
+        //     } else {
+        //         // Afficher un message d'erreur pour les types de fichiers non pris en charge
+        //         console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier .zip ou .json.');
+        //     }
+        // }
     }
 
     onClickFileExport() {

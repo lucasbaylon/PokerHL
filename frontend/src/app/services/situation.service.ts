@@ -67,13 +67,25 @@ export class SituationService {
         });
     }
 
-    importSituationsForUser(file: Blob): Observable<any> {
+    importZIPSituationsForUser(file: Blob): Observable<any> {
         const actualUser = this.auth.getUser();
-        
+
         const formData: FormData = new FormData();
         formData.append('file', file, 'situations.zip');
 
-        return this.http.post(`/api/import_situation/${actualUser?.email}`, formData, {
+        return this.http.post(`/api/import_zip_situation/${actualUser?.email}`, formData, {
+            responseType: 'json'
+        });
+    }
+
+    importJSONSituationsForUser(file: Blob): Observable<any> {
+        const actualUser = this.auth.getUser();
+        console.log(file as File);
+
+        const formData: FormData = new FormData();
+        formData.append('file', file);
+
+        return this.http.post(`/api/import_json_situation/${actualUser?.email}`, formData, {
             responseType: 'json'
         });
     }
