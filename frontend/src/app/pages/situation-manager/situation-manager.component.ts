@@ -474,7 +474,12 @@ export class SituationManagerComponent {
 
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
-        this.nbPlayer.code === 2 ? this.availableDealerPlayer.splice(2, 1) : this.availableDealerPlayer.push({ name: 'Adversaire 2', code: 'opponent2' });
+        if (this.nbPlayer.code === 2) {
+            this.availableDealerPlayer.splice(2, 1);
+            if (this.dealer.code === 'opponent2') this.dealer = { name: 'Vous', code: 'you' };
+        } else {
+            this.availableDealerPlayer.push({ name: 'Adversaire 2', code: 'opponent2' });
+        }
     }
 
     onChangeDealer() {
