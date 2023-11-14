@@ -88,10 +88,28 @@ export class SettingsComponent {
 
                     this.apiSituation.importZIPSituationsForUser(blob).subscribe({
                         next: (response) => {
-                            console.log(`${response.count} fichier(s) téléchargé(s) avec succès`);
+                            console.log(`${response.count} fichier(s) importé(s)`);
+                            Swal.fire({
+                                position: 'top-end',
+                                toast: true,
+                                icon: 'success',
+                                title: `<span style="font-size: 1.3vw;">${response.count} fichier(s) importé(s) avec succès !</span>`,
+                                showConfirmButton: false,
+                                width: 'auto',
+                                timer: 2500
+                            });
                         },
                         error: (error) => {
                             console.error('Erreur lors du téléchargement du fichier', error);
+                            Swal.fire({
+                                position: 'top-end',
+                                toast: true,
+                                icon: 'error',
+                                title: '<span style="font-size: 1.3vw;">Échec de l\'import</span>',
+                                showConfirmButton: false,
+                                width: 'auto',
+                                timer: 2500
+                            });
                         }
                     });
                 } else if (file.type === 'application/json') {
@@ -99,11 +117,28 @@ export class SettingsComponent {
                     const blob = new Blob([file], { type: 'application/json' });
                     this.apiSituation.importJSONSituationsForUser(file.name, blob).subscribe({
                         next: (response) => {
-                            console.log(response);
                             console.log(`Fichier JSON téléchargé avec succès.`);
+                            Swal.fire({
+                                position: 'top-end',
+                                toast: true,
+                                icon: 'success',
+                                title: `<span style="font-size: 1.3vw;">Fichier(s) importé(s) avec succès !</span>`,
+                                showConfirmButton: false,
+                                width: 'auto',
+                                timer: 2500
+                            });
                         },
                         error: (error) => {
                             console.error('Erreur lors du téléchargement du fichier JSON', error);
+                            Swal.fire({
+                                position: 'top-end',
+                                toast: true,
+                                icon: 'error',
+                                title: '<span style="font-size: 1.3vw;">Échec de l\'import</span>',
+                                showConfirmButton: false,
+                                width: 'auto',
+                                timer: 2500
+                            });
                         }
                     });
                 } else {
@@ -112,61 +147,6 @@ export class SettingsComponent {
                 }
             }
         }
-        // const file = event.target.files[0];
-
-        // if (file) {
-        //     const blob = new Blob([file], { type: 'application/zip' });
-
-        //     this.apiSituation.importSituationsForUser(blob).subscribe({
-        //         next: (response) => {
-        //             console.log(`${response.count} fichier(s) importé(s)`);
-        //             Swal.fire({
-        //                 position: 'top-end',
-        //                 toast: true,
-        //                 icon: 'success',
-        //                 title: `<span style="font-size: 1.3vw;">${response.count} fichier(s) importé(s) !</span>`,
-        //                 showConfirmButton: false,
-        //                 width: 'auto',
-        //                 timer: 2500
-        //             });
-        //         },
-        //         error: (error) => {
-        //             console.error('Échec de l\'import', error);
-        //             Swal.fire({
-        //                 position: 'top-end',
-        //                 toast: true,
-        //                 icon: 'error',
-        //                 title: '<span style="font-size: 1.3vw;">Échec de l\'import</span>',
-        //                 showConfirmButton: false,
-        //                 width: 'auto',
-        //                 timer: 2500
-        //             });
-        //         }
-        //     }
-        // };
-        // const file = event.target.files[0];
-
-        // if (file) {
-        //     // Vérifier le type de fichier
-        //     if (file.type === 'application/zip') {
-        //         const blob = new Blob([file], { type: 'application/zip' });
-
-        //         this.apiSituation.importZIPSituationsForUser(blob).subscribe({
-        //             next: (response) => {
-        //                 console.log(`${response.count} fichier(s) téléchargé(s) avec succès`);
-        //             },
-        //             error: (error) => {
-        //                 console.error('Erreur lors du téléchargement du fichier', error);
-        //             }
-        //         });
-        //     } else if (file.type === 'application/json') {
-        //         // Traiter le fichier json
-        //         console.log("jsn");
-        //     } else {
-        //         // Afficher un message d'erreur pour les types de fichiers non pris en charge
-        //         console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier .zip ou .json.');
-        //     }
-        // }
         event.target.value = '';
     }
 
