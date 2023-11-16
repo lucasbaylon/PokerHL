@@ -21,6 +21,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "@sweetalert2/ngx-sweetalert2": "^12.2.0",
     "animate.css": "^4.1.1",
     "file-saver": "^2.0.5",
