@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -34,8 +34,16 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { AuthService } from './services/auth.service';
 
 import { environment } from '../environments/environment';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
+
+// fonction pour charger les fichiers de traduction
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
     declarations: [
@@ -50,7 +58,8 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
         ActionColorPipe,
         LoginComponent,
         SettingsComponent,
-        LoadingComponent
+        LoadingComponent,
+        BaseLayoutComponent
     ],
     imports: [
         FormsModule,
@@ -75,6 +84,13 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
             messagingSenderId: "812892987669",
             appId: "1:812892987669:web:911a0142ec81c1429b091c"
         })),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
         provideAuth(() => getAuth())
     ],
     providers: [

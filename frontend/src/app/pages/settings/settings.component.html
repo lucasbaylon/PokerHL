@@ -16,12 +16,13 @@
                     <h4>Entraînement</h4>
                     <div class="switch-container">
                         <div class="setting-description">Solution lors d'une erreur</div>
-                        <p-inputSwitch [(ngModel)]="displaySolutionOnError" (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"
+                            (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
                     </div>
                     <div class="switch-container">
                         <div class="setting-description">Style des cartes</div>
-                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles"
-                            optionLabel="name" (onChange)="onChangeDropdownCardsStyle()"></p-dropdown>
+                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
+                            (onChange)="onChangeDropdownCardsStyle()"></p-dropdown>
                     </div>
                     <div class="switch-container">
                         <div class="setting-description">Couleur du tapis de jeu</div>
@@ -37,8 +38,11 @@
                     </div>
                     <div class="buttons-container">
                         <div class="side-buttons">
-                            <button class="fill">Importer</button>
-                            <button class="fill">Exporter</button>
+                            <button class="fill" (click)="fileImportInput.click()">Importer</button>
+                            <button class="fill" (click)="onClickFileExport()">Exporter</button>
+
+                            <input type="file" #fileImportInput style="display: none;"
+                                (change)="onClickFileImport($event)" multiple>
                         </div>
                     </div>
                     <h4 class="buttons-only-div">Compte</h4>

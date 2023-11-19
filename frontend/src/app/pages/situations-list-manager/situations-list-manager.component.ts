@@ -55,6 +55,15 @@ export class SituationsListManagerComponent {
 
     duplicateSituation(id: string) {
         this.apiSituation.duplicateSituation(id);
+        Swal.fire({
+            position: 'top-end',
+            toast: true,
+            icon: 'success',
+            title: '<span style="font-size: 1.3vw;">Situation dupliquée !</span>',
+            showConfirmButton: false,
+            width: 'auto',
+            timer: 2500
+        });
     }
 
     removeSituation(id: string) {
@@ -73,9 +82,9 @@ export class SituationsListManagerComponent {
                     toast: true,
                     position: 'top-end',
                     icon: 'success',
-                    html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation supprimée !</h3>',
+                    title: '<span style="font-size: 1.3vw;">Situation supprimée !</span>',
                     showConfirmButton: false,
-                    width: '359px',
+                    width: 'auto',
                     timer: 2500
                 });
             }

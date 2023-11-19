@@ -4,7 +4,6 @@ import { Action } from 'src/app/interfaces/action';
 import { ActiveSituation } from 'src/app/interfaces/active-situation';
 import { Situation } from 'src/app/interfaces/situation';
 import { UserParams } from 'src/app/interfaces/user-params';
-import { SituationService } from 'src/app/services/situation.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -192,12 +191,9 @@ export class TrainingComponent {
                 position: 'top-end',
                 toast: true,
                 icon: 'success',
-                title: 'Bonne réponse !',
+                title: '<span style="font-size: 1.3vw;">Bonne réponse !</span>',
                 showConfirmButton: false,
-                width: '305px',
-                customClass: {
-                    container: "custom-swal"
-                },
+                width: 'auto',
                 timer: 2500
             });
             this.generateSituation();
@@ -220,12 +216,9 @@ export class TrainingComponent {
                     position: 'top-end',
                     toast: true,
                     icon: 'error',
-                    title: 'Mauvaise réponse !',
+                    title: '<span style="font-size: 1.3vw;">Mauvaise réponse !</span>',
                     showConfirmButton: false,
-                    width: '305px',
-                    customClass: {
-                        container: "custom-swal"
-                    },
+                    width: 'auto',
                     timer: 2500
                 });
                 this.generateSituation();
