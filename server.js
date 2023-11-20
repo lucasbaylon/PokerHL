@@ -68,8 +68,9 @@ if (process.env.NODE_ENV !== 'dev') {
 
 protectedRouter.get("/check_situations_for_user/:user", async function (req, res) {
     const user = req.params.user;
+    let connection;
     try {
-        const connection = await getConnection();
+        connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
 
         if (results.length === 0) {
@@ -81,6 +82,10 @@ protectedRouter.get("/check_situations_for_user/:user", async function (req, res
         console.error('Error querying the database:', error);
         // En cas d'erreur, envoyez une réponse 500 au client
         // res.status(500).json({ error: 'An error occurred while checking the situation name' });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
     }
 });
 
@@ -88,9 +93,10 @@ protectedRouter.get("/check_change_situation_name/:id/:new_situation_name/:user"
     const id = req.params.id;
     const new_situation_name = req.params.new_situation_name;
     const user = req.params.user;
+    let connection;
 
     try {
-        const connection = await getConnection();
+        connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE id != ? AND user = ?', [id, user]);
 
         const situation_exist = results.some(situation => {
@@ -103,15 +109,20 @@ protectedRouter.get("/check_change_situation_name/:id/:new_situation_name/:user"
         console.error('Error querying the database:', error);
         // En cas d'erreur, envoyez une réponse 500 au client
         // res.status(500).json({ error: 'An error occurred while checking the situation name' });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
     }
 });
 
 protectedRouter.get("/check_situation_name/:new_situation_name/:user", async function (req, res) {
     let new_situation_name = req.params.new_situation_name;
     let user = req.params.user;
+    let connection;
 
     try {
-        const connection = await getConnection();
+        connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
 
         const situation_exist = results.some(situation => {
@@ -124,130 +135,19 @@ protectedRouter.get("/check_situation_name/:new_situation_name/:user", async fun
         console.error('Error querying the database:', error);
         // En cas d'erreur, envoyez une réponse 500 au client
         // res.status(500).json({ error: 'An error occurred while checking the situation name' });
-    }
-});
-
-app.get("/test", function (req, res) {
-    const filePath = path.join(__dirname, 'test.json');
-    // Essayez de lire le fichier de manière synchrone
-    try {
-        const data = fs.readFileSync(filePath, 'utf8');
-        const jsonData = JSON.parse(data);
-        const champsValides = ["name", "nbPlayer", "dealerMissingTokens", "dealer", "opponentLevel", "actions", "situations"];
-
-        // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
-        const champsJson = Object.keys(jsonData);
-        const isChampManquant = champsValides.some(champ => !champsJson.includes(champ));
-        const isChampInvalide = champsJson.some(champ => !champsValides.includes(champ));
-
-        if (isChampManquant) {
-            return res.status(400).json({
-                success: false,
-                message: "Il manque un ou plusieurs champs requis.",
-            });
+    } finally {
+        if (connection) {
+            connection.release();
         }
-
-        if (isChampInvalide) {
-            return res.status(400).json({
-                success: false,
-                message: "Le fichier contient des champs non attendus.",
-            });
-        }
-
-        const validations = {
-            name: val => typeof val === 'string',
-            nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
-            dealerMissingTokens: val => typeof val === 'number',
-            dealer: val => typeof val === 'string' && ['you', 'opponent1', 'opponent2'].includes(val),
-            opponentLevel: val => typeof val === 'string' && ['fish', 'shark'].includes(val),
-        };
-
-        for (const [key, validator] of Object.entries(validations)) {
-            if (!validator(jsonData[key])) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Le champ '${key}' est invalide.`,
-                });
-            }
-        }
-
-        // Validation spécifique pour le champ 'actions'
-        if (!Array.isArray(jsonData.actions)) {
-            return res.status(400).json({
-                success: false,
-                message: "Le champ 'actions' doit être un tableau.",
-            });
-        }
-
-        let actionErrors = [];
-        jsonData.actions.forEach((action, index) => {
-            if (!/^unique_action_\d+$/.test(action.id)) {
-                actionErrors.push(`Action ${index}: 'id' invalide.`);
-            }
-            if (!['unique', 'mixed'].includes(action.type)) {
-                actionErrors.push(`Action ${index}: 'type' invalide.`);
-            }
-            if (typeof action.display_name !== 'string') {
-                actionErrors.push(`Action ${index}: 'display_name' doit être une chaîne de caractères.`);
-            }
-            if (!/^#[0-9A-Fa-f]{6}$/.test(action.color)) {
-                actionErrors.push(`Action ${index}: 'color' doit être au format hexadécimal.`);
-            }
-        });
-
-        if (actionErrors.length > 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Erreurs détectées dans le champ 'actions':",
-                errors: actionErrors,
-            });
-        }
-
-        // Validation spécifique pour le champ 'situations'
-        if (!Array.isArray(jsonData.situations) || jsonData.situations.length !== 13) {
-            return res.status(400).json({
-                success: false,
-                message: "Le champ 'situations' doit être un tableau de 13 éléments.",
-            });
-        }
-
-        let situationErrors = [];
-        jsonData.situations.forEach((situationGroup, groupIndex) => {
-            if (!Array.isArray(situationGroup) || situationGroup.length !== 13) {
-                situationErrors.push(`Groupe ${groupIndex} dans 'situations' doit être un tableau de 13 éléments.`);
-                return; // Passe au groupe suivant
-            }
-
-            situationGroup.forEach((situation, situationIndex) => {
-                if (typeof situation.card !== 'string') {
-                    situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'card' doit être une chaîne de caractères.`);
-                }
-                if (!/^unique_action_\d+$/.test(situation.action)) {
-                    situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'action' invalide.`);
-                }
-            });
-        });
-
-        if (situationErrors.length > 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Erreurs détectées dans le champ 'situations':",
-                errors: situationErrors,
-            });
-        }
-        // }
-        res.json(JSON.parse(data));
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Une erreur est survenue lors de la lecture du fichier');
     }
 });
 
 protectedRouter.get("/export_situation/:user", async function (req, res) {
     let user = req.params.user;
+    let connection;
 
     try {
-        const connection = await getConnection();
+        connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
 
         const zip = new JSZip();
@@ -265,6 +165,10 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
     } catch (error) {
         console.error('Erreur lors de la création du fichier ZIP:', err);
         res.status(500).send('Erreur du serveur');
+    } finally {
+        if (connection) {
+            connection.release();
+        }
     }
 });
 
@@ -354,6 +258,8 @@ protectedRouter.post("/import_json_situation", upload.single('file'), async func
     // Récupérer le contenu du fichier JSON
     const jsonContent = req.file.buffer.toString();
 
+    let connection;
+
     try {
         const validationResult = validateJsonContent(fileName, jsonContent);
 
@@ -361,7 +267,7 @@ protectedRouter.post("/import_json_situation", upload.single('file'), async func
             return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
         }
 
-        const connection = await getConnection();
+        connection = await getConnection();
 
         try {
             await connection.execute('INSERT INTO situations (json, user) VALUES (?, ?)', [jsonContent, user]);
@@ -377,6 +283,10 @@ protectedRouter.post("/import_json_situation", upload.single('file'), async func
     } catch (error) {
         console.error('Erreur lors de la lecture ou du traitement du fichier JSON:', error);
         res.status(500).json({ success: false, message: 'Erreur lors de la lecture ou du traitement du fichier JSON' });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
     }
 });
 
@@ -532,8 +442,10 @@ io.on('connection', (socket) => {
 
         let json = JSON.stringify(situation);
 
+        let connection;
+
         try {
-            const connection = await getConnection();
+            connection = await getConnection();
 
             await connection.execute("INSERT INTO situations (json, user) VALUES (?, ?)", [json, data.user], function (error, results, fields) {
                 if (error) throw error;
@@ -542,6 +454,10 @@ io.on('connection', (socket) => {
         } catch (error) {
             console.error('An error occurred:', error);
             // socket.emit('Error', 'An error occurred while duplicating the situation.');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
         }
     });
 
@@ -551,8 +467,10 @@ io.on('connection', (socket) => {
 
         delete situation.id;
 
+        let connection;
+
         try {
-            const connection = await getConnection();
+            connection = await getConnection();
 
             await connection.execute("UPDATE situations SET json = ? WHERE id = ?", [JSON.stringify(situation), situation_id], function (error, results, fields) {
                 if (error) throw error;
@@ -562,6 +480,10 @@ io.on('connection', (socket) => {
         } catch (error) {
             console.error('An error occurred:', error);
             // socket.emit('Error', 'An error occurred while updating the situation.');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
         }
     });
 
@@ -640,8 +562,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('GetSituations', async (user) => {
+        let connection;
         try {
-            const connection = await getConnection();
+            connection = await getConnection();
             const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
 
             let situations = results.map((situationObj) => {
@@ -654,15 +577,28 @@ io.on('connection', (socket) => {
             console.error('Error querying the database:', error);
             // Gérez l'erreur comme vous le souhaitez, peut-être envoyer une réponse au client également
             // socket.emit('Error', 'An error occurred while fetching situations');  // Vous pouvez ajuster ce message d'erreur selon vos besoins
+        } finally {
+            if (connection) {
+                connection.release();
+            }
         }
     });
 
     socket.on('GetSituation', async (id) => {
-        const connection = await getConnection();
-        const [results] = await connection.execute('SELECT * FROM situations WHERE id = ?', [id]);
-        let parsedSituationJson = JSON.parse(results[0].json);
-        const situationObj = { id: results[0].id, ...parsedSituationJson };
-        socket.emit('Situation', JSON.stringify(situationObj));
+        let connection;
+        try {
+            connection = await getConnection();
+            const [results] = await connection.execute('SELECT * FROM situations WHERE id = ?', [id]);
+            let parsedSituationJson = JSON.parse(results[0].json);
+            const situationObj = { id: results[0].id, ...parsedSituationJson };
+            socket.emit('Situation', JSON.stringify(situationObj));
+        } catch (error) {
+            console.error('Error querying the database:', error);
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
     });
 });
 
