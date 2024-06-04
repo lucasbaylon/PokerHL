@@ -128,8 +128,8 @@
 <div class="situation-caracteristics">
     <h2>Caractéristiques de la situation</h2>
     <div class="caracteristic-container">
-        <div class="caracteristic-description">Nombre de BB restantes du dealer</div>
-        <p-inputNumber inputId="integeronly" [size]="10" [min]="0" [(ngModel)]="situation_obj.dealerMissingTokens"> </p-inputNumber>
+        <div class="caracteristic-description">Nombre de BB minimum sur la table</div>
+        <p-inputNumber inputId="integeronly" [size]="10" [min]="0" [(ngModel)]="situation_obj.dealerMissingTokens"></p-inputNumber>
     </div>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Nombre de joueurs sur la table</div>
@@ -137,7 +137,7 @@
             optionLabel="name"></p-dropdown>
     </div>
     <div class="caracteristic-container">
-        <div class="caracteristic-description">Joueur dealer</div>
+        <div class="caracteristic-description">Joueur bouton</div>
         <p-dropdown [(ngModel)]="dealer" [options]="availableDealerPlayer" (onChange)="onChangeDealer()"
             optionLabel="name"></p-dropdown>
     </div>
