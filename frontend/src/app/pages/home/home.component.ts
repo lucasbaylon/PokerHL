@@ -3,8 +3,10 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
+    standalone: true,
+    imports: [],
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss']
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 
@@ -13,5 +15,6 @@ export class HomeComponent {
     redirectTo(page: string) {
         this.router.navigate([page]);
     }
+
 
 }

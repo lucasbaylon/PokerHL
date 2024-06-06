@@ -42,14 +42,14 @@
                             <button class="fill" (click)="onClickFileExport()">Exporter</button>
 
                             <input type="file" #fileImportInput style="display: none;"
-                                (change)="onClickFileImport($event)" multiple>
+                                (change)="onClickFileImport($event)" multiple ngDefaultControl>
                         </div>
                     </div>
                     <h4 class="buttons-only-div">Compte</h4>
                     <div class="buttons-container">
                         <div class="side-buttons">
                             <button class="fill">Changer le MDP</button>
-                            <button class="fill" (click)="apiAuth.signOut()">Se déconnecter</button>
+                            <button class="fill" (click)="authService.signOut()">Se déconnecter</button>
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
+import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from './services/auth.service';
+import { ToastModule } from 'primeng/toast';
+import { LoadingComponent } from './components/loading/loading.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-root',
+    standalone: true,
+    imports: [RouterOutlet, ToastModule, LoadingComponent, AsyncPipe],
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
 

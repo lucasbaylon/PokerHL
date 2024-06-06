@@ -1,8 +1,9 @@
 <p-toast></p-toast>
 
-<ng-container *ngIf="authService.isLoading | async">
+@if (authService.isLoading | async) {
     <app-loading></app-loading>
-</ng-container>
-<div class="main">
-    <router-outlet></router-outlet>
-</div>
+} @else {
+    <div class="main">
+        <router-outlet></router-outlet>
+    </div>
+}

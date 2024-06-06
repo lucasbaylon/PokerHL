@@ -1,21 +1,26 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { UserParams } from 'src/app/interfaces/user-params';
-import { AuthService } from 'src/app/services/auth.service';
-import { SituationService } from 'src/app/services/situation.service';
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import Swal from 'sweetalert2';
+import { SituationService } from '../../services/situation.service';
+import { Router } from '@angular/router';
+import { UserParams } from '../../interfaces/user-params';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @Component({
     selector: 'app-settings',
+    standalone: true,
+    imports: [FormsModule, InputSwitchModule, DropdownModule],
     templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.scss']
+    styleUrl: './settings.component.scss',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-
 export class SettingsComponent {
 
     constructor(
-        public apiAuth: AuthService,
-        private apiSituation: SituationService,
+        public authService: AuthService,
+        private situationService: SituationService,
         private router: Router
     ) { }
 
@@ -86,7 +91,7 @@ export class SettingsComponent {
                 if (file.type === 'application/zip' || file.type === 'application/x-compressed' || file.type === 'application/x-zip-compressed') {
                     const blob = new Blob([file], { type: 'application/zip' });
 
-                    this.apiSituation.importZIPSituationsForUser(blob).subscribe({
+                    this.situationService.importZIPSituationsForUser(blob).subscribe({
                         next: (response) => {
                             console.log(`${response.count} fichier(s) importé(s)`);
                             Swal.fire({
@@ -115,7 +120,7 @@ export class SettingsComponent {
                 } else if (file.type === 'application/json') {
                     // Traiter le fichier json
                     const blob = new Blob([file], { type: 'application/json' });
-                    this.apiSituation.importJSONSituationsForUser(file.name, blob).subscribe({
+                    this.situationService.importJSONSituationsForUser(file.name, blob).subscribe({
                         next: (response) => {
                             console.log(`Fichier JSON téléchargé avec succès.`);
                             Swal.fire({
@@ -151,7 +156,7 @@ export class SettingsComponent {
     }
 
     onClickFileExport() {
-        this.apiSituation.exportSituationsForUser();
+        this.situationService.exportSituationsForUser();
         Swal.fire({
             position: 'top-end',
             toast: true,

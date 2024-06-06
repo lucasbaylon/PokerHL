@@ -1,20 +1,24 @@
-import { Component } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-login',
+    standalone: true,
+    imports: [FormsModule],
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrl: './login.component.scss',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginComponent {
-
-    constructor(private authService: AuthService) { }
 
     eyeIcon: string = 'eye-outline';
     inputType: string = 'password';
 
     email: string = '';
     password: string = '';
+
+    constructor(private authService: AuthService) { }
 
     toggleEyeIcon(): void {
         if (this.eyeIcon === 'eye-outline') {

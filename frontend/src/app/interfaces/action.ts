@@ -7,5 +7,5 @@ export interface Action {
 
     color?: string;
 
-    colorList?: {color: string, percent?: number}[];
+    colorList?: { color: string, percent?: number }[];
 }

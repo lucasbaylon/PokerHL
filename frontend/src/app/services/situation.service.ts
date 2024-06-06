@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Situation } from '../interfaces/situation';
 import { AuthService } from './auth.service';
+import { Situation } from '../interfaces/situation';
 import { saveAs } from 'file-saver';
 import { Observable } from 'rxjs';
 
@@ -92,5 +92,4 @@ export class SituationService {
             responseType: 'json'
         });
     }
-
 }
