@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { SituationService } from '../../services/situation.service';
 import { Router } from '@angular/router';
-import { UserParams } from 'src/app/interfaces/user-params';
-import { AuthService } from 'src/app/services/auth.service';
-import { SituationService } from 'src/app/services/situation.service';
+import { UserParams } from '../../interfaces/user-params';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-settings',
+    standalone: true,
+    imports: [DropdownModule, InputSwitchModule],
     templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.scss']
+    styleUrl: './settings.component.scss',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-
 export class SettingsComponent {
-
-    constructor(
-        public apiAuth: AuthService,
-        private apiSituation: SituationService,
-        private router: Router
-    ) { }
 
     darkMode: boolean = false;
 
@@ -40,7 +38,13 @@ export class SettingsComponent {
         { name: 'Rouge', code: 'red' },
     ];
 
-    pokerTableColor: { name: string, code: string } = { name: 'Vert', code: 'green' };
+    pokerTableColor!: { name: string, code: string };
+
+    constructor(
+        public apiAuth: AuthService,
+        private apiSituation: SituationService,
+        private router: Router
+    ) { }
 
     ngOnInit() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
@@ -66,15 +70,15 @@ export class SettingsComponent {
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
-    onChangeDropdownCardsStyle() {
+    onChangeDropdownCardsStyle(e: any) {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.cardStyle = this.cardsStyle.code;
+        userParams.cardStyle = e.value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
-    onChangeDropdownTableColor() {
+    onChangeDropdownTableColor(e: any) {
         const userParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.playmatColor = this.pokerTableColor.code;
+        userParams.playmatColor = e.value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 

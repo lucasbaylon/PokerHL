@@ -1,8 +1,12 @@
 <ion-button class="backArrow" (click)="redirectTo('situations-list-manager')">
     <ion-icon name="arrow-back-outline"></ion-icon>
 </ion-button>
-<h1 *ngIf="mode === 'new'">Enregistrer une nouvelle situation</h1>
-<h1 *ngIf="mode === 'edit'">Modifier la situation</h1>
+@if (mode === 'new') {
+    <h1>Enregistrer une nouvelle situation</h1>
+}
+@if (mode === 'edit') {
+    <h1>Modifier la situation</h1>
+}
 <div class="div-input-text field">
     <input [(ngModel)]="situation_obj.name" type="text" class="styled-input-text" placeholder="Nom de la situation"
         name="situationName" id='situationName' autocomplete="off" />
@@ -12,18 +16,20 @@
 <div class="case-definition">
     <table (mouseleave)="endSelection($event)" oncontextmenu="return false;">
         <tbody>
-            <tr *ngFor="let row of situation_obj.situations; let i = index"
-                class="table-row animate__animated animate__fadeIn" [style.animation-delay]="i * 0.05+'s'">
-                <td *ngFor="let item of row; let j = index" (mousedown)="startSelection($event)"
-                    (mouseenter)="updateSelection($event)" (mouseup)="endSelection($event)"
-                    [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
-                    {{item.card}} </td>
-            </tr>
+            @for (row of situation_obj.situations; track i; let i = $index) {
+                <tr class="table-row animate__animated animate__fadeIn" [style.animation-delay]="i * 0.05+'s'">
+                    @for (item of row; track j; let j = $index) {
+                        <td (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)" (mouseup)="endSelection($event)" [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
+                            {{item.card}}
+                        </td>
+                    }
+                </tr>
+            }
         </tbody>
     </table>
     <div class="solutions">
         <h2>Solutions</h2>
-        <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index" class="solution-selector">
+        @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
             <div class="solution-selector">
                 <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                     (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
@@ -61,30 +67,32 @@
                         (click)="onSelectColor(action.id, '#e284ff')"></div>
                 </div>
             </div>
-        </ng-container>
+        }
         <button class="fill addButton" id="add-solution-button" (click)="addUniqueAction()">Ajouter +</button>
     </div>
     <div class="multiples-solutions-div">
         <h2>Solutions multiples</h2>
         <div class="multiples-solutions-container">
-            <div *ngFor="let action of filteredActionList(situation_obj.actions, 'mixed')" class="multiples-solutions">
-                <div class="multiples-solutions-name">
-                    {{action.display_name}}
+            @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
+                <div class="multiples-solutions">
+                    <div class="multiples-solutions-name">
+                        {{action.display_name}}
+                    </div>
+                    <div class="color-picker-square"
+                        [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
+                    <label>
+                        <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
+                            (click)="onChangeAction($event)">
+                        <span class="design"></span>
+                    </label>
+                    <ion-button (click)="editMultipleSolution(action.id)">
+                        <ion-icon name="pencil-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="deleteMultipleSolution(action.id)">
+                        <ion-icon name="trash-outline"></ion-icon>
+                    </ion-button>
                 </div>
-                <div class="color-picker-square"
-                    [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
-                <label>
-                    <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                        (click)="onChangeAction($event)">
-                    <span class="design"></span>
-                </label>
-                <ion-button (click)="editMultipleSolution(action.id)">
-                    <ion-icon name="pencil-outline"></ion-icon>
-                </ion-button>
-                <ion-button (click)="deleteMultipleSolution(action.id)">
-                    <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
-            </div>
+            }
         </div>
         <button class="fill addButton" (click)="showAddMultiplesAction()">Ajouter +</button>
     </div>
@@ -99,7 +107,7 @@
                     name="multipleSolution" id='multipleSolution' autocomplete="off" />
                 <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
             </div>
-            <ng-container *ngFor="let action of filteredActionList(situation_obj.actions, 'unique'); let i = index">
+            @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
                 <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
                         [style]="'background: ' + action.color"></div>
                     <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id" (change)="onCheckChange($event)">
@@ -112,14 +120,18 @@
                         </svg>
                     </label>
                 </div>
-            </ng-container>
-            <div *ngIf="simpleSlider" class="custom-slider">
-                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
-            </div>
-            <div *ngIf="multipleSlider" class="custom-slider">
-                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                    [options]="options"></ngx-slider>
-            </div>
+            }
+            @if (simpleSlider) {
+                <div class="custom-slider">
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
+                </div>
+            }
+            @if (multipleSlider) {
+                <div class="custom-slider">
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                        [options]="options"></ngx-slider>
+                </div>
+            }
             <button class="fill addButton" id="add-multiple-solution-button"
                 (click)="addMultipleAction()">Enregistrer</button>
         </div>
@@ -143,8 +155,8 @@
     </div>
     <div class="caracteristic-container">
         <div class="caracteristic-description">Niveau des adversaires</div>
-        <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel" (onChange)="onChangeOpponentLevel()"
-            optionLabel="name"></p-dropdown>
+        <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
+            (onChange)="onChangeOpponentLevel()" optionLabel="name"></p-dropdown>
     </div>
 </div>
 <button class="fill saveButton animate__animated animate__fadeInUp" (click)="saveSituation()">Enregistrer</button>

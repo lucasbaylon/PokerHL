@@ -1,9 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
-authState
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 
 @Injectable({

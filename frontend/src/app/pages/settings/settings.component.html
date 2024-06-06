@@ -21,13 +21,13 @@
                     </div>
                     <div class="switch-container">
                         <div class="setting-description">Style des cartes</div>
-                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
-                            (onChange)="onChangeDropdownCardsStyle()"></p-dropdown>
+                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name" optionValue="code"
+                            (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
                     </div>
                     <div class="switch-container">
                         <div class="setting-description">Couleur du tapis de jeu</div>
                         <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
-                            optionLabel="name" (onChange)="onChangeDropdownTableColor()"></p-dropdown>
+                            optionLabel="name" optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
                     </div>
                 </div>
                 <div class="settings-second-part">

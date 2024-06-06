@@ -6,10 +6,12 @@ describe('SituationManagerComponent', () => {
   let component: SituationManagerComponent;
   let fixture: ComponentFixture<SituationManagerComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [SituationManagerComponent]
-    });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [SituationManagerComponent]
+    })
+    .compileComponents();
+    
     fixture = TestBed.createComponent(SituationManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

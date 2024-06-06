@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'opponentLevel'
+    name: 'opponentLevel',
+    standalone: true
 })
 export class OpponentLevelPipe implements PipeTransform {
 

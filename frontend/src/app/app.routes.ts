@@ -1,17 +1,16 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
+import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
+import { HomeComponent } from './pages/home/home.component';
+import { authGuard } from './guards/auth.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { TrainingComponent } from './pages/training/training.component';
 import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
 import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
 import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
+import { TrainingComponent } from './pages/training/training.component';
 import { checkSituationGuard } from './guards/check-situation.guard';
-import { AuthGuard } from './guards/auth.guard';
-import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 
-const routes: Routes = [
+export const routes: Routes = [
     {
         path: '',
         redirectTo: 'home',
@@ -24,30 +23,30 @@ const routes: Routes = [
             {
                 path: 'home',
                 component: HomeComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'situations-manager',
                 component: SituationManagerComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'situations-list-manager',
                 component: SituationsListManagerComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'situations-list-training',
                 component: SituationsListTrainingComponent,
                 canActivate: [
-                    AuthGuard,
+                    authGuard,
                     checkSituationGuard
                 ]
             },
             {
                 path: 'settings',
                 component: SettingsComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'login',
@@ -63,9 +62,3 @@ const routes: Routes = [
         ]
     }
 ];
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
-})
-export class AppRoutingModule { }

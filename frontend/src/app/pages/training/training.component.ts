@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Situation } from '../../interfaces/situation';
+import { ActiveSituation } from '../../interfaces/active-situation';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Action } from 'src/app/interfaces/action';
-import { ActiveSituation } from 'src/app/interfaces/active-situation';
-import { Situation } from 'src/app/interfaces/situation';
-import { UserParams } from 'src/app/interfaces/user-params';
+import { UserParams } from '../../interfaces/user-params';
+import { Action } from '../../interfaces/action';
 import Swal from 'sweetalert2';
+import { NgStyle } from '@angular/common';
+import { ActionColorPipe } from '../../pipes/action-color.pipe';
 
 @Component({
     selector: 'app-training',
+    standalone: true,
+    imports: [NgStyle, ActionColorPipe],
     templateUrl: './training.component.html',
-    styleUrls: ['./training.component.scss']
+    styleUrl: './training.component.scss',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TrainingComponent {
 

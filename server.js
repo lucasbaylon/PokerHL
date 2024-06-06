@@ -440,6 +440,8 @@ io.on('connection', (socket) => {
     socket.on('AddSituation', async (data) => {
         let situation = data.data;
 
+        console.log(situation);
+
         let json = JSON.stringify(situation);
 
         let connection;

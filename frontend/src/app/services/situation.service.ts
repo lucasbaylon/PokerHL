@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Situation } from '../interfaces/situation';
 import { AuthService } from './auth.service';
+import { Situation } from '../interfaces/situation';
 import { saveAs } from 'file-saver';
 import { Observable } from 'rxjs';
 
@@ -42,6 +42,7 @@ export class SituationService {
     }
 
     addSituation(data: Situation) {
+        console.log(data);
         const actualUser = this.auth.getUser();
         this.socket.emit('AddSituation', { data: data, user: actualUser?.email });
     }
@@ -92,5 +93,4 @@ export class SituationService {
             responseType: 'json'
         });
     }
-
 }

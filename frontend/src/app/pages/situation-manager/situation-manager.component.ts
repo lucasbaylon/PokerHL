@@ -1,18 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Situation } from 'src/app/interfaces/situation';
-import { CommonService } from 'src/app/services/common.service';
-import { SituationService } from 'src/app/services/situation.service';
-import Swal from 'sweetalert2';
-import { Subscription } from 'rxjs';
-import { Action } from 'src/app/interfaces/action';
-import { Options } from 'ngx-slider-v2';
+import { SituationService } from '../../services/situation.service';
+import { CommonService } from '../../services/common.service';
 import { cloneDeep } from 'lodash';
+import { Options } from '@angular-slider/ngx-slider';
+import { Situation } from '../../interfaces/situation';
+import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { Action } from '../../interfaces/action';
+import { FormsModule } from '@angular/forms';
+import { NgStyle } from '@angular/common';
+import { ActionColorPipe } from '../../pipes/action-color.pipe';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     selector: 'app-situation-manager',
+    standalone: true,
+    imports: [FormsModule, NgStyle, ActionColorPipe, InputNumberModule, DropdownModule],
     templateUrl: './situation-manager.component.html',
-    styleUrls: ['./situation-manager.component.scss']
+    styleUrl: './situation-manager.component.scss',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SituationManagerComponent {
 

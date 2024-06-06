@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Situation } from '../interfaces/situation';
 import { Action } from '../interfaces/action';
+import { Situation } from '../interfaces/situation';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CommonService {
 

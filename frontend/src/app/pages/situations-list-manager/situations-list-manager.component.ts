@@ -1,14 +1,19 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
+import { Situation } from '../../interfaces/situation';
 import { Router } from '@angular/router';
-import { Situation } from 'src/app/interfaces/situation';
-import { SituationService } from 'src/app/services/situation.service';
-
+import { SituationService } from '../../services/situation.service';
 import Swal from 'sweetalert2';
+import { DealerPipe } from '../../pipes/dealer.pipe';
+import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
+import { TableModule } from 'primeng/table';
 
 @Component({
     selector: 'app-situations-list-manager',
+    standalone: true,
+    imports: [TableModule, DealerPipe, OpponentLevelPipe],
     templateUrl: './situations-list-manager.component.html',
-    styleUrls: ['./situations-list-manager.component.scss']
+    styleUrl: './situations-list-manager.component.scss',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SituationsListManagerComponent {
 

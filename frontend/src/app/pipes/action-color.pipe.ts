@@ -3,7 +3,8 @@ import { CommonService } from '../services/common.service';
 import { Action } from '../interfaces/action';
 
 @Pipe({
-    name: 'actionColor'
+    name: 'actionColor',
+    standalone: true
 })
 export class ActionColorPipe implements PipeTransform {
 

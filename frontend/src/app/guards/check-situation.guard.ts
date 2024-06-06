@@ -1,11 +1,10 @@
-import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+import { CanActivateFn } from '@angular/router';
 import { SituationService } from '../services/situation.service';
-import { map } from 'rxjs/operators';
+import { inject } from '@angular/core';
 import Swal from 'sweetalert2';
+import { map } from 'rxjs';
 
-export const checkSituationGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-
+export const checkSituationGuard: CanActivateFn = (route, state) => {
     const apiSituation = inject(SituationService);
 
     return apiSituation.checkSituationForUser().pipe(map((data: any) => {
@@ -20,7 +19,7 @@ export const checkSituationGuard: CanActivateFn = (route: ActivatedRouteSnapshot
                 icon: 'error',
                 html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Aucune situation d\'entraînement existante.<br> Veuillez d\'abord créer une situation dans le menu "Gérer les situations".</p>',
                 confirmButtonColor: '#d74c4c',
-                confirmButtonText:'<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             })
             return false;
         }
