@@ -4,6 +4,8 @@ import { BaseLayoutComponent } from './components/base-layout/base-layout.compon
 import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
+import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
 
 export const routes: Routes = [
     {
@@ -20,16 +22,16 @@ export const routes: Routes = [
                 component: HomeComponent,
                 canActivate: [authGuard]
             },
-            // {
-            //     path: 'situations-manager',
-            //     component: SituationManagerComponent,
-            //     canActivate: [AuthGuard]
-            // },
-            // {
-            //     path: 'situations-list-manager',
-            //     component: SituationsListManagerComponent,
-            //     canActivate: [AuthGuard]
-            // },
+            {
+                path: 'situations-manager',
+                component: SituationManagerComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'situations-list-manager',
+                component: SituationsListManagerComponent,
+                canActivate: [authGuard]
+            },
             // {
             //     path: 'situations-list-training',
             //     component: SituationsListTrainingComponent,
