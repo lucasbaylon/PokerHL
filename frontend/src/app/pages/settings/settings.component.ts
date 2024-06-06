@@ -38,7 +38,7 @@ export class SettingsComponent {
         { name: 'Rouge', code: 'red' },
     ];
 
-    pokerTableColor: { name: string, code: string } = { name: 'Vert', code: 'green' };
+    pokerTableColor!: { name: string, code: string };
 
     constructor(
         public apiAuth: AuthService,
@@ -70,15 +70,15 @@ export class SettingsComponent {
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
-    onChangeDropdownCardsStyle() {
+    onChangeDropdownCardsStyle(e: any) {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.cardStyle = this.cardsStyle.code;
+        userParams.cardStyle = e.value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
-    onChangeDropdownTableColor() {
+    onChangeDropdownTableColor(e: any) {
         const userParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.playmatColor = this.pokerTableColor.code;
+        userParams.playmatColor = e.value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 

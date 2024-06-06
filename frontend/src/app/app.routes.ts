@@ -6,6 +6,9 @@ import { authGuard } from './guards/auth.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
 import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
+import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
+import { TrainingComponent } from './pages/training/training.component';
+import { checkSituationGuard } from './guards/check-situation.guard';
 
 export const routes: Routes = [
     {
@@ -32,14 +35,14 @@ export const routes: Routes = [
                 component: SituationsListManagerComponent,
                 canActivate: [authGuard]
             },
-            // {
-            //     path: 'situations-list-training',
-            //     component: SituationsListTrainingComponent,
-            //     canActivate: [
-            //         AuthGuard,
-            //         checkSituationGuard
-            //     ]
-            // },
+            {
+                path: 'situations-list-training',
+                component: SituationsListTrainingComponent,
+                canActivate: [
+                    authGuard,
+                    checkSituationGuard
+                ]
+            },
             {
                 path: 'settings',
                 component: SettingsComponent,
@@ -51,11 +54,11 @@ export const routes: Routes = [
             }
         ]
     },
-    // {
-    //     path: 'training',
-    //     component: TrainingComponent,
-    //     canActivate: [
-    //         checkSituationGuard
-    //     ]
-    // }
+    {
+        path: 'training',
+        component: TrainingComponent,
+        canActivate: [
+            checkSituationGuard
+        ]
+    }
 ];

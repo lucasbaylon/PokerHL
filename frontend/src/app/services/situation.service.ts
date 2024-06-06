@@ -42,6 +42,7 @@ export class SituationService {
     }
 
     addSituation(data: Situation) {
+        console.log(data);
         const actualUser = this.auth.getUser();
         this.socket.emit('AddSituation', { data: data, user: actualUser?.email });
     }
