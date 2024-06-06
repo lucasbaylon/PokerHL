@@ -1,0 +1,24 @@
+<div class="login-container animate__animated animate__fadeInDown">
+    <div>
+        <div class="form">
+            <h3>Se connecter</h3>
+            <div class="form-holder">
+                <ion-button class="icon-div">
+                    <ion-icon name="person-outline"></ion-icon>
+                </ion-button>
+                <input type="text" class="form-control" [(ngModel)]="email" placeholder="Adresse mail">
+            </div>
+            <div class="form-holder">
+                <ion-button class="icon-div">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                </ion-button>
+                <input [type]="inputType" class="form-control" [(ngModel)]="password" placeholder="Mot de passe">
+                <ion-button class="icon-div right-icon-div" (click)="toggleEyeIcon()">
+                    <ion-icon [name]="eyeIcon"></ion-icon>
+                </ion-button>
+            </div>
+            <button class="fill" (click)="login()">Connexion</button>
+            <p class="forgot_password">Mot de passe oublié ?</p>
+        </div>
+    </div>
+</div>
