@@ -1,4 +1,6 @@
-@import url(//fonts.googleapis.com/css?family=Lato:300:400);
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 * {
     font-family: 'Lato', sans-serif;
