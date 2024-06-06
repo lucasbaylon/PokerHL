@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
-import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -18,7 +17,6 @@ export const routes: Routes = [
     },
     {
         path: '',
-        component: BaseLayoutComponent,
         children: [
             {
                 path: 'home',

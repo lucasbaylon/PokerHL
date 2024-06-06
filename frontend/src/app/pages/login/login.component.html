@@ -1,25 +1,52 @@
-<div class="login-container animate__animated animate__fadeInDown">
-    <div>
-        <div class="form">
-            <h3>Se connecter</h3>
-            <div class="form-holder">
-                <ion-button class="icon-div">
-                    <i class="fas fa-home"></i>
-                    <ion-icon name="person-outline"></ion-icon>
-                </ion-button>
-                <input type="text" class="form-control" [(ngModel)]="email" placeholder="Adresse mail">
-            </div>
-            <div class="form-holder">
-                <ion-button class="icon-div">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                </ion-button>
-                <input [type]="inputType" class="form-control" [(ngModel)]="password" placeholder="Mot de passe">
-                <ion-button class="icon-div right-icon-div" (click)="toggleEyeIcon()">
-                    <ion-icon [name]="eyeIcon"></ion-icon>
-                </ion-button>
-            </div>
-            <button class="fill" (click)="login()">Connexion</button>
-            <p class="forgot_password">Mot de passe oublié ?</p>
+<div class="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-main-dark-bg">
+    <div
+        class="w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear">
+        <div class="space-y-2 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800">Connexion</h1>
+            <p class="text-sm md:text-base lg:text-lg text-gray-500 dark:text-gray-400">Entrez vos identifiants de
+                connexion afin d'accéder à votre compte.</p>
         </div>
+        <form class="space-y-6">
+            <div class="space-y-2">
+                <label
+                    class="text-sm md:text-md lg:text-lg font-medium leading-none flex items-center gap-2 text-gray-800"
+                    for="email">
+                    <i class="fa-solid fa-envelope text-gray-800"></i>
+                    Email
+                </label>
+                <input
+                    class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-sm md:text-md text-black dark:text-white ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    id="email" placeholder="Entrez votre adresse email" required="" type="email" />
+            </div>
+            <div class="space-y-2">
+                <label
+                    class="text-sm md:text-md lg:text-lg font-medium leading-none flex items-center gap-2 text-gray-800"
+                    for="password">
+                    <i class="fa-solid fa-lock text-gray-800"></i>
+                    Mot de passe
+                </label>
+                <div class="relative flex items-center">
+                    <input
+                        class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-sm md:text-md text-black dark:text-white ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType" />
+                    <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
+                        (click)="togglePasswordVisibility()"
+                        class="fa-solid absolute right-3 cursor-pointer text-sm md:text-lg text-gray-800 dark:text-gray-400"></i>
+                </div>
+            </div>
+            <div class="space-y-4 text-center">
+                <button
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm md:text-md lg:text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-gray-800 text-white hover:bg-gray-700 h-10 md:h-12 px-4 py-2 mt-2 w-full"
+                    type="submit">
+                    Se connecter
+                </button>
+            </div>
+            <div class="text-center">
+                <a class="text-sm md:text-md lg:text-lg font-medium text-gray-800 hover:underline dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer"
+                    href="#">
+                    Mot de passe oublié
+                </a>
+            </div>
+        </form>
     </div>
 </div>
