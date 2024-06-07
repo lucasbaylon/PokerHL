@@ -1,59 +1,69 @@
-<ion-button class="backArrow" (click)="redirectTo('home')">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-button>
-<div class="settings-container animate__animated animate__fadeInDown">
-    <div>
-        <div class="settings-div">
-            <h3>Paramètres</h3>
-            <p>Ajustez les paramètres selon vos préférences.</p>
-            <div class="flex-container">
-                <div class="settings-first-part">
-                    <h4>Global</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
-                    </div>
-                    <h4>Entraînement</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Solution lors d'une erreur</div>
-                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"
-                            (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Style des cartes</div>
-                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name" optionValue="code"
-                            (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Couleur du tapis de jeu</div>
-                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
-                            optionLabel="name" optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
+<section class="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-main-dark-bg">
+    <div
+        class="mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
+        <h3 class="m-0 text-left uppercase text-2xl text-gray-800 tracking-wider select-none">Paramètres</h3>
+        <p class="text-gray-500 text-lg mt-2 mb-0 text-left">Ajustez les paramètres selon vos préférences.</p>
+        <div class="flex">
+            <div class="w-1/2 min-w-[425px] mr-6">
+                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 tracking-wider select-none">Global</h4>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 text-lg tracking-wider select-none">
+                        Activer le mode sombre</div>
+                    <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
+                </div>
+                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 tracking-wider select-none">Entraînement
+                </h4>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 text-lg tracking-wider select-none">
+                        Solution lors d'une erreur</div>
+                    <p-inputSwitch [(ngModel)]="displaySolutionOnError"
+                        (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+                </div>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 text-lg tracking-wider select-none">
+                        Style des cartes</div>
+                    <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
+                        optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
+                </div>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 text-lg tracking-wider select-none">
+                        Couleur du tapis de jeu</div>
+                    <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"
+                        optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
+                </div>
+            </div>
+            <div class="w-1/2 min-w-[425px] ml-6">
+                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 tracking-wider select-none">Situations
+                </h4>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 text-lg tracking-wider select-none">Nom
+                        de solution multiple auto</div>
+                    <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="flex justify-between w-full">
+                        <button
+                            class="fill bg-none border border-gray-800 mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition duration-300 hover:bg-blue-600 hover:text-white">Importer</button>
+                        <button
+                            class="fill bg-none border border-gray-800 mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition duration-300 hover:bg-blue-600 hover:text-white"
+                            (click)="onClickFileExport()">Exporter</button>
+                        <input type="file" #fileImportInput class="hidden" (change)="onClickFileImport($event)"
+                            multiple>
                     </div>
                 </div>
-                <div class="settings-second-part">
-                    <h4>Situations</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Nom de solution multiple auto</div>
-                        <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
-                    </div>
-                    <div class="buttons-container">
-                        <div class="side-buttons">
-                            <button class="fill" (click)="fileImportInput.click()">Importer</button>
-                            <button class="fill" (click)="onClickFileExport()">Exporter</button>
-
-                            <input type="file" #fileImportInput style="display: none;"
-                                (change)="onClickFileImport($event)" multiple>
-                        </div>
-                    </div>
-                    <h4 class="buttons-only-div">Compte</h4>
-                    <div class="buttons-container">
-                        <div class="side-buttons">
-                            <button class="fill">Changer le MDP</button>
-                            <button class="fill" (click)="apiAuth.signOut()">Se déconnecter</button>
-                        </div>
+                <h4 class="m-0 mt-10 mb-2 text-left uppercase text-gray-800 tracking-wider select-none">
+                    Compte</h4>
+                <div class="flex flex-col items-center">
+                    <div class="flex justify-between w-full">
+                        <button
+                            class="fill bg-none border border-gray-800 mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition duration-300 hover:bg-blue-600 hover:text-white">Changer
+                            le MDP</button>
+                        <button
+                            class="fill bg-none border border-gray-800 mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition duration-300 hover:bg-blue-600 hover:text-white"
+                            (click)="apiAuth.signOut()">Se déconnecter</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>

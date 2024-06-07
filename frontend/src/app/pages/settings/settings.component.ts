@@ -12,7 +12,6 @@ import Swal from 'sweetalert2';
     standalone: true,
     imports: [DropdownModule, InputSwitchModule],
     templateUrl: './settings.component.html',
-    styleUrl: './settings.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SettingsComponent {
