@@ -28,7 +28,8 @@
                 <div class="relative flex items-center">
                     <input
                         class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-200 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType" [(ngModel)]="password" />
+                        id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType"
+                        [(ngModel)]="password" />
                     <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer"
                         (click)="togglePasswordVisibility()">
                         <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
@@ -38,7 +39,7 @@
             </div>
             <div class="space-y-4 text-center">
                 <button
-                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base md:text-lg lg:text-xl font-medium ring-offset-background transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-black h-10 md:h-12 px-4 py-2 mt-2 w-full"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base md:text-lg lg:text-xl font-medium ring-offset-background transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 h-10 md:h-12 px-4 py-2 mt-2 w-full"
                     (click)="login()">
                     Se connecter
                 </button>
