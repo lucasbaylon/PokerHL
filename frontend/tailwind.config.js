@@ -3,7 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{html,ts}",
   ],
-  darkMode: 'class',
+  // darkMode: 'class',
   theme: {
     screens: {
       sm: '640px',
@@ -16,7 +16,7 @@ module.exports = {
       backgroundColor: {
         'main-bg': '#FAFBFB',
         'main-dark-bg': '#20232A',
-        'secondary-dark-bg': '#33373E',
+        'secondary-dark-bg': '#292b30',
         'light-gray': '#EFEFEF',
         'half-transparent': 'rgba(0, 0, 0, 0.5)',
       },
