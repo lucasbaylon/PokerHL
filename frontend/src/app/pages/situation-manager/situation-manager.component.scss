@@ -1,7 +1,7 @@
-@import url(//fonts.googleapis.com/css?family=Lato:300:400);
+@import url(//fonts.googleapis.com/css?family=Inter:300:400);
 
 * {
-    font-family: "Lato", sans-serif;
+    font-family: "Inter", sans-serif;
     user-drag: none;
     box-sizing: unset !important;
 }
@@ -521,7 +521,7 @@ input[type="radio"]:checked+.design::before {
     animation-duration: 0.5s;
 }
 
-.add-multiples-solutions-h2{
+.add-multiples-solutions-h2 {
     margin-top: -20px;
 }
 

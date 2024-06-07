@@ -73,7 +73,7 @@ export class SituationsListManagerComponent {
 
     removeSituation(id: string) {
         Swal.fire({
-            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière !</p>',
+            html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière !</p>',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

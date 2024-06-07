@@ -188,9 +188,9 @@ export class SituationManagerComponent {
         if (!this.situation_obj.name) {
             Swal.fire({
                 icon: 'error',
-                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
+                html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
                 confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             });
         } else {
             let situation_empty = false;
@@ -203,18 +203,18 @@ export class SituationManagerComponent {
             if (situation_empty) {
                 Swal.fire({
                     icon: 'error',
-                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau.</p>',
+                    html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau.</p>',
                     confirmButtonColor: '#d74c4c',
-                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                    confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 });
             } else {
                 // On check si il y a bien un nombre de jetons
                 if (!this.situation_obj.dealerMissingTokens) {
                     Swal.fire({
                         icon: 'error',
-                        html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
+                        html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
                         confirmButtonColor: '#d74c4c',
-                        confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                        confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                     });
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
@@ -231,9 +231,9 @@ export class SituationManagerComponent {
                     if (empty_action_input) {
                         Swal.fire({
                             icon: 'error',
-                            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom aux actions utilisées dans le tableau.</p>',
+                            html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom aux actions utilisées dans le tableau.</p>',
                             confirmButtonColor: '#d74c4c',
-                            confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                            confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                         });
                     } else {
                         if (this.mode === "new") {
@@ -281,7 +281,7 @@ export class SituationManagerComponent {
             toast: true,
             position: 'top-end',
             icon: 'success',
-            html: '<h2 style="font-family: \'Lato\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
+            html: '<h2 style="font-family: \'Inter\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
             showConfirmButton: false,
             width: '370px',
             timer: 2500
@@ -373,17 +373,17 @@ export class SituationManagerComponent {
         if (this.multipleSolutionName === "") {
             Swal.fire({
                 icon: 'error',
-                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom à la solution multiple.</p>',
+                html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom à la solution multiple.</p>',
                 confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
             });
         } else {
             if (this.checkboxMultipleSolutionChecked < 2) {
                 Swal.fire({
                     icon: 'error',
-                    html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de cocher au moins deux cases.</p>',
+                    html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de cocher au moins deux cases.</p>',
                     confirmButtonColor: '#d74c4c',
-                    confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+                    confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
                 });
             } else {
                 let colorLst: {

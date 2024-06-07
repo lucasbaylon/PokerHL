@@ -1,17 +1,3 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-
-* {
-    font-family: 'Lato', sans-serif;
-    user-drag: none;
-}
-
-body {
-    margin: 0;
-}
-
-:root {
-    --primary: #ff6348;
-    --bg: blue;
-}
