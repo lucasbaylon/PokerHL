@@ -8,6 +8,7 @@ import { SituationsListManagerComponent } from './pages/situations-list-manager/
 import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
 import { TrainingComponent } from './pages/training/training.component';
 import { checkSituationGuard } from './guards/check-situation.guard';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
     {
@@ -49,6 +50,10 @@ export const routes: Routes = [
             {
                 path: 'login',
                 component: LoginComponent
+            },
+            {
+                path: 'forgot-password',
+                component: ForgotPasswordComponent
             }
         ]
     },

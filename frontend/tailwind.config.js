@@ -50,16 +50,16 @@ module.exports = {
   plugins: [
     function ({ addUtilities }) {
       const newUtilities = {
-        '.delay-50': {
+        '.animation-delay-50': {
           'animation-delay': '50ms',
         },
-        '.delay-100': {
+        '.animation-delay-100': {
           'animation-delay': '100ms',
         },
-        '.delay-150': {
+        '.animation-delay-150': {
           'animation-delay': '150ms',
         },
-        '.delay-200': {
+        '.animation-delay-200': {
           'animation-delay': '200ms',
         },
       }
