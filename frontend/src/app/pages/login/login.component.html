@@ -1,6 +1,6 @@
-<div class="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-secondary-dark-bg">
+<div class="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-main-dark-bg">
     <div
-        class="w-full max-w-sm md:max-w-lg lg:max-w-xl mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl dark:shadow-none bg-white dark:bg-main-dark-bg animate-appear">
+        class="w-full max-w-sm md:max-w-lg lg:max-w-xl mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear">
         <div class="space-y-2 text-center">
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-300">Connexion</h1>
             <p class="text-sm md:text-base lg:text-lg text-gray-500 dark:text-gray-300">Entrez vos identifiants de
@@ -15,7 +15,7 @@
                     Email
                 </label>
                 <input
-                    class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-white dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-200 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     id="email" placeholder="Entrez votre adresse email" required="" type="email" [(ngModel)]="email" />
             </div>
             <div class="space-y-2">
@@ -27,7 +27,7 @@
                 </label>
                 <div class="relative flex items-center">
                     <input
-                        class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-white dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-200 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType" [(ngModel)]="password" />
                     <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer"
                         (click)="togglePasswordVisibility()">
@@ -38,7 +38,7 @@
             </div>
             <div class="space-y-4 text-center">
                 <button
-                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base md:text-lg lg:text-xl font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-gray-800 text-white hover:bg-gray-700 h-10 md:h-12 px-4 py-2 mt-2 w-full"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base md:text-lg lg:text-xl font-medium ring-offset-background transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-main-dark-bg dark:bg-gray-700 h-10 md:h-12 px-4 py-2 mt-2 w-full"
                     (click)="login()">
                     Se connecter
                 </button>
