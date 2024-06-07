@@ -1,5 +1,5 @@
 <section class="w-full py-16 md:py-32 flex items-center justify-center dark:bg-main-dark-bg h-screen">
-    <div class="container mb-20 px-4 md:px-6 grid items-center gap-6 lg:grid-cols-2 lg:gap-12 animate-appear">
+    <div class="container mb-20 px-4 md:px-6 grid items-center gap-6 lg:grid-cols-2 lg:gap-12 animate-appear opacity-0">
         <div class="space-y-4">
             <h1 class="text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl dark:text-gray-200">Poker HL</h1>
             <p
@@ -9,51 +9,24 @@
             </p>
             <div class="flex flex-col gap-5 min-[400px]:flex-row">
                 <div (click)="redirectTo('situations-list-training')"
-                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    class="animate-appear delay-50 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-play mr-2 h-4 w-4"></i>
                     Entraînement
                 </div>
                 <div (click)="redirectTo('situations-list-manager')"
-                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    class="animate-appear delay-100 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-tasks mr-2 h-4 w-4"></i>
                     Situations
                 </div>
                 <div (click)="redirectTo('settings')"
-                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    class="animate-appear delay-150 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-cog mr-2 h-4 w-4"></i>
                     Paramètres
                 </div>
             </div>
         </div>
         <div class="flex lg:justify-end xl:lg:justify-end w-full">
-            <img src="../../../assets/img/logo.png" class="animate-appear delay-1000 object-cover w-10/12" />
+            <img src="../../../assets/img/logo.png" class="animate-appear delay-200 object-cover w-10/12 opacity-0" />
         </div>
     </div>
 </section>
-
-
-
-
-
-
-
-<!-- <div class="animate__animated animate__fadeInDown">
-    <h1>Poker HL</h1>
-    <p>Que souhaitez vous faire aujourd'hui ?</p>
-</div>
-<div class="animate__animated animate__fadeInDown animation-delay-1">
-    <button class="fill" (click)="redirectTo('situations-list-training')">
-        Débuter une session d'entraînement
-    </button>
-</div>
-
-<div class="animate__animated animate__fadeInDown animation-delay-2">
-    <button class="fill" (click)="redirectTo('situations-list-manager')">
-        Gérer les situations
-    </button>
-</div>
-<div class="animate__animated animate__fadeInDown animation-delay-3">
-    <button class="fill" (click)="redirectTo('settings')">
-        Paramètres
-    </button>
-</div> -->

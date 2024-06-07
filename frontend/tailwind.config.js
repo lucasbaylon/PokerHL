@@ -3,7 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{html,ts}",
   ],
-  darkMode: 'class',
+  // darkMode: 'class',
   theme: {
     screens: {
       sm: '640px',
@@ -19,6 +19,12 @@ module.exports = {
         'secondary-dark-bg': '#232726',
         'light-gray': '#EFEFEF',
         'half-transparent': 'rgba(0, 0, 0, 0.5)',
+      },
+      animationDelay: {
+        '50': '50ms',
+        '100': '100ms',
+        '150': '150ms',
+        '200': '200ms',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
@@ -41,6 +47,23 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.delay-50': {
+          'animation-delay': '50ms',
+        },
+        '.delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.delay-150': {
+          'animation-delay': '150ms',
+        },
+        '.delay-200': {
+          'animation-delay': '200ms',
+        },
+      }
+      addUtilities(newUtilities, ['responsive', 'hover'])
+    },
+  ],
 }
-
