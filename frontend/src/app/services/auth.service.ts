@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -19,8 +18,7 @@ export class AuthService {
     isLoading = new BehaviorSubject<boolean>(true);
 
     constructor(
-        private router: Router,
-        private messageService: MessageService
+        private router: Router
     ) {
         this.authStateSubscription = authState(this.auth).subscribe((aUser: User | null) => {
             this.userSubject.next(aUser);
@@ -50,7 +48,7 @@ export class AuthService {
         this.authStateSubscription.unsubscribe();
     }
 
-    signIn(email: string, password: string) {
+    async signIn(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password).then((result) => {
             Swal.fire({
                 position: 'top-end',
@@ -83,7 +81,7 @@ export class AuthService {
         });
     }
 
-    signOut() {
+    async signOut() {
         return signOut(this.auth).then((result) => {
             Swal.fire({
                 position: 'top-end',
@@ -103,5 +101,9 @@ export class AuthService {
 
     getUser(): User | null {
         return this.userSubject.value;
+    }
+
+    sendPasswordResetEmail(email: string) {
+        return sendPasswordResetEmail(this.auth, email);
     }
 }

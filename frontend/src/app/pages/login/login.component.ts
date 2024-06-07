@@ -2,6 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
 
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService, private router: Router) { }
 
     passwordFieldType: string = 'password';
     email: string = '';
@@ -24,6 +25,10 @@ export class LoginComponent {
 
     login(): void {
         if (this.email && this.password) this.authService.signIn(this.email, this.password);
+    }
+
+    redirectTo(page: string) {
+        this.router.navigate([page]);
     }
 
 }
