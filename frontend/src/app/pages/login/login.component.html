@@ -6,7 +6,7 @@
             <p class="text-sm md:text-base lg:text-lg text-gray-500 dark:text-gray-300">Entrez vos identifiants de
                 connexion afin d'accéder à votre compte.</p>
         </div>
-        <form class="space-y-6">
+        <div class="space-y-6">
             <div class="space-y-2">
                 <label
                     class="text-sm md:text-md lg:text-lg font-medium leading-none flex items-center gap-2 text-gray-800 dark:text-gray-300"
@@ -16,7 +16,7 @@
                 </label>
                 <input
                     class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-white dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    id="email" placeholder="Entrez votre adresse email" required="" type="email" />
+                    id="email" placeholder="Entrez votre adresse email" required="" type="email" [(ngModel)]="email" />
             </div>
             <div class="space-y-2">
                 <label
@@ -28,7 +28,7 @@
                 <div class="relative flex items-center">
                     <input
                         class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-white dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType" />
+                        id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType" [(ngModel)]="password" />
                     <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer"
                         (click)="togglePasswordVisibility()">
                         <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
@@ -39,7 +39,7 @@
             <div class="space-y-4 text-center">
                 <button
                     class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base md:text-lg lg:text-xl font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-gray-800 text-white hover:bg-gray-700 h-10 md:h-12 px-4 py-2 mt-2 w-full"
-                    type="submit">
+                    (click)="login()">
                     Se connecter
                 </button>
             </div>
@@ -49,6 +49,6 @@
                     Mot de passe oublié
                 </a>
             </div>
-        </form>
+        </div>
     </div>
 </div>
