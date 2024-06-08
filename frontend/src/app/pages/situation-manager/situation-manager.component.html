@@ -34,7 +34,7 @@
                 <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
                     (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
                 <div class="color-picker-square"
-                    [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"
+                    [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
                     (click)="onColorAction(action.id)"></div>
                 <label>
                     <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
@@ -79,7 +79,7 @@
                         {{action.display_name}}
                     </div>
                     <div class="color-picker-square"
-                        [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
+                        [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"></div>
                     <label>
                         <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
                             (click)="onChangeAction($event)">

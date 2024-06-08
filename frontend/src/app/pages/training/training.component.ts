@@ -4,7 +4,7 @@ import { ActiveSituation } from '../../interfaces/active-situation';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserParams } from '../../interfaces/user-params';
 import { Action } from '../../interfaces/action';
-import Swal from 'sweetalert2';
+import { CommonService } from './../../services/common.service';
 import { NgStyle } from '@angular/common';
 import { ActionColorPipe } from '../../pipes/action-color.pipe';
 
@@ -19,25 +19,17 @@ import { ActionColorPipe } from '../../pipes/action-color.pipe';
 export class TrainingComponent {
 
     countResult: boolean = true;
-
     GoodResponse: number = 0;
-
     BadResponse: number = 0;
-
     TotalResponse: number = 0;
-
     SuccessRatePercentage: number = 0;
-
     randomizer: number = 0;
-
     situationList: Situation[] = [];
-
     currentSituation!: Situation;
-
     currentSituationName: string = "";
-
     activeSituation!: ActiveSituation;
-
+    backgroundColor!: string;
+    cardStyle!: string;
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
 
     tableColors = {
@@ -46,13 +38,10 @@ export class TrainingComponent {
         "blue": "#3B82F6"
     }
 
-    backgroundColor!: string;
-
-    cardStyle!: string;
-
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private commonService: CommonService
     ) { }
 
     ngOnInit(): void {
@@ -192,15 +181,7 @@ export class TrainingComponent {
             if (this.countResult) this.GoodResponse += 1;
             if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
             this.countResult = true;
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'success',
-                title: '<span style="font-size: 1.3vw;">Bonne réponse !</span>',
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`Bonne réponse !`);
             this.generateSituation();
         } else {
             if (this.countResult) this.BadResponse += 1;
@@ -217,15 +198,7 @@ export class TrainingComponent {
                     button.disabled = true;
                 });
             } else {
-                Swal.fire({
-                    position: 'top-end',
-                    toast: true,
-                    icon: 'error',
-                    title: '<span style="font-size: 1.3vw;">Mauvaise réponse !</span>',
-                    showConfirmButton: false,
-                    width: 'auto',
-                    timer: 2500
-                });
+                this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
                 this.generateSituation();
             }
         }

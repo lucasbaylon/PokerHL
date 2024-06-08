@@ -25,49 +25,31 @@ import { DropdownModule } from 'primeng/dropdown';
 export class SituationManagerComponent {
 
     mode: string = "new";
-
     situationSubscription!: Subscription;
-
     multipleSolutionName: string = "";
-
     situation_obj!: Situation;
-
     actionSelected: string = "unique_action_0";
-
     showOpponent2: boolean = true;
-
     isSelectionActive: boolean = false;
-
     situation_objActionsRef: any;
-
     mixedSolutionSliderMinValue: number = 50;
-
     mixedSolutionSliderMaxValue: number = 100;
-
+    simpleSlider: boolean = true;
+    multipleSlider: boolean = false;
+    checkboxMultipleSolutionChecked: number = 0;
+    multipleSolutionCheckedList: string[] = [];
+    countMultipleSolution: number = 0;
+    multipleSituationId?: string;
+    editSituationName?: string;
+    nbPlayer: { name: string, code: number } = { name: '2', code: 2 };
+    dealer: { name: string, code: string } = { name: 'Vous', code: 'you' };
+    opponentLevel: { name: string, code: string } = { name: 'Débutant', code: 'fish' };
     listener: any;
 
     options: Options = {
         floor: 0,
         ceil: 100
     };
-
-    simpleSlider: boolean = true;
-
-    multipleSlider: boolean = false;
-
-    checkboxMultipleSolutionChecked: number = 0;
-
-    multipleSolutionCheckedList: string[] = [];
-
-    countMultipleSolution: number = 0;
-
-    multipleSituationId?: string;
-
-    editSituationName?: string;
-
-    nbPlayer: { name: string, code: number } = { name: '2', code: 2 };
-    dealer: { name: string, code: string } = { name: 'Vous', code: 'you' };
-    opponentLevel: { name: string, code: string } = { name: 'Débutant', code: 'fish' };
 
     availableNbPlayersTable: any[] = [
         { name: '2', code: 2 },
@@ -87,12 +69,12 @@ export class SituationManagerComponent {
     constructor(
         private router: Router,
         private apiSituation: SituationService,
-        public apiCommon: CommonService,
+        public commonService: CommonService,
         private _Activatedroute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        this.situation_obj = cloneDeep(this.apiCommon.empty_situation_obj);
+        this.situation_obj = cloneDeep(this.commonService.empty_situation_obj);
         this.situation_objActionsRef = this.situation_obj.actions.slice();
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
@@ -277,29 +259,13 @@ export class SituationManagerComponent {
 
     addSituation() {
         this.apiSituation.addSituation(this.situation_obj);
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            html: '<h2 style="font-family: \'Inter\', sans-serif;margin-top:16px; margin-bottom:0; font-size: 1.5em;">Situation enregistrée !</h3>',
-            showConfirmButton: false,
-            width: '370px',
-            timer: 2500
-        });
+        this.commonService.showSwalToast(`Situation enregistrée !`);
         this.router.navigate(['situations-list-manager']);
     }
 
     editSituation() {
         this.apiSituation.editSituation(this.situation_obj);
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: '<span style="font-size: 1.3vw;">Situation modifiée !</span>',
-            showConfirmButton: false,
-            width: 'auto',
-            timer: 2500
-        });
+        this.commonService.showSwalToast(`Situation modifiée !`);
         this.router.navigate(['situations-list-manager']);
     }
 

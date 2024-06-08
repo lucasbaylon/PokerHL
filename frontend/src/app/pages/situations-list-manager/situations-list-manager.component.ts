@@ -2,10 +2,11 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { Situation } from '../../interfaces/situation';
 import { Router } from '@angular/router';
 import { SituationService } from '../../services/situation.service';
-import Swal from 'sweetalert2';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { TableModule } from 'primeng/table';
+import { CommonService } from './../../services/common.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-situations-list-manager',
@@ -25,7 +26,8 @@ export class SituationsListManagerComponent {
 
     constructor(
         private router: Router,
-        private apiSituation: SituationService
+        private apiSituation: SituationService,
+        private commonService: CommonService
     ) { }
 
     @HostListener('window:resize', ['$event'])
@@ -60,15 +62,7 @@ export class SituationsListManagerComponent {
 
     duplicateSituation(id: string) {
         this.apiSituation.duplicateSituation(id);
-        Swal.fire({
-            position: 'top-end',
-            toast: true,
-            icon: 'success',
-            title: '<span style="font-size: 1.3vw;">Situation dupliquée !</span>',
-            showConfirmButton: false,
-            width: 'auto',
-            timer: 2500
-        });
+        this.commonService.showSwalToast(`Situation dupliquée !`);
     }
 
     removeSituation(id: string) {
@@ -83,15 +77,7 @@ export class SituationsListManagerComponent {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.apiSituation.removeSituation(id);
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: '<span style="font-size: 1.3vw;">Situation supprimée !</span>',
-                    showConfirmButton: false,
-                    width: 'auto',
-                    timer: 2500
-                });
+                this.commonService.showSwalToast(`Situation supprimée !`);
             }
         });
     }
