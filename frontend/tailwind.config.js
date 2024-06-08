@@ -5,7 +5,7 @@ module.exports = {
   content: [
     "./src/**/*.{html,ts}",
   ],
-  darkMode: 'class',
+  // darkMode: 'class',
   theme: {
     screens: {
       sm: '640px',
