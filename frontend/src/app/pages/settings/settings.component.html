@@ -1,33 +1,33 @@
 <section class="flex min-h-screen bg-gray-100 dark:bg-main-dark-bg">
     <!-- SIDEBAR -->
     <div [ngClass]="{ 'w-20': isCollapsed, 'w-64': !isCollapsed }"
-        class="fixed h-full overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl dark:shadow-none">
-        <ul class="p-2 absolute w-full">
-            <li class="mb-6">
-                <div class="flex items-center cursor-pointer p-2" (click)="redirectTo('home')">
+        class="fixed h-full overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
+        <ul class="absolute w-full">
+            <li class="mb-6 ml-3 mt-4 w-fit">
+                <div (click)="redirectTo('home')" class="flex items-center cursor-pointer p-3">
                     <img src="../../../assets/img/logo.png" alt="Logo" class="h-8 w-8">
-                    <span class="ml-6 text-xl font-bold text-gray-800 dark:text-gray-200">Poker HL</span>
+                    <span class="ml-4 text-xl font-bold text-gray-800 dark:text-gray-200">Poker HL</span>
                 </div>
             </li>
             <li
                 class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
-                <div (click)="redirectTo('situations-list-training')" class="flex items-center p-2">
-                    <i class="fa-solid fa-house ml-6 text-lg text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Entraînement</span>
+                <div (click)="redirectTo('situations-list-training')" class="flex items-center px-3 py-4">
+                    <i class="fa-solid fa-house ml-4 text-xl text-gray-800 dark:text-gray-200"></i>
+                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-4 text-lg">Entraînement</span>
                 </div>
             </li>
-            <li>
-                <div (click)="redirectTo('situations-list-training')"
-                    class="flex items-center p-2 transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
-                    <i class="fa-solid fa-tasks ml-6 text-lg"></i>
-                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Situations</span>
+            <li
+                class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
+                <div (click)="redirectTo('situations-list-manager')" class="flex items-center px-3 py-4">
+                    <i class="fa-solid fa-tasks ml-4 text-xl text-gray-800 dark:text-gray-200"></i>
+                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-4 text-lg">Situations</span>
                 </div>
             </li>
-            <li>
-                <div (click)="redirectTo('settings')"
-                    class="flex items-center p-2 transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
-                    <i class="fa-solid fa-gear ml-6 text-lg"></i>
-                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Paramètres</span>
+            <li
+                class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
+                <div (click)="redirectTo('settings')" class="flex items-center px-3 py-4">
+                    <i class="fa-solid fa-gear ml-4 text-xl text-gray-800 dark:text-gray-200"></i>
+                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-4 text-lg">Paramètres</span>
                 </div>
             </li>
         </ul>
@@ -46,10 +46,11 @@
         </div>
     </div>
     <button [ngStyle]="{ left: isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
-        class="flex justify-center items-center z-10 fixed top-4 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400">
+        class="flex justify-center items-center z-10 fixed top-7 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400">
         <i class="fa-solid fa-angle-left text-base"
             [ngClass]="{ 'transform rotate-180': isCollapsed, 'transform rotate-0': !isCollapsed }"></i>
     </button>
+
 
     <!-- CONTENT -->
     <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
