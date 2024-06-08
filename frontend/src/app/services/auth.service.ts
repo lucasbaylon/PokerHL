@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail } from '@angular/fire/auth';
-import Swal from 'sweetalert2';
+import { CommonService } from './../services/common.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,8 @@ export class AuthService {
     isLoading = new BehaviorSubject<boolean>(true);
 
     constructor(
-        private router: Router
+        private router: Router,
+        private commonService: CommonService
     ) {
         this.authStateSubscription = authState(this.auth).subscribe((aUser: User | null) => {
             this.userSubject.next(aUser);
@@ -50,15 +51,7 @@ export class AuthService {
 
     async signIn(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password).then((result) => {
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'success',
-                title: '<span style="font-size: 1.3vw;">Connexion réussie !</span>',
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`Connexion réussie !`);
         }).catch((error) => {
             let errorMessage = 'Échec de connexion';
             switch (error.code) {
@@ -69,29 +62,13 @@ export class AuthService {
                     errorMessage = 'Compte désactivé';
                     break;
             }
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'error',
-                title: `<span style="font-size: 1.3vw;">${errorMessage}</span>`,
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`${errorMessage}`, 'error');
         });
     }
 
     async signOut() {
         return signOut(this.auth).then((result) => {
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'success',
-                title: '<span style="font-size: 1.3vw;">Déconnexion réussie !</span>',
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`Déconnexion réussie !`);
         });
     }
 
