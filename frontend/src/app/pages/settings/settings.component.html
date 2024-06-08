@@ -1,10 +1,11 @@
 <section class="flex min-h-screen bg-gray-100 dark:bg-main-dark-bg">
     <!-- SIDEBAR -->
     <div [ngClass]="{ 'w-20': isCollapsed, 'w-64': !isCollapsed }"
-        class="fixed h-full overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
+        class="fixed h-full whitespace-nowrap overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
         <ul class="absolute w-full">
-            <li class="mb-6 ml-3 mt-4 w-fit overflow-hidden">
-                <div (click)="redirectTo('home')" class="flex items-center cursor-pointer p-3">
+            <li class="mb-6 ml-3 mt-4 w-fit">
+                <div (click)="redirectTo('home')"
+                    class="flex items-center cursor-pointer p-3 ">
                     <img src="../../../assets/img/logo.png" alt="Logo" class="h-8 w-8">
                     <span class="ml-4 text-xl font-bold text-gray-800 dark:text-gray-200">Poker HL</span>
                 </div>
@@ -13,21 +14,21 @@
                 class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
                 <div (click)="redirectTo('situations-list-training')" class="flex items-center px-3 py-4">
                     <i class="fa-solid fa-house ml-4 text-xl text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-4 text-lg">Entraînement</span>
+                    <span [ngClass]="{ 'ml-8': isCollapsed, 'ml-4': !isCollapsed }" class="ml-4 text-lg transition-all duration-500">Entraînement</span>
                 </div>
             </li>
             <li
                 class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
                 <div (click)="redirectTo('situations-list-manager')" class="flex items-center px-3 py-4">
                     <i class="fa-solid fa-tasks ml-4 text-xl text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-4 text-lg">Situations</span>
+                    <span [ngClass]="{ 'ml-8': isCollapsed, 'ml-4': !isCollapsed }" class="ml-4 text-lg transition-all duration-500">Situations</span>
                 </div>
             </li>
             <li
                 class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
                 <div (click)="redirectTo('settings')" class="flex items-center px-3 py-4">
                     <i class="fa-solid fa-gear ml-4 text-xl text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-4 text-lg">Paramètres</span>
+                    <span [ngClass]="{ 'ml-8': isCollapsed, 'ml-4': !isCollapsed }" class="ml-4 text-lg transition-all duration-500">Paramètres</span>
                 </div>
             </li>
         </ul>
@@ -38,7 +39,7 @@
                         src="https://imgs.search.brave.com/QBZ3pjIkCvxe93Tm8VrevCLN6-iloSH7DHAj50TWzws/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzgyLzVj/L2UyLzgyNWNlMjlj/MWZkNTllYzk3Njc2/NzlhY2ZjODM4ZWI5/LmpwZw" />
                 </div>
             </div>
-            <div [ngClass]="{ 'hidden': isCollapsed }" class="ml-4">
+            <div [ngClass]="{ 'whitespace-nowrap overflow-hidden': isCollapsed }" class="ml-4">
                 <p class="font-semibold text-gray-800 dark:text-gray-200">Hugo Eribon</p>
                 <div (click)="redirectTo('settings')"
                     class="hover:underline text-gray-800 dark:text-gray-200 cursor-pointer">Gérer le compte</div>
@@ -52,6 +53,7 @@
     </button>
 
 
+
     <!-- CONTENT -->
     <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
         class="flex-grow py-8 px-14 min-h-screen transition-all duration-500 text-black overflow-hidden">
@@ -63,7 +65,8 @@
             <div class="w-1/2 min-w-[400px] mr-6">
                 <div
                     class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-50">
-                    <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                    <h4
+                        class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
                         Global</h4>
                     <div class="flex items-center justify-between w-full mt-4">
                         <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
@@ -78,7 +81,8 @@
                 </div>
                 <div
                     class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100">
-                    <h4 class="m-0 mb-4 font-semibold text-left text-lg uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                    <h4
+                        class="m-0 mb-4 font-semibold text-left text-lg uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
                         Entraînement
                     </h4>
                     <div class="flex items-center justify-between w-full mt-4">
@@ -96,15 +100,17 @@
                     <div class="flex items-center justify-between w-full mt-4">
                         <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
                             Couleur du tapis de jeu</div>
-                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"
-                            optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
+                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
+                            optionLabel="name" optionValue="code"
+                            (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
                     </div>
                 </div>
             </div>
             <div class="w-1/2 min-w-[400px] ml-6">
                 <div
                     class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100">
-                    <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    <h4
+                        class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                         Situations
                     </h4>
                     <div class="flex items-center justify-between w-full mt-4">
@@ -133,10 +139,12 @@
                 </div>
                 <div
                     class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150">
-                    <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    <h4
+                        class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                         Compte</h4>
                     <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Modifier votre mot de
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Modifier votre
+                            mot de
                             passe</div>
                         <div
                             class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
