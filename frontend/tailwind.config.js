@@ -1,3 +1,5 @@
+import daisyui from "daisyui"
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -65,5 +67,10 @@ module.exports = {
       }
       addUtilities(newUtilities, ['responsive', 'hover'])
     },
+    daisyui,
   ],
+  daisyui: {
+    themes: ["light"],
+    prefix: "dui-",
+  }
 }

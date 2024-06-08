@@ -1,133 +1,130 @@
 <section class="flex min-h-screen bg-gray-100 dark:bg-main-dark-bg">
-    <div class="flex">
-        <div [ngClass]="{ 'w-20': isCollapsed, 'w-64': !isCollapsed }"
-            class="fixed h-full overflow-hidden transition-all duration-500 bg-gray-100 dark:bg-secondary-dark-bg">
-            <ul class="p-2 absolute w-full">
-                <li class="mb-6">
-                    <div class="flex items-center cursor-pointer" (click)="redirectTo('home')">
-                        <img src="../../../assets/img/logo.png" alt="Logo" class="h-8 w-8">
-                        <span class="ml-6 text-lg font-semibold text-gray-800 dark:text-gray-200">Poker HL</span>
-                    </div>
-                </li>
-                <li class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer w-full">
-                    <div (click)="redirectTo('situations-list-training')"
-                        class="flex items-center p-2">
-                        <i class="fa-solid fa-house ml-6 text-lg text-gray-800 dark:text-gray-200"></i>
-                        <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Entraînement</span>
-                    </div>
-                </li>
-                <li>
-                    <div (click)="redirectTo('situations-list-training')"
-                        class="flex items-center p-2 transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer">
-                        <i class="fa-solid fa-tasks ml-6 text-lg"></i>
-                        <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Situations</span>
-                    </div>
-                </li>
-                <li>
-                    <div (click)="redirectTo('settings')"
-                        class="flex items-center p-2 transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer">
-                        <i class="fa-solid fa-gear ml-6 text-lg"></i>
-                        <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Paramètres</span>
-                    </div>
-                </li>
-            </ul>
-            <div class="absolute bottom-0 flex items-center p-4">
-                <div class="text-primary p-2 rounded-lg text-2xl">
-                    <i class="fa-solid fa-user"></i>
+    <!-- SIDEBAR -->
+    <div [ngClass]="{ 'w-20': isCollapsed, 'w-64': !isCollapsed }"
+        class="fixed h-full overflow-hidden transition-all duration-500 bg-gray-100 dark:bg-secondary-dark-bg">
+        <ul class="p-2 absolute w-full">
+            <li class="mb-6">
+                <div class="flex items-center cursor-pointer p-2" (click)="redirectTo('home')">
+                    <img src="../../../assets/img/logo.png" alt="Logo" class="h-8 w-8">
+                    <span class="ml-6 text-xl font-bold text-gray-800 dark:text-gray-200">Poker HL</span>
                 </div>
-                <div [ngClass]="{ 'hidden': isCollapsed }" class="ml-2">
-                    <p class="font-semibold text-gray-800 dark:text-gray-200">Hugo Eribon</p>
-                    <div (click)="redirectTo('settings')"
-                        class="hover:underline text-gray-800 dark:text-gray-200 cursor-pointer">Gérer le compte</div>
+            </li>
+            <li
+                class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer w-full">
+                <div (click)="redirectTo('situations-list-training')" class="flex items-center p-2">
+                    <i class="fa-solid fa-house ml-6 text-lg text-gray-800 dark:text-gray-200"></i>
+                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Entraînement</span>
+                </div>
+            </li>
+            <li>
+                <div (click)="redirectTo('situations-list-training')"
+                    class="flex items-center p-2 transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer">
+                    <i class="fa-solid fa-tasks ml-6 text-lg"></i>
+                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Situations</span>
+                </div>
+            </li>
+            <li>
+                <div (click)="redirectTo('settings')"
+                    class="flex items-center p-2 transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer">
+                    <i class="fa-solid fa-gear ml-6 text-lg"></i>
+                    <span [ngClass]="{ 'hidden': isCollapsed }" class="ml-6">Paramètres</span>
+                </div>
+            </li>
+        </ul>
+        <div class="absolute bottom-0 flex items-center p-4">
+            <div class="dui-avatar">
+                <div class="w-12 rounded-full">
+                    <img src="https://imgs.search.brave.com/QBZ3pjIkCvxe93Tm8VrevCLN6-iloSH7DHAj50TWzws/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzgyLzVj/L2UyLzgyNWNlMjlj/MWZkNTllYzk3Njc2/NzlhY2ZjODM4ZWI5/LmpwZw" />
                 </div>
             </div>
-        </div>
-        <button [ngStyle]="{ left: isCollapsed ? '85px' : '250px' }" (click)="toggleSidebar()"
-            class="fixed top-4 transform -translate-x-1/2 rounded-full w-8 h-8 text-xl transition-all duration-500 text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 border border-gray-400 flex justify-center items-center z-10">
-            <i class="fa-solid fa-angle-left"
-                [ngClass]="{ 'transform rotate-180': isCollapsed, 'transform rotate-0': !isCollapsed }"></i>
-        </button>
-        <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
-            class="flex-grow pt-5 pl-8 pr-8 min-h-screen transition-all duration-500 text-black overflow-hidden">
-            <div class="mx-2 my-10">
-
-                <!-- CONTENT -->
-                <!-- <div
-                    class="mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0"> -->
-                <h3 class="text-4xl font-bold sm:text-6xl md:text-5xl text-gray-800 dark:text-gray-200">
-                    Paramètres</h3>
-                <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left">Ajustez les paramètres selon
-                    vos
-                    préférences.</p>
-                <div class="flex">
-                    <div class="w-1/2 min-w-[500px] mr-6">
-                        <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                            Global</h4>
-                        <div class="flex items-center justify-between w-full mt-2">
-                            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                                Activer le mode sombre</div>
-                            <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
-                        </div>
-                        <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                            Entraînement
-                        </h4>
-                        <div class="flex items-center justify-between w-full mt-2">
-                            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                                Solution lors d'une erreur</div>
-                            <p-inputSwitch [(ngModel)]="displaySolutionOnError"
-                                (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
-                        </div>
-                        <div class="flex items-center justify-between w-full mt-2">
-                            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                                Style des cartes</div>
-                            <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
-                                optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
-                        </div>
-                        <div class="flex items-center justify-between w-full mt-2">
-                            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                                Couleur du tapis de jeu</div>
-                            <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
-                                optionLabel="name" optionValue="code"
-                                (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
-                        </div>
-                    </div>
-                    <div class="w-1/2 min-w-[500px] ml-6">
-                        <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                            Situations
-                        </h4>
-                        <div class="flex items-center justify-between w-full mt-2">
-                            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Nom
-                                de solution multiple auto</div>
-                            <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="flex justify-between w-full">
-                                <button
-                                    class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">Importer</button>
-                                <button
-                                    class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
-                                    (click)="onClickFileExport()">Exporter</button>
-                                <input type="file" #fileImportInput class="hidden" (change)="onClickFileImport($event)"
-                                    multiple>
-                            </div>
-                        </div>
-                        <h4 class="m-0 mt-10 mb-2 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                            Compte</h4>
-                        <div class="flex flex-col items-center">
-                            <div class="flex justify-between w-full">
-                                <button
-                                    class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">Changer
-                                    le mot de passe</button>
-                                <button
-                                    class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
-                                    (click)="apiAuth.signOut()">Se déconnecter</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div [ngClass]="{ 'hidden': isCollapsed }" class="ml-4">
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Hugo Eribon</p>
+                <div (click)="redirectTo('settings')"
+                    class="hover:underline text-gray-800 dark:text-gray-200 cursor-pointer">Gérer le compte</div>
             </div>
-            <!-- </div> -->
-
         </div>
     </div>
+    <button [ngStyle]="{ left: isCollapsed ? '85px' : '250px' }" (click)="toggleSidebar()"
+        class="fixed top-4 transform -translate-x-1/2 rounded-full w-8 h-8 text-xl transition-all duration-500 text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 border border-gray-400 flex justify-center items-center z-10">
+        <i class="fa-solid fa-angle-left"
+            [ngClass]="{ 'transform rotate-180': isCollapsed, 'transform rotate-0': !isCollapsed }"></i>
+    </button>
+
+    <!-- CONTENT -->
+    <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
+        class="flex-grow py-8 px-14 min-h-screen transition-all duration-500 text-black overflow-hidden">
+        <!-- <div
+                    class="mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0"> -->
+        <h3 class="text-4xl font-bold sm:text-6xl md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
+            Paramètres</h3>
+        <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">Ajustez les paramètres selon
+            vos
+            préférences.</p>
+        <div class="flex">
+            <div class="w-1/2 min-w-[500px] mr-6">
+                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                    Global</h4>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                        Activer le mode sombre</div>
+                    <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
+                </div>
+                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                    Entraînement
+                </h4>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                        Solution lors d'une erreur</div>
+                    <p-inputSwitch [(ngModel)]="displaySolutionOnError"
+                        (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+                </div>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                        Style des cartes</div>
+                    <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
+                        optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
+                </div>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                        Couleur du tapis de jeu</div>
+                    <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"
+                        optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
+                </div>
+            </div>
+            <div class="w-1/2 min-w-[500px] ml-6">
+                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    Situations
+                </h4>
+                <div class="flex items-center justify-between w-full mt-2">
+                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Nom
+                        de solution multiple auto</div>
+                    <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="flex justify-between w-full">
+                        <button
+                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">Importer</button>
+                        <button
+                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
+                            (click)="onClickFileExport()">Exporter</button>
+                        <input type="file" #fileImportInput class="hidden" (change)="onClickFileImport($event)"
+                            multiple>
+                    </div>
+                </div>
+                <h4 class="m-0 mt-10 mb-2 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    Compte</h4>
+                <div class="flex flex-col items-center">
+                    <div class="flex justify-between w-full">
+                        <button
+                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">Changer
+                            le mot de passe</button>
+                        <button
+                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
+                            (click)="apiAuth.signOut()">Se déconnecter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
 </section>
