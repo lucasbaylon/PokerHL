@@ -44,8 +44,8 @@
             </div>
         </div>
     </div>
-    <button [ngStyle]="{ left: isCollapsed ? '85px' : '250px' }" (click)="toggleSidebar()"
-        class="fixed top-4 transform -translate-x-1/2 rounded-full w-8 h-8 text-xl transition-all duration-500 text-gray-800 dark:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 border border-gray-400 flex justify-center items-center z-10">
+    <button [ngStyle]="{ left: isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
+        class="flex justify-center items-center z-10 fixed top-4 transform -translate-x-1/2 rounded-full w-8 h-8 text-xl transition-all duration-200 bg-gray-100 dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400">
         <i class="fa-solid fa-angle-left"
             [ngClass]="{ 'transform rotate-180': isCollapsed, 'transform rotate-0': !isCollapsed }"></i>
     </button>
