@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action } from '../interfaces/action';
 import { Situation } from '../interfaces/situation';
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
@@ -68,6 +69,24 @@ export class CommonService {
             return gradient;
         }
         return '';
+    }
+
+    /**
+   * Affiche une notification toast avec SweetAlert2.
+   * 
+   * @param {string} message - Le message à afficher dans la notification.
+   * @param {'success' | 'error' | 'warning' | 'info' | 'question'} [icon='success'] - L'icône à afficher dans la notification. Peut être 'success', 'error', 'warning', 'info' ou 'question'.
+   */
+    showSwalToast(message: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question' = 'success') {
+        Swal.fire({
+            position: 'top-end',
+            toast: true,
+            icon: icon,
+            title: `<span style="font-size: 1.3vw;">${message}</span>`,
+            showConfirmButton: false,
+            width: 'auto',
+            timer: 2500
+        });
     }
 
 }

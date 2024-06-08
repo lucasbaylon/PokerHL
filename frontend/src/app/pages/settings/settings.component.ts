@@ -1,48 +1,46 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SituationService } from '../../services/situation.service';
 import { Router } from '@angular/router';
 import { UserParams } from '../../interfaces/user-params';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import Swal from 'sweetalert2';
+import { CommonService } from './../../services/common.service';
 
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [DropdownModule, InputSwitchModule],
+    imports: [DropdownModule, InputSwitchModule, CommonModule],
     templateUrl: './settings.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SettingsComponent {
 
+    isCollapsed: boolean = false;
     darkMode: boolean = false;
-
     displaySolutionOnError: boolean = true;
-
     highContrastCards: boolean = false;
-
     autoNameMultipleSituation: boolean = false;
+    cardsStyle: { name: string, code: string } = { name: 'Standard', code: 'default' };
+    pokerTableColor!: { name: string, code: string };
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
         { name: 'Contraste', code: 'contrast' },
     ];
-
-    cardsStyle: { name: string, code: string } = { name: 'Standard', code: 'default' };
-
+    
     availablePokerTableColors: any[] = [
         { name: 'Vert', code: 'green' },
         { name: 'Bleu', code: 'blue' },
         { name: 'Rouge', code: 'red' },
     ];
 
-    pokerTableColor!: { name: string, code: string };
-
     constructor(
         public apiAuth: AuthService,
         private apiSituation: SituationService,
-        private router: Router
+        private router: Router,
+        private commonService: CommonService
     ) { }
 
     ngOnInit() {
@@ -92,27 +90,11 @@ export class SettingsComponent {
                     this.apiSituation.importZIPSituationsForUser(blob).subscribe({
                         next: (response) => {
                             console.log(`${response.count} fichier(s) importé(s)`);
-                            Swal.fire({
-                                position: 'top-end',
-                                toast: true,
-                                icon: 'success',
-                                title: `<span style="font-size: 1.3vw;">${response.count} fichier(s) importé(s) avec succès !</span>`,
-                                showConfirmButton: false,
-                                width: 'auto',
-                                timer: 2500
-                            });
+                            this.commonService.showSwalToast(`${response.count} fichier(s) importé(s) avec succès !`);
                         },
                         error: (error) => {
                             console.error('Erreur lors du téléchargement du fichier', error);
-                            Swal.fire({
-                                position: 'top-end',
-                                toast: true,
-                                icon: 'error',
-                                title: '<span style="font-size: 1.3vw;">Échec de l\'import</span>',
-                                showConfirmButton: false,
-                                width: 'auto',
-                                timer: 2500
-                            });
+                            this.commonService.showSwalToast(`Échec de l\'import`, 'error');
                         }
                     });
                 } else if (file.type === 'application/json') {
@@ -121,32 +103,16 @@ export class SettingsComponent {
                     this.apiSituation.importJSONSituationsForUser(file.name, blob).subscribe({
                         next: (response) => {
                             console.log(`Fichier JSON téléchargé avec succès.`);
-                            Swal.fire({
-                                position: 'top-end',
-                                toast: true,
-                                icon: 'success',
-                                title: `<span style="font-size: 1.3vw;">Fichier(s) importé(s) avec succès !</span>`,
-                                showConfirmButton: false,
-                                width: 'auto',
-                                timer: 2500
-                            });
+                            this.commonService.showSwalToast(`Fichier(s) importé(s) avec succès !`);
                         },
                         error: (error) => {
                             console.error('Erreur lors du téléchargement du fichier JSON', error);
-                            Swal.fire({
-                                position: 'top-end',
-                                toast: true,
-                                icon: 'error',
-                                title: '<span style="font-size: 1.3vw;">Échec de l\'import</span>',
-                                showConfirmButton: false,
-                                width: 'auto',
-                                timer: 2500
-                            });
+                            this.commonService.showSwalToast(`Échec de l\'import`, 'error');
                         }
                     });
                 } else {
                     // Afficher un message d'erreur pour les types de fichiers non pris en charge
-                    console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier .zip ou .json.');
+                    console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier zip ou json.');
                 }
             }
         }
@@ -155,15 +121,11 @@ export class SettingsComponent {
 
     onClickFileExport() {
         this.apiSituation.exportSituationsForUser();
-        Swal.fire({
-            position: 'top-end',
-            toast: true,
-            icon: 'success',
-            title: `<span style="font-size: 1.3vw;">Situations exportées !</span>`,
-            showConfirmButton: false,
-            width: 'auto',
-            timer: 2500
-        });
+        this.commonService.showSwalToast(`Situations exportées !`);
+    }
+
+    toggleSidebar() {
+        this.isCollapsed = !this.isCollapsed;
     }
 
 }
