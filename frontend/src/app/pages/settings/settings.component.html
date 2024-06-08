@@ -34,7 +34,8 @@
         <div class="absolute bottom-0 flex items-center p-4">
             <div class="dui-avatar">
                 <div class="w-12 rounded-full">
-                    <img src="https://imgs.search.brave.com/QBZ3pjIkCvxe93Tm8VrevCLN6-iloSH7DHAj50TWzws/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzgyLzVj/L2UyLzgyNWNlMjlj/MWZkNTllYzk3Njc2/NzlhY2ZjODM4ZWI5/LmpwZw" />
+                    <img
+                        src="https://imgs.search.brave.com/QBZ3pjIkCvxe93Tm8VrevCLN6-iloSH7DHAj50TWzws/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzgyLzVj/L2UyLzgyNWNlMjlj/MWZkNTllYzk3Njc2/NzlhY2ZjODM4ZWI5/LmpwZw" />
                 </div>
             </div>
             <div [ngClass]="{ 'hidden': isCollapsed }" class="ml-4">
@@ -53,78 +54,107 @@
     <!-- CONTENT -->
     <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
         class="flex-grow py-8 px-14 min-h-screen transition-all duration-500 text-black overflow-hidden">
-        <!-- <div
-                    class="mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0"> -->
-        <h3 class="text-4xl font-bold sm:text-6xl md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
+        <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
             Paramètres</h3>
-        <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">Ajustez les paramètres selon
-            vos
-            préférences.</p>
+        <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">Ajustez les
+            paramètres selon vos préférences.</p>
         <div class="flex">
-            <div class="w-1/2 min-w-[500px] mr-6">
-                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                    Global</h4>
-                <div class="flex items-center justify-between w-full mt-2">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                        Activer le mode sombre</div>
-                    <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
-                </div>
-                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                    Entraînement
-                </h4>
-                <div class="flex items-center justify-between w-full mt-2">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                        Solution lors d'une erreur</div>
-                    <p-inputSwitch [(ngModel)]="displaySolutionOnError"
-                        (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
-                </div>
-                <div class="flex items-center justify-between w-full mt-2">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                        Style des cartes</div>
-                    <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
-                        optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
-                </div>
-                <div class="flex items-center justify-between w-full mt-2">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                        Couleur du tapis de jeu</div>
-                    <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"
-                        optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
-                </div>
-            </div>
-            <div class="w-1/2 min-w-[500px] ml-6">
-                <h4 class="m-0 mt-10 mb-4 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                    Situations
-                </h4>
-                <div class="flex items-center justify-between w-full mt-2">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Nom
-                        de solution multiple auto</div>
-                    <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="flex justify-between w-full">
-                        <button
-                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">Importer</button>
-                        <button
-                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
-                            (click)="onClickFileExport()">Exporter</button>
-                        <input type="file" #fileImportInput class="hidden" (change)="onClickFileImport($event)"
-                            multiple>
+            <div class="w-1/2 min-w-[400px] mr-6">
+                <div
+                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
+                    <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                        Global</h4>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                            Activer le mode sombre</div>
+                        <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
+                    </div>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                            Désactiver les particules</div>
+                        <p-inputSwitch></p-inputSwitch>
                     </div>
                 </div>
-                <h4 class="m-0 mt-10 mb-2 text-left uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                    Compte</h4>
-                <div class="flex flex-col items-center">
-                    <div class="flex justify-between w-full">
-                        <button
-                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">Changer
-                            le mot de passe</button>
-                        <button
-                            class="mx-auto mt-6 text-lg p-4 tracking-wider w-44 cursor-pointer rounded-md transition-colors bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
-                            (click)="apiAuth.signOut()">Se déconnecter</button>
+                <div
+                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
+                    <h4 class="m-0 mb-4 font-semibold text-left text-lg uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                        Entraînement
+                    </h4>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                            Solution lors d'une erreur</div>
+                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"
+                            (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+                    </div>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                            Style des cartes</div>
+                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
+                            optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
+                    </div>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                            Couleur du tapis de jeu</div>
+                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"
+                            optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="w-1/2 min-w-[400px] ml-6">
+                <div
+                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
+                    <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                        Situations
+                    </h4>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Nom de solution
+                            multiple auto</div>
+                        <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
+                    </div>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Importer des
+                            situations</div>
+                        <div #fileImportInput (change)="onClickFileImport($event)"
+                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                            <i class="fa-solid fa-download mr-4 h-4 w-4"></i>
+                            Importer
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Exporter vos
+                            situations</div>
+                        <div (click)="onClickFileExport()"
+                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                            <i class="fa-solid fa-upload mr-4 h-4 w-4"></i>
+                            Exporter
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
+                    <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                        Compte</h4>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Modifier votre mot de
+                            passe</div>
+                        <div
+                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                            <i class="fa-solid fa-lock mr-4 h-4 w-4"></i>
+                            Modification
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between w-full mt-4">
+                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Se déconnecter de
+                            votre compte</div>
+                        <div (click)="apiAuth.signOut()"
+                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-4 h-4 w-4"></i>
+                            Déconnexion
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- </div> -->
+
 </section>
