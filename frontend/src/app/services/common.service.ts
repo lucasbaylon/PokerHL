@@ -13,6 +13,7 @@ export class CommonService {
         private router: Router
     ) { }
 
+    public isCollapsed: boolean = false;
     empty_situation_obj: Situation = {
         id: undefined,
         name: undefined,

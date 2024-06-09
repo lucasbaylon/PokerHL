@@ -9,6 +9,7 @@ import { SituationsListTrainingComponent } from './pages/situations-list-trainin
 import { TrainingComponent } from './pages/training/training.component';
 import { checkSituationGuard } from './guards/check-situation.guard';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 
 export const routes: Routes = [
     {
@@ -18,12 +19,8 @@ export const routes: Routes = [
     },
     {
         path: '',
+        component: BaseLayoutComponent,
         children: [
-            {
-                path: 'home',
-                component: HomeComponent,
-                canActivate: [authGuard]
-            },
             {
                 path: 'situations-manager',
                 component: SituationManagerComponent,
@@ -47,15 +44,20 @@ export const routes: Routes = [
                 component: SettingsComponent,
                 canActivate: [authGuard]
             },
-            {
-                path: 'login',
-                component: LoginComponent
-            },
-            {
-                path: 'forgot-password',
-                component: ForgotPasswordComponent
-            }
         ]
+    },
+    {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
     },
     {
         path: 'training',

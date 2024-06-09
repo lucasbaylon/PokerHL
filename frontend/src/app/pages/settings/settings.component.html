@@ -1,112 +1,106 @@
-<section class="flex min-h-screen bg-gray-100 dark:bg-main-dark-bg">
-    <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
-        class="flex-grow py-8 px-14 min-h-screen transition-all duration-500 text-black overflow-hidden">
-        <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
-            Paramètres</h3>
-        <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">Ajustez les
-            paramètres selon vos préférences.</p>
-        <div class="flex">
-            <div class="w-1/2 min-w-[400px] mr-6">
-                <div
-                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-50">
-                    <h4
-                        class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                        Global</h4>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                            Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
-                    </div>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                            Désactiver les particules</div>
-                        <p-inputSwitch></p-inputSwitch>
-                    </div>
-                </div>
-                <div
-                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100">
-                    <h4
-                        class="m-0 mb-4 font-semibold text-left text-lg uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
-                        Entraînement
-                    </h4>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                            Solution lors d'une erreur</div>
-                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"
-                            (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
-                    </div>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                            Style des cartes</div>
-                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
-                            optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
-                    </div>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
-                            Couleur du tapis de jeu</div>
-                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
-                            optionLabel="name" optionValue="code"
-                            (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
-                    </div>
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
+    Paramètres</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">Ajustez les
+    paramètres selon vos préférences.</p>
+<div class="flex">
+    <div class="w-1/2 min-w-[400px] mr-6">
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-50">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                Global</h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                    Activer le mode sombre</div>
+                <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                    Désactiver les particules</div>
+                <p-inputSwitch></p-inputSwitch>
+            </div>
+        </div>
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100">
+            <h4
+                class="m-0 mb-4 font-semibold text-left text-lg uppercase text-gray-800 dark:text-gray-300 tracking-wider ">
+                Entraînement
+            </h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                    Solution lors d'une erreur</div>
+                <p-inputSwitch [(ngModel)]="displaySolutionOnError"
+                    (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                    Style des cartes</div>
+                <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
+                    optionValue="code" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider ">
+                    Couleur du tapis de jeu</div>
+                <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors" optionLabel="name"
+                    optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="w-1/2 min-w-[400px] ml-6">
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Situations
+            </h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Nom de solution
+                    multiple auto</div>
+                <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Importer des
+                    situations</div>
+                <div #fileImportInput (change)="onClickFileImport($event)"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    <i class="fa-solid fa-download mr-4 h-4 w-4"></i>
+                    Importer
                 </div>
             </div>
-            <div class="w-1/2 min-w-[400px] ml-6">
-                <div
-                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100">
-                    <h4
-                        class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                        Situations
-                    </h4>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Nom de solution
-                            multiple auto</div>
-                        <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
-                    </div>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Importer des
-                            situations</div>
-                        <div #fileImportInput (change)="onClickFileImport($event)"
-                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                            <i class="fa-solid fa-download mr-4 h-4 w-4"></i>
-                            Importer
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Exporter vos
-                            situations</div>
-                        <div (click)="onClickFileExport()"
-                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                            <i class="fa-solid fa-upload mr-4 h-4 w-4"></i>
-                            Exporter
-                        </div>
-                    </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Exporter vos
+                    situations</div>
+                <div (click)="onClickFileExport()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    <i class="fa-solid fa-upload mr-4 h-4 w-4"></i>
+                    Exporter
                 </div>
+            </div>
+        </div>
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Compte</h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Modifier votre
+                    mot de
+                    passe</div>
                 <div
-                    class="mx-auto mt-10 p-5 rounded-lg shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150">
-                    <h4
-                        class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                        Compte</h4>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Modifier votre
-                            mot de
-                            passe</div>
-                        <div
-                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                            <i class="fa-solid fa-rotate mr-4 h-4 w-4"></i>
-                            Modification
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between w-full mt-4">
-                        <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Se déconnecter de
-                            votre compte</div>
-                        <div (click)="apiAuth.signOut()"
-                            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                            <i class="fa-solid fa-arrow-right-from-bracket mr-4 h-4 w-4"></i>
-                            Déconnexion
-                        </div>
-                    </div>
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    <i class="fa-solid fa-rotate mr-4 h-4 w-4"></i>
+                    Modification
+                </div>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">Se déconnecter de
+                    votre compte</div>
+                <div (click)="apiAuth.signOut()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    <i class="fa-solid fa-arrow-right-from-bracket mr-4 h-4 w-4"></i>
+                    Déconnexion
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>

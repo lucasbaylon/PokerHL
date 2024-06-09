@@ -14,13 +14,11 @@ export class SidebarComponent {
     protected commonService: CommonService,
   ) { }
 
-  public isCollapsed: boolean = false;
-
   /**
   * Inverse la valeur de la propriété `isCollapsed`,
   * permettant d'afficher ou de masquer la barre latérale.
   */
   toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
+    this.commonService.isCollapsed = !this.commonService.isCollapsed;
   }
 }
