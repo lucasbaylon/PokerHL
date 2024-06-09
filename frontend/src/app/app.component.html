@@ -3,7 +3,5 @@
 @if (authService.isLoading | async) {
     <app-loading></app-loading>
 } @else {
-    <div class="main">
-        <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
 }
