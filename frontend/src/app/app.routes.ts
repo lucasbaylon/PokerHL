@@ -11,6 +11,7 @@ import { checkSituationGuard } from './guards/check-situation.guard';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { SelectTrainingModeComponent } from './pages/select-training-mode/select-training-mode.component';
 
 export const routes: Routes = [
     {
@@ -43,6 +44,11 @@ export const routes: Routes = [
             {
                 path: 'settings',
                 component: SettingsComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'select-training-mode',
+                component: SelectTrainingModeComponent,
                 canActivate: [authGuard]
             },
             {
