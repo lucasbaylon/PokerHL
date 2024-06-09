@@ -26,8 +26,6 @@ export class SettingsComponent {
     displaySolutionOnError: boolean = true;
     highContrastCards: boolean = false;
     autoNameMultipleSituation: boolean = false;
-    cardsStyle: { name: string, code: string } = { name: 'Standard', code: 'default' };
-    pokerTableColor!: { name: string, code: string };
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
@@ -40,8 +38,13 @@ export class SettingsComponent {
         { name: 'Rouge', code: 'red' },
     ];
 
+    cardsStyle: { name: string, code: string } = this.availableCardsStyles[0];
+    pokerTableColor: { name: string, code: string } = this.availablePokerTableColors[0];
+
     ngOnInit() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        console.log(this.pokerTableColor);
+        console.log(this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor));
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
@@ -62,17 +65,19 @@ export class SettingsComponent {
 
     onChangeDropdownCardsStyle(e: any) {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.cardStyle = e.value;
+        userParams.cardStyle = e.value.code;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
     onChangeDropdownTableColor(e: any) {
+        console.log(e);
         const userParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.playmatColor = e.value;
+        userParams.playmatColor = e.value.code;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
     onClickFileImport(event: any) {
+        console.log("test");
         const fileList = event.target.files;
         for (const file of fileList) {
             if (file) {

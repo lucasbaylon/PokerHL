@@ -63,7 +63,8 @@ export const routes: Routes = [
         path: 'training',
         component: TrainingComponent,
         canActivate: [
-            checkSituationGuard
+            checkSituationGuard,
+            authGuard
         ]
     }
 ];
