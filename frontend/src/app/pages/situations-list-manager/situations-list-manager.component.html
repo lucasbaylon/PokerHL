@@ -42,9 +42,8 @@
                 <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md"></th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-situation let-i="rowIndex"
-            class="dark:text-gray-200 dark:bg-secondary-dark-bg">
-            <tr>
+        <ng-template pTemplate="body" let-situation let-i="rowIndex">
+            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
                 <td>
                     {{ situation.name }}
                 </td>
