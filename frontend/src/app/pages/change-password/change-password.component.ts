@@ -19,17 +19,21 @@ export class ChangePasswordComponent {
         private router: Router
     ) { }
 
-    passwordFieldType: string = 'password';
+    passwordFieldTypeOld: string = 'password';
+    passwordFieldTypeNew: string = 'password';
+    passwordFieldTypeConfirm: string = 'password';
     oldPassword: string = '';
     newPassword: string = '';
     newPasswordConfirmation: string = '';
 
-    /**
-     * Cette méthode change le type du champ de mot de passe entre 'password' et 'text',
-     * permettant de masquer ou afficher le mot de passe.
-     */
-    togglePasswordVisibility(): void {
-        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    togglePasswordVisibility(field: string): void {
+        if (field === 'old') {
+            this.passwordFieldTypeOld = this.passwordFieldTypeOld === 'password' ? 'text' : 'password';
+        } else if (field === 'new') {
+            this.passwordFieldTypeNew = this.passwordFieldTypeNew === 'password' ? 'text' : 'password';
+        } else if (field === 'confirm') {
+            this.passwordFieldTypeConfirm = this.passwordFieldTypeConfirm === 'password' ? 'text' : 'password';
+        }
     }
 
     changePassword() {
@@ -48,10 +52,10 @@ export class ChangePasswordComponent {
                 this.commonService.showSwalToast(`Mot de passe changé avec succès !`);
                 this.router.navigate(['settings']);
             })
-            .catch((error) => {
-                let errorMessage = this.getErrorMessage(error.code);
-                this.commonService.showSwalToast(`Échec du changement de mot de passe: ${errorMessage}`, 'error');
-            });
+                .catch((error) => {
+                    let errorMessage = this.getErrorMessage(error.code);
+                    this.commonService.showSwalToast(`Échec du changement de mot de passe: ${errorMessage}`, 'error');
+                });
         }).catch(error => {
             let errorMessage = this.getErrorMessage(error.code);
             this.commonService.showSwalToast(`Échec du changement de mot de passe: ${errorMessage}`, 'error');
