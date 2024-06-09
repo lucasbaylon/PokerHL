@@ -1,60 +1,4 @@
 <section class="flex min-h-screen bg-gray-100 dark:bg-main-dark-bg">
-    <!-- SIDEBAR -->
-    <div [ngClass]="{ 'w-20': isCollapsed, 'w-64': !isCollapsed }"
-        class="fixed h-full whitespace-nowrap overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
-        <ul class="absolute w-full">
-            <li class="mb-6 ml-3 mt-4 w-fit">
-                <div (click)="redirectTo('home')"
-                    class="flex items-center cursor-pointer p-3 ">
-                    <img src="../../../assets/img/logo.png" alt="Logo" class="h-8 w-8">
-                    <span class="ml-4 text-xl font-bold text-gray-800 dark:text-gray-200">Poker HL</span>
-                </div>
-            </li>
-            <li
-                class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
-                <div (click)="redirectTo('situations-list-training')" class="flex items-center justify-start px-3 py-4">
-                    <i class="fa-solid fa-play ml-5 text-xl text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'ml-8': isCollapsed, 'ml-6': !isCollapsed }" class="flex items-center justify-center text-md transition-all duration-500">Entraînement</span>
-                </div>
-            </li>
-            <li
-                class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
-                <div (click)="redirectTo('situations-list-manager')" class="flex items-center justify-start px-3 py-4">
-                    <i class="fa-solid fa-tasks ml-5 text-lg text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'ml-8': isCollapsed, 'ml-6': !isCollapsed }" class="flex items-center justify-center text-md transition-all duration-500">Situations</span>
-                </div>
-            </li>
-            <li
-                class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
-                <div (click)="redirectTo('settings')" class="flex items-center justify-start px-3 py-4">
-                    <i class="fa-solid fa-gear ml-5 text-lg text-gray-800 dark:text-gray-200"></i>
-                    <span [ngClass]="{ 'ml-8': isCollapsed, 'ml-6': !isCollapsed }" class="flex items-center justify-center text-md transition-all duration-500">Paramètres</span>
-                </div>
-            </li>
-        </ul>
-        <div class="absolute bottom-0 flex items-center p-4">
-            <div class="dui-avatar">
-                <div class="w-12 rounded-full">
-                    <img
-                        src="https://imgs.search.brave.com/QBZ3pjIkCvxe93Tm8VrevCLN6-iloSH7DHAj50TWzws/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzgyLzVj/L2UyLzgyNWNlMjlj/MWZkNTllYzk3Njc2/NzlhY2ZjODM4ZWI5/LmpwZw" />
-                </div>
-            </div>
-            <div [ngClass]="{ 'whitespace-nowrap overflow-hidden': isCollapsed }" class="ml-4">
-                <p class="font-semibold text-gray-800 dark:text-gray-200">Hugo Eribon</p>
-                <div (click)="redirectTo('settings')"
-                    class="hover:underline text-gray-800 dark:text-gray-200 cursor-pointer">Gérer le compte</div>
-            </div>
-        </div>
-    </div>
-    <button [ngStyle]="{ left: isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
-        class="flex justify-center items-center z-10 fixed top-7 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400">
-        <i class="fa-solid fa-angle-left text-base"
-            [ngClass]="{ 'transform rotate-180': isCollapsed, 'transform rotate-0': !isCollapsed }"></i>
-    </button>
-
-
-
-    <!-- CONTENT -->
     <div [ngClass]="{ 'ml-20': isCollapsed, 'ml-64': !isCollapsed }"
         class="flex-grow py-8 px-14 min-h-screen transition-all duration-500 text-black overflow-hidden">
         <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
@@ -165,5 +109,4 @@
             </div>
         </div>
     </div>
-
 </section>

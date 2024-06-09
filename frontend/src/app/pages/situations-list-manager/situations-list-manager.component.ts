@@ -27,7 +27,7 @@ export class SituationsListManagerComponent {
     constructor(
         private router: Router,
         private apiSituation: SituationService,
-        private commonService: CommonService
+        protected commonService: CommonService
     ) { }
 
     @HostListener('window:resize', ['$event'])
@@ -50,10 +50,6 @@ export class SituationsListManagerComponent {
         if (window.innerHeight <= 1080) {
             this.nbRowsPerPage = 7;
         }
-    }
-
-    redirectTo(page: string) {
-        this.router.navigate([page]);
     }
 
     editSituation(id: string) {

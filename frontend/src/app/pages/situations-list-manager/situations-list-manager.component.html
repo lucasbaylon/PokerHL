@@ -1,6 +1,3 @@
-<ion-button class="backArrow" (click)="redirectTo('home')">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-button>
 <h1>Gérer les situations</h1>
 <p>Supprimez, modifiez ou créez des situations</p>
 <div class="container">
@@ -85,4 +82,4 @@
         </ng-template>
     </p-table>
 </div>
-<button class="fill" (click)="redirectTo('situations-manager')">Créer une nouvelle situation</button>
+<button class="fill" (click)="commonService.redirectTo('situations-manager')">Créer une nouvelle situation</button>

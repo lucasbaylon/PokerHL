@@ -98,10 +98,6 @@ export class SituationManagerComponent {
         this.situationSubscription.unsubscribe();
     }
 
-    redirectTo(page: string) {
-        this.router.navigate([page]);
-    }
-
     getRandomColor(): string {
         let colorList = ["#d80c05", "#ff9100", "#7a5a00", "#3f7a89", "#96c582", "#303030", "#1c51ff", "#00aeff", "#8400ff", "#e284ff"];
         const colorActionsSituation = this.situation_obj.actions.map(action => action.color);

@@ -2,7 +2,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SituationService } from '../../services/situation.service';
-import { Router } from '@angular/router';
 import { UserParams } from '../../interfaces/user-params';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -17,7 +16,12 @@ import { CommonService } from './../../services/common.service';
 })
 export class SettingsComponent {
 
-    isCollapsed: boolean = false;
+    constructor(
+        public apiAuth: AuthService,
+        private apiSituation: SituationService,
+        private commonService: CommonService
+    ) { }
+
     darkMode: boolean = false;
     displaySolutionOnError: boolean = true;
     highContrastCards: boolean = false;
@@ -36,23 +40,12 @@ export class SettingsComponent {
         { name: 'Rouge', code: 'red' },
     ];
 
-    constructor(
-        public apiAuth: AuthService,
-        private apiSituation: SituationService,
-        private router: Router,
-        private commonService: CommonService
-    ) { }
-
     ngOnInit() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
         userParams.darkMode ? this.darkMode = userParams.darkMode : this.darkMode = false;
-    }
-
-    redirectTo(page: string) {
-        this.router.navigate([page]);
     }
 
     onChangeDisplaySolutionOnError() {
@@ -123,9 +116,4 @@ export class SettingsComponent {
         this.apiSituation.exportSituationsForUser();
         this.commonService.showSwalToast(`Situations exportées !`);
     }
-
-    toggleSidebar() {
-        this.isCollapsed = !this.isCollapsed;
-    }
-
 }

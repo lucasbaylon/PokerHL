@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Action } from '../interfaces/action';
 import { Situation } from '../interfaces/situation';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CommonService {
+
+    constructor(
+        private router: Router
+    ) { }
 
     empty_situation_obj: Situation = {
         id: undefined,
@@ -52,31 +57,44 @@ export class CommonService {
         ]
     }
 
-    constructor() { }
-
+    /**
+    * Crée un dégradé linéaire pour l'arrière-plan d'une cellule
+    * en fonction du type d'action (unique ou mixte) et des couleurs associées.
+    *
+    * @param {Action} action - L'action pour laquelle l'arrière-plan est généré.
+    * @param {Action[]} actionSituations - La liste des actions pour récupérer les couleurs associées.
+    * @returns {string} - La chaîne CSS représentant le dégradé de l'arrière-plan de la cellule.
+    */
     cellBackground(action: Action, actionSituations: Action[]) {
         if (action.type === "unique") {
             return `linear-gradient(to right, ${action.color} 0%, ${action.color} 100%)`;
-        } else if (action.type === "mixed") {
-            let gradient = "linear-gradient(to right";
-            let total = 0;
-            action.colorList!.map((d: any) => {
-                let goodColor = actionSituations.filter(action => action.id === d.color)[0];
-                total += d.percent;
-                gradient += `, ${goodColor.color} ${total - d.percent}%, ${goodColor.color} ${total}%`
-            });
-            gradient += ")";
-            return gradient;
+        } else if (action.type === "mixed" && action.colorList) {
+            const gradientStops = action.colorList.map(d => {
+                const goodColor = actionSituations.find(situation => situation.id === d.color);
+                return goodColor ? `${goodColor.color} ${d.percent}%` : '';
+            }).filter(stop => stop !== '').join(', ');
+
+            return `linear-gradient(to right, ${gradientStops})`;
         }
         return '';
     }
 
+
     /**
-   * Affiche une notification toast avec SweetAlert2.
-   * 
-   * @param {string} message - Le message à afficher dans la notification.
-   * @param {'success' | 'error' | 'warning' | 'info' | 'question'} [icon='success'] - L'icône à afficher dans la notification. Peut être 'success', 'error', 'warning', 'info' ou 'question'.
-   */
+     * Utilise le routeur pour naviguer vers une page donnée.
+     *
+     * @param {string} page - Le chemin de la page vers laquelle rediriger.
+     */
+    redirectTo(page: string) {
+        this.router.navigate([page]);
+    }
+
+    /**
+     * Affiche une notification toast avec SweetAlert2.
+     * 
+     * @param {string} message - Le message à afficher dans la notification.
+     * @param {'success' | 'error' | 'warning' | 'info' | 'question'} [icon='success'] - L'icône à afficher dans la notification. Peut être 'success', 'error', 'warning', 'info' ou 'question'.
+     */
     showSwalToast(message: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question' = 'success') {
         Swal.fire({
             position: 'top-end',

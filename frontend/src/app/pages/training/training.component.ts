@@ -75,10 +75,6 @@ export class TrainingComponent {
         return array[randomIndex];
     }
 
-    redirectTo(page: string) {
-        this.router.navigate([page]);
-    }
-
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;

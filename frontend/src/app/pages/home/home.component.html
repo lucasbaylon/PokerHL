@@ -8,17 +8,17 @@
                 et élever votre jeu vers de nouveaux sommets.
             </p>
             <div class="flex flex-col gap-5 min-[400px]:flex-row">
-                <div (click)="redirectTo('situations-list-training')"
+                <div (click)="commonService.redirectTo('situations-list-training')"
                     class="animate-appear animation-delay-50 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-play mr-2 h-4 w-4"></i>
                     Entraînement
                 </div>
-                <div (click)="redirectTo('situations-list-manager')"
+                <div (click)="commonService.redirectTo('situations-list-manager')"
                     class="animate-appear animation-delay-100 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-tasks mr-3 h-4 w-4"></i>
                     Situations
                 </div>
-                <div (click)="redirectTo('settings')"
+                <div (click)="commonService.redirectTo('settings')"
                     class="animate-appear animation-delay-150 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-cog mr-3 h-4 w-4"></i>
                     Paramètres

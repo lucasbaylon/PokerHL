@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-home',
@@ -9,10 +9,8 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
 
-    constructor(private router: Router) { }
-
-    redirectTo(page: string) {
-        this.router.navigate([page]);
-    }
+    constructor(
+        protected commonService: CommonService,
+    ) { }
 
 }
