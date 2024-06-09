@@ -1,13 +1,12 @@
 import { NgClass } from '@angular/common';
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
   imports: [NgClass, FormsModule],
-  
-templateUrl: './change-password.component.html',
+  templateUrl: './change-password.component.html',
 })
 export class ChangePasswordComponent {
 
