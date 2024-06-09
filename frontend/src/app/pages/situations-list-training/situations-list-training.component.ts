@@ -6,13 +6,13 @@ import Swal from 'sweetalert2';
 import { TableModule } from 'primeng/table';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
     selector: 'app-situations-list-training',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule],
     templateUrl: './situations-list-training.component.html',
-    styleUrl: './situations-list-training.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SituationsListTrainingComponent {

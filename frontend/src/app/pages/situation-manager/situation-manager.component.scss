@@ -14,30 +14,6 @@
     animation-duration: 1s;
 }
 
-ion-icon {
-    pointer-events: none;
-}
-
-ion-button {
-    cursor: pointer;
-    width: fit-content;
-    height: fit-content;
-    padding: 0;
-    margin: 0;
-}
-
-h1 {
-    font-weight: 300;
-    letter-spacing: 2px;
-    font-size: 3em;
-    margin: auto;
-    margin-top: 2%;
-}
-
-h2 {
-    margin-top: 10px;
-}
-
 .case-definition {
     display: flex;
     align-items: center;
@@ -46,61 +22,6 @@ h2 {
     margin: 60px auto;
     animation-delay: 0.5s;
 }
-
-/********************************* Back Arrow *********************************/
-
-.backArrow {
-    position: absolute;
-    font-size: 3.5em;
-    left: 1.5%;
-    top: 1.5%;
-    cursor: pointer;
-    transition: 0.25s linear;
-    -webkit-transition: 0.25s linear;
-    -moz-transition: 0.25s linear;
-    -ms-transition: 0.25s linear;
-    -o-transition: 0.25s linear;
-    z-index: 1;
-}
-
-.backArrow:hover {
-    -moz-animation: bounce 2s infinite;
-    -webkit-animation: bounce 2s infinite;
-    animation: bounce 2s infinite;
-}
-
-.backArrow:active {
-    scale: (0.8);
-    -moz-animation: none !important;
-    -webkit-animation: none !important;
-    animation: none !important;
-    transition: 0.1s linear;
-    -webkit-transition: 0.1s linear;
-    -moz-transition: 0.1s linear;
-    -ms-transition: 0.1s linear;
-    -o-transition: 0.1s linear;
-}
-
-@keyframes bounce {
-
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0);
-    }
-
-    40% {
-        transform: translateX(-10px);
-    }
-
-    60% {
-        transform: translateX(-5px);
-    }
-}
-
-/********************************* Boutons *********************************/
 
 $colors: (
     fill: #fff,
