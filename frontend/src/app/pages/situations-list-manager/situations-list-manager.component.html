@@ -1,49 +1,51 @@
 <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
     Gestion des situations</h3>
-<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">Supprimez, modifiez ou créez des situations.</p>
-<div class="container">
+<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
+    créez des situations.</p>
+<div class="animate-appear opacity-0 animation-delay-50 w-10/12 min-w-[525px] mx-auto shadow-lg">
     <p-table [value]="situationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
         [paginator]="true">
         <ng-template pTemplate="header">
-            <tr class="animate__animated animate__fadeIn">
-                <th>
-                    <div class="flex align-items-center">
+            <tr>
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
+                    <div class="flex items-center">
                         Nom
-                        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="name" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Nb BB minimum
-                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"></p-columnFilter>
+                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
+                            class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Nb joueurs
-                        <p-columnFilter type="numeric" field="nbPlayer" display="menu"></p-columnFilter>
+                        <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Joueur bouton
-                        <p-columnFilter type="text" field="dealer" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="dealer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Niveau
-                        <p-columnFilter type="text" field="opponentLevel" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th style="width: 4.5rem"></th>
-                <th style="width: 4.5rem"></th>
-                <th style="width: 4.5rem"></th>
+                <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg"></th>
+                <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg"></th>
+                <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md"></th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-situation let-i="rowIndex">
-            <tr class="animate__animated animate__fadeIn"
-                [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.1 + 's'">
+        <ng-template pTemplate="body" let-situation let-i="rowIndex"
+            class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+            <tr>
                 <td>
                     {{ situation.name }}
                 </td>
@@ -60,27 +62,28 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td>
-                    <ion-button class="icon-div" (click)="duplicateSituation(situation.id)">
-                        <ion-icon name="copy-outline"></ion-icon>
-                    </ion-button>
+                    <i class="fa-solid fa-clone" (click)="duplicateSituation(situation.id)"></i>
                 </td>
                 <td>
-                    <ion-button class="icon-div" (click)="editSituation(situation.id)">
-                        <ion-icon name="pencil-outline"></ion-icon>
-                    </ion-button>
+                    <i class="fa-solid fa-pencil" (click)="editSituation(situation.id)"></i>
                 </td>
                 <td>
-                    <ion-button class="icon-div" (click)="removeSituation(situation.id)">
-                        <ion-icon name="trash-outline"></ion-icon>
-                    </ion-button>
+                    <i class="fa-solid fa-trash-can" (click)="removeSituation(situation.id)"></i>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
-            <tr>
+            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
                 <td colspan="8">Aucune situation trouvée.</td>
             </tr>
         </ng-template>
     </p-table>
+    <p-paginator class="rounded-b-md border-t-0"></p-paginator>
 </div>
-<button class="fill" (click)="commonService.redirectTo('situations-manager')">Créer une nouvelle situation</button>
+<div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-100">
+    <div (click)="commonService.redirectTo('situations-manager')"
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+        <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>
+        Créer une nouvelle situation
+    </div>
+</div>
