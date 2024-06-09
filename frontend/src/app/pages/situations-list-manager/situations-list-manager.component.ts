@@ -6,14 +6,14 @@ import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { TableModule } from 'primeng/table';
 import { CommonService } from './../../services/common.service';
+import { PaginatorModule } from 'primeng/paginator';
 import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule],
     templateUrl: './situations-list-manager.component.html',
-    styleUrl: './situations-list-manager.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SituationsListManagerComponent {
