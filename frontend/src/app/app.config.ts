@@ -6,7 +6,6 @@ import { routes } from './app.routes';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { MessageService } from 'primeng/api';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
@@ -40,6 +39,5 @@ export const appConfig: ApplicationConfig = {
         })),
         provideAuth(() => getAuth()),
         importProvidersFrom(SocketIoModule.forRoot(config)),
-        MessageService
     ]
 };
