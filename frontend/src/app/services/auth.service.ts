@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword, UserCredential } from '@angular/fire/auth';
 import { CommonService } from './../services/common.service';
 
 @Injectable({
@@ -82,5 +82,24 @@ export class AuthService {
 
     sendPasswordResetEmail(email: string) {
         return sendPasswordResetEmail(this.auth, email);
+    }
+
+    reauthenticate(currentPassword: string): Promise<UserCredential> {
+        const user = this.getUser();
+        if (user && user.email) {
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            return reauthenticateWithCredential(user, credential);
+        } else {
+            return Promise.reject('No user logged in');
+        }
+    }
+
+    async changePassword(newPassword: string): Promise<void> {
+        const user = this.getUser();
+        if (user) {
+            return updatePassword(user, newPassword);
+        } else {
+            return Promise.reject('No user logged in');
+        }
     }
 }
