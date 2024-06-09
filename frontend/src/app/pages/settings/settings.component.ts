@@ -17,9 +17,9 @@ import { FormsModule } from '@angular/forms';
 export class SettingsComponent {
 
     constructor(
-        public apiAuth: AuthService,
+        protected apiAuth: AuthService,
         private apiSituation: SituationService,
-        private commonService: CommonService
+        protected commonService: CommonService
     ) { }
 
     darkMode: boolean = false;
