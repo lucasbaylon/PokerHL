@@ -68,14 +68,12 @@ export class SettingsComponent {
     }
 
     onChangeDropdownTableColor(e: any) {
-        console.log(e);
         const userParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.playmatColor = e.value.code;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
     onClickFileImport(event: any) {
-        console.log("test");
         const fileList = event.target.files;
         for (const file of fileList) {
             if (file) {
