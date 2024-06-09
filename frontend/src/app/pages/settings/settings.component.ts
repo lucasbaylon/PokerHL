@@ -1,16 +1,16 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SituationService } from '../../services/situation.service';
 import { UserParams } from '../../interfaces/user-params';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CommonService } from './../../services/common.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [DropdownModule, InputSwitchModule, CommonModule],
+    imports: [DropdownModule, InputSwitchModule, FormsModule],
     templateUrl: './settings.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -45,7 +45,7 @@ export class SettingsComponent {
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
-        userParams.darkMode ? this.darkMode = userParams.darkMode : this.darkMode = false;
+        localStorage.getItem('theme') === 'light' ? this.darkMode = false : this.darkMode = true;
     }
 
     onChangeDisplaySolutionOnError() {
@@ -55,9 +55,9 @@ export class SettingsComponent {
     }
 
     onChangeDarkMode() {
-        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.darkMode = this.darkMode;
-        localStorage.setItem('userParams', JSON.stringify(userParams));
+        const htmlElement = document.documentElement;
+        this.darkMode ? htmlElement.classList.add('dark') : htmlElement.classList.remove('dark');
+        localStorage.setItem('theme', this.darkMode ? "dark" : "light");
     }
 
     onChangeDropdownCardsStyle(e: any) {

@@ -22,6 +22,13 @@ export class AppComponent {
         this.translateService.addLangs(['fr']);
         this.translateService.setDefaultLang('fr');
         this.translate('fr');
+
+        let theme = localStorage.getItem('theme');
+        if (theme !== "dark" && theme !== "light") {
+            localStorage.setItem('theme', 'light');
+            theme = 'light';
+        }
+        document.documentElement.classList.add(theme);
     }
 
     translate(lang: string) {
