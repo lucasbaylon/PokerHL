@@ -19,11 +19,15 @@ export class SituationsListTrainingComponent {
 
     situationList: Situation[] = [];
 
+    paginatedSituationList: any[] = [];
+
     selectedSituations: Situation[] = [];
 
     checkedSituations: number[] = [];
 
     nbRowsPerPage = 10;
+
+    totalRecords: number = 0;
 
     constructor(
         private router: Router,
@@ -42,6 +46,10 @@ export class SituationsListTrainingComponent {
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data;
+
+            this.loadPageData(0, this.nbRowsPerPage);
+
+            this.totalRecords = this.situationList.length;
         });
 
         this.apiSituation.getSituations();
@@ -66,6 +74,14 @@ export class SituationsListTrainingComponent {
         } else {
             this.router.navigate(['training', { situationList: JSON.stringify(this.selectedSituations) }]);
         }
+    }
+
+    loadPageData(first: number, rows: number) {
+        this.paginatedSituationList = this.situationList.slice(first, first + rows);
+    }
+
+    onPageChange(event: any) {
+        this.loadPageData(event.first, event.rows);
     }
 
 }

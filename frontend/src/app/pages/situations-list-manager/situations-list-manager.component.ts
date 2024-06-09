@@ -20,7 +20,11 @@ export class SituationsListManagerComponent {
 
     situationList: Situation[] = [];
 
+    paginatedSituationList: any[] = [];
+
     nbRowsPerPage = 10;
+
+    totalRecords: number = 0;
 
     paginatorAnimationDelay = "0s"
 
@@ -43,6 +47,10 @@ export class SituationsListManagerComponent {
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data;
+
+            this.loadPageData(0, this.nbRowsPerPage);
+
+            this.totalRecords = this.situationList.length;
         });
 
         this.apiSituation.getSituations();
@@ -76,6 +84,14 @@ export class SituationsListManagerComponent {
                 this.commonService.showSwalToast(`Situation supprimée !`);
             }
         });
+    }
+
+    loadPageData(first: number, rows: number) {
+        this.paginatedSituationList = this.situationList.slice(first, first + rows);
+    }
+
+    onPageChange(event: any) {
+        this.loadPageData(event.first, event.rows);
     }
 
 }
