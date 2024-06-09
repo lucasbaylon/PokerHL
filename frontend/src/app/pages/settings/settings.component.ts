@@ -43,8 +43,6 @@ export class SettingsComponent {
 
     ngOnInit() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        console.log(this.pokerTableColor);
-        console.log(this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor));
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
