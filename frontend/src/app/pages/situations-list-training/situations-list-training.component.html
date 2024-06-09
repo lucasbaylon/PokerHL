@@ -1,48 +1,50 @@
-<h1>Débuter une session d'entraînement</h1>
-<p>Sélectionnez les situations sur lesquelles vous souhaitez vous entraîner</p>
-<div class="container">
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
+    Débuter une session d'entraînement</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Sélectionnez les
+    situations sur lesquelles vous souhaitez vous entraîner.</p>
+<div class="animate-appear opacity-0 animation-delay-50 w-11/12 min-w-[525px] mx-auto shadow-lg">
     <p-table [value]="situationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
-        [paginator]="true" [(selection)]="selectedSituations">
+        [(selection)]="selectedSituations">
         <ng-template pTemplate="header">
-            <tr class="animate__animated animate__fadeIn">
-                <th>
-                    <div class="flex align-items-center">
+            <tr>
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
+                    <div class="flex items-center">
                         Nom
-                        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="name" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Nb BB minimum
-                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"></p-columnFilter>
+                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
+                            class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Nb joueurs
-                        <p-columnFilter type="numeric" field="nbPlayer" display="menu"></p-columnFilter>
+                        <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
-                        Joueur Bouton
-                        <p-columnFilter type="text" field="dealer" display="menu"></p-columnFilter>
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
+                        Joueur bouton
+                        <p-columnFilter type="text" field="dealer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                    <div class="flex items-center">
                         Niveau
-                        <p-columnFilter type="text" field="opponentLevel" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th style="width: 4rem">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
-            <tr class="animate__animated animate__fadeIn"
-                [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.075 + 's'">
+            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
                 <td>
                     {{ situation.name }}
                 </td>
@@ -64,5 +66,14 @@
             </tr>
         </ng-template>
     </p-table>
+    <p-paginator locale="fr-FR" styleClass="rounded-b-md rounded-t-none dark:text-gray-200 dark:bg-secondary-dark-bg"
+        [totalRecords]="30" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Page {first} - {last} sur {totalRecords}" />
 </div>
-<button class="fill" (click)="onStartTrainingButton()">Lancer l'entraînement</button>
+<div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-100">
+    <div (click)="onStartTrainingButton()"
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+        <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
+        Lancer l'entraînement
+    </div>
+</div>

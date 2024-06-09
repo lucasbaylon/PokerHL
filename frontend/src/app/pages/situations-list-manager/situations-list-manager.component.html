@@ -2,36 +2,36 @@
     Gestion des situations</h3>
 <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
     créez des situations.</p>
-<div class="animate-appear opacity-0 animation-delay-50 w-10/12 min-w-[525px] mx-auto shadow-lg">
+<div class="animate-appear opacity-0 animation-delay-50 w-11/12 min-w-[525px] mx-auto shadow-lg">
     <p-table [value]="situationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true">
         <ng-template pTemplate="header">
-            <tr>
+            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
                 <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
                     <div class="flex items-center">
                         Nom
                         <p-columnFilter type="text" field="name" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
                     <div class="flex items-center">
                         Nb BB minimum
                         <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
                             class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
                     <div class="flex items-center">
                         Nb joueurs
                         <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
                     <div class="flex items-center">
                         Joueur bouton
                         <p-columnFilter type="text" field="dealer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
                     <div class="flex items-center">
                         Niveau
                         <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-1"></p-columnFilter>
@@ -60,13 +60,13 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td>
-                    <i class="fa-solid fa-clone" (click)="duplicateSituation(situation.id)"></i>
+                    <i class="fa-solid fa-clone cursor-pointer p-3" (click)="duplicateSituation(situation.id)"></i>
                 </td>
                 <td>
-                    <i class="fa-solid fa-pencil" (click)="editSituation(situation.id)"></i>
+                    <i class="fa-solid fa-pencil cursor-pointer p-3" (click)="editSituation(situation.id)"></i>
                 </td>
                 <td>
-                    <i class="fa-solid fa-trash-can" (click)="removeSituation(situation.id)"></i>
+                    <i class="fa-solid fa-trash-can cursor-pointer p-3" (click)="removeSituation(situation.id)"></i>
                 </td>
             </tr>
         </ng-template>
