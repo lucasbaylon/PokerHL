@@ -19,7 +19,6 @@ import { DropdownModule } from 'primeng/dropdown';
     standalone: true,
     imports: [FormsModule, NgStyle, ActionColorPipe, InputNumberModule, DropdownModule],
     templateUrl: './situation-manager.component.html',
-    styleUrl: './situation-manager.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SituationManagerComponent {
