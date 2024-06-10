@@ -17,11 +17,11 @@
             @for (row of situation_obj.situations; track i; let i = $index) {
             <tr class="table-row animate-appear opacity-0" [style.animation-delay]="i * 0.025+'s'">
                 @for (item of row; track j; let j = $index) {
-                <td class="rounded cursor-pointer font-bold select-none text-center align-middle py-2 px-1.5 bg-white dark:text-white hover:bg-gray-200 dark:bg-secondary-dark-bg shadow-xl dark:shadow-none"
+                <td class="rounded cursor-pointer font-bold select-none text-center align-middle py-2 px-1.5 bg-white dark:text-white hover:bg-gray-200 dark:bg-secondary-dark-bg shadow-xl"
                     (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)"
                     (mouseup)="endSelection($event)"
                     [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef)}"
-                    [ngClass]="item.action ? 'text-white' : 'text-gray-800'">
+                    [ngClass]="item.action ? 'text-gray-200' : 'text-gray-800'">
                     {{item.card}}
                 </td>
                 }
