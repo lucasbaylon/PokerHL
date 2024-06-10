@@ -28,7 +28,7 @@ export class AppComponent {
             localStorage.setItem('theme', 'light');
             theme = 'light';
         }
-        document.documentElement.classList.add(theme);
+        if (theme === 'dark') document.documentElement.classList.add(theme);
     }
 
     translate(lang: string) {
