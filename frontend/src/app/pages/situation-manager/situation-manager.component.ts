@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Action } from '../../interfaces/action';
 import { FormsModule } from '@angular/forms';
-import { NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { ActionColorPipe } from '../../pipes/action-color.pipe';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
@@ -18,7 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule],
+    imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule],
     templateUrl: './situation-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
