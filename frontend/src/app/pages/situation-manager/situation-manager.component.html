@@ -85,7 +85,7 @@
 
 <div class="flex items-center justify-center w-full my-16 mx-auto">
     <div
-        class="mx-auto p-5 rounded-lg min-h-full shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2">
+        class="mx-auto p-5 h-80 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
         <div class="multiples-solutions-container">
@@ -173,7 +173,7 @@
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Nombre de BB minimum sur la table</div>
+                Stack effectif</div>
             <p-inputNumber inputId="integeronly" [size]="10" [min]="0"
                 [(ngModel)]="situation_obj.dealerMissingTokens"></p-inputNumber>
         </div>
@@ -185,7 +185,7 @@
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Joueur bouton</div>
+                Position</div>
             <p-dropdown [(ngModel)]="dealer" [options]="availableDealerPlayer" (onChange)="onChangeDealer()"
                 optionLabel="name"></p-dropdown>
         </div>
