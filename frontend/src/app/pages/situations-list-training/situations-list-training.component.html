@@ -44,23 +44,23 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
-            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
-                <td>
+            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg py-3">
+                <td class="py-6">
                     {{ situation.name }}
                 </td>
-                <td>
+                <td class="py-6">
                     {{ situation.dealerMissingTokens }}
                 </td>
-                <td>
+                <td class="py-6">
                     {{ situation.nbPlayer }}
                 </td>
-                <td>
+                <td class="py-6">
                     {{ situation.dealer! | dealer }}
                 </td>
-                <td>
+                <td class="py-6">
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
-                <td>
+                <td class="py-6">
                     <p-tableCheckbox [value]="situation"></p-tableCheckbox>
                 </td>
             </tr>
