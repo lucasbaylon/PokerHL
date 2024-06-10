@@ -17,11 +17,11 @@
             @for (row of situation_obj.situations; track i; let i = $index) {
             <tr class="table-row animate-appear opacity-0" [style.animation-delay]="i * 0.025+'s'">
                 @for (item of row; track j; let j = $index) {
-                <td class="rounded cursor-pointer font-bold select-none text-center align-middle py-2 px-1.5 bg-white dark:text-white hover:bg-gray-200 dark:bg-secondary-dark-bg shadow-xl dark:shadow-none"
+                <td class="rounded cursor-pointer font-bold select-none text-center align-middle py-2 px-1.5 bg-white dark:text-white hover:bg-gray-200 dark:bg-secondary-dark-bg shadow-xl"
                     (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)"
                     (mouseup)="endSelection($event)"
                     [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef)}"
-                    [ngClass]="item.action ? 'text-white' : 'text-gray-800'">
+                    [ngClass]="item.action ? 'text-gray-200' : 'text-gray-800'">
                     {{item.card}}
                 </td>
                 }
@@ -202,7 +202,7 @@
 <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-150">
     <div (click)="saveSituation()"
         class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
+        <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
         Enregistrer la situation
     </div>
 </div>
