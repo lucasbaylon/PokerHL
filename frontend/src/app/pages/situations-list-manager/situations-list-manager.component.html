@@ -2,7 +2,7 @@
     Gestion des situations</h3>
 <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
     créez des situations.</p>
-<div class="animate-appear opacity-0 animation-delay-50 w-11/12 min-w-[525px] mx-auto shadow-lg">
+<div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto shadow-lg">
     <p-table [value]="paginatedSituationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true">
         <ng-template pTemplate="header">
             <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
@@ -79,7 +79,7 @@
     <p-paginator locale="fr-FR" styleClass="rounded-b-md rounded-t-none dark:text-gray-200 dark:bg-secondary-dark-bg"
         [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" />
 </div>
-<div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-100">
+<div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
     <div (click)="commonService.redirectTo('situations-manager')"
         class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>
