@@ -77,8 +77,7 @@
         </ng-template>
     </p-table>
     <p-paginator locale="fr-FR" styleClass="rounded-b-md rounded-t-none dark:text-gray-200 dark:bg-secondary-dark-bg"
-        [totalRecords]="totalRecords" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Page {first} - {last} sur {totalRecords}" (onPageChange)="onPageChange($event)" />
+        [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" />
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-100">
     <div (click)="commonService.redirectTo('situations-manager')"
