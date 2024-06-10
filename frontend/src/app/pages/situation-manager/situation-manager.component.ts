@@ -13,11 +13,12 @@ import { NgStyle } from '@angular/common';
 import { ActionColorPipe } from '../../pipes/action-color.pipe';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, ActionColorPipe, InputNumberModule, DropdownModule],
+    imports: [FormsModule, NgStyle, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule],
     templateUrl: './situation-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
