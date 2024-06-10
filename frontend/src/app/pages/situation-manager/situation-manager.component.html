@@ -35,7 +35,7 @@
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions</h4>
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-        <div class="color-picker-square flex items-center mb-4">
+        <div class="flex items-center mb-4">
             <input type="input" class="textInput text-lg my-3 border-none w-20 text-center mr-4"
                 value="{{action.display_name}}" [id]="'input_' + action.id"
                 (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
@@ -51,7 +51,7 @@
                 </span>
             </label>
         </div>
-        <div class="bg-white dark:bg-gray-700 p-4 rounded shadow-lg absolute ml-1 z-10 w-fit"
+        <div class="bg-white dark:bg-gray-700 p-4 rounded shadow-lg absolute ml-1 z-10 w-fit animate-appear opacity-0 duration-100 hidden"
             [id]="'color-picker-div_' + action.id">
             <div class="grid grid-cols-5 gap-2">
                 <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #d80c05"

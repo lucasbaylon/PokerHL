@@ -279,11 +279,11 @@ export class SituationManagerComponent {
     }
 
     onColorAction(action_id: string) {
-        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("hidden");
         setTimeout(() => {
             this.listener = (event: any) => {
                 if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
-                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('color-picker-div-closed');
+                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('hidden');
                     document.removeEventListener('click', this.listener);
                     this.listener = null;
                 }
