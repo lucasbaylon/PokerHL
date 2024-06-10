@@ -295,7 +295,7 @@ export class SituationManagerComponent {
     onSelectColor(action_id: string, color: string) {
         let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0];
         actionList.color = color;
-        document.getElementById(`color-picker-div_${action_id}`)?.classList.add("color-picker-div-closed");
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.add("hidden");
         this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
 

@@ -1,13 +1,13 @@
 @if (mode === 'new') {
 <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
     Créer une nouvelle situation</h3>
-<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Créez une nouvelle
+<p class="text-gray-500 dark:text-gray-350 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Créez une nouvelle
     situation en renseignant ses ranges ainsi que ses caractèristiques.</p>
 }
 @if (mode === 'edit') {
 <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0">
     Modifier une situation</h3>
-<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Modifiez une de vos
+<p class="text-gray-500 dark:text-gray-350 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Modifiez une de vos
     situations existante en renseignant ses nouvelles ranges et caractèristiques.</p>
 }
 <div class="flex items-center justify-center w-10/12 my-16 mx-auto">
@@ -29,11 +29,13 @@
             }
         </tbody>
     </table>
+
     <div
-        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-52 rounded-lg p-5 shadow-lg mx-auto flex flex-col items-center justify-center">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Solutions</h2>
+        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-52 rounded-lg p-5 shadow-lg mx-auto flex flex-col items-center">
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Solutions</h4>
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-        <div class="flex items-center mb-4">
+        <div class="color-picker-square flex items-center mb-4">
             <input type="input" class="textInput text-lg my-3 border-none w-20 text-center mr-4"
                 value="{{action.display_name}}" [id]="'input_' + action.id"
                 (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
@@ -49,43 +51,44 @@
                 </span>
             </label>
         </div>
-        <div class="color-picker-div color-picker-div-closed bg-white p-4 rounded shadow-lg absolute ml-1 z-10 w-56 hidden"
+        <div class="bg-white dark:bg-gray-700 p-4 rounded shadow-lg absolute ml-1 z-10 w-fit"
             [id]="'color-picker-div_' + action.id">
-            <div class="flex flex-wrap">
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #d80c05"
+            <div class="grid grid-cols-5 gap-2">
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #d80c05"
                     (click)="onSelectColor(action.id, '#d80c05')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #ff9100"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #ff9100"
                     (click)="onSelectColor(action.id, '#ff9100')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #7a5a00"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #7a5a00"
                     (click)="onSelectColor(action.id, '#7a5a00')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #3f7a89"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #3f7a89"
                     (click)="onSelectColor(action.id, '#3f7a89')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #96c582"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #96c582"
                     (click)="onSelectColor(action.id, '#96c582')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #303030"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #303030"
                     (click)="onSelectColor(action.id, '#303030')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #1c51ff"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #1c51ff"
                     (click)="onSelectColor(action.id, '#1c51ff')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #00aeff"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #00aeff"
                     (click)="onSelectColor(action.id, '#00aeff')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #8400ff"
-                    (click)="onSelectColor(action.id, '#8400ff')"></div>
-                <div class="h-8 w-8 rounded shadow cursor-pointer mr-2 mb-2" style="background: #e284ff"
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #8350ff"
+                    (click)="onSelectColor(action.id, '#8350ff')"></div>
+                <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #e284ff"
                     (click)="onSelectColor(action.id, '#e284ff')"></div>
             </div>
         </div>
+
         }
         <div (click)="addUniqueAction()" id="add-solution-button"
-            class=" flex h-12 items-center w-full justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+            class=" flex h-12 items-center w-full justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
             <i class="fa-solid fa-plus mr-4 h-4 w-4"></i>
             Ajouter
         </div>
     </div>
 </div>
 
-<div class="flex items-center justify-center w-full my-16 mx-auto">
+<div class="flex items-start justify-center w-full my-16 mx-auto">
     <div
-        class="mx-auto p-5 h-80 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2">
+        class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-[350px]">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
         <div class="multiples-solutions-container">
@@ -112,15 +115,15 @@
         </div>
         <div class="flex justify-center items-center">
             <div (click)="showAddMultiplesAction()"
-                class=" flex h-12 items-center w-1/4 justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+                class="flex h-12 items-center w-1/4 justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                 <i class="fa-solid fa-plus mr-4 h-4 w-4"></i>
                 Ajouter
             </div>
         </div>
     </div>
 
-    <div class="add-multiples-solutions-container hidden">
-        <div class="add-multiples-solutions animate__animated animate__fadeInDown" id="add-multiples-solutions">
+    <div class="animate-appear opacity-0">
+        <div class="add-multiples-solutions" id="add-multiples-solutions">
             <ion-button (click)="resetMultipleSituation()">
                 <ion-icon name="close-outline"></ion-icon>
             </ion-button>
@@ -161,15 +164,14 @@
     </div>
 
     <div
-        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2">
+        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-[350px]">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Caractéristiques de la situation</h4>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Nom de la situation</div>
-            <input [(ngModel)]="situation_obj.name" type="text"
-                placeholder="Nom de la situation" name="situationName" id='situationName' autocomplete="off"
-                pInputText />
+            <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
+                id='situationName' autocomplete="off" pInputText />
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
@@ -197,7 +199,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-150">
     <div (click)="saveSituation()"
