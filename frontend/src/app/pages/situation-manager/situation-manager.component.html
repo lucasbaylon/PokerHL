@@ -36,20 +36,23 @@
 
     <!-- Div solutions -->
     <div
-        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-1/5 rounded-lg py-5 px-7 shadow-lg mx-auto flex flex-col items-center">
-        <h4 class="mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Solutions
-        </h4>
+        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-110 rounded-lg py-5 px-7 shadow-lg mx-auto flex flex-col items-center mb-2 animate-appear opacity-0 animation-delay-100">
+        <div class="text-left w-full">
+            <h4 class="mb-4  text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Solutions
+            </h4>
+        </div>
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
         <div class="relative flex items-center mb-5">
             <!-- Surbrillance de la couleur sélectionnée -->
-            <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
-                class="absolute -inset-2 -inset-x-4  z-0"></div>
-        
+            <div [ngClass]="{'bg-gray-300 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
+                class="absolute -inset-2 -inset-x-5  z-0"></div>
+
             <!-- Div solution couleur -->
             <div class="relative z-10 flex items-center">
                 <input type="input"
-                    class="textInput text-lg my-3 border-none w-20 text-center bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-300"
+                    [ngClass]="{'bg-gray-300 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
+                    class="text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300 "
                     value="{{action.display_name}}" [id]="'input_' + action.id" (input)="onChangeActionName(action.id, $event)"
                     placeholder="-" autocomplete="off" />
                 <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
@@ -57,12 +60,12 @@
                     (click)="onColorAction(action.id)"></div>
                 <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
                     [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
-                    class="flex h-12 items-center w-32 justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 px-5 text-base font-medium shadow transition-none">
+                    class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 px-5 text-base font-medium shadow transition-none">
                     @if (actionSelected !== action.id) {
-                        <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
+                    <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
                     }
                     @if (actionSelected === action.id) {
-                        <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
+                    <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
                     }
                     {{actionSelected === action.id ? 'Choisi' : 'Sélectionner'}}
                 </div>
@@ -96,14 +99,16 @@
         </div>
         }
         <div (click)="addUniqueAction()" id="add-solution-button"
-            class=" flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
+            class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
             <i class="fa-solid fa-plus mr-4 h-4 w-4"></i>
             Ajouter
         </div>
     </div>
 </div>
 
+<!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
 <div class="flex items-start justify-center w-full my-16 mx-auto h-[425px]">
+    <!-- Div SOLUTIONS MULTIPLES-->
     <div
         class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
@@ -139,6 +144,7 @@
         </div>
     </div>
 
+    <!-- Div AJOUTER SOLUTIONS MULTIPLES-->
     <div class="animate-appear opacity-0 hidden">
         <div class="add-multiples-solutions" id="add-multiples-solutions">
             <ion-button (click)="resetMultipleSituation()">
@@ -180,8 +186,9 @@
         </div>
     </div>
 
+    <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
     <div
-        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
+        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-full">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Caractéristiques de la situation</h4>
         <div class="flex items-center justify-between w-full mt-4">
@@ -224,7 +231,8 @@
     </div>
 </div>
 
-<div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-150">
+<!-- Bouton d'enregistrement de la situation -->
+<div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
     <div (click)="saveSituation()"
         class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>

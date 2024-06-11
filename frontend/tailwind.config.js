@@ -15,6 +15,12 @@ module.exports = {
       xl: '1280px'
     },
     extend: {
+      width: {
+        '110': '27.5rem',  // 440px
+        '115': '28.75rem', // 460px
+        '120': '30rem',    // 480px
+        '125': '31.25rem', // 500px
+      },
       backgroundColor: {
         'main-bg': '#FAFBFB',
         'main-dark-bg': '#191a1a',
