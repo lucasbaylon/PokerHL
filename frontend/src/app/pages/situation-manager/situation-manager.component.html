@@ -31,25 +31,23 @@
     </table>
 
     <div
-        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-52 rounded-lg p-5 shadow-lg mx-auto flex flex-col items-center">
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-fit rounded-lg p-5 shadow-lg mx-auto flex flex-col items-center">
+        <h4 class="mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions</h4>
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-        <div class="flex items-center mb-4">
-            <input type="input" class="textInput text-lg my-3 border-none w-20 text-center mr-4"
-                value="{{action.display_name}}" [id]="'input_' + action.id"
-                (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
-            <div class="h-8 w-8 rounded shadow cursor-pointer"
+        <div class="flex items-center mb-5">
+            <input type="input"
+                class="textInput text-lg my-3 border-none w-20 text-center bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-300"
+                value="{{action.display_name}}" [id]="'input_' + action.id" (input)="onChangeActionName(action.id, $event)"
+                placeholder="-" autocomplete="off" />
+            <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
                 [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
                 (click)="onColorAction(action.id)"></div>
-            <label class="flex items-center ml-5 cursor-pointer relative">
-                <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                    class="absolute opacity-0" (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
-                <span class="design w-5 h-5 border border-gray-800 rounded-full relative mr-4">
-                    <span
-                        class="absolute w-full h-full rounded-full bg-gray-800 transform scale-0 transition duration-300"></span>
-                </span>
-            </label>
+            <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
+                Sélectionner
+            </div>
         </div>
         <div class="bg-white dark:bg-gray-700 p-4 rounded shadow-lg absolute ml-1 z-10 w-fit animate-appear opacity-0 duration-100 hidden"
             [id]="'color-picker-div_' + action.id">
@@ -76,19 +74,18 @@
                     (click)="onSelectColor(action.id, '#e284ff')"></div>
             </div>
         </div>
-
         }
         <div (click)="addUniqueAction()" id="add-solution-button"
-            class=" flex h-12 items-center w-full justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+            class=" flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
             <i class="fa-solid fa-plus mr-4 h-4 w-4"></i>
             Ajouter
         </div>
     </div>
 </div>
 
-<div class="flex items-start justify-center w-full my-16 mx-auto">
+<div class="flex items-start justify-center w-full my-16 mx-auto h-[425px]">
     <div
-        class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-[425px]">
+        class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
         <div class="multiples-solutions-container">
@@ -101,7 +98,7 @@
                     [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"></div>
                 <label>
                     <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                        (click)="onChangeAction($event)">
+                        (click)="onChangeAction(action.id)">
                     <span class="design"></span>
                 </label>
                 <ion-button (click)="editMultipleSolution(action.id)">
@@ -164,7 +161,7 @@
     </div>
 
     <div
-        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-[425px]">
+        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Caractéristiques de la situation</h4>
         <div class="flex items-center justify-between w-full mt-4">

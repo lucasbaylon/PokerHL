@@ -270,8 +270,8 @@ export class SituationManagerComponent {
         this.router.navigate(['situations-list-manager']);
     }
 
-    onChangeAction(e: any) {
-        this.actionSelected = e.target.value;
+    onChangeAction(actionId: string) {
+        this.actionSelected = actionId;
     }
 
     onChangeActionName(action_id: string, e: any) {
@@ -389,7 +389,7 @@ export class SituationManagerComponent {
                             new_obj,
                             ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
                         ];
-                        (document.getElementById(`radio_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
+                        (document.getElementById(`button_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
                     }
                 } else {
                     this.countMultipleSolution++;
