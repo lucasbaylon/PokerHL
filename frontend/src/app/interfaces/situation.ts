@@ -6,6 +6,8 @@ export interface Situation {
 
     name?: string;
 
+    type:string;
+
     nbPlayer?: number;
 
     dealerMissingTokens: number;

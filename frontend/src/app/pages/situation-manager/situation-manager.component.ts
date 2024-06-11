@@ -51,6 +51,11 @@ export class SituationManagerComponent {
         ceil: 100
     };
 
+    availableSituationType: any[] = [
+        { name: 'Pré-flop', code: 'preflop' },
+        { name: 'Flop', code: 'flop' }
+    ];
+
     availableNbPlayersTable: any[] = [
         { name: '2', code: 2 },
         { name: '3', code: 3 }

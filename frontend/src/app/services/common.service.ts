@@ -17,6 +17,7 @@ export class CommonService {
     empty_situation_obj: Situation = {
         id: undefined,
         name: undefined,
+        type:"preflop",
         nbPlayer: 3,
         dealerMissingTokens: 0,
         dealer: "you",
