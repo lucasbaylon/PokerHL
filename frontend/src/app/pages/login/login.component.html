@@ -16,7 +16,7 @@
                 </label>
                 <input
                     class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-200 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    id="email" placeholder="Entrez votre adresse email" required="" type="email" [(ngModel)]="email" />
+                    id="email" placeholder="Entrez votre adresse email" required="" type="email" [(ngModel)]="email" (keydown.enter)="login()" />
             </div>
             <div class="space-y-2">
                 <label
@@ -29,7 +29,7 @@
                     <input
                         class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-200 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType"
-                        [(ngModel)]="password" />
+                        [(ngModel)]="password" (keydown.enter)="login()" />
                     <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer"
                         (click)="togglePasswordVisibility()">
                         <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'"

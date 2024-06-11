@@ -58,6 +58,9 @@ export class AuthService {
                 case 'auth/invalid-email':
                     errorMessage = 'Adresse email non valide';
                     break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Mot de passe incorrect';
+                    break;
                 case 'auth/user-disabled':
                     errorMessage = 'Compte désactivé';
                     break;
