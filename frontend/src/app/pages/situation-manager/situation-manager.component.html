@@ -45,13 +45,13 @@
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
         <div class="relative flex items-center mb-5">
             <!-- Surbrillance de la couleur sélectionnée -->
-            <div [ngClass]="{'bg-gray-300 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
+            <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
                 class="absolute -inset-2 -inset-x-5  z-0"></div>
 
             <!-- Div solution couleur -->
             <div class="relative z-10 flex items-center">
                 <input type="input"
-                    [ngClass]="{'bg-gray-300 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
+                    [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
                     class="text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300 "
                     value="{{action.display_name}}" [id]="'input_' + action.id" (input)="onChangeActionName(action.id, $event)"
                     placeholder="-" autocomplete="off" />
