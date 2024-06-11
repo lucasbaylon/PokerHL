@@ -1,4 +1,4 @@
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { SituationService } from '../services/situation.service';
 import { inject } from '@angular/core';
 import { map, of, switchMap, take } from 'rxjs';
@@ -9,6 +9,9 @@ export const checkSituationGuard: CanActivateFn = (route, state) => {
     const apiSituation = inject(SituationService);
     const commonService = inject(CommonService);
     const authService = inject(AuthService);
+    const router = inject(Router);
+
+    const previousUrl = router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString();
 
     return authService.authState$.pipe(
         take(1),
@@ -24,6 +27,7 @@ export const checkSituationGuard: CanActivateFn = (route, state) => {
                                 message = "Vous n'avez encore crée aucune situation pour vos entraînements. Veuillez d'abord créer une situation dans le menu 'Gérer les situations'.";
                             }
                             commonService.showSwalAlert('Erreur', message, 'error');
+                            if (!previousUrl) router.navigate(['/home']);
                             return false;
                         }
                     })
