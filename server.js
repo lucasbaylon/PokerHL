@@ -73,13 +73,11 @@ protectedRouter.get("/check_situations_for_user/:user", async function (req, res
         connection = await getConnection();
         const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
 
-        res.status(200).json({ authorized: false, message: "NO_SITUATION" });
-
-        // if (results.length === 0) {
-        //     res.status(200).json({ authorized: false, message: "NO_SITUATION" });
-        // } else {
-        //     res.status(200).json({ authorized: true, message: "OK" });
-        // }
+        if (results.length === 0) {
+            res.status(200).json({ authorized: false, message: "NO_SITUATION" });
+        } else {
+            res.status(200).json({ authorized: true, message: "OK" });
+        }
     } catch (error) {
         console.error('Error querying the database:', error);
         // En cas d'erreur, envoyez une réponse 500 au client
