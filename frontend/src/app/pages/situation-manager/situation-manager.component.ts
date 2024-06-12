@@ -44,6 +44,7 @@ export class SituationManagerComponent {
     nbPlayer: { name: string, code: number } = { name: '2', code: 2 };
     dealer: { name: string, code: string } = { name: 'Vous', code: 'you' };
     opponentLevel: { name: string, code: string } = { name: 'Débutant', code: 'fish' };
+    situationType: { name: string, code: string } = { name: 'Pré-flop', code: 'preflop' };
     listener: any;
 
     options: Options = {

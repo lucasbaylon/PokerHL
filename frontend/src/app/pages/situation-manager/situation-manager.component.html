@@ -207,8 +207,20 @@
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Type de situation</div>
-            <p-dropdown [(ngModel)]="situation_obj.type" [options]="availableSituationType"
-                optionLabel="name"></p-dropdown>
+            <div class="flex items-center justify-end w-1/3">
+                <input [(ngModel)]="situation_obj.type" type="text" name="situationType"
+                    class="bg-white cursor-pointer text-gray-800 h-10 w-full transition-all duration-100 rounded-md border px-3 py-2 text-md shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-700"
+                    id='situationType' autocomplete="off" />
+                <i class="fa-solid fa-angle-down ml-2 relative text-gray-800 right-9 cursor-pointer"></i>
+            </div>
+            <!-- <div class="dui-dropdown">
+                <div tabindex="0" role="button" class="dui-btn m-1">Click</div>
+                <ul tabindex="0"
+                    class="dui-dropdown-content z-[1] dui-menu p-2 shadow bg-base-100 rounded-box w-52 text-white">
+                    <li><a>Item 1</a></li>
+                    <li><a>Item 2</a></li>
+                </ul>
+            </div> -->
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
