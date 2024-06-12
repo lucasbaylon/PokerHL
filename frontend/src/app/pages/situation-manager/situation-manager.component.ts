@@ -127,7 +127,7 @@ export class SituationManagerComponent {
     }
 
     showAddMultiplesAction() {
-        document.getElementById("add-multiples-solutions")!.style.display = "block";
+        document.getElementById("add-multiples-solutions")!.classList.remove("hidden");
     }
 
     startSelection(event: any) {
@@ -411,7 +411,7 @@ export class SituationManagerComponent {
         this.multipleSolutionCheckedList = [];
         this.multipleSolutionName = "";
         this.multipleSituationId = undefined;
-        document.getElementById("add-multiples-solutions")!.style.display = "none";
+        document.getElementById("add-multiples-solutions")?.classList.add("hidden");
     }
 
     editMultipleSolution(action_id: string) {
@@ -435,8 +435,7 @@ export class SituationManagerComponent {
             this.simpleSlider = false;
             this.multipleSlider = true;
         }
-
-        document.getElementById("add-multiples-solutions")!.style.display = "block";
+        document.getElementById("add-multiples-solutions")?.classList.remove("hidden");
     }
 
     deleteMultipleSolution(action_id: string) {
