@@ -127,7 +127,10 @@ export class SituationManagerComponent {
     }
 
     showAddMultiplesAction() {
-        document.getElementById("add-multiples-solutions")!.classList.remove("hidden");
+        const modal = document.getElementById('add-multiples-solutions') as HTMLDialogElement;
+        if (modal) {
+            modal.showModal();
+        }
     }
 
     startSelection(event: any) {

@@ -145,11 +145,23 @@
     </div>
 
     <!-- Div AJOUTER SOLUTIONS MULTIPLES-->
-    <div class="animate-appear opacity-0 hidden bg-white dark:bg-secondary-dark-bg fixed z-10 mx-auto p-5" id="add-multiples-solutions">
-        <i class="fa-solid fa-xmark" (click)="resetMultipleSituation()"></i>
+    <dialog id="add-multiples-solutions" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+        <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+            <form method="dialog">
+                <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+            </form>
+            <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Ajout d'une Solution multiple</h4>
+            <p class="py-4">Press ESC key or click the button below to close</p>
+        </div>
+    </dialog>
+    <!-- <div class="animate-appear opacity-0 hidden bg-white dark:bg-gray-700 absolute z-10 p-5 rounded"
+        id="add-multiples-solutions">
+        <i class="fa-solid fa-xmark text-gray-800 dark:text-gray-200 cursor-pointer p-3 absolute top-3 right-3"
+            (click)="resetMultipleSituation()"></i>
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Ajout d'une Solution multiple</h4>
-        <div class="div-input-text field input-name-multiples-solutions">
+        <div class="div-input-text field">
             <input [(ngModel)]="multipleSolutionName" type="text" class="styled-input-text" placeholder="Nom"
                 name="multipleSolution" id='multipleSolution' autocomplete="off" />
             <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
@@ -179,9 +191,15 @@
                 [options]="options"></ngx-slider>
         </div>
         }
-        <button class="fill addButton" id="add-multiple-solution-button"
-            (click)="addMultipleAction()">Enregistrer</button>
-    </div>
+        <div class="flex justify-center mt-10">
+            <div (click)="addMultipleAction()"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+                Enregistrer la solution
+            </div>
+        </div>
+    </div> -->
+
 
     <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
     <div

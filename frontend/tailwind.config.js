@@ -81,7 +81,7 @@ module.exports = {
     daisyui,
   ],
   daisyui: {
-    themes: ["light"],
+    themes: ["light",'dark'],
     prefix: "dui-",
   }
 }
