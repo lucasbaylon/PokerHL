@@ -31,6 +31,14 @@
                     class="flex items-center justify-center text-md transition-all duration-500">Paramètres</span>
             </div>
         </li>
+        <li
+            class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
+            <a href="https://www.clubpoker.net/lexique-poker" target="_blank" class="flex items-center justify-start px-3 py-4">
+                <i class="fa-solid fa-spell-check ml-5 text-lg text-gray-800 dark:text-gray-200 transition-colors duration-500"></i>
+                <span [ngClass]="{ 'ml-8': commonService.isCollapsed, 'ml-6': !commonService.isCollapsed }"
+                    class="flex items-center justify-center text-md transition-all duration-500">Lexique</span>
+            </a>
+        </li>
     </ul>
     <div class="absolute bottom-0 flex items-center p-4">
         <div class="dui-avatar">

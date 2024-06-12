@@ -7,8 +7,11 @@
 
 @layer components {
     .p-dropdown {
-        border-width: 1px;
-        border-style: solid;
-        border-color: #e5e7eb;
+        border: 1px solid #d8dadf;
+        box-shadow
+
+        li{
+            border-radius: 5px;
+        }
     }
 }
