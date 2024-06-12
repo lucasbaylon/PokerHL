@@ -60,13 +60,13 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td>
-                    <i class="fa-solid fa-clone cursor-pointer p-3" (click)="duplicateSituation(situation.id)"></i>
+                    <i class="fa-solid fa-clone cursor-pointer p-3 dui-btn-ghost rounded-full" (click)="duplicateSituation(situation.id)"></i>
                 </td>
                 <td>
-                    <i class="fa-solid fa-pencil cursor-pointer p-3" (click)="editSituation(situation.id)"></i>
+                    <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full" (click)="editSituation(situation.id)"></i>
                 </td>
                 <td>
-                    <i class="fa-solid fa-trash-can cursor-pointer p-3" (click)="removeSituation(situation.id)"></i>
+                    <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full" (click)="removeSituation(situation.id)"></i>
                 </td>
             </tr>
         </ng-template>
