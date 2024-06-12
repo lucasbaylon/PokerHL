@@ -51,8 +51,8 @@
             <!-- Div solution couleur -->
             <div class="relative z-10 flex items-center">
                 <input type="input"
-                    [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
-                    class="text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300"
+                    [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'bg-white dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
+                    class="  text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300"
                     value="{{action.display_name}}" [id]="'input_' + action.id"
                     (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
                 <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
@@ -107,7 +107,7 @@
 </div>
 
 <!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
-<div class="flex items-start justify-center w-full my-16 mx-auto h-[425px]">
+<div class="flex items-start justify-center w-full my-16 mx-auto h-[440px]">
     <!-- Div SOLUTIONS MULTIPLES-->
     <div
         class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
@@ -148,58 +148,49 @@
     <dialog id="add-multiples-solutions" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
         <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
             <form method="dialog">
-                <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+                <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none"
+                    (click)="resetMultipleSituation()">✕</button>
             </form>
-            <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                 Ajout d'une Solution multiple</h4>
-            <p class="py-4">Press ESC key or click the button below to close</p>
-        </div>
-    </dialog>
-    <!-- <div class="animate-appear opacity-0 hidden bg-white dark:bg-gray-700 absolute z-10 p-5 rounded"
-        id="add-multiples-solutions">
-        <i class="fa-solid fa-xmark text-gray-800 dark:text-gray-200 cursor-pointer p-3 absolute top-3 right-3"
-            (click)="resetMultipleSituation()"></i>
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Ajout d'une Solution multiple</h4>
-        <div class="div-input-text field">
-            <input [(ngModel)]="multipleSolutionName" type="text" class="styled-input-text" placeholder="Nom"
-                name="multipleSolution" id='multipleSolution' autocomplete="off" />
-            <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
-        </div>
-        @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-        <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
-                [style]="'background: ' + action.color"></div>
-            <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id" (change)="onCheckChange($event)">
-            <label [for]="'id_check_'+ action.id" class="check">
-                <svg width="18px" height="18px" viewBox="0 0 18 18">
-                    <path
-                        d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z">
-                    </path>
-                    <polyline points="1 9 7 14 15 4"></polyline>
-                </svg>
-            </label>
-        </div>
-        }
-        @if (simpleSlider) {
-        <div class="custom-slider">
-            <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
-        </div>
-        }
-        @if (multipleSlider) {
-        <div class="custom-slider">
-            <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                [options]="options"></ngx-slider>
-        </div>
-        }
-        <div class="flex justify-center mt-10">
-            <div (click)="addMultipleAction()"
-                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
-                Enregistrer la solution
+            <div class="">
+                <label for="multipleSolution" class="">Nom de la solution</label>
+                <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
+                    class="bg-white flex h-10 w-1/2 transition-all duration-100 rounded-md border px-3 py-2 text-md shadow-sm ring-offset-background placeholder:text-muted-foreground placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-700"
+                    id='multipleSolution' autocomplete="off" />
+                @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
+                <div class="flex justify-between w-1/2 items-center mt-4">
+                    {{action.display_name}}
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" [style]="'background: ' + action.color">
+                    </div>
+                    <label [for]="'id_check_'+ action.id" class="check">
+                        <input type="checkbox" class="dui-checkbox" [id]="'id_check_'+ action.id"
+                            (change)="onCheckChange($event)" />
+                    </label>
+                </div>
+                }
+                @if (simpleSlider) {
+                <div class="custom-slider">
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
+                </div>
+                }
+                @if (multipleSlider) {
+                <div class="custom-slider">
+                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                        [options]="options"></ngx-slider>
+                </div>
+                }
+                <div class="flex justify-center mt-10">
+                    <div (click)="addMultipleAction()"
+                        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+                        Enregistrer la solution
+                    </div>
+                </div>
             </div>
         </div>
-    </div> -->
-
+    </dialog>
 
     <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
     <div
@@ -210,7 +201,7 @@
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Nom de la situation</div>
             <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
-                class="flex h-10 w-1/3 transition-all duration-100 ease-out rounded-md border border-input bg-background px-3 py-2 text-md ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shadow-md"
+                class="bg-white flex h-10 w-1/3 transition-all duration-100 rounded-md border px-3 py-2 text-md shadow-sm ring-offset-background placeholder:text-muted-foreground placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-700"
                 id='situationName' autocomplete="off" />
         </div>
         <div class="flex items-center justify-between w-full mt-4">
@@ -222,8 +213,9 @@
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Stack effectif</div>
-            <p-inputNumber inputId="integeronly" [size]="10" [min]="0"
-                [(ngModel)]="situation_obj.dealerMissingTokens"></p-inputNumber>
+            <input type="text"
+                class="bg-white flex h-10 w-24 transition-all duration-100 rounded-md border px-3 py-2 text-md shadow-sm ring-offset-background placeholder:text-muted-foreground placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-700"
+                [(ngModel)]="situation_obj.dealerMissingTokens" (input)="formatAndRestrictNumberInput($event)" />
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">

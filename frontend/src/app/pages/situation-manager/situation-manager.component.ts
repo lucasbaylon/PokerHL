@@ -414,7 +414,6 @@ export class SituationManagerComponent {
         this.multipleSolutionCheckedList = [];
         this.multipleSolutionName = "";
         this.multipleSituationId = undefined;
-        document.getElementById("add-multiples-solutions")?.classList.add("hidden");
     }
 
     editMultipleSolution(action_id: string) {
@@ -465,6 +464,36 @@ export class SituationManagerComponent {
 
     onChangeOpponentLevel() {
         this.situation_obj.opponentLevel = this.opponentLevel.code;
+    }
+
+    /**
+  * Filtre et formate la saisie d'un champ de saisie HTML.
+  * Seules les valeurs numériques sont conservées.
+  * Limite la saisie à un maximum de 4 chiffres et s'assure que la valeur est entre 1 et 9999.
+  * 
+  * @param event L'événement d'entrée déclenché lors de la saisie dans le champ de saisie.
+  *              L'événement doit être de type `Event`.
+  */
+    formatAndRestrictNumberInput(event: Event): void {
+        let input = event.target as HTMLInputElement;
+        let value = input.value;
+
+        // Supprimer tout caractère non numérique
+        let numbers = value.replace(/\D/g, '');
+
+        // Limiter à 2 chiffres
+        numbers = numbers.slice(0, 4);
+
+        // S'assurer que la valeur est entre 1 et 9999
+        if (parseInt(numbers) < 1) {
+            numbers = '1';
+        } else if (parseInt(numbers) > 9999){
+            numbers = '9999';
+        }
+
+        // Mettre à jour la valeur du modèle et de l'input
+        this.situation_obj.dealerMissingTokens = Number(numbers);
+        input.value = numbers;
     }
 
 }
