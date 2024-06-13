@@ -281,18 +281,24 @@ export class SituationManagerComponent {
         return list.filter(item => item.type === type && (!filterNoDisplayName || (item.display_name !== undefined && item.display_name !== '')));
     }
 
-    onColorAction(action_id: string) {
-        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("hidden");
-        setTimeout(() => {
-            this.listener = (event: any) => {
-                if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
-                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('hidden');
-                    document.removeEventListener('click', this.listener);
-                    this.listener = null;
-                }
-            };
-            document.addEventListener('click', this.listener);
-        }, 0);
+    onColorAction(action_id: string, colorCell: HTMLElement) {
+        const colorPickerDiv = document.getElementById(`color-picker-div_${action_id}`);
+        if (colorPickerDiv) {
+            const rect = colorCell.getBoundingClientRect();
+            colorPickerDiv.style.top = `${rect.top - 280}px`;
+            colorPickerDiv.style.left = `56px`;
+            colorPickerDiv.classList.remove("hidden");
+            setTimeout(() => {
+                this.listener = (event: any) => {
+                    if (!colorPickerDiv.contains(event.target) && colorPickerDiv !== event.target) {
+                        colorPickerDiv.classList.add('hidden');
+                        document.removeEventListener('click', this.listener);
+                        this.listener = null;
+                    }
+                };
+                document.addEventListener('click', this.listener);
+            }, 0);
+        }
     }
 
     onSelectColor(action_id: string, color: string) {
