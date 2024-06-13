@@ -16,7 +16,6 @@
         }
 
         li.p-highlight.p-focus {
-            background-color: rgb(209 213 219);
             @apply text-gray-800;
         }
     }
@@ -38,11 +37,11 @@
     }
 
     .custom-slider .ngx-slider .ngx-slider-selection {
-        @apply bg-red-500 dark:bg-red-500;
+        @apply bg-white dark:bg-blue-500;
     }
 
     .custom-slider .ngx-slider .ngx-slider-pointer {
-        @apply bg-gray-800 dark:bg-white;
+        @apply bg-blue-500 dark:bg-white;
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -58,13 +57,13 @@
     }
 
     .custom-slider .ngx-slider .ngx-slider-pointer:after {
-        @apply dark:bg-gray-800 bg-white;
+        @apply dark:bg-blue-500 bg-white;
         top: 6px;
         left: 6px;
     }
 
     .custom-slider .ngx-slider .ngx-slider-pointer.ngx-slider-active:after {
-        @apply dark:bg-gray-800 bg-white;
+        @apply dark:bg-blue-500 bg-white;
     }
 
     .custom-slider .ngx-slider .ngx-slider-floor {
