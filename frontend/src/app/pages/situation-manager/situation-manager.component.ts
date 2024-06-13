@@ -15,12 +15,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { UserParams } from '../../interfaces/user-params';
-import { user } from '@angular/fire/auth';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule],
+    imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule],
     templateUrl: './situation-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
