@@ -62,7 +62,7 @@
         top: 6px;
         left: 6px;
     }
-    
+
     .custom-slider .ngx-slider .ngx-slider-pointer.ngx-slider-active:after {
         @apply dark:bg-gray-800 bg-white;
     }
@@ -81,4 +81,11 @@
     //     color: red !important;
     //     display: none !important;
     // }
+
+
 }
+
+// .custom-checkbox .p-checkbox-box.p-highlight {
+//     background-color: red;
+//     border-color: black;
+// }
