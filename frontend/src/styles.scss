@@ -6,6 +6,8 @@
 @import 'tailwindcss/utilities';
 
 @layer components {
+
+    //Dropdown primeNG
     .p-dropdown {
         ul {
             padding: 0;
@@ -19,6 +21,12 @@
         }
     }
 
+    //Paginator primeNG
+    // .p-dropdown.p-ripple.p-element.p-paginator-page.p-paginator-element.p-link.ng-star-inserted{
+    //     @apply text-gray-800 dark:text-gray-200;
+    // }
+
+    //Slider
     .custom-slider .ngx-slider .ngx-slider-bar {
         @apply bg-gray-200 dark:bg-white;
         height: 3px;
