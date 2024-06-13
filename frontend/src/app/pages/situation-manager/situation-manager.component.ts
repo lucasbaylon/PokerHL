@@ -60,9 +60,9 @@ export class SituationManagerComponent {
         { name: '3', code: 3 }
     ];
 
-    availableDealerPlayer: any[] = [
-        { name: 'Vous', code: 'you' },
-        { name: 'Adversaire 1', code: 'opponent1' }
+    availablePositionPlayer: any[] = [
+        { name: 'HU SB', code: 'hu_sb' },
+        { name: 'HU BB', code: 'hu_bb' }
     ];
 
     availableOpponentsPlayersLevel: any[] = [
@@ -72,7 +72,7 @@ export class SituationManagerComponent {
 
     nbPlayer: { name: string, code: number } = this.availableNbPlayersTable[0];
 
-    dealer: { name: string, code: string } = this.availableDealerPlayer[0];
+    position: { name: string, code: string } = this.availablePositionPlayer[0];
 
     opponentLevel: { name: string, code: string } = this.availableOpponentsPlayersLevel[0];
 
@@ -99,8 +99,8 @@ export class SituationManagerComponent {
             this.situation_obj = JSON.parse(situation_str);
             this.editSituationName = this.situation_obj.name;
             this.situation_objActionsRef = this.situation_obj.actions.slice();
-            this.nbPlayer = this.availableNbPlayersTable.find((nbPlayer) => nbPlayer.code === this.situation_obj.nbPlayer);
-            this.dealer = this.availableDealerPlayer.find((dealer) => dealer.code === this.situation_obj.dealer);
+            this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
+            this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
             this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
 
             let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
@@ -448,15 +448,22 @@ export class SituationManagerComponent {
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
         if (this.nbPlayer.code === 2) {
-            this.availableDealerPlayer.splice(2, 1);
-            if (this.dealer.code === 'opponent2') this.dealer = { name: 'Vous', code: 'you' };
+            this.availablePositionPlayer = [
+                { name: 'HU SB', code: 'hu_sb' },
+                { name: 'HU BB', code: 'hu_bb' }
+            ]
         } else {
-            this.availableDealerPlayer.push({ name: 'Adversaire 2', code: 'opponent2' });
+            this.availablePositionPlayer = [
+                { name: '3W SB', code: '3w_sb' },
+                { name: '3W BB', code: '3w_bb' },
+                { name: '3W BU', code: '3w_bu' }
+            ]
         }
+        this.position = this.availablePositionPlayer[0];
     }
 
-    onChangeDealer() {
-        this.situation_obj.dealer = this.dealer.code;
+    onChangePosition() {
+        this.situation_obj.position = this.position.code;
     }
 
     onChangeSituationType() {

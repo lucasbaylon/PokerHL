@@ -20,7 +20,7 @@ export class CommonService {
         type:"preflop",
         nbPlayer: 3,
         dealerMissingTokens: 0,
-        dealer: "you",
+        position: "hu_sb",
         opponentLevel: "fish",
         actions: [
             {
