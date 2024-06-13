@@ -113,28 +113,36 @@
         class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
-        <div class="multiples-solutions-container">
-            @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
-            <div class="multiples-solutions">
-                <div class="multiples-solutions-name">
-                    {{action.display_name}}
-                </div>
-                <div class="color-picker-square"
-                    [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"></div>
-                <label>
-                    <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                        (click)="onChangeAction(action.id)">
-                    <span class="design"></span>
-                </label>
-                <ion-button (click)="editMultipleSolution(action.id)">
-                    <ion-icon name="pencil-outline"></ion-icon>
-                </ion-button>
-                <ion-button (click)="deleteMultipleSolution(action.id)">
-                    <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
+        <!-- Surbrillance de la couleur sélectionnée -->
+        <!-- <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
+            class="absolute -inset-2 -inset-x-5 z-0"></div> -->
+        @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
+        <div class="grid grid-cols-5 w-full items-center gap-4 px-3 mb-2">
+            <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'bg-white dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
+                class="text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300">
+                {{action.display_name}}
             </div>
-            }
+            <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
+                [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
+                (click)="onColorAction(action.id)"></div>
+            <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
+                [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
+                class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 px-5 text-base font-medium shadow transition-none">
+                @if (actionSelected !== action.id) {
+                <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
+                }
+                @if (actionSelected === action.id) {
+                <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
+                }
+                {{actionSelected === action.id ? 'Choisi' : 'Sélectionner'}}
+            </div>
+            <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-200 text-gray-800"
+                (click)="editMultipleSolution(action.id)"></i>
+            <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-200 text-gray-800"
+                (click)="deleteMultipleSolution(action.id)"></i>
+
         </div>
+        }
         <div class="flex justify-center items-center">
             <div (click)="showAddMultiplesActionModal()"
                 class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
@@ -176,8 +184,8 @@
                         </div>
                     </div>
                     <div class="flex justify-center items-center">
-                        <p-checkbox [(ngModel)]="multipleSolutionCheckBox" class="custom-checkbox" name="multipleSolutionCheckBox"
-                            [value]="action.id" (onChange)="onCheckChange()" />
+                        <p-checkbox [(ngModel)]="multipleSolutionCheckBox" class="custom-checkbox"
+                            name="multipleSolutionCheckBox" [value]="action.id" (onChange)="onCheckChange()" />
                     </div>
                 </div>
             </div>
