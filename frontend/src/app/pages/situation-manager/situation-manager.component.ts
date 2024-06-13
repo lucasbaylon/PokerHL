@@ -43,10 +43,6 @@ export class SituationManagerComponent {
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     editSituationName?: string;
-    nbPlayer: { name: string, code: number } = { name: '2', code: 2 };
-    dealer: { name: string, code: string } = { name: 'Vous', code: 'you' };
-    opponentLevel: { name: string, code: string } = { name: 'Débutant', code: 'fish' };
-    situationType: { name: string, code: string } = { name: 'Pré-flop', code: 'preflop' };
     listener: any;
 
     options: Options = {
@@ -73,6 +69,14 @@ export class SituationManagerComponent {
         { name: 'Débutant', code: 'fish' },
         { name: 'Confirmé', code: 'shark' }
     ];
+
+    nbPlayer: { name: string, code: number } = this.availableNbPlayersTable[0];
+
+    dealer: { name: string, code: string } = this.availableDealerPlayer[0];
+
+    opponentLevel: { name: string, code: string } = this.availableOpponentsPlayersLevel[0];
+
+    situationType: { name: string, code: string } = this.availableSituationType[0];
 
     autoMultipleSolutionName: boolean = false;
 
@@ -186,12 +190,7 @@ export class SituationManagerComponent {
     saveSituation() {
         // On check si il y a bien un nom à la situation
         if (!this.situation_obj.name) {
-            Swal.fire({
-                icon: 'error',
-                html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
-                confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            });
+            this.commonService.showSwalToast(`Veuillez donner un nom à la situation.`, 'error');
         } else {
             let situation_empty = false;
             this.situation_obj.situations.map((row: any) => {
@@ -201,21 +200,11 @@ export class SituationManagerComponent {
             });
             // On check si toutes les cases sont bien remplies
             if (situation_empty) {
-                Swal.fire({
-                    icon: 'error',
-                    html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau.</p>',
-                    confirmButtonColor: '#d74c4c',
-                    confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                });
+                this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau.`, 'error');
             } else {
                 // On check si il y a bien un nombre de jetons
                 if (!this.situation_obj.dealerMissingTokens) {
-                    Swal.fire({
-                        icon: 'error',
-                        html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
-                        confirmButtonColor: '#d74c4c',
-                        confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                    });
+                    this.commonService.showSwalToast(`Veuillez remplir le stack effectif.`, 'error');
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
                     const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
@@ -227,23 +216,14 @@ export class SituationManagerComponent {
                             empty_action_input = true;
                         }
                     });
-                    // On check si toutes les situations simple ont bien un nom
+                    // On check si toutes les solutions simple ont bien un nom
                     if (empty_action_input) {
-                        Swal.fire({
-                            icon: 'error',
-                            html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom aux actions utilisées dans le tableau.</p>',
-                            confirmButtonColor: '#d74c4c',
-                            confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                        });
+                        this.commonService.showSwalToast(`Veuillez donner un nom aux actions utilisées dans le tableau.`, 'error');
                     } else {
                         if (this.mode === "new") {
                             this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Attention',
-                                        text: 'Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.'
-                                    });
+                                    this.commonService.showSwalToast(`Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.`, 'error');
                                 } else {
                                     this.addSituation();
                                 }
@@ -296,8 +276,8 @@ export class SituationManagerComponent {
         actionList.display_name = e.target.value;
     }
 
-    filteredActionList(list: Action[], type: string) {
-        return list.filter(item => item.type === type);
+    filteredActionList(list: Action[], type: string, filterNoDisplayName: boolean = false) {
+        return list.filter(item => item.type === type && (!filterNoDisplayName || (item.display_name !== undefined && item.display_name !== '')));
     }
 
     onColorAction(action_id: string) {
@@ -477,6 +457,10 @@ export class SituationManagerComponent {
 
     onChangeDealer() {
         this.situation_obj.dealer = this.dealer.code;
+    }
+
+    onChangeSituationType() {
+        this.situation_obj.type = this.situationType.code;
     }
 
     onChangeOpponentLevel() {
