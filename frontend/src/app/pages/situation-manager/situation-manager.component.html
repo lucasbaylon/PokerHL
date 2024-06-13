@@ -156,43 +156,45 @@
                 Ajout d'une Solution multiple
             </h4>
             @if (!autoMultipleSolutionName) {
-                <div class="flex items-center justify-between w-full my-7">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                        Nom de la solution
-                    </div>
-                    <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
-                        name="multipleSolutionName" id='multipleSolution' autocomplete="off" pInputText />
+            <div class="flex items-center justify-between w-full my-7">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Nom de la solution
                 </div>
+                <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
+                    name="multipleSolutionName" id='multipleSolution' autocomplete="off" pInputText />
+            </div>
             }
-            
-            @for (action of filteredActionList(situation_obj.actions, 'unique', true); track i; let i = $index) {
+
+            @for (action of filteredActionList(situation_obj.actions, 'unique', true); track $index;) {
             <div class="flex justify-center items-center w-full my-4">
                 <div class="grid grid-cols-3 w-1/2 items-center gap-4 px-3 mb-2">
                     <div class="flex justify-center items-center">
                         {{action.display_name}}
                     </div>
                     <div class="flex justify-center items-center">
-                        <div class="h-8 w-8 rounded shadow cursor-pointer m-0" [style]="'background: ' + action.color"></div>
+                        <div class="h-8 w-8 rounded shadow cursor-pointer m-0" [style]="'background: ' + action.color">
+                        </div>
                     </div>
                     <div class="flex justify-center items-center">
-                        <p-checkbox [binary]="true" class="custom-checkbox" name="multipleSolutionCheckBox" [inputId]="'id_check_'+ action.id" (onChange)="onCheckChange($event)"/>
+                        <p-checkbox [(ngModel)]="multipleSolutionCheckBox" class="custom-checkbox" name="multipleSolutionCheckBox"
+                            [value]="action.id" (onChange)="onCheckChange()" />
                     </div>
                 </div>
             </div>
             }
             @if (simpleSlider) {
-                <div class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
-                </div>
+            <div class="custom-slider">
+                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
+            </div>
             }
             @if (multipleSlider) {
-                <div class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                        [options]="options"></ngx-slider>
-                </div>
+            <div class="custom-slider">
+                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                    [options]="options"></ngx-slider>
+            </div>
             }
             <div class="flex justify-center mt-10">
-                <div (click)="addMultipleSolution()"
+                <div (click)="saveMultipleSolution()"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
                     Enregistrer la solution
@@ -218,7 +220,8 @@
                 Type de situation</div>
             <div class="flex items-center justify-end w-1/3">
                 <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
-                    [options]="availableSituationType" (onChange)="onChangeSituationType()" optionLabel="name"></p-dropdown>
+                    [options]="availableSituationType" (onChange)="onChangeSituationType()"
+                    optionLabel="name"></p-dropdown>
             </div>
         </div>
         <div class="flex items-center justify-between w-full mt-4">
