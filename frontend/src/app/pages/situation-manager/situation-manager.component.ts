@@ -38,8 +38,8 @@ export class SituationManagerComponent {
     mixedSolutionSliderMaxValue: number = 100;
     simpleSlider: boolean = true;
     multipleSlider: boolean = false;
-    checkboxMultipleSolutionChecked: number = 0;
-    multipleSolutionCheckedList: string[] = [];
+    // checkboxMultipleSolutionChecked: number = 0;
+    // multipleSolutionCheckedList: string[] = [];
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     editSituationName?: string;
@@ -302,41 +302,19 @@ export class SituationManagerComponent {
         this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
 
-    onCheckChange(e: any) {
-        let checkbox_id = e.originalEvent.target.id;
-        if (e.checked) {
-            if (this.checkboxMultipleSolutionChecked < 3) {
-                this.checkboxMultipleSolutionChecked++;
-                this.multipleSolutionCheckedList.push(checkbox_id.replace("id_check_", ""));
-            } else {
-                e.checked = false;
-            }
-        } else {
-            this.checkboxMultipleSolutionChecked--;
-            const index: number = this.multipleSolutionCheckedList.indexOf(checkbox_id.replace("id_check_", ""));
-            if (index !== -1) {
-                this.multipleSolutionCheckedList.splice(index, 1);
-            }
-        }
-
-        if (this.checkboxMultipleSolutionChecked < 3) {
+    onCheckChange() {
+        if (this.multipleSolutionCheckBox.length < 3) {
             this.simpleSlider = true;
             this.multipleSlider = false;
-        } else if (this.checkboxMultipleSolutionChecked === 3) {
+        } else if (this.multipleSolutionCheckBox.length === 3) {
             this.simpleSlider = false;
             this.multipleSlider = true;
         }
     }
 
-    addMultipleSolution() {
-        this.multipleSolutionCheckedList.sort((a: string, b: string) => {
-            const numA = parseInt(a.slice(14));
-            const numB = parseInt(b.slice(14));
-
-            return numA - numB;
-        });
+    saveMultipleSolution() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        if (this.checkboxMultipleSolutionChecked < 2) {
+        if (this.multipleSolutionCheckBox.length < 2) {
             this.commonService.showSwalToast(`Merci de cocher au moins deux cases.`, 'error');
             return;
         }
@@ -345,11 +323,11 @@ export class SituationManagerComponent {
             color: string;
             percent?: number | undefined;
         }[] = [];
-        this.multipleSolutionCheckedList.map((action, index) => {
+        this.multipleSolutionCheckBox.map((action, index) => {
             let percent = 0;
             if (index === 0) percent = this.mixedSolutionSliderMinValue;
-            if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
-            if (index + 1 === this.multipleSolutionCheckedList.length) {
+            if (index === 1 && this.multipleSolutionCheckBox.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
+            if (index + 1 === this.multipleSolutionCheckBox.length) {
                 if (this.mixedSolutionSliderMaxValue === 100) {
                     percent = 100 - this.mixedSolutionSliderMinValue;
                 } else {
@@ -364,6 +342,7 @@ export class SituationManagerComponent {
             actionsLst.push(obj);
         });
         if (userParams.autoMultipleSolutionName) {
+            this.multipleSolutionName = "";
             actionsLst.forEach((actionItem, index) => {
                 const action = this.situation_obj.actions.find(action => action.id === actionItem.color);
                 if (action) {
@@ -391,7 +370,7 @@ export class SituationManagerComponent {
                     new_obj,
                     ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
                 ];
-                (document.getElementById(`button_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
+                // (document.getElementById(`button_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
             }
         } else {
             this.countMultipleSolution++;
@@ -404,11 +383,9 @@ export class SituationManagerComponent {
     resetMultipleSituation() {
         this.simpleSlider = true;
         this.multipleSlider = false;
-        this.checkboxMultipleSolutionChecked = 0;
         this.mixedSolutionSliderMinValue = 50;
         this.mixedSolutionSliderMaxValue = 100;
-        this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = false);
-        this.multipleSolutionCheckedList = [];
+        this.multipleSolutionCheckBox = [];
         this.multipleSolutionName = "";
         this.multipleSituationId = undefined;
         this.closeMultiplesActionModal();
@@ -418,9 +395,7 @@ export class SituationManagerComponent {
         let action: Action = this.situation_objActionsRef.filter((action: Action) => action.id === action_id)[0];
         this.multipleSituationId = action.id;
         this.multipleSolutionName = action.display_name!;
-        this.multipleSolutionCheckedList = action.colorList!.map(action => action.color);
-        this.multipleSolutionCheckedList.map(action => (document.getElementById(`id_check_${action}`) as HTMLInputElement).checked = true);
-        this.checkboxMultipleSolutionChecked = this.multipleSolutionCheckedList.length;
+        this.multipleSolutionCheckBox = action.colorList!.map(action => action.color);
         if (action.colorList?.length === 2) {
             this.mixedSolutionSliderMinValue = action.colorList[0].percent!;
         } else if (action.colorList?.length === 3) {
@@ -428,14 +403,14 @@ export class SituationManagerComponent {
             this.mixedSolutionSliderMaxValue = action.colorList[0].percent! + action.colorList[1].percent!;
         }
 
-        if (this.checkboxMultipleSolutionChecked < 3) {
+        if (this.multipleSolutionCheckBox.length < 3) {
             this.simpleSlider = true;
             this.multipleSlider = false;
-        } else if (this.checkboxMultipleSolutionChecked === 3) {
+        } else if (this.multipleSolutionCheckBox.length === 3) {
             this.simpleSlider = false;
             this.multipleSlider = true;
         }
-        document.getElementById("add-multiples-solutions")?.classList.remove("hidden");
+        this.showAddMultiplesActionModal();
     }
 
     deleteMultipleSolution(action_id: string) {
