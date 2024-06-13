@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SituationService } from '../../services/situation.service';
 import { CommonService } from '../../services/common.service';
 import { cloneDeep } from 'lodash';
-import { Options } from '@angular-slider/ngx-slider';
+import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 import { Situation } from '../../interfaces/situation';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -18,7 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule],
+    imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule],
     templateUrl: './situation-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
