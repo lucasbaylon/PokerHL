@@ -137,7 +137,7 @@
         </div>
         <div class="flex justify-center items-center">
             <div (click)="showAddMultiplesAction()"
-                class="flex h-12 items-center w-1/4 justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
                 <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
                 Ajouter
             </div>
@@ -154,19 +154,21 @@
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                 Ajout d'une Solution multiple</h4>
-            <div class="">
-                <label for="multipleSolution" class="">Nom de la solution</label>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Nom de la solution</div>
                 <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
-                    class="bg-white flex h-10 w-1/2 transition-all duration-100 rounded-md border px-3 py-2 text-md shadow-sm ring-offset-background placeholder:text-muted-foreground placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-700"
-                    id='multipleSolution' autocomplete="off" />
+                    name="multipleSolutionName" id='multipleSolution' autocomplete="off" pInputText />
+            </div>
+            <div class="grid items-center w-full mt-4">
                 @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-                <div class="flex justify-between w-1/2 items-center mt-4">
-                    {{action.display_name}}
-                    <div class="h-8 w-8 rounded shadow cursor-pointer" [style]="'background: ' + action.color">
+                <div class="flex justify-evenly w-1/2 items-center mt-4 px-3">
+                    <div class="flex justify-between items-center px-3">{{action.display_name}}</div>
+                    <div class="h-8 w-8 rounded shadow cursor-pointer m-0" [style]="'background: ' + action.color">
                     </div>
-                    <label [for]="'id_check_'+ action.id" class="check">
-                        <input type="checkbox" class="dui-checkbox" [id]="'id_check_'+ action.id"
-                            (change)="onCheckChange($event)" />
+                    <label [for]="'id_check_'+ action.id" class="dui-check">
+                        <input type="checkbox" class="dui-checkbox border-solid border border-gray-200"
+                            [id]="'id_check_'+ action.id" (change)="onCheckChange($event)" />
                     </label>
                 </div>
                 }
@@ -214,7 +216,8 @@
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Stack effectif</div>
-            <p-inputNumber inputId="integeronly" [size]="5" [min]="0" [max]="999" [(ngModel)]="situation_obj.dealerMissingTokens"></p-inputNumber>
+            <p-inputNumber inputId="integeronly" [size]="5" [min]="0" [max]="999"
+                [(ngModel)]="situation_obj.dealerMissingTokens"></p-inputNumber>
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">

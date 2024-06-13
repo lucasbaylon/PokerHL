@@ -62,7 +62,7 @@
     </div>
 </div>
 <div [ngStyle]="{ left: commonService.isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
-    class="border border-gray-400 flex justify-center items-center z-10 fixed top-8 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+    class="border-solid border border-gray-400 flex justify-center items-center z-10 fixed top-8 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer">
     <i class="fa-solid fa-angle-left text-base"
         [ngClass]="{ 'transform rotate-180': commonService.isCollapsed, 'transform rotate-0': !commonService.isCollapsed }"></i>
 </div>
