@@ -6,72 +6,72 @@
     <p-table [value]="paginatedSituationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true">
         <ng-template pTemplate="header">
             <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
+                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-900">
                     <div class="flex items-center">
                         Nom
-                        <p-columnFilter type="text" field="name" display="menu" class="ml-1"></p-columnFilter>
+                        <p-columnFilter type="text" field="name" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Stack effectif
                         <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
-                            class="ml-1"></p-columnFilter>
+                            class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Nb joueurs
-                        <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-1"></p-columnFilter>
+                        <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Position
-                        <p-columnFilter type="text" field="dealer" display="menu" class="ml-1"></p-columnFilter>
+                        <p-columnFilter type="text" field="dealer" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Niveau
-                        <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-1"></p-columnFilter>
+                        <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg"></th>
-                <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg"></th>
-                <th class="w-16 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md"></th>
+                <th class="w-16 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900"></th>
+                <th class="w-16 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900"></th>
+                <th class="w-16 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-900"></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
             <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
-                <td>
+                <td class="dark:border-gray-900">
                     {{ situation.name }}
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     {{ situation.dealerMissingTokens }}
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     {{ situation.nbPlayer }}
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     {{ situation.dealer! | dealer }}
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     <i class="fa-solid fa-clone cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150" (click)="duplicateSituation(situation.id)"></i>
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150" (click)="editSituation(situation.id)"></i>
                 </td>
-                <td>
+                <td class="dark:border-gray-900">
                     <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150" (click)="removeSituation(situation.id)"></i>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
-            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                 <td colspan="8">Aucune situation trouvée.</td>
             </tr>
         </ng-template>

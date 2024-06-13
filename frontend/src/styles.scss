@@ -15,7 +15,7 @@
 
         li.p-highlight.p-focus {
             background-color: rgb(209 213 219);
-            color: rgb(31 41 55);
+            @apply text-gray-800;
         }
     }
 

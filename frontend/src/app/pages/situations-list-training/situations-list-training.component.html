@@ -7,66 +7,66 @@
         [(selection)]="selectedSituations">
         <ng-template pTemplate="header">
             <tr>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-900">
                     <div class="flex items-center">
                         Nom
                         <p-columnFilter type="text" field="name" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Stack effectif
                         <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
                             class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Nb joueurs
                         <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Position
                         <p-columnFilter type="text" field="dealer" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Niveau
                         <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-1"></p-columnFilter>
                     </div>
                 </th>
-                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md">
+                <th class="dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-900">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
             <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg py-3">
-                <td class="py-6">
+                <td class="py-6 dark:border-gray-900">
                     {{ situation.name }}
                 </td>
-                <td class="py-6">
+                <td class="py-6 dark:border-gray-900">
                     {{ situation.dealerMissingTokens }}
                 </td>
-                <td class="py-6">
+                <td class="py-6 dark:border-gray-900">
                     {{ situation.nbPlayer }}
                 </td>
-                <td class="py-6">
+                <td class="py-6 dark:border-gray-900">
                     {{ situation.dealer! | dealer }}
                 </td>
-                <td class="py-6">
+                <td class="py-6 dark:border-gray-900">
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
-                <td class="py-6">
+                <td class="py-6 dark:border-gray-900">
                     <p-tableCheckbox [value]="situation"></p-tableCheckbox>
                 </td>
             </tr>
         </ng-template>
     </p-table>
-    <p-paginator locale="fr-FR" styleClass="rounded-b-md rounded-t-none dark:text-gray-200 dark:bg-secondary-dark-bg"
+    <p-paginator locale="fr-FR" styleClass="rounded-b-md rounded-t-none dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900"
         [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" />
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
