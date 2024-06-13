@@ -14,6 +14,8 @@ import { ActionColorPipe } from '../../pipes/action-color.pipe';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { UserParams } from '../../interfaces/user-params';
+import { user } from '@angular/fire/auth';
 
 @Component({
     selector: 'app-situation-manager',
@@ -72,6 +74,8 @@ export class SituationManagerComponent {
         { name: 'Confirmé', code: 'shark' }
     ];
 
+    autoMultipleSolutionName: boolean = false;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -98,6 +102,8 @@ export class SituationManagerComponent {
             let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
             this.countMultipleSolution = actionList.length;
         });
+        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        if (userParams.autoMultipleSolutionName) this.autoMultipleSolutionName = true;
     }
 
     ngOnDestroy() {
@@ -127,10 +133,17 @@ export class SituationManagerComponent {
         }
     }
 
-    showAddMultiplesAction() {
+    showAddMultiplesActionModal() {
         const modal = document.getElementById('add-multiples-solutions') as HTMLDialogElement;
         if (modal) {
             modal.showModal();
+        }
+    }
+
+    closeMultiplesActionModal() {
+        const modal = document.getElementById('add-multiples-solutions') as HTMLDialogElement;
+        if (modal) {
+            modal.close();
         }
     }
 
@@ -334,75 +347,77 @@ export class SituationManagerComponent {
         }
     }
 
-    addMultipleAction() {
+    addMultipleSolution() {
         this.multipleSolutionCheckedList.sort((a: string, b: string) => {
             const numA = parseInt(a.slice(14));
             const numB = parseInt(b.slice(14));
 
             return numA - numB;
         });
-        if (this.multipleSolutionName === "") {
-            Swal.fire({
-                icon: 'error',
-                html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de donner un nom à la solution multiple.</p>',
-                confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
+        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        if (this.checkboxMultipleSolutionChecked < 2) {
+            this.commonService.showSwalToast(`Merci de cocher au moins deux cases.`, 'error');
+            return;
+        }
+
+        const actionsLst: {
+            color: string;
+            percent?: number | undefined;
+        }[] = [];
+        this.multipleSolutionCheckedList.map((action, index) => {
+            let percent = 0;
+            if (index === 0) percent = this.mixedSolutionSliderMinValue;
+            if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
+            if (index + 1 === this.multipleSolutionCheckedList.length) {
+                if (this.mixedSolutionSliderMaxValue === 100) {
+                    percent = 100 - this.mixedSolutionSliderMinValue;
+                } else {
+                    percent = 100 - this.mixedSolutionSliderMaxValue;
+                }
+            }
+
+            let obj = {
+                color: action,
+                percent: percent
+            }
+            actionsLst.push(obj);
+        });
+        if (userParams.autoMultipleSolutionName) {
+            actionsLst.forEach((actionItem, index) => {
+                const action = this.situation_obj.actions.find(action => action.id === actionItem.color);
+                if (action) {
+                    this.multipleSolutionName += action.display_name!.replace(/ /g, '_') + '_' + actionItem.percent;
+                    if (index + 1 < actionsLst.length) this.multipleSolutionName += '_';
+                }
             });
         } else {
-            if (this.checkboxMultipleSolutionChecked < 2) {
-                Swal.fire({
-                    icon: 'error',
-                    html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Merci de cocher au moins deux cases.</p>',
-                    confirmButtonColor: '#d74c4c',
-                    confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                });
-            } else {
-                let colorLst: {
-                    color: string;
-                    percent?: number | undefined;
-                }[] = [];
-                this.multipleSolutionCheckedList.map((action, index) => {
-                    let percent = 0;
-                    if (index === 0) percent = this.mixedSolutionSliderMinValue;
-                    if (index === 1 && this.multipleSolutionCheckedList.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
-                    if (index + 1 === this.multipleSolutionCheckedList.length) {
-                        if (this.mixedSolutionSliderMaxValue === 100) {
-                            percent = 100 - this.mixedSolutionSliderMinValue;
-                        } else {
-                            percent = 100 - this.mixedSolutionSliderMaxValue;
-                        }
-                    }
-
-                    let obj = {
-                        color: action,
-                        percent: percent
-                    }
-                    colorLst.push(obj);
-                });
-                let new_obj = {
-                    id: this.multipleSituationId ? this.multipleSituationId : `mixed_action_${this.countMultipleSolution}`,
-                    type: "mixed",
-                    display_name: this.multipleSolutionName,
-                    colorList: colorLst
-                }
-                if (this.multipleSituationId) {
-                    const indexToReplace = this.situation_obj.actions.findIndex(action => action.id === this.multipleSituationId);
-                    if (indexToReplace !== -1) {
-                        this.situation_obj.actions = [
-                            ...this.situation_obj.actions.slice(0, indexToReplace),
-                            new_obj,
-                            ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
-                        ];
-                        (document.getElementById(`button_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
-                    }
-                } else {
-                    this.countMultipleSolution++;
-                    this.situation_obj.actions.push(new_obj);
-                }
-                this.situation_objActionsRef = this.situation_obj.actions.slice();
-                this.resetMultipleSituation();
+            if (this.multipleSolutionName === "") {
+                this.commonService.showSwalToast(`Merci de donner un nom à la solution multiple.`, 'error');
+                return;
             }
         }
+        let new_obj = {
+            id: this.multipleSituationId ? this.multipleSituationId : `mixed_action_${this.countMultipleSolution}`,
+            type: "mixed",
+            display_name: this.multipleSolutionName,
+            colorList: actionsLst
+        }
+        if (this.multipleSituationId) {
+            const indexToReplace = this.situation_obj.actions.findIndex(action => action.id === this.multipleSituationId);
+            if (indexToReplace !== -1) {
+                this.situation_obj.actions = [
+                    ...this.situation_obj.actions.slice(0, indexToReplace),
+                    new_obj,
+                    ...(this.situation_obj.actions.length > 1 ? this.situation_obj.actions.slice(indexToReplace + 1) : [])
+                ];
+                (document.getElementById(`button_${this.multipleSituationId}`) as HTMLInputElement).checked = true;
+            }
+        } else {
+            this.countMultipleSolution++;
+            this.situation_obj.actions.push(new_obj);
+        }
+        this.situation_objActionsRef = this.situation_obj.actions.slice();
+        this.resetMultipleSituation();
     }
 
     resetMultipleSituation() {
@@ -415,6 +430,7 @@ export class SituationManagerComponent {
         this.multipleSolutionCheckedList = [];
         this.multipleSolutionName = "";
         this.multipleSituationId = undefined;
+        this.closeMultiplesActionModal();
     }
 
     editMultipleSolution(action_id: string) {
@@ -488,7 +504,7 @@ export class SituationManagerComponent {
         // S'assurer que la valeur est entre 1 et 9999
         if (parseInt(numbers) < 1) {
             numbers = '1';
-        } else if (parseInt(numbers) > 9999){
+        } else if (parseInt(numbers) > 9999) {
             numbers = '9999';
         }
 

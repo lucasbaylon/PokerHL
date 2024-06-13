@@ -64,9 +64,9 @@
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Nom de solution
-                    multiple auto</div>
-                <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
+                    Nom de situation multiple auto
+                </div>
+                <p-inputSwitch [(ngModel)]="autoMultipleSolutionName" (onChange)="onChangeAutoMultipleSolutionName()"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div

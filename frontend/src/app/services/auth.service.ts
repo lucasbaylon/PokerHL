@@ -30,8 +30,11 @@ export class AuthService {
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',
-                        JSON.stringify({ darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false })
+                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false })
                     );
+                }
+                if (!localStorage.getItem('theme')) {
+                    localStorage.setItem('theme', 'light');
                 }
                 if (currentUrl.startsWith('/login')) {
                     this.router.navigate(['home']);

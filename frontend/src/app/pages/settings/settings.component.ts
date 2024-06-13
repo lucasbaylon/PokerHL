@@ -25,7 +25,7 @@ export class SettingsComponent {
     darkMode: boolean = false;
     displaySolutionOnError: boolean = true;
     highContrastCards: boolean = false;
-    autoNameMultipleSituation: boolean = false;
+    autoMultipleSolutionName: boolean = false;
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
@@ -46,12 +46,19 @@ export class SettingsComponent {
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
+        userParams.autoMultipleSolutionName ? this.autoMultipleSolutionName = userParams.autoMultipleSolutionName : this.autoMultipleSolutionName = false;
         localStorage.getItem('theme') === 'light' ? this.darkMode = false : this.darkMode = true;
     }
 
     onChangeDisplaySolutionOnError() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.displaySolution = this.displaySolutionOnError;
+        localStorage.setItem('userParams', JSON.stringify(userParams));
+    }
+
+    onChangeAutoMultipleSolutionName() {
+        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        userParams.autoMultipleSolutionName = this.autoMultipleSolutionName;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
