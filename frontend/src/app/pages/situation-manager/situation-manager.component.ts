@@ -186,12 +186,7 @@ export class SituationManagerComponent {
     saveSituation() {
         // On check si il y a bien un nom à la situation
         if (!this.situation_obj.name) {
-            Swal.fire({
-                icon: 'error',
-                html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom à la situation.</p>',
-                confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            });
+            this.commonService.showSwalToast(`Veuillez donner un nom à la situation.`, 'error');
         } else {
             let situation_empty = false;
             this.situation_obj.situations.map((row: any) => {
@@ -201,21 +196,11 @@ export class SituationManagerComponent {
             });
             // On check si toutes les cases sont bien remplies
             if (situation_empty) {
-                Swal.fire({
-                    icon: 'error',
-                    html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir toutes les cases du tableau.</p>',
-                    confirmButtonColor: '#d74c4c',
-                    confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                });
+                this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau.`, 'error');
             } else {
                 // On check si il y a bien un nombre de jetons
                 if (!this.situation_obj.dealerMissingTokens) {
-                    Swal.fire({
-                        icon: 'error',
-                        html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez remplir le nombre de BB restantes pour les joueurs.</p>',
-                        confirmButtonColor: '#d74c4c',
-                        confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                    });
+                    this.commonService.showSwalToast(`Veuillez remplir le stack effectif.`, 'error');
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
                     const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
@@ -227,23 +212,14 @@ export class SituationManagerComponent {
                             empty_action_input = true;
                         }
                     });
-                    // On check si toutes les situations simple ont bien un nom
+                    // On check si toutes les solutions simple ont bien un nom
                     if (empty_action_input) {
-                        Swal.fire({
-                            icon: 'error',
-                            html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez donner un nom aux actions utilisées dans le tableau.</p>',
-                            confirmButtonColor: '#d74c4c',
-                            confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-                        });
+                        this.commonService.showSwalToast(`Veuillez donner un nom aux actions utilisées dans le tableau.`, 'error');
                     } else {
                         if (this.mode === "new") {
                             this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Attention',
-                                        text: 'Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.'
-                                    });
+                                    this.commonService.showSwalToast(`Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.`, 'error');
                                 } else {
                                     this.addSituation();
                                 }
