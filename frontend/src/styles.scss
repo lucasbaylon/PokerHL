@@ -81,10 +81,13 @@
     //     display: none !important;
     // }
 
+    .custom-checkbox .p-checkbox-box.p-highlight {
+        @apply bg-gray-800 dark:bg-secondary-dark-bg border-gray-200;
+        border-width: 0.5px;
+    }
+
+    .custom-checkbox .p-checkbox-box:hover {
+        @apply border-gray-600 dark:border-gray-100;
+    }
 
 }
-
-// .custom-checkbox .p-checkbox-box.p-highlight {
-//     background-color: red;
-//     border-color: black;
-// }
