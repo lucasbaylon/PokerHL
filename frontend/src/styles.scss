@@ -12,10 +12,16 @@
             border-radius: 5px;
             overflow: hidden;
         }
-        
+
         li.p-highlight.p-focus {
             background-color: rgb(209 213 219);
             color: rgb(31 41 55);
         }
+    }
+
+    .p-inputwrapper-filled.p-focus.p-inputwrapper-focus {
+        background-color: red !important;
+        color: red !important;
+        display: none !important;
     }
 }
