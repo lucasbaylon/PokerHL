@@ -33,7 +33,7 @@
             class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
             <a href="https://www.clubpoker.net/lexique-poker" target="_blank"
                 class="flex items-center justify-start px-3 py-4 no-underline text-gray-800 dark:text-gray-200">
-                <i class="fa-solid fa-spell-check ml-5 text-lg transition-colors duration-500"></i>
+                <i class="fa-solid fa-spell-check ml-5 text-lg transition-all duration-500"></i>
                 <span [ngClass]="{ 'ml-8': commonService.isCollapsed, 'ml-6': !commonService.isCollapsed }"
                     class="flex items-center justify-center text-md transition-all duration-500">Lexique</span>
             </a>
@@ -56,15 +56,15 @@
             </div>
         </div>
         <div [ngClass]="{ 'whitespace-nowrap overflow-hidden': commonService.isCollapsed }" class="ml-4">
-            <p class="font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-500">Hugo Eribon</p>
+            <p class="font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-500 m-0 mb-1">Hugo Eribon</p>
             <div (click)="commonService.redirectTo('settings')"
                 class="hover:underline text-gray-800 dark:text-gray-200 cursor-pointer transition-colors duration-500">
                 Gérer le compte</div>
         </div>
     </div>
 </div>
-<button [ngStyle]="{ left: commonService.isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
+<div [ngStyle]="{ left: commonService.isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
     class="flex justify-center items-center z-10 fixed top-8 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400 cursor-pointer">
     <i class="fa-solid fa-angle-left text-base"
         [ngClass]="{ 'transform rotate-180': commonService.isCollapsed, 'transform rotate-0': !commonService.isCollapsed }"></i>
-</button>
+</div>
