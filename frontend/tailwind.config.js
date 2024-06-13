@@ -80,6 +80,9 @@ module.exports = {
     },
     daisyui,
   ],
+  corePlugins: {
+    preflight: false
+  },
   daisyui: {
     themes: ["light",'dark'],
     prefix: "dui-",

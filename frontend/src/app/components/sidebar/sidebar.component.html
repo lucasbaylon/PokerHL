@@ -1,6 +1,6 @@
-<div [ngClass]="{ 'w-20': commonService.isCollapsed, 'w-64': !commonService.isCollapsed }"
+<div [ngStyle]="{ 'width': commonService.isCollapsed ? '80px' : '255px' }"
     class="fixed h-full whitespace-nowrap overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
-    <ul class="absolute w-full">
+    <ul class="absolute w-full list-none m-0 p-0">
         <li class="mb-6 ml-3 mt-4 w-fit">
             <div (click)="commonService.redirectTo('home')" class="flex items-center cursor-pointer p-3 ">
                 <img src="../../../assets/img/logo.png" alt="Logo" class="h-8 w-8">
@@ -32,9 +32,8 @@
         <li
             class="transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
             <a href="https://www.clubpoker.net/lexique-poker" target="_blank"
-                class="flex items-center justify-start px-3 py-4">
-                <i
-                    class="fa-solid fa-spell-check ml-5 text-lg text-gray-800 dark:text-gray-200 transition-colors duration-500"></i>
+                class="flex items-center justify-start px-3 py-4 no-underline text-gray-800 dark:text-gray-200">
+                <i class="fa-solid fa-spell-check ml-5 text-lg transition-colors duration-500"></i>
                 <span [ngClass]="{ 'ml-8': commonService.isCollapsed, 'ml-6': !commonService.isCollapsed }"
                     class="flex items-center justify-center text-md transition-all duration-500">Lexique</span>
             </a>
@@ -65,7 +64,7 @@
     </div>
 </div>
 <button [ngStyle]="{ left: commonService.isCollapsed ? '80px' : '255px' }" (click)="toggleSidebar()"
-    class="flex justify-center items-center z-10 fixed top-7 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400">
+    class="flex justify-center items-center z-10 fixed top-8 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-gray-400 cursor-pointer">
     <i class="fa-solid fa-angle-left text-base"
         [ngClass]="{ 'transform rotate-180': commonService.isCollapsed, 'transform rotate-0': !commonService.isCollapsed }"></i>
 </button>
