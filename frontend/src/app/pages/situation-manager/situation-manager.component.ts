@@ -43,10 +43,6 @@ export class SituationManagerComponent {
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     editSituationName?: string;
-    nbPlayer: { name: string, code: number } = { name: '2', code: 2 };
-    dealer: { name: string, code: string } = { name: 'Vous', code: 'you' };
-    opponentLevel: { name: string, code: string } = { name: 'Débutant', code: 'fish' };
-    situationType: { name: string, code: string } = { name: 'Pré-flop', code: 'preflop' };
     listener: any;
 
     options: Options = {
@@ -73,6 +69,14 @@ export class SituationManagerComponent {
         { name: 'Débutant', code: 'fish' },
         { name: 'Confirmé', code: 'shark' }
     ];
+
+    nbPlayer: { name: string, code: number } = this.availableNbPlayersTable[0];
+
+    dealer: { name: string, code: string } = this.availableDealerPlayer[0];
+
+    opponentLevel: { name: string, code: string } = this.availableOpponentsPlayersLevel[0];
+
+    situationType: { name: string, code: string } = this.availableSituationType[0];
 
     autoMultipleSolutionName: boolean = false;
 
@@ -453,6 +457,10 @@ export class SituationManagerComponent {
 
     onChangeDealer() {
         this.situation_obj.dealer = this.dealer.code;
+    }
+
+    onChangeSituationType() {
+        this.situation_obj.type = this.situationType.code;
     }
 
     onChangeOpponentLevel() {
