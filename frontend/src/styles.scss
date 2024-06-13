@@ -16,14 +16,22 @@
         }
 
         li.p-highlight.p-focus {
-            @apply text-gray-800;
+            @apply text-gray-800 bg-gray-300;
         }
     }
 
     //Paginator primeNG
-    // .p-dropdown.p-ripple.p-element.p-paginator-page.p-paginator-element.p-link.ng-star-inserted{
-    //     @apply text-gray-800 dark:text-gray-200;
-    // }
+    .custom-paginator .p-ripple {
+        @apply text-gray-800 dark:text-gray-200 min-w-10 max-h-10;
+    }
+    
+    .custom-paginator .p-ripple.p-highlight {
+        @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10;
+    }
+    
+    .custom-paginator .p-ripple:hover {
+        @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10 transition-colors duration-300;
+    }
 
     //Slider
     .custom-slider .ngx-slider .ngx-slider-bar {
@@ -73,13 +81,6 @@
     .custom-slider .ngx-slider .ngx-slider-ceil {
         margin-left: 16px !important;
     }
-
-
-    // .p-inputwrapper-filled.p-focus.p-inputwrapper-focus {
-    //     background-color: red !important;
-    //     color: red !important;
-    //     display: none !important;
-    // }
 
     .custom-checkbox .p-checkbox-box.p-highlight {
         @apply bg-gray-800 dark:bg-secondary-dark-bg border-gray-200;
