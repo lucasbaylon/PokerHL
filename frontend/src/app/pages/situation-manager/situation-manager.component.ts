@@ -296,8 +296,8 @@ export class SituationManagerComponent {
         actionList.display_name = e.target.value;
     }
 
-    filteredActionList(list: Action[], type: string) {
-        return list.filter(item => item.type === type);
+    filteredActionList(list: Action[], type: string, filterNoDisplayName: boolean = false) {
+        return list.filter(item => item.type === type && (!filterNoDisplayName || (item.display_name !== undefined && item.display_name !== '')));
     }
 
     onColorAction(action_id: string) {

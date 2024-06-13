@@ -165,7 +165,7 @@
                 </div>
             }
             
-            @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
+            @for (action of filteredActionList(situation_obj.actions, 'unique', true); track i; let i = $index) {
             <div class="flex justify-center items-center w-full my-4">
                 <div class="grid grid-cols-3 w-1/2 items-center gap-4 px-3 mb-2">
                     <div class="flex justify-center items-center">
