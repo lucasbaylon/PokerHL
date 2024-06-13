@@ -43,6 +43,7 @@ export class SituationManagerComponent {
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     editSituationName?: string;
+    multipleSolutionCheckBox: string[] = [];
     listener: any;
 
     options: Options = {
@@ -302,13 +303,13 @@ export class SituationManagerComponent {
     }
 
     onCheckChange(e: any) {
-        let checkbox_id = e.target.id;
-        if (e.target.checked) {
+        let checkbox_id = e.originalEvent.target.id;
+        if (e.checked) {
             if (this.checkboxMultipleSolutionChecked < 3) {
                 this.checkboxMultipleSolutionChecked++;
                 this.multipleSolutionCheckedList.push(checkbox_id.replace("id_check_", ""));
             } else {
-                e.target.checked = false;
+                e.checked = false;
             }
         } else {
             this.checkboxMultipleSolutionChecked--;
