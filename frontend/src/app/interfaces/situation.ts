@@ -12,7 +12,7 @@ export interface Situation {
 
     dealerMissingTokens: number;
 
-    dealer?: string;
+    position?: string;
 
     opponentLevel?: string;
 
