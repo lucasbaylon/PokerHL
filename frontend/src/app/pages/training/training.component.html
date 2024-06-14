@@ -1,6 +1,6 @@
-<div class="relative h-screen">
+<div class="relative h-[calc(100vh-64px)]">
     @if (activeSituation) {
-    <div class="flex_container">
+    <div class="flex-col justify-center items-center">
         <div class="poker_table_container">
             <div class="poker_table" [style.background]="backgroundColor">
                 <h1>Poker
@@ -93,19 +93,18 @@
                 <hr class="userHr">
             </div>
         </div>
-        <div class="answer_div_container">
-            <div class="answer_div">
-                @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
-                @if (action.display_name) {
-                <button class="fill" [id]="'button_' + action.id"
-                    (click)="checkResultCase(action.id)">{{action.display_name}}</button>
-                }
-                }
-            </div>
+        <div
+            class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+            @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
+            @if (action.display_name) {
+            <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
+                [id]="'button_' + action.id" (click)="checkResultCase(action.id)">{{action.display_name}}</div>
+            }
+            }
         </div>
     </div>
     }
-    
+
     <!-- Div affichée lors d'une mauvaise réponse -->
     <dialog id="wrong-answer-modal" class="dui-modal">
         <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
@@ -138,7 +137,8 @@
                 <div class=" ml-6 mr-5">
                     @for (action of activeSituation.actions; track i; let i = $index) {
                     @if (action.display_name) {
-                    <div class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
+                    <div
+                        class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
                         {{action.display_name}}
                         <div class="h-7 w-7 ml-2 rounded shadow-md"
                             [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
@@ -160,7 +160,7 @@
 
     <!-- Div des infos -->
     <div
-        class="absolute left-0 bottom-0 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+        class="absolute -left-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
         <div class="mb-1">
             <span class="font-semibold">Randomizer :</span>
             {{randomizer}}%
@@ -176,7 +176,7 @@
 
     <!-- Compte à rebours -->
     <div
-        class="absolute right-0 bottom-0 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+        class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
         <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
             <div class="flex flex-col">
                 <span class="dui-countdown text-5xl">

@@ -76,7 +76,7 @@ export class TrainingComponent {
     }
 
     filteredActionList(list: Action[], type: string) {
-        return list.filter(item => item.type === type);
+        return list.filter(item => item.type === type).reverse();;
     }
 
     getRandomSituation(array: any[]): any {
