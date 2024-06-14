@@ -13,7 +13,6 @@ import { ActionColorPipe } from '../../pipes/action-color.pipe';
     standalone: true,
     imports: [NgStyle, ActionColorPipe],
     templateUrl: './training.component.html',
-    styleUrl: './training.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TrainingComponent {
