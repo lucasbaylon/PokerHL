@@ -24,6 +24,7 @@ export class SettingsComponent {
 
     darkMode: boolean = false;
     displaySolutionOnError: boolean = true;
+    displaySituation: boolean = true;
     highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
 

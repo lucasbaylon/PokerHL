@@ -104,43 +104,51 @@
     </div>
 </div>
 }
-<div class="error-window-container" id="error-window-container" style="display: none;">
-    @if (currentSituation) {
-    <div class="error-window">
-        <h1>Mauvaise réponse !</h1>
-        <div class="parent">
-            <div class="tableaux">
-                <table>
-                    <tbody>
-                        @for (row of currentSituation.situations; track $index) {
-                        <tr>
-                            @for (item of row; track $index) {
-                            <td [style.background]="(item.action! | actionColor:currentSituation.actions)">
-                                {{item.card}}
-                            </td>
+<dialog id="wrong-answer-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <form method="dialog">
+            <button
+                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+        </form>
+        @if (currentSituation) {
+        <div>
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Mauvaise réponse...
+            </h4>
+            <div class="flex justify-center items-center">
+                <div class="mx-auto table-fixed border-separate border-spacing-1">
+                    <table>
+                        <tbody>
+                            @for (row of currentSituation.situations; track $index) {
+                            <tr>
+                                @for (item of row; track $index) {
+                                <td [style.background]="(item.action! | actionColor:currentSituation.actions)">
+                                    {{item.card}}
+                                </td>
+                                }
+                            </tr>
                             }
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="color-solution-container">
-                @for (action of activeSituation.actions; track i; let i = $index) {
-                @if (action.display_name) {
-                <div class="color-solution">
-                    {{action.display_name}}
-                    <div class="color-picker-square"
-                        [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
+                        </tbody>
+                    </table>
                 </div>
-                }
-                }
+                <!-- <div class="color-solution-container">
+                    @for (action of activeSituation.actions; track i; let i = $index) {
+                    @if (action.display_name) {
+                    <div class="color-solution">
+                        {{action.display_name}}
+                        <div class="color-picker-square"
+                            [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
+                    </div>
+                    }
+                    }
+                </div> -->
             </div>
+            <button class="fill" (click)="closeErrorWindow()">Compris !</button>
         </div>
-        <button class="fill" (click)="closeErrorWindow()">Compris !</button>
+        }
     </div>
-    }
-
-</div>
+</dialog>
 
 <div
     class="text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
@@ -155,4 +163,28 @@
         <span class="font-semibold">Taux de réussite :</span> {{SuccessRatePercentage}}%
     </div>
     <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
+</div>
+
+<div
+    class="text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+    <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+        <div class="flex flex-col">
+            <span class="dui-countdown text-5xl">
+                <span [style.--value]="hours"></span>
+            </span>
+            heure
+        </div>
+        <div class="flex flex-col">
+            <span class="dui-countdown text-5xl">
+                <span [style.--value]="minutes"></span>
+            </span>
+            min
+        </div>
+        <div class="flex flex-col">
+            <span class="dui-countdown text-5xl">
+                <span [style.--value]="seconds"></span>
+            </span>
+            sec
+        </div>
+    </div>
 </div>

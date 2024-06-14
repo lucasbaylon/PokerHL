@@ -30,6 +30,10 @@ export class TrainingComponent {
     activeSituation!: ActiveSituation;
     backgroundColor!: string;
     cardStyle!: string;
+    hours: number = 1;
+    minutes: number = 0;
+    seconds: number = 0;
+    private countdownInterval: any;
     colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
 
     tableColors = {
@@ -61,9 +65,14 @@ export class TrainingComponent {
             const currentUrl = this.router.url;
             const baseUrl = currentUrl.split(';')[0];
             this.router.navigateByUrl(baseUrl);
+            this.startCountdown();
         } else {
             this.router.navigate(['situations-list-training']);
         }
+    }
+
+    ngOnDestroy() {
+        this.clearCountdown();
     }
 
     filteredActionList(list: Action[], type: string) {
@@ -185,8 +194,10 @@ export class TrainingComponent {
             const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
             if (userParams.displaySolution) {
                 this.countResult = false;
-                let situationTable = document.getElementById("error-window-container");
-                situationTable!.style.display = "block";
+                const modal = document.getElementById('wrong-answer-modal') as HTMLDialogElement;
+                if (modal) {
+                    modal.showModal();
+                }
                 let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
                 uniqueActionList.map(action => {
                     let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
@@ -216,6 +227,35 @@ export class TrainingComponent {
             button!.classList.add("fill");
             button.disabled = false;
         })
+    }
+
+    /**
+   * Lance le compte à rebours en décrémentant les heures, minutes et secondes chaque seconde.
+   */
+    startCountdown() {
+        this.countdownInterval = setInterval(() => {
+            if (this.seconds > 0) {
+                this.seconds--;
+            } else if (this.minutes > 0) {
+                this.minutes--;
+                this.seconds = 59;
+            } else if (this.hours > 0) {
+                this.hours--;
+                this.minutes = 59;
+                this.seconds = 59;
+            } else {
+                this.clearCountdown();
+            }
+        }, 1000);
+    }
+
+    /**
+   * Arrête le compte à rebours et efface l'intervalle pour éviter les fuites de mémoire.
+   */
+    clearCountdown() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
     }
 
 }

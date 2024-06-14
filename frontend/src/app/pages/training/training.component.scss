@@ -341,50 +341,6 @@ hr.oponent2Hr {
 }
 
 
-$colors: (
-    fill: #3B82F6,
-);
-
-@each $button,
-$color in $colors {
-    .#{$button} {
-        --color: #303030;
-        --hover: #{$color};
-    }
-}
-
-button {
-    background: none;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 1px solid;
-    font-size: 1.1em;
-    padding: 15px;
-    letter-spacing: 1px;
-    width: fit-content;
-    min-width: 150px;
-    cursor: pointer;
-    align-self: center;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
-
-    color: var(--color);
-    transition: 0.25s;
-
-    &:hover {
-        border-color: var(--hover);
-        color: #fff;
-    }
-
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
 .fill {
     cursor: pointer;
 }

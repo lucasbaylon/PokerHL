@@ -42,8 +42,7 @@
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Affichage de la situation en cours</div>
-                <p-inputSwitch [(ngModel)]="displaySolutionOnError"
-                    (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+                <p-inputSwitch [(ngModel)]="displaySituation"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
@@ -86,7 +85,6 @@
                     <i class="fa-solid fa-download mr-4 h-4 w-4"></i>
                     Importer
                 </div>
-
                 <input type="file" #fileImportInput style="display: none;" (change)="onClickFileImport($event)"
                     multiple>
             </div>
