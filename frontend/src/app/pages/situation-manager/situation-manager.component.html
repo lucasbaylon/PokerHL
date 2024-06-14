@@ -118,7 +118,7 @@
             class="absolute -inset-2 -inset-x-5 z-0"></div> -->
         <div class="max-h-[280px] overflow-y-auto">
             @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
-            <div class="flex w-full items-center justify-evenly gap-4 px-3 mb-3">
+            <div class="flex w-full items-center justify-evenly gap-4 px-3 mb-5">
                 <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'bg-white dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
                     class="w-5/12 text-lg border-none text-center text-gray-800 dark:text-gray-300 overflow-x-auto">
                     {{action.display_name}}
@@ -151,7 +151,7 @@
 
             }
         </div>
-        <div class="flex justify-center items-center mt-5">
+        <div class="absolute bottom-7 left-1/2 transform -translate-x-1/2">
             <div (click)="showAddMultiplesActionModal()"
                 class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
                 <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
