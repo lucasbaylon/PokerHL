@@ -372,10 +372,23 @@ export class SituationManagerComponent {
             return;
         }
 
+        if (this.multipleSolutionCheckBox.length === 2 && (this.mixedSolutionSliderMinValue === 0 || this.mixedSolutionSliderMinValue === 100)) {
+            this.commonService.showSwalToast(`Merci de définir une valeur entre 1 et 99 pour le premier slider.`, 'error');
+            return;
+        }
+        
+        if (this.multipleSolutionCheckBox.length === 3 && 
+            (this.mixedSolutionSliderMinValue === 0 || this.mixedSolutionSliderMinValue === 100 || 
+             this.mixedSolutionSliderMaxValue === 0 || this.mixedSolutionSliderMaxValue === 100)) {
+            this.commonService.showSwalToast(`Merci de définir une valeur entre 1 et 99 pour le premier et le deuxième slider.`, 'error');
+            return;
+        }
+
         const actionsLst: {
             color: string;
             percent?: number | undefined;
         }[] = [];
+
         this.multipleSolutionCheckBox.map((action, index) => {
             let percent = 0;
             if (index === 0) percent = this.mixedSolutionSliderMinValue;
@@ -394,6 +407,7 @@ export class SituationManagerComponent {
             }
             actionsLst.push(obj);
         });
+        console.log(actionsLst);
         if (userParams.autoMultipleSolutionName) {
             this.multipleSolutionName = "";
             actionsLst.forEach((actionItem, index) => {
