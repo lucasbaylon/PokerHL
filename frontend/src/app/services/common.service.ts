@@ -17,7 +17,7 @@ export class CommonService {
     empty_situation_obj: Situation = {
         id: undefined,
         name: undefined,
-        type:"preflop",
+        type: "preflop",
         nbPlayer: 3,
         dealerMissingTokens: 0,
         position: "hu_sb",
@@ -60,23 +60,25 @@ export class CommonService {
     }
 
     /**
-    * Crée un dégradé linéaire pour l'arrière-plan d'une cellule
-    * en fonction du type d'action (unique ou mixte) et des couleurs associées.
-    *
-    * @param {Action} action - L'action pour laquelle l'arrière-plan est généré.
-    * @param {Action[]} actionSituations - La liste des actions pour récupérer les couleurs associées.
-    * @returns {string} - La chaîne CSS représentant le dégradé de l'arrière-plan de la cellule.
-    */
+     * Crée un dégradé linéaire pour l'arrière-plan d'une cellule
+     * en fonction du type d'action (unique ou mixte) et des couleurs associées.
+     * @param action L'action pour laquelle l'arrière-plan est généré.
+     * @param actionSituations La liste des actions pour récupérer les couleurs associées.
+     * @returns La chaîne CSS représentant le dégradé de l'arrière-plan de la cellule.
+     */
     cellBackground(action: Action, actionSituations: Action[]) {
         if (action.type === "unique") {
             return `linear-gradient(to right, ${action.color} 0%, ${action.color} 100%)`;
-        } else if (action.type === "mixed" && action.colorList) {
-            const gradientStops = action.colorList.map(d => {
-                const goodColor = actionSituations.find(situation => situation.id === d.color);
-                return goodColor ? `${goodColor.color} ${d.percent}%` : '';
-            }).filter(stop => stop !== '').join(', ');
-
-            return `linear-gradient(to right, ${gradientStops})`;
+        } else if (action.type === "mixed") {
+            let gradient = "linear-gradient(to right";
+            let total = 0;
+            action.colorList!.map((d: any) => {
+                let goodColor = actionSituations.filter(action => action.id === d.color)[0];
+                total += d.percent;
+                gradient += `, ${goodColor.color} ${total - d.percent}%, ${goodColor.color} ${total}%`
+            });
+            gradient += ")";
+            return gradient;
         }
         return '';
     }
