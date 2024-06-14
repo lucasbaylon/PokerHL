@@ -20,6 +20,10 @@
         }
     }
 
+    .p-dropdown:hover {
+        @apply border-gray-600;
+    }
+
     //Paginator primeNG
     .custom-paginator .p-ripple {
         @apply text-gray-800 dark:text-gray-200 min-w-10 max-h-10;
