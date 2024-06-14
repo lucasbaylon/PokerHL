@@ -105,17 +105,7 @@
         </div>
     </div>
     }
-    <!-- <dialog id="wrong-answer-modal"  class="dui-modal">
-    <div class="dui-modal-box">
-        <h3 class="font-bold text-lg">Hello!</h3>
-        <p class="py-4">Click the button below to close</p>
-        <div class="dui-modal-action">
-            <form method="dialog">
-                <button class="dui-btn">Close</button>
-            </form>
-        </div>
-    </div>
-</dialog> -->
+    
     <!-- Div affichée lors d'une mauvaise réponse -->
     <dialog id="wrong-answer-modal" class="dui-modal">
         <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
@@ -135,7 +125,7 @@
                             @for (row of currentSituation.situations; track $index) {
                             <tr class="table-row animate-appear opacity-0">
                                 @for (item of row; track $index) {
-                                <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 dark:text-white shadow-xl"
+                                <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
                                     [style.background]="(item.action! | actionColor:currentSituation.actions)">
                                     {{item.card}}
                                 </td>
