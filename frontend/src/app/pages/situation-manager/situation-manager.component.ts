@@ -68,7 +68,8 @@ export class SituationManagerComponent {
 
     availableOpponentsPlayersLevel: any[] = [
         { name: 'Débutant', code: 'fish' },
-        { name: 'Confirmé', code: 'shark' }
+        { name: 'Confirmé', code: 'shark' },
+        { name: 'Mixte', code: 'fish_shark' }
     ];
 
     nbPlayer: { name: string, code: number } = this.availableNbPlayersTable[0];
