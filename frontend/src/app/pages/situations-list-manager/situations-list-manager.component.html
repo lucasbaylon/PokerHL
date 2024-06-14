@@ -1,49 +1,51 @@
-<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0 m-0">
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
     Gestion des situations</h3>
 <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
     créez des situations.</p>
 <div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto shadow-lg">
     <p-table [value]="paginatedSituationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true">
         <ng-template pTemplate="header">
-            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-900">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-900">
                     <div class="flex items-center">
                         Nom
                         <p-columnFilter type="text" field="name" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Stack effectif
                         <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
                             class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Nb joueurs
                         <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Position
                         <p-columnFilter type="text" field="dealer" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Niveau
                         <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="w-16 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900"></th>
-                <th class="w-16 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900"></th>
-                <th class="w-16 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-900"></th>
+                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900"></th>
+                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900"></th>
+                <th
+                    class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-900">
+                </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
-            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
                 <td class="dark:border-gray-900">
                     {{ situation.name }}
                 </td>
@@ -60,18 +62,21 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td class="dark:border-gray-900">
-                    <i class="fa-solid fa-clone cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150" (click)="duplicateSituation(situation.id)"></i>
+                    <i class="fa-solid fa-clone cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="duplicateSituation(situation.id)"></i>
                 </td>
                 <td class="dark:border-gray-900">
-                    <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150" (click)="editSituation(situation.id)"></i>
+                    <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="editSituation(situation.id)"></i>
                 </td>
                 <td class="dark:border-gray-900">
-                    <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150" (click)="removeSituation(situation.id)"></i>
+                    <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="removeSituation(situation.id)"></i>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
-            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                 <td colspan="8">Aucune situation trouvée.</td>
             </tr>
         </ng-template>
@@ -81,7 +86,7 @@
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
     <div (click)="commonService.redirectTo('situations-manager')"
-        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>
         Créer une nouvelle situation
     </div>

@@ -26,7 +26,7 @@
 
     //Paginator primeNG
     .custom-paginator .p-ripple {
-        @apply text-gray-800 dark:text-gray-200 min-w-10 max-h-10;
+        @apply text-gray-800 dark:text-gray-300 min-w-10 max-h-10;
     }
 
     .custom-paginator .p-ripple.p-highlight {
@@ -45,7 +45,7 @@
 
     .custom-slider .ngx-slider-bubble.ngx-slider-limit,
     .custom-slider .ngx-slider-bubble {
-        @apply text-gray-800 dark:text-gray-200;
+        @apply text-gray-800 dark:text-gray-300;
     }
 
     .custom-slider .ngx-slider .ngx-slider-selection {

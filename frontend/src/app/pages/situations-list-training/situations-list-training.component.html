@@ -1,4 +1,4 @@
-<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0 m-0">
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
     Débuter une session d'entraînement</h3>
 <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Sélectionnez les
     situations sur lesquelles vous souhaitez vous entraîner.</p>
@@ -7,44 +7,44 @@
         [(selection)]="selectedSituations">
         <ng-template pTemplate="header">
             <tr>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-900">
                     <div class="flex items-center">
                         Nom
                         <p-columnFilter type="text" field="name" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Stack effectif
                         <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
                             class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Nb joueurs
                         <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Position
                         <p-columnFilter type="text" field="dealer" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900">
                     <div class="flex items-center">
                         Niveau
                         <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-900">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-900">
                     <p-tableHeaderCheckbox class="custom-checkbox"></p-tableHeaderCheckbox>
                 </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
-            <tr class="dark:text-gray-200 dark:bg-secondary-dark-bg py-3">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg py-3">
                 <td class="py-6 dark:border-gray-900">
                     {{ situation.name }}
                 </td>
@@ -66,12 +66,13 @@
             </tr>
         </ng-template>
     </p-table>
-    <p-paginator locale="fr-FR" styleClass="custom-paginator rounded-b-md rounded-t-none dark:text-gray-200 dark:bg-secondary-dark-bg dark:border-gray-900"
+    <p-paginator locale="fr-FR"
+        styleClass="custom-paginator rounded-b-md rounded-t-none dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-900"
         [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" />
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
     <div (click)="onStartTrainingButton()"
-        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
         Lancer l'entraînement
     </div>

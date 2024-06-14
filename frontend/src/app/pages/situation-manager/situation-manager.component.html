@@ -1,11 +1,11 @@
 @if (mode === 'new') {
-<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0 m-0">
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
     Créer une nouvelle situation</h3>
 <p class="text-gray-500 dark:text-gray-350 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Créez une nouvelle
     situation en renseignant ses ranges ainsi que ses caractèristiques.</p>
 }
 @if (mode === 'edit') {
-<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-200 animate-appear opacity-0 m-0">
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
     Modifier une situation</h3>
 <p class="text-gray-500 dark:text-gray-350 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Modifiez une de vos
     situations existante en renseignant ses nouvelles ranges et caractèristiques.</p>
@@ -25,7 +25,7 @@
                     (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)"
                     (mouseup)="endSelection($event)"
                     [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef)}"
-                    [ngClass]="item.action ? 'text-white dark:text-gray-200' : 'text-gray-800'">
+                    [ngClass]="item.action ? 'text-white dark:text-gray-300' : 'text-gray-800'">
                     {{item.card}}
                 </td>
                 }
@@ -63,7 +63,7 @@
                         (click)="onColorAction(action.id, colorCell)"></div> -->
                 <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
                     [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
-                    class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 px-5 text-base font-medium shadow transition-none">
+                    class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 px-5 text-base font-medium shadow transition-none">
                     @if (actionSelected !== action.id) {
                     <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
                     }
@@ -102,7 +102,7 @@
         </div>
         }
         <div (click)="addUniqueAction()" id="add-solution-button"
-            class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
+            class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
             <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
             Ajouter
         </div>
@@ -136,16 +136,16 @@
                         </div>
                     </div>
                     <div class="w-fit flex items-center justify-center">
-                        <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-200 text-gray-800"
+                        <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-300 text-gray-800"
                             (click)="editMultipleSolution(action.id)"></i>
                     </div>
                     <div class="w-fit flex items-center justify-center">
-                        <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-200 text-gray-800"
+                        <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-300 text-gray-800"
                             (click)="deleteMultipleSolution(action.id)"></i>
                     </div>
                     <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
                         [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
-                        class="flex h-12 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 text-base font-medium shadow transition-colors w-48">
+                        class="flex h-12 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 text-base font-medium shadow transition-colors w-48">
                         @if (actionSelected !== action.id) {
                         <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
                         }
@@ -161,7 +161,7 @@
 
         <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2">
             <div (click)="showAddMultiplesActionModal()"
-                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
                 <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
                 Ajouter
             </div>
@@ -219,7 +219,7 @@
             }
             <div class="flex justify-center mt-10">
                 <div (click)="saveMultipleSolution()"
-                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
                     Enregistrer la solution
                 </div>
@@ -278,7 +278,7 @@
 <!-- Bouton d'enregistrement de la situation -->
 <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
     <div (click)="saveSituation()"
-        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
         Enregistrer la situation
     </div>
