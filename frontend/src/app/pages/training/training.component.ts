@@ -198,12 +198,6 @@ export class TrainingComponent {
                 if (modal) {
                     modal.showModal();
                 }
-                let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
-                uniqueActionList.map(action => {
-                    let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
-                    button!.classList.remove("fill");
-                    button.disabled = true;
-                });
             } else {
                 this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
                 this.generateSituation();
@@ -219,14 +213,11 @@ export class TrainingComponent {
         return Math.floor(Math.random() * 101);
     }
 
-    closeErrorWindow() {
-        document.getElementById("error-window-container")!.style.display = "none";
-        let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
-        uniqueActionList.map(action => {
-            let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
-            button!.classList.add("fill");
-            button.disabled = false;
-        })
+    closeModal() {
+        const modal = document.getElementById('wrong-answer-modal') as HTMLDialogElement;
+        if (modal) {
+            modal.close();
+        }
     }
 
     /**

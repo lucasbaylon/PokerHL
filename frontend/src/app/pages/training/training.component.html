@@ -1,129 +1,142 @@
-@if (activeSituation) {
-<div class="flex_container">
-    <div class="poker_table_container">
-        <div class="poker_table" [style.background]="backgroundColor">
-            <h1>Poker
-                Trainer<br><span>&#9824;</span><span>&#9830;</span><span>&#9829;</span><span>&#9827;</span>
-            </h1>
+<div class="relative h-screen">
+    @if (activeSituation) {
+    <div class="flex_container">
+        <div class="poker_table_container">
+            <div class="poker_table" [style.background]="backgroundColor">
+                <h1>Poker
+                    Trainer<br><span>&#9824;</span><span>&#9830;</span><span>&#9829;</span><span>&#9827;</span>
+                </h1>
 
-            <!-- Adversaire du milieu  -->
-            @if (activeSituation.nbPlayer == 2) {
-            <div class="playerBox oponentBox0">
-                <div>
-                    <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                    <h2>Adversaire</h2>
-                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                </div>
-            </div>
-            @if (activeSituation.dealer == 'opponent1') {
-            <div class="dealer-coin dealer-coin-oponent0">
-                <span class="dealer-coin-text">D</span>
-            </div>
-            }
-            <hr class="oponent0Hr">
-            <div class="cardContainer oponent0Cards" style="width: 50%;">
-                <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-            </div>
-            }
-            <!-- Adversaire de gauche  -->
-            @if (activeSituation.nbPlayer == 3) {
-            <div class="playerBox oponentBox1">
-                <div>
-                    <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                    <h2>Adversaire</h2>
-                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                </div>
-            </div>
-            @if (activeSituation.dealer == 'opponent1') {
-            <div class="dealer-coin dealer-coin-oponent1">
-                <span class="dealer-coin-text">D</span>
-            </div>
-            }
-            <hr class="oponent1Hr">
-            <div class="cardContainer oponent1Cards">
-                <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-            </div>
-            }
-
-
-            <!-- Adversaire de droite  -->
-            @if (activeSituation.nbPlayer == 3) {
-            <div class="playerBox oponentBox2">
-                <div>
-                    <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                    <h2>Adversaire</h2>
-                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                </div>
-            </div>
-            @if (activeSituation.dealer == 'opponent2') {
-            <div class="dealer-coin dealer-coin-oponent2">
-                <span class="dealer-coin-text">D</span>
-            </div>
-            }
-
-            <hr class="oponent2Hr">
-            <div class="cardContainer oponent2Cards">
-                <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-            </div>
-            }
-
-            <!-- Joueur  -->
-            <div class="playerBox userBox">
-                <div>
-                    <ion-icon name="person-outline"></ion-icon>
-                    <h2>Vous</h2>
-                    <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                    @if (activeSituation.dealer == 'you') {
-                    <div class="dealer-coin dealer-coin-player">
-                        <span class="dealer-coin-text">D</span>
+                <!-- Adversaire du milieu  -->
+                @if (activeSituation.nbPlayer == 2) {
+                <div class="playerBox oponentBox0">
+                    <div>
+                        <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
+                        <h2>Adversaire</h2>
+                        <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
                     </div>
-                    }
-
                 </div>
+                @if (activeSituation.dealer == 'opponent1') {
+                <div class="dealer-coin dealer-coin-oponent0">
+                    <span class="dealer-coin-text">D</span>
+                </div>
+                }
+                <hr class="oponent0Hr">
+                <div class="cardContainer oponent0Cards" style="width: 50%;">
+                    <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                    <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                </div>
+                }
+                <!-- Adversaire de gauche  -->
+                @if (activeSituation.nbPlayer == 3) {
+                <div class="playerBox oponentBox1">
+                    <div>
+                        <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
+                        <h2>Adversaire</h2>
+                        <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
+                    </div>
+                </div>
+                @if (activeSituation.dealer == 'opponent1') {
+                <div class="dealer-coin dealer-coin-oponent1">
+                    <span class="dealer-coin-text">D</span>
+                </div>
+                }
+                <hr class="oponent1Hr">
+                <div class="cardContainer oponent1Cards">
+                    <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                    <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                </div>
+                }
+
+
+                <!-- Adversaire de droite  -->
+                @if (activeSituation.nbPlayer == 3) {
+                <div class="playerBox oponentBox2">
+                    <div>
+                        <img class="shark-fish-icon" src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
+                        <h2>Adversaire</h2>
+                        <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
+                    </div>
+                </div>
+                @if (activeSituation.dealer == 'opponent2') {
+                <div class="dealer-coin dealer-coin-oponent2">
+                    <span class="dealer-coin-text">D</span>
+                </div>
+                }
+
+                <hr class="oponent2Hr">
+                <div class="cardContainer oponent2Cards">
+                    <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                    <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                </div>
+                }
+
+                <!-- Joueur  -->
+                <div class="playerBox userBox">
+                    <div>
+                        <ion-icon name="person-outline"></ion-icon>
+                        <h2>Vous</h2>
+                        <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
+                        @if (activeSituation.dealer == 'you') {
+                        <div class="dealer-coin dealer-coin-player">
+                            <span class="dealer-coin-text">D</span>
+                        </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="cardContainer userCards">
+                    <img class="card leftCard"
+                        src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.left_card}}.png">
+                    <img class="card" src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.right_card}}.png">
+                </div>
+                <hr class="userHr">
             </div>
-            <div class="cardContainer userCards">
-                <img class="card leftCard"
-                    src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.left_card}}.png">
-                <img class="card" src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.right_card}}.png">
+        </div>
+        <div class="answer_div_container">
+            <div class="answer_div">
+                @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
+                @if (action.display_name) {
+                <button class="fill" [id]="'button_' + action.id"
+                    (click)="checkResultCase(action.id)">{{action.display_name}}</button>
+                }
+                }
             </div>
-            <hr class="userHr">
         </div>
     </div>
-    <div class="answer_div_container">
-        <div class="answer_div">
-            @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
-            @if (action.display_name) {
-            <button class="fill" [id]="'button_' + action.id"
-                (click)="checkResultCase(action.id)">{{action.display_name}}</button>
-            }
-            }
+    }
+    <!-- <dialog id="wrong-answer-modal"  class="dui-modal">
+    <div class="dui-modal-box">
+        <h3 class="font-bold text-lg">Hello!</h3>
+        <p class="py-4">Click the button below to close</p>
+        <div class="dui-modal-action">
+            <form method="dialog">
+                <button class="dui-btn">Close</button>
+            </form>
         </div>
     </div>
-</div>
-}
-<dialog id="wrong-answer-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
-    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-        <form method="dialog">
-            <button
-                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
-        </form>
-        @if (currentSituation) {
-        <div>
+</dialog> -->
+    <!-- Div affichée lors d'une mauvaise réponse -->
+    <dialog id="wrong-answer-modal" class="dui-modal">
+        <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+            <form method="dialog">
+                <button
+                    class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+            </form>
+            @if (currentSituation) {
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                 Mauvaise réponse...
             </h4>
             <div class="flex justify-center items-center">
-                <div class="mx-auto table-fixed border-separate border-spacing-1">
+                <div class="mx-auto table-fixed border-separate border-spacing-1 ml-5">
                     <table>
                         <tbody>
                             @for (row of currentSituation.situations; track $index) {
-                            <tr>
+                            <tr class="table-row animate-appear opacity-0">
                                 @for (item of row; track $index) {
-                                <td [style.background]="(item.action! | actionColor:currentSituation.actions)">
+                                <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 dark:text-white shadow-xl"
+                                    [style.background]="(item.action! | actionColor:currentSituation.actions)">
                                     {{item.card}}
                                 </td>
                                 }
@@ -132,59 +145,67 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- <div class="color-solution-container">
+                <div class=" ml-6 mr-5">
                     @for (action of activeSituation.actions; track i; let i = $index) {
                     @if (action.display_name) {
-                    <div class="color-solution">
+                    <div class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
                         {{action.display_name}}
-                        <div class="color-picker-square"
+                        <div class="h-7 w-7 ml-2 rounded shadow-md"
                             [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
                     </div>
                     }
                     }
-                </div> -->
+                </div>
+
             </div>
-            <button class="fill" (click)="closeErrorWindow()">Compris !</button>
+            <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
+                <div (click)="closeModal()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    Compris !
+                </div>
+            </div>
+            }
         </div>
-        }
-    </div>
-</dialog>
+    </dialog>
 
-<div
-    class="text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
-    <div class="mb-1">
-        <span class="font-semibold">Randomizer :</span>
-        {{randomizer}}%
+    <!-- Div des infos -->
+    <div
+        class="absolute left-0 bottom-0 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+        <div class="mb-1">
+            <span class="font-semibold">Randomizer :</span>
+            {{randomizer}}%
+        </div>
+        <div class="mb-1">
+            <span class="font-semibold">Ratio W/L :</span> {{GoodResponse}} / {{BadResponse}}
+        </div>
+        <div class="mb-1">
+            <span class="font-semibold">Taux de réussite :</span> {{SuccessRatePercentage}}%
+        </div>
+        <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
     </div>
-    <div class="mb-1">
-        <span class="font-semibold">Ratio W/L :</span> {{GoodResponse}} / {{BadResponse}}
-    </div>
-    <div class="mb-1">
-        <span class="font-semibold">Taux de réussite :</span> {{SuccessRatePercentage}}%
-    </div>
-    <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
-</div>
 
-<div
-    class="text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
-    <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
-        <div class="flex flex-col">
-            <span class="dui-countdown text-5xl">
-                <span [style.--value]="hours"></span>
-            </span>
-            heure
-        </div>
-        <div class="flex flex-col">
-            <span class="dui-countdown text-5xl">
-                <span [style.--value]="minutes"></span>
-            </span>
-            min
-        </div>
-        <div class="flex flex-col">
-            <span class="dui-countdown text-5xl">
-                <span [style.--value]="seconds"></span>
-            </span>
-            sec
+    <!-- Compte à rebours -->
+    <div
+        class="absolute right-0 bottom-0 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+        <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+            <div class="flex flex-col">
+                <span class="dui-countdown text-5xl">
+                    <span [style.--value]="hours"></span>
+                </span>
+                heure
+            </div>
+            <div class="flex flex-col">
+                <span class="dui-countdown text-5xl">
+                    <span [style.--value]="minutes"></span>
+                </span>
+                min
+            </div>
+            <div class="flex flex-col">
+                <span class="dui-countdown text-5xl">
+                    <span [style.--value]="seconds"></span>
+                </span>
+                sec
+            </div>
         </div>
     </div>
 </div>

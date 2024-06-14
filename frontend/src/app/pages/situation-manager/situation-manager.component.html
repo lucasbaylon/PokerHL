@@ -21,7 +21,7 @@
             @for (row of situation_obj.situations; track i; let i = $index) {
             <tr class="table-row animate-appear opacity-0" [style.animation-delay]="i * 0.025+'s'">
                 @for (item of row; track j; let j = $index) {
-                <td class="rounded cursor-pointer font-bold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl"
+                <td class="rounded cursor-pointer font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl"
                     (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)"
                     (mouseup)="endSelection($event)"
                     [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef)}"
