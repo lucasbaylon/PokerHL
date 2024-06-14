@@ -281,17 +281,64 @@ export class SituationManagerComponent {
         return list.filter(item => item.type === type && (!filterNoDisplayName || (item.display_name !== undefined && item.display_name !== '')));
     }
 
+    // onColorAction(action_id: string, colorCell: HTMLElement) {
+    //     const colorPickerDiv = document.getElementById(`color-picker-div_${action_id}`);
+    //     if (colorPickerDiv) {
+    //         const rect = colorCell.getBoundingClientRect();
+    //         colorPickerDiv.style.top = `${rect.top - 280}px`;
+    //         colorPickerDiv.style.left = `56px`;
+    //         colorPickerDiv.classList.remove("hidden");
+    //         setTimeout(() => {
+    //             this.listener = (event: any) => {
+    //                 if (!colorPickerDiv.contains(event.target) && colorPickerDiv !== event.target) {
+    //                     colorPickerDiv.classList.add('hidden');
+    //                     document.removeEventListener('click', this.listener);
+    //                     this.listener = null;
+    //                 }
+    //             };
+    //             document.addEventListener('click', this.listener);
+    //         }, 0);
+    //     }
+    // }
+
     onColorAction(action_id: string, colorCell: HTMLElement) {
         const colorPickerDiv = document.getElementById(`color-picker-div_${action_id}`);
         if (colorPickerDiv) {
             const rect = colorCell.getBoundingClientRect();
-            colorPickerDiv.style.top = `${rect.top - 280}px`;
-            colorPickerDiv.style.left = `56px`;
+            const divHeight = colorPickerDiv.offsetHeight;
+            const divWidth = colorPickerDiv.offsetWidth;
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
+
+            // Calculate the initial top and left positions
+            let top = rect.top + window.scrollY - divHeight; // Display above the cell
+            let left = rect.left + window.scrollX;
+
+            // Adjust if the color picker goes off the top of the screen
+            if (top < window.scrollY) {
+                top = rect.bottom + window.scrollY; // Display below the cell if above is not possible
+            }
+
+            // Adjust if the color picker goes off the right of the screen
+            if (left + divWidth > windowWidth + window.scrollX) {
+                left = rect.right + window.scrollX - divWidth; // Align right edge if it exceeds screen width
+            }
+
+            console.log(top);
+            console.log(left);
+
+            // Apply the calculated position
+            colorPickerDiv.style.top = `${top}px`;
+            colorPickerDiv.style.left = `${left}px`;
             colorPickerDiv.classList.remove("hidden");
+            colorPickerDiv.style.opacity = '1';
+
+            // Add event listener to hide the color picker when clicking outside
             setTimeout(() => {
                 this.listener = (event: any) => {
                     if (!colorPickerDiv.contains(event.target) && colorPickerDiv !== event.target) {
                         colorPickerDiv.classList.add('hidden');
+                        colorPickerDiv.style.opacity = '0';
                         document.removeEventListener('click', this.listener);
                         this.listener = null;
                     }
