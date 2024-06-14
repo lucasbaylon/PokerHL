@@ -282,12 +282,11 @@ export class SituationManagerComponent {
     }
 
     onColorAction(action_id: string) {
-        console.log("test");
-        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("color-picker-div-closed");
+        document.getElementById(`color-picker-div_${action_id}`)?.classList.remove("hidden");
         setTimeout(() => {
             this.listener = (event: any) => {
                 if (document.getElementById(`color-picker-div_${action_id}`) !== event.target) {
-                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('color-picker-div-closed');
+                    document.getElementById(`color-picker-div_${action_id}`)?.classList.add('hidden');
                     document.removeEventListener('click', this.listener);
                     this.listener = null;
                 }
@@ -295,27 +294,6 @@ export class SituationManagerComponent {
             document.addEventListener('click', this.listener);
         }, 0);
     }
-
-    // onColorAction(action_id: string, colorCell: HTMLElement) {
-    //     const colorPickerDiv = document.getElementById(`color-picker-div_${action_id}`);
-    //     if (colorPickerDiv) {
-    //         const rect = colorCell.getBoundingClientRect();
-    //         console.log(rect);
-    //         colorPickerDiv.style.top = `${rect.top - 280}px`;
-    //         colorPickerDiv.style.left = `56px`;
-    //         colorPickerDiv.classList.remove("hidden");
-    //         setTimeout(() => {
-    //             this.listener = (event: any) => {
-    //                 if (!colorPickerDiv.contains(event.target) && colorPickerDiv !== event.target) {
-    //                     colorPickerDiv.classList.add('hidden');
-    //                     document.removeEventListener('click', this.listener);
-    //                     this.listener = null;
-    //                 }
-    //             };
-    //             document.addEventListener('click', this.listener);
-    //         }, 0);
-    //     }
-    // }
 
     onSelectColor(action_id: string, color: string) {
         let actionList = this.situation_obj.actions.filter(action => action.id === action_id)[0];

@@ -43,39 +43,38 @@
             </h4>
         </div>
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-            <div class="relative flex items-center mb-5">
-                <!-- Surbrillance de la couleur sélectionnée -->
-                <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
-                    class="absolute -inset-2 -inset-x-5 z-0"></div>
+        <div class="relative flex items-center mb-5">
+            <!-- Surbrillance de la couleur sélectionnée -->
+            <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
+                class="absolute -inset-2 -inset-x-5 z-0"></div>
 
-                <!-- Ligne solution -->
-                <div class="relative z-10 flex items-center">
-                    <input type="input"
-                        [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'bg-white dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
-                        class="  text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300"
-                        value="{{action.display_name}}" [id]="'input_' + action.id"
-                        (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
-                    <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
-                        [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
-                        (click)="onColorAction(action.id)"></div>
-                    <!-- <div #colorCell class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
+            <!-- Ligne solution -->
+            <div class="relative z-10 flex items-center">
+                <input type="input"
+                    [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'bg-white dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
+                    class="  text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300"
+                    value="{{action.display_name}}" [id]="'input_' + action.id"
+                    (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
+                <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
+                    [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
+                    (click)="onColorAction(action.id)"></div>
+                <!-- <div #colorCell class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
                         [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
                         (click)="onColorAction(action.id, colorCell)"></div> -->
-                    <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
-                        [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
-                        class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 px-5 text-base font-medium shadow transition-none">
-                        @if (actionSelected !== action.id) {
-                        <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
-                        }
-                        @if (actionSelected === action.id) {
-                        <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
-                        }
-                        {{actionSelected === action.id ? 'Choisi' : 'Sélectionner'}}
-                    </div>
+                <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
+                    [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
+                    class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-200 px-5 text-base font-medium shadow transition-none">
+                    @if (actionSelected !== action.id) {
+                    <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
+                    }
+                    @if (actionSelected === action.id) {
+                    <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
+                    }
+                    {{actionSelected === action.id ? 'Choisi' : 'Sélectionner'}}
                 </div>
             </div>
             <!-- Div qui apparait lorsqu'on clique sur un carré color picker -->
-            <div class="bg-white dark:bg-gray-700 p-4 rounded shadow-lg absolute ml-1 z-50 w-fit animate-appear opacity-0 duration-100 hidden"
+            <div class="bg-white dark:bg-gray-700 p-4 mt-40 rounded shadow-lg absolute ml-1 z-50 w-fit animate-appear opacity-0 duration-100 hidden"
                 [id]="'color-picker-div_' + action.id">
                 <div class="grid grid-cols-5 gap-2">
                     <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #d80c05"
@@ -100,6 +99,7 @@
                         (click)="onSelectColor(action.id, '#e284ff')"></div>
                 </div>
             </div>
+        </div>
         }
         <div (click)="addUniqueAction()" id="add-solution-button"
             class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-200 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
@@ -123,10 +123,11 @@
                 <!-- Surbrillance de la couleur sélectionnée -->
                 <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
                     class="absolute inset-0 -inset-y-2 rounded z-0"></div>
-        
+
                 <!-- Ligne solution multiple -->
                 <div class="flex w-full items-center justify-evenly gap-4 px-3 relative z-10">
-                    <div class="w-5/12 text-lg border-none text-center text-gray-800 dark:text-gray-300 overflow-x-auto">
+                    <div
+                        class="w-5/12 text-lg border-none text-center text-gray-800 dark:text-gray-300 overflow-x-auto">
                         {{action.display_name}}
                     </div>
                     <div class="flex items-center justify-center px-2">
