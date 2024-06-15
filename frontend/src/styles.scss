@@ -86,9 +86,9 @@
         margin-left: 16px !important;
     }
 
-    //Checkbox primeNG
+    //Input Switch primeNG
     .custom-inputSwitch.p-inputswitch-checked .p-inputswitch-slider{
-        @apply bg-secondary-dark-bg dark:bg-gray-600;
+        @apply bg-secondary-dark-bg dark:bg-gray-600 transition-colors duration-500;
     }
 
     //Checkbox primeNG
