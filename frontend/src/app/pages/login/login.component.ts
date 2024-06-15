@@ -3,11 +3,12 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CommonService } from '../../services/common.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, InputTextModule],
     templateUrl: './login.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
