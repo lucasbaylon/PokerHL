@@ -110,7 +110,7 @@
 </div>
 
 <!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
-<div class="flex items-start justify-center w-full my-16 mx-auto h-[440px]">
+<div class="flex items-start justify-center w-full my-16 mx-auto h-[500px]">
     <!-- Div SOLUTIONS MULTIPLES -->
     <div
         class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
@@ -262,16 +262,28 @@
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Position</div>
+                Position
+            </div>
             <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangePosition()"
                 optionLabel="name"></p-dropdown>
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Niveau des adversaires</div>
+                Niveau des adversaires
+            </div>
             <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
                 (onChange)="onChangeOpponentLevel()" optionLabel="name"></p-dropdown>
         </div>
+        @if (nbPlayer.code === 3 && opponentLevel.code === "fish_shark") {
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Position du fish
+                </div>
+                <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
+                    (onChange)="onChangeOpponentLevel()" optionLabel="name"></p-dropdown>
+            </div>
+        }
+        
     </div>
 </div>
 

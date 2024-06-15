@@ -16,6 +16,8 @@ export interface Situation {
 
     opponentLevel?: string;
 
+    fishPosition?: string;
+
     actions: Action[];
 
     situations: Card[][];
