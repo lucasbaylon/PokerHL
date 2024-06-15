@@ -32,8 +32,7 @@
                         }
                     </div>
                     <div class="w-1/2 flex items-center justify-center">
-                        <img class="w-[45%]" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                        <img class="w-[45%] z-10 -ml-[25%]" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                        <app-default-cards></app-default-cards>
                     </div>
                 </div>
                 }
@@ -60,8 +59,7 @@
                         }
                     </div>
                     <div class="w-1/2 flex items-center justify-center">
-                        <img class="w-[45%]" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                        <img class="w-[45%] z-10 -ml-[25%]" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                        <app-default-cards></app-default-cards>
                     </div>
                 </div>
                 }
@@ -88,8 +86,7 @@
                         }
                     </div>
                     <div class="w-1/2 flex items-center justify-center">
-                        <img class="w-[45%]" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                        <img class="w-[45%] z-10 -ml-[25%]" src="../../../assets/img/cards/{{cardStyle}}/default.png">
+                        <app-default-cards></app-default-cards>
                     </div>
                 </div>
                 }
@@ -109,11 +106,20 @@
                         </div>
                         }
                     </div>
-                    <div class="w-1/2 flex items-center justify-center">
-                        <img class="w-[45%]"
-                            src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.left_card}}.png">
-                        <img class="w-[45%] z-10 -ml-[25%]"
-                            src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.right_card}}.png">
+                    <div class="w-1/2 flex items-center justify-center select-none">
+                        <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
+                            <span class="absolute top-[-5%] left-0 ml-1 mt-1 text-3xl font-bold">A</span>
+                            <i class="absolute bottom-[-10%] left-1/2 transform -translate-x-1/2 mb-1 text-6xl">
+                                ♠
+                            </i>
+                        </div>
+                        <div
+                            class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
+                            <span class="absolute top-[-5%] left-0 ml-1 mt-1 text-3xl font-bold">K</span>
+                            <i class="absolute bottom-[-10%] left-1/2 transform -translate-x-1/2 mb-1 text-6xl">
+                                ♣
+                            </i>
+                        </div>
                     </div>
                 </div>
             </div>
