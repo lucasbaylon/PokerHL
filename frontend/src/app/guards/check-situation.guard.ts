@@ -24,16 +24,16 @@ export const checkSituationGuard: CanActivateFn = (route, state) => {
                         } else {
                             let message = "Une erreur est survenue.";
                             if (data.message === "NO_SITUATION") {
-                                message = "Vous n'avez encore crée aucune situation pour vos entraînements. Veuillez d'abord créer une situation dans le menu 'Gérer les situations'.";
+                                message = "Veuillez d'abord créer une situation dans le menu 'Situations'.";
                             }
-                            commonService.showSwalAlert('Erreur', message, 'error');
+                            commonService.showSwalToast(message, 'error');
                             if (!previousUrl) router.navigate(['/home']);
                             return false;
                         }
                     })
                 );
             } else {
-                commonService.showSwalAlert('Erreur', 'Utilisateur non authentifié', 'error');
+                commonService.showSwalToast('Utilisateur non authentifié.', 'error');
                 return of(false);
             }
         })

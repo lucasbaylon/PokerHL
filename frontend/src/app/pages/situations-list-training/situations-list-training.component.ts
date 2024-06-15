@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-situations-list-training',
@@ -31,7 +32,8 @@ export class SituationsListTrainingComponent {
 
     constructor(
         private router: Router,
-        private apiSituation: SituationService
+        private apiSituation: SituationService,
+        public commonService: CommonService,
     ) { }
 
     @HostListener('window:resize', ['$event'])
@@ -65,12 +67,7 @@ export class SituationsListTrainingComponent {
 
     onStartTrainingButton() {
         if (this.selectedSituations.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                html: '<h1 style="font-family: \'Inter\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Inter\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez sélectionner au moins une situation.</p>',
-                confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Inter\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            })
+            this.commonService.showSwalToast('Veuillez sélectionner au moins une situation.', 'error');
         } else {
             this.router.navigate(['training', { situationList: JSON.stringify(this.selectedSituations) }]);
         }
