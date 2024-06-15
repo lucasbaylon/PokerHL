@@ -198,7 +198,9 @@
         <div class="mb-1">
             <span class="font-semibold">Taux de réussite :</span> {{SuccessRatePercentage}}%
         </div>
+        @if(displaySituation){
         <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
+        }
     </div>
 
     <!-- Compte à rebours -->
