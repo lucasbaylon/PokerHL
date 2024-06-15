@@ -20,8 +20,9 @@ export class CommonService {
         type: "preflop",
         nbPlayer: 3,
         dealerMissingTokens: 0,
-        position: "hu_sb",
+        position: "sb",
         opponentLevel: "fish",
+        fishPosition: undefined,
         actions: [
             {
                 id: "unique_action_0",

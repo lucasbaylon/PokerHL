@@ -60,16 +60,37 @@ export class SituationManagerComponent {
         { name: '3', code: 3 }
     ];
 
-    availablePositionPlayer: any[] = [
-        { name: 'HU SB', code: 'hu_sb' },
-        { name: 'HU BB', code: 'hu_bb' }
+    // availablePositionPlayer: any[] = [
+    //     { name: 'SB', code: 'sb' },
+    //     { name: 'BB', code: 'bb' }
+    // ];
+
+    // availableOpponentsPlayersLevel: any[] = [
+    //     { name: 'Débutant', code: 'fish' },
+    //     { name: 'Confirmé', code: 'shark' }
+    // ];
+
+    // availableFishPlayerPosition: any[] = [
+    //     // { name: 'SB', code: 'sb' },
+    //     { name: 'BB', code: 'bb' },
+    //     { name: 'BU', code: 'bu' }
+    // ];
+
+    allPositions: any[] = [
+        { name: 'SB', code: 'sb' },
+        { name: 'BB', code: 'bb' },
+        { name: 'BU', code: 'bu' } // Ajouté pour le cas où nbPlayer = 3
     ];
 
-    availableOpponentsPlayersLevel: any[] = [
+    allOpponentLevels: any[] = [
         { name: 'Débutant', code: 'fish' },
         { name: 'Confirmé', code: 'shark' },
-        { name: 'Mixte', code: 'fish_shark' }
+        { name: 'Mixte', code: 'fish_shark' } // Ajouté pour le cas où nbPlayer = 3
     ];
+
+    availablePositionPlayer: any[] = this.allPositions.filter(pos => pos.code !== 'bu');
+    availableOpponentsPlayersLevel: any[] = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
+    availableFishPlayerPosition: any[] = [];
 
     nbPlayer: { name: string, code: number } = this.availableNbPlayersTable[0];
 
@@ -80,6 +101,8 @@ export class SituationManagerComponent {
     situationType: { name: string, code: string } = this.availableSituationType[0];
 
     autoMultipleSolutionName: boolean = false;
+
+    fishPosition?: { name: string, code: string } = this.availableFishPlayerPosition[0];
 
     constructor(
         private router: Router,
@@ -95,20 +118,65 @@ export class SituationManagerComponent {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
 
+        // this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
+        //     this.mode = "edit";
+        //     this.situation_obj = JSON.parse(situation_str);
+        //     this.editSituationName = this.situation_obj.name;
+        //     this.situation_objActionsRef = this.situation_obj.actions.slice();
+        //     this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
+        //     this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
+        //     this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
+        //     this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
+        //     this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
+
+        //     let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
+        //     this.countMultipleSolution = actionList.length;
+        // });
+
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
             this.editSituationName = this.situation_obj.name;
             this.situation_objActionsRef = this.situation_obj.actions.slice();
-            this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
-            this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
-            this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
+
+            // Initialisation des listes et des valeurs
+            this.initializeValues();
 
             let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
             this.countMultipleSolution = actionList.length;
         });
+
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         if (userParams.autoMultipleSolutionName) this.autoMultipleSolutionName = true;
+        this.updateAvailableFishPositions();
+    }
+
+    initializeValues() {
+        // Définir nbPlayer en premier pour ajuster les listes
+        this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
+        this.onChangeNbPlayersTable(); // Met à jour les listes disponibles
+
+        // Définir les autres valeurs après mise à jour des listes
+        this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
+        this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
+
+        // Mettre à jour la liste des positions du fish après avoir défini la position principale
+        this.updateAvailableFishPositions();
+        this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
+
+        // Pour le type de situation (si applicable, à adapter selon votre logique)
+        if (this.availableSituationType) {
+            this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
+        }
+    }
+
+    updateAvailableFishPositions() {
+        this.availableFishPlayerPosition = this.allPositions.filter(pos => pos.code !== this.position.code);
+        if (this.availableFishPlayerPosition.length > 0) {
+            this.fishPosition = this.availableFishPlayerPosition[0];
+        } else {
+            this.fishPosition = undefined;
+        }
     }
 
     ngOnDestroy() {
@@ -431,25 +499,65 @@ export class SituationManagerComponent {
         this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
 
+    // onChangeNbPlayersTable() {
+    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
+    //     if (this.nbPlayer.code === 2) {
+    //         this.availablePositionPlayer.splice(2, 1);
+    //         this.availableFishPlayerPosition.splice(2, 1);
+    //     } else {
+    //         this.availablePositionPlayer.push({ name: 'BU', code: 'bu' });
+    //         this.availableOpponentsPlayersLevel.push({ name: 'Mixte', code: 'fish_shark' })
+    //     }
+    //     this.position = this.availablePositionPlayer[0];
+    // }
+
+    // onChangePosition() {
+    //     this.situation_obj.position = this.position.code;
+    //     console.log(this.position.code);
+    //     let index;
+    //     if (this.position.code === "sb") {
+    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "sb");
+    //     } else if (this.position.code === "bb") {
+    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "bb");
+    //     } else if (this.position.code === "bu") {
+    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "bu");
+    //     }
+    //     if (index) {
+    //         this.availableFishPlayerPosition.splice(index, 1);
+    //         console.log(index);
+    //         console.log(this.availableFishPlayerPosition);
+    //     }
+    // }
+
+    // onChangeNbPlayersTable() {
+    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
+    //     if (this.nbPlayer.code === 2) {
+    //         this.availablePositionPlayer = this.allPositions.filter(pos => pos.code !== 'bu');
+    //         this.availableOpponentsPlayersLevel = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
+    //     } else {
+    //         this.availablePositionPlayer = [...this.allPositions];
+    //         this.availableOpponentsPlayersLevel = [...this.allOpponentLevels];
+    //     }
+    //     this.position = this.availablePositionPlayer[0];
+    //     this.updateAvailableFishPositions();
+    // }
+
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
         if (this.nbPlayer.code === 2) {
-            this.availablePositionPlayer = [
-                { name: 'HU SB', code: 'hu_sb' },
-                { name: 'HU BB', code: 'hu_bb' }
-            ]
+            this.availablePositionPlayer = this.allPositions.filter(pos => pos.code !== 'bu');
+            this.availableOpponentsPlayersLevel = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
         } else {
-            this.availablePositionPlayer = [
-                { name: '3W SB', code: '3w_sb' },
-                { name: '3W BB', code: '3w_bb' },
-                { name: '3W BU', code: '3w_bu' }
-            ]
+            this.availablePositionPlayer = [...this.allPositions];
+            this.availableOpponentsPlayersLevel = [...this.allOpponentLevels];
         }
         this.position = this.availablePositionPlayer[0];
+        this.updateAvailableFishPositions();
     }
 
     onChangePosition() {
         this.situation_obj.position = this.position.code;
+        this.updateAvailableFishPositions();
     }
 
     onChangeSituationType() {
@@ -458,6 +566,10 @@ export class SituationManagerComponent {
 
     onChangeOpponentLevel() {
         this.situation_obj.opponentLevel = this.opponentLevel.code;
+    }
+
+    onChangeFishPosition() {
+        this.situation_obj.fishPosition = this.fishPosition!.code;
     }
 
     /**
