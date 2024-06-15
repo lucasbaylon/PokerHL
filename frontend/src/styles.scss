@@ -93,7 +93,7 @@
 
     //Checkbox primeNG
     .custom-checkbox .p-checkbox-box.p-highlight {
-        @apply bg-gray-800 dark:bg-secondary-dark-bg border-gray-200;
+        @apply bg-gray-800 dark:bg-gray-600 border-gray-800 dark:border-gray-600;
         border-width: 0.5px;
     }
 
