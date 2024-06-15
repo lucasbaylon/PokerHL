@@ -119,23 +119,56 @@ export class SituationManagerComponent {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
 
+        // this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
+        //     this.mode = "edit";
+        //     this.situation_obj = JSON.parse(situation_str);
+        //     this.editSituationName = this.situation_obj.name;
+        //     this.situation_objActionsRef = this.situation_obj.actions.slice();
+        //     this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
+        //     this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
+        //     this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
+        //     this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
+        //     this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
+
+        //     let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
+        //     this.countMultipleSolution = actionList.length;
+        // });
+
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
             this.editSituationName = this.situation_obj.name;
             this.situation_objActionsRef = this.situation_obj.actions.slice();
-            this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
-            this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
-            this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
-            this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
-            this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
+
+            // Initialisation des listes et des valeurs
+            this.initializeValues();
 
             let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
             this.countMultipleSolution = actionList.length;
         });
+
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         if (userParams.autoMultipleSolutionName) this.autoMultipleSolutionName = true;
         this.updateAvailableFishPositions();
+    }
+
+    initializeValues() {
+        // Définir nbPlayer en premier pour ajuster les listes
+        this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
+        this.onChangeNbPlayersTable(); // Met à jour les listes disponibles
+
+        // Définir les autres valeurs après mise à jour des listes
+        this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
+        this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
+
+        // Mettre à jour la liste des positions du fish après avoir défini la position principale
+        this.updateAvailableFishPositions();
+        this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
+
+        // Pour le type de situation (si applicable, à adapter selon votre logique)
+        if (this.availableSituationType) {
+            this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
+        }
     }
 
     updateAvailableFishPositions() {
@@ -501,6 +534,19 @@ export class SituationManagerComponent {
     //     }
     // }
 
+    // onChangeNbPlayersTable() {
+    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
+    //     if (this.nbPlayer.code === 2) {
+    //         this.availablePositionPlayer = this.allPositions.filter(pos => pos.code !== 'bu');
+    //         this.availableOpponentsPlayersLevel = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
+    //     } else {
+    //         this.availablePositionPlayer = [...this.allPositions];
+    //         this.availableOpponentsPlayersLevel = [...this.allOpponentLevels];
+    //     }
+    //     this.position = this.availablePositionPlayer[0];
+    //     this.updateAvailableFishPositions();
+    // }
+
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
         if (this.nbPlayer.code === 2) {
@@ -525,6 +571,10 @@ export class SituationManagerComponent {
 
     onChangeOpponentLevel() {
         this.situation_obj.opponentLevel = this.opponentLevel.code;
+    }
+
+    onChangeFishPosition() {
+        this.situation_obj.fishPosition = this.fishPosition!.code;
     }
 
     /**
