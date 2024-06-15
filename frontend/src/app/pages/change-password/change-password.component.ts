@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 import { Router } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-change-password',
     standalone: true,
-    imports: [NgClass, FormsModule],
+    imports: [NgClass, FormsModule, InputTextModule],
     templateUrl: './change-password.component.html',
 })
 export class ChangePasswordComponent {

@@ -49,11 +49,11 @@
     }
 
     .custom-slider .ngx-slider .ngx-slider-selection {
-        @apply bg-white dark:bg-blue-500;
+        @apply bg-gray-800 dark:bg-gray-500;
     }
 
     .custom-slider .ngx-slider .ngx-slider-pointer {
-        @apply bg-blue-500 dark:bg-white;
+        @apply bg-gray-800 dark:bg-white;
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -69,13 +69,13 @@
     }
 
     .custom-slider .ngx-slider .ngx-slider-pointer:after {
-        @apply dark:bg-blue-500 bg-white;
+        @apply dark:bg-gray-800 bg-white;
         top: 6px;
         left: 6px;
     }
 
     .custom-slider .ngx-slider .ngx-slider-pointer.ngx-slider-active:after {
-        @apply dark:bg-blue-500 bg-white;
+        @apply dark:bg-gray-800 bg-white;
     }
 
     .custom-slider .ngx-slider .ngx-slider-floor {
@@ -86,10 +86,14 @@
         margin-left: 16px !important;
     }
 
+    //Input Switch primeNG
+    .custom-inputSwitch.p-inputswitch-checked .p-inputswitch-slider{
+        @apply bg-secondary-dark-bg dark:bg-gray-600 transition-colors duration-500;
+    }
 
     //Checkbox primeNG
     .custom-checkbox .p-checkbox-box.p-highlight {
-        @apply bg-gray-800 dark:bg-secondary-dark-bg border-gray-200;
+        @apply bg-gray-800 dark:bg-gray-600 border-gray-800 dark:border-gray-600;
         border-width: 0.5px;
     }
 

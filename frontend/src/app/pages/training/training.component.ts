@@ -7,13 +7,13 @@ import { Action } from '../../interfaces/action';
 import { CommonService } from './../../services/common.service';
 import { NgStyle } from '@angular/common';
 import { ActionColorPipe } from '../../pipes/action-color.pipe';
+import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
 
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, ActionColorPipe],
+    imports: [NgStyle, ActionColorPipe, DefaultCardsComponent],
     templateUrl: './training.component.html',
-    styleUrl: './training.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TrainingComponent {
@@ -30,6 +30,7 @@ export class TrainingComponent {
     activeSituation!: ActiveSituation;
     backgroundColor!: string;
     cardStyle!: string;
+    displaySituation!: boolean;
     hours: number = 1;
     minutes: number = 0;
     seconds: number = 0;
@@ -59,6 +60,7 @@ export class TrainingComponent {
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
 
             this.cardStyle = userParams.cardStyle;
+            this.displaySituation = userParams.displaySituation;
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();

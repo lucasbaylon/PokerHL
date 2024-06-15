@@ -14,10 +14,8 @@
                     <i class="fa-solid fa-envelope text-gray-800 dark:text-gray-300"></i>
                     Email
                 </label>
-                <input
-                    class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-300 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    id="email" placeholder="Entrez votre adresse email" required="" type="email" [(ngModel)]="email"
-                    (keydown.enter)="login()" />
+                <input [(ngModel)]="email" type="email" placeholder="Entrez votre adresse email" class="w-full" name="email"
+                    id="email" autocomplete="off" pInputText (keydown.enter)="login()" />
             </div>
             <div class="space-y-2">
                 <label
@@ -27,14 +25,12 @@
                     Mot de passe
                 </label>
                 <div class="relative flex items-center">
-                    <input
-                        class="flex h-10 md:h-12 w-full rounded-md border border-input bg-background px-3 md:px-4 py-2 text-base text-black dark:text-gray-300 dark:bg-main-dark-bg dark:border-gray-500 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        id="password" placeholder="Entrez votre mot de passe" required="" [type]="passwordFieldType"
-                        [(ngModel)]="password" (keydown.enter)="login()" />
+                        <input [(ngModel)]="password" type="text" placeholder="Entrez votre mot de passe" class="w-full"
+                            name="password" id="password" [type]="passwordFieldType" autocomplete="off" pInputText (keydown.enter)="login()"/>
                     <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer"
                         (click)="togglePasswordVisibility()">
                         <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
-                            class="fa-solid text-lg text-gray-800 dark:text-gray-300"></i>
+                            class="fa-solid text-lg text-gray-800 dark:text-gray-800"></i>
                     </div>
                 </div>
             </div>
