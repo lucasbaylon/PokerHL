@@ -96,14 +96,38 @@ export class TrainingComponent {
         let result = this.getResultCase(situationCase.action);
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
-            dealer: situation.dealer,
+            position: situation.position,
             left_card: cards.left_card,
             right_card: cards.right_card,
             actions: situation.actions,
             result: result,
             dealerMissingTokens: situation.dealerMissingTokens,
-            opponentLevel: situation.opponentLevel
+            opponentLevel: situation.opponentLevel,
+            fishPosition: situation.fishPosition
         }
+    }
+
+    getFishPosition(mainPlayerPosition: string, fishPlayerPosition: string): string | undefined {
+        if (mainPlayerPosition === "bu") {
+            if (fishPlayerPosition === "sb") {
+                return "opponent1";
+            } else if (fishPlayerPosition === "bb") {
+                return "opponent2";
+            }
+        } else if (mainPlayerPosition === "sb") {
+            if (fishPlayerPosition === "bb") {
+                return "opponent1";
+            } else if (fishPlayerPosition === "bu") {
+                return "opponent2";
+            }
+        } else if (mainPlayerPosition === "bb") {
+            if (fishPlayerPosition === "bu") {
+                return "opponent1";
+            } else if (fishPlayerPosition === "sb") {
+                return "opponent2";
+            }
+        }
+        return undefined;
     }
 
     getRandomCase(array: any[][]): any {

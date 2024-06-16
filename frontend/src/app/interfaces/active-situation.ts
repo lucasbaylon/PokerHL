@@ -3,7 +3,7 @@ import { Action } from "./action";
 export interface ActiveSituation {
     nbPlayer: number;
 
-    dealer?: string;
+    position?: string;
 
     left_card?: string;
 
@@ -16,4 +16,6 @@ export interface ActiveSituation {
     dealerMissingTokens?: number;
 
     opponentLevel?: string;
+
+    fishPosition?: string;
 }

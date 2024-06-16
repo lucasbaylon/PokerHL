@@ -2,17 +2,17 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { SituationService } from '../../services/situation.service';
 import { Router } from '@angular/router';
 import { Situation } from '../../interfaces/situation';
-import Swal from 'sweetalert2';
 import { TableModule } from 'primeng/table';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { PositionPipe } from '../../pipes/position.pipe';
 import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-situations-list-training',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe],
     templateUrl: './situations-list-training.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
