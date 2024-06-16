@@ -9,11 +9,12 @@ import { CommonService } from './../../services/common.service';
 import { PaginatorModule } from 'primeng/paginator';
 import Swal from 'sweetalert2';
 import { PositionPipe } from '../../pipes/position.pipe';
+import { TypePipe } from '../../pipes/type.pipe';
 
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe, TypePipe],
     templateUrl: './situations-list-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
