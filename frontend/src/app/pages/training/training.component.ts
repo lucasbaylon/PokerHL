@@ -8,11 +8,12 @@ import { CommonService } from './../../services/common.service';
 import { NgStyle } from '@angular/common';
 import { ActionColorPipe } from '../../pipes/action-color.pipe';
 import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
+import { CardComponent } from '../../components/card/card.component';
 
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, ActionColorPipe, DefaultCardsComponent],
+    imports: [NgStyle, ActionColorPipe, DefaultCardsComponent, CardComponent],
     templateUrl: './training.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
