@@ -8,11 +8,11 @@ export class PositionPipe implements PipeTransform {
 
     transform(value: string): string | undefined {
         if (value === "sb") {
-            return "Small Blind";
+            return "SB";
         } else if (value === "bb") {
-            return "Big Blind";
+            return "BB";
         } else if (value === "bu") {
-            return "Bouton";
+            return "BU";
         }
         return undefined;
     }

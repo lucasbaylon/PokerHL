@@ -21,11 +21,7 @@ export class SituationsListManagerComponent {
 
     situationList: Situation[] = [];
 
-    paginatedSituationList: Situation[] = [];
-
-    nbRowsPerPage = 10;
-
-    totalRecords: number = 0;
+    nbRowsPerPage = 11;
 
     constructor(
         private router: Router,
@@ -36,7 +32,7 @@ export class SituationsListManagerComponent {
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         if (event.target.innerHeight > 1080) {
-            this.nbRowsPerPage = 12;
+            this.nbRowsPerPage = 11;
         } else {
             this.nbRowsPerPage = 7;
         }
@@ -45,10 +41,6 @@ export class SituationsListManagerComponent {
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data;
-
-            this.loadPageData(0, this.nbRowsPerPage);
-
-            this.totalRecords = this.situationList.length;
         });
 
         this.apiSituation.getSituations();
@@ -83,14 +75,6 @@ export class SituationsListManagerComponent {
                 this.commonService.showSwalToast(`Situation supprimée !`);
             }
         });
-    }
-
-    loadPageData(first: number, rows: number) {
-        this.paginatedSituationList = this.situationList.slice(first, first + rows);
-    }
-
-    onPageChange(event: any) {
-        this.loadPageData(event.first, event.rows);
     }
 
 }

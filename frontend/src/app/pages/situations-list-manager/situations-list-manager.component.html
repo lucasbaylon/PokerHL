@@ -3,7 +3,7 @@
 <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
     créez des situations.</p>
 <div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto shadow-lg">
-    <p-table [value]="paginatedSituationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true">
+    <p-table [value]="situationList" dataKey="id" [paginator]="true" [rows]="nbRowsPerPage">
         <ng-template pTemplate="header">
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-700">
@@ -84,8 +84,8 @@
             </tr>
         </ng-template>
     </p-table>
-    <p-paginator locale="fr-FR" styleClass="custom-paginator rounded-b-md rounded-t-none dark:bg-secondary-dark-bg"
-        [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" />
+    <!-- <p-paginator locale="fr-FR" styleClass="custom-paginator rounded-b-md rounded-t-none dark:bg-secondary-dark-bg"
+        [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" /> -->
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
     <div (click)="commonService.redirectTo('situations-manager')"
