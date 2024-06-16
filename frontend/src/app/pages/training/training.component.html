@@ -17,7 +17,7 @@
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
                             @if (activeSituation.opponentLevel == "fish"){
                                 <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else {
+                            } @else if (activeSituation.opponentLevel == "shark") {
                                 <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             <h3 class="m-0">Adversaire</h3>
@@ -38,55 +38,64 @@
 
                 <!-- Adversaire de gauche -->
                 @if (activeSituation.nbPlayer === 3) {
-                <div
-                    class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                    <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
-                        @if (activeSituation.opponentLevel == "fish"){
-                        <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        }
-                        @else {
-                        <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        }
-                        <h3 class="m-0">Adversaire</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
-                        <!-- Dealer coin -->
-                        @if (activeSituation.position == 'bb') {
-                        <div
-                            class="absolute top-[130%] left-[40%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                            <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
-                        </div>
-                        }
-                    </div>
-                    <div class="w-1/2 flex items-center justify-center">
-                        <app-default-cards></app-default-cards>
-                    </div>
-                </div>
-                }
-
-                <!-- Adversaire de droite -->
-                @if (activeSituation.nbPlayer == 3) {
-                <div
-                    class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                    <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
-                        @if (activeSituation.opponentLevel == "fish"){
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        } @else {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        }
-                        <h3 class="m-0">Adversaire</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
-                        <!-- Dealer coin -->
-                        @if (activeSituation.position == 'sb') {
+                    <div
+                        class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "fish_shark") {
+                                @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent1") {
+                                    <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                } @else {
+                                    <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                }
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'bb') {
                             <div
-                                class="absolute top-[130%] left-[60%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                class="absolute top-[130%] left-[40%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
                                 <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
                             </div>
-                        }
+                            }
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
                     </div>
-                    <div class="w-1/2 flex items-center justify-center">
-                        <app-default-cards></app-default-cards>
+
+                    <!-- Adversaire de droite -->
+                    <div
+                        class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "fish_shark") {
+                                @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent2") {
+                                    <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                } @else {
+                                    <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                }
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'sb') {
+                                <div
+                                    class="absolute top-[130%] left-[60%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                    <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
                     </div>
-                </div>
                 }
 
                 <!-- Joueur -->

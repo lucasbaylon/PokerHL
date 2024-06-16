@@ -49,8 +49,6 @@ export class SituationsListManagerComponent {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data;
 
-            console.log(this.situationList.at(-1));
-
             this.loadPageData(0, this.nbRowsPerPage);
 
             this.totalRecords = this.situationList.length;

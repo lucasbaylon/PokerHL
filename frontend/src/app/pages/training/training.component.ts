@@ -88,7 +88,6 @@ export class TrainingComponent {
 
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
-        console.log(situation);
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
@@ -103,8 +102,32 @@ export class TrainingComponent {
             actions: situation.actions,
             result: result,
             dealerMissingTokens: situation.dealerMissingTokens,
-            opponentLevel: situation.opponentLevel
+            opponentLevel: situation.opponentLevel,
+            fishPosition: situation.fishPosition
         }
+    }
+
+    getFishPosition(mainPlayerPosition: string, fishPlayerPosition: string): string | undefined {
+        if (mainPlayerPosition === "bu") {
+            if (fishPlayerPosition === "sb") {
+                return "opponent1";
+            } else if (fishPlayerPosition === "bb") {
+                return "opponent2";
+            }
+        } else if (mainPlayerPosition === "sb") {
+            if (fishPlayerPosition === "bb") {
+                return "opponent1";
+            } else if (fishPlayerPosition === "bu") {
+                return "opponent2";
+            }
+        } else if (mainPlayerPosition === "bb") {
+            if (fishPlayerPosition === "bu") {
+                return "opponent1";
+            } else if (fishPlayerPosition === "sb") {
+                return "opponent2";
+            }
+        }
+        return undefined;
     }
 
     getRandomCase(array: any[][]): any {
