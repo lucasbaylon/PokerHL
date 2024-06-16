@@ -29,13 +29,12 @@ export class TrainingComponent {
     currentSituationName: string = "";
     activeSituation!: ActiveSituation;
     backgroundColor!: string;
-    cardStyle!: string;
     displaySituation!: boolean;
     hours: number = 1;
     minutes: number = 0;
     seconds: number = 0;
     private countdownInterval: any;
-    colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
+    colorList: any[] = [{name: "heart", color: "red"}, {name: "diamond", color: "red"}, {name: "club", color: "black"}, {name: "spade", color: "black"}];
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -59,7 +58,10 @@ export class TrainingComponent {
                 `radial-gradient(${tableColor}, black 150%)` :
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
 
-            this.cardStyle = userParams.cardStyle;
+            if (userParams.cardStyle === 'contrast') {
+                this.colorList = [{name: "heart", color: "red"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
+            }
+
             this.displaySituation = userParams.displaySituation;
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
@@ -90,7 +92,7 @@ export class TrainingComponent {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
-        let situationCase = this.getRandomCase(this.currentSituation.situations)
+        let situationCase = this.getRandomCase(this.currentSituation.situations);
         let cards = this.generateCards(situationCase);
         this.randomizer = this.generateRandomNumber();
         let result = this.getResultCase(situationCase.action);
@@ -107,27 +109,26 @@ export class TrainingComponent {
         }
     }
 
-    getFishPosition(mainPlayerPosition: string, fishPlayerPosition: string): string | undefined {
+    getFishPosition(mainPlayerPosition: string, fishPlayerPosition: string): string {
         if (mainPlayerPosition === "bu") {
             if (fishPlayerPosition === "sb") {
                 return "opponent1";
-            } else if (fishPlayerPosition === "bb") {
+            } else {
                 return "opponent2";
             }
         } else if (mainPlayerPosition === "sb") {
             if (fishPlayerPosition === "bb") {
                 return "opponent1";
-            } else if (fishPlayerPosition === "bu") {
+            } else  {
                 return "opponent2";
             }
-        } else if (mainPlayerPosition === "bb") {
+        } else {
             if (fishPlayerPosition === "bu") {
                 return "opponent1";
-            } else if (fishPlayerPosition === "sb") {
+            } else  {
                 return "opponent2";
             }
         }
-        return undefined;
     }
 
     getRandomCase(array: any[][]): any {
@@ -161,8 +162,6 @@ export class TrainingComponent {
     }
 
     generateCards(situationCase: any): any {
-        let left_card;
-        let right_card;
         let card = situationCase.card;
         let card_split = card.split('');
         let nbColor = 2;
@@ -172,16 +171,28 @@ export class TrainingComponent {
             }
         }
         let colors = this.getRandomColors(nbColor);
+        const leftCardObj = {
+            color: "",
+            value: ""
+        }
+        const rightCardObj = {
+            color: "",
+            value: ""
+        }
         if (colors.length === 1) {
-            left_card = `${card_split[0]}_${colors[0]}`;
-            right_card = `${card_split[1]}_${colors[0]}`;
+            leftCardObj.color = colors[0];
+            leftCardObj.value = card_split[0];
+            rightCardObj.color = colors[0];
+            rightCardObj.value = card_split[1];
         } else if (colors.length === 2) {
-            left_card = `${card_split[0]}_${colors[0]}`;
-            right_card = `${card_split[1]}_${colors[1]}`;
+            leftCardObj.color = colors[0];
+            leftCardObj.value = card_split[0];
+            rightCardObj.color = colors[1];
+            rightCardObj.value = card_split[1];
         }
         return {
-            left_card: left_card,
-            right_card: right_card
+            left_card: leftCardObj,
+            right_card: rightCardObj
         }
     }
 

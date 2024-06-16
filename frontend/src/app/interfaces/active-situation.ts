@@ -1,13 +1,23 @@
 import { Action } from "./action";
 
+interface ColorCard {
+    name: string;
+    color: string;
+}
+
+interface Card {
+    color: ColorCard;
+    value: string;
+}
+
 export interface ActiveSituation {
     nbPlayer: number;
 
     position?: string;
 
-    left_card?: string;
+    left_card: Card;
 
-    right_card?: string;
+    right_card: Card;
 
     actions: Action[];
 
