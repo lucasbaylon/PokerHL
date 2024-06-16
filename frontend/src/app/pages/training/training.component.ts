@@ -88,6 +88,7 @@ export class TrainingComponent {
 
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
+        console.log(situation);
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations)
@@ -96,7 +97,7 @@ export class TrainingComponent {
         let result = this.getResultCase(situationCase.action);
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
-            dealer: situation.dealer,
+            position: situation.position,
             left_card: cards.left_card,
             right_card: cards.right_card,
             actions: situation.actions,
