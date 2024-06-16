@@ -6,7 +6,6 @@ import { cloneDeep } from 'lodash';
 import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 import { Situation } from '../../interfaces/situation';
 import { Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
 import { Action } from '../../interfaces/action';
 import { FormsModule } from '@angular/forms';
 import { NgClass, NgStyle } from '@angular/common';
@@ -270,11 +269,11 @@ export class SituationManagerComponent {
             });
             // On check si toutes les cases sont bien remplies
             if (situation_empty) {
-                this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau.`, 'error');
+                this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau des ranges.`, 'error');
             } else {
                 // On check si il y a bien un nombre de jetons
                 if (!this.situation_obj.dealerMissingTokens) {
-                    this.commonService.showSwalToast(`Veuillez remplir le stack effectif.`, 'error');
+                    this.commonService.showSwalToast(`Veuillez remplir le champ "Stack effectif".`, 'error');
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
                     const uniqueActions = Array.from(new Set(flatArray.map(item => item.action)));
@@ -306,11 +305,7 @@ export class SituationManagerComponent {
                             if (situation_name_change) {
                                 this.apiSituation.checkChangeSituationNameFromUser(this.situation_obj.id!, this.situation_obj.name).subscribe((data: any) => {
                                     if (data.exist) {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Attention',
-                                            text: 'Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.'
-                                        });
+                                        this.commonService.showSwalToast('Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.', 'error');
                                     } else {
                                         this.editSituation();
                                     }
@@ -384,19 +379,19 @@ export class SituationManagerComponent {
     saveMultipleSolution() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         if (this.multipleSolutionCheckBox.length < 2) {
-            this.commonService.showSwalToast(`Merci de cocher au moins deux cases.`, 'error');
+            this.commonService.showSwalToast(`Veuillez cocher au moins deux cases.`, 'error');
             return;
         }
 
         if (this.multipleSolutionCheckBox.length === 2 && (this.mixedSolutionSliderMinValue === 0 || this.mixedSolutionSliderMinValue === 100)) {
-            this.commonService.showSwalToast(`Merci de définir une valeur entre 1 et 99 pour le premier slider.`, 'error');
+            this.commonService.showSwalToast(`Veuillez définir une valeur entre 1 et 99 pour le premier slider.`, 'error');
             return;
         }
 
         if (this.multipleSolutionCheckBox.length === 3 &&
             (this.mixedSolutionSliderMinValue === 0 || this.mixedSolutionSliderMinValue === 100 ||
                 this.mixedSolutionSliderMaxValue === 0 || this.mixedSolutionSliderMaxValue === 100)) {
-            this.commonService.showSwalToast(`Merci de définir une valeur entre 1 et 99 pour le premier et le deuxième slider.`, 'error');
+            this.commonService.showSwalToast(`Veuillez une valeur entre 1 et 99 pour le premier et le deuxième slider.`, 'error');
             return;
         }
 
@@ -435,7 +430,7 @@ export class SituationManagerComponent {
             });
         } else {
             if (this.multipleSolutionName === "") {
-                this.commonService.showSwalToast(`Merci de donner un nom à la solution multiple.`, 'error');
+                this.commonService.showSwalToast(`Veuillez donner un nom à la solution multiple.`, 'error');
                 return;
             }
         }
