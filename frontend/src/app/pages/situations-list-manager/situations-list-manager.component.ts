@@ -27,8 +27,6 @@ export class SituationsListManagerComponent {
 
     totalRecords: number = 0;
 
-    paginatorAnimationDelay = "0s"
-
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -38,11 +36,10 @@ export class SituationsListManagerComponent {
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         if (event.target.innerHeight > 1080) {
-            this.nbRowsPerPage = 10;
+            this.nbRowsPerPage = 12;
         } else {
             this.nbRowsPerPage = 7;
         }
-        this.paginatorAnimationDelay = 0.1 + this.nbRowsPerPage * 0.075 + 's';
     }
 
     ngOnInit(): void {
@@ -72,7 +69,7 @@ export class SituationsListManagerComponent {
 
     removeSituation(id: string) {
         Swal.fire({
-            title:'Attention !',
+            title: 'Attention !',
             text: 'Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière.',
             icon: 'warning',
             showCancelButton: true,
