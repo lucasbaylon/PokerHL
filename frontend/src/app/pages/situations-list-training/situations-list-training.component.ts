@@ -7,11 +7,12 @@ import { TableModule } from 'primeng/table';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { PositionPipe } from '../../pipes/position.pipe';
 
 @Component({
     selector: 'app-situations-list-training',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe],
     templateUrl: './situations-list-training.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

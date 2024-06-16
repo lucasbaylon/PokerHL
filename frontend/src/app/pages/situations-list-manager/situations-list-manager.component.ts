@@ -8,11 +8,12 @@ import { TableModule } from 'primeng/table';
 import { CommonService } from './../../services/common.service';
 import { PaginatorModule } from 'primeng/paginator';
 import Swal from 'sweetalert2';
+import { PositionPipe } from '../../pipes/position.pipe';
 
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe],
     templateUrl: './situations-list-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -20,7 +21,7 @@ export class SituationsListManagerComponent {
 
     situationList: Situation[] = [];
 
-    paginatedSituationList: any[] = [];
+    paginatedSituationList: Situation[] = [];
 
     nbRowsPerPage = 10;
 
@@ -47,6 +48,8 @@ export class SituationsListManagerComponent {
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data;
+
+            console.log(this.situationList.at(-1));
 
             this.loadPageData(0, this.nbRowsPerPage);
 
