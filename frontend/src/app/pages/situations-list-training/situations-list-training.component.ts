@@ -39,7 +39,7 @@ export class SituationsListTrainingComponent {
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         if (event.target.innerHeight > 1080) {
-            this.nbRowsPerPage = 10;
+            this.nbRowsPerPage = 12;
         } else {
             this.nbRowsPerPage = 7;
         }
