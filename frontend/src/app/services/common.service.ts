@@ -19,7 +19,7 @@ export class CommonService {
         name: undefined,
         type: "preflop",
         nbPlayer: 3,
-        dealerMissingTokens: 0,
+        stack: 0,
         position: "sb",
         opponentLevel: "fish",
         fishPosition: undefined,

@@ -15,14 +15,14 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Type
-                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
+                        <p-columnFilter type="numeric" field="type" display="menu"
                             class="ml-2"></p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Stack effectif
-                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"
+                        <p-columnFilter type="numeric" field="stack" display="menu"
                             class="ml-2"></p-columnFilter>
                     </div>
                 </th>
@@ -60,7 +60,7 @@
                     {{ situation.type | type }}
                 </td>
                 <td class="dark:border-gray-700">
-                    {{ situation.dealerMissingTokens }}
+                    {{ situation.stack }}
                 </td>
                 <td class="dark:border-gray-700">
                     {{ situation.nbPlayer }}

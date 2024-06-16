@@ -23,7 +23,7 @@ export interface ActiveSituation {
 
     result: string;
 
-    dealerMissingTokens?: number;
+    stack?: number;
 
     opponentLevel?: string;
 

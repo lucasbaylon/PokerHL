@@ -14,6 +14,7 @@ const { getConnection } = require('./database');
 const http = require('http').Server(app);
 
 const serviceAccount = require('./serviceAccountKey.json');
+const { json } = require('body-parser');
 
 // Configuration de multer pour le stockage en mémoire
 const storage = multer.memoryStorage();
@@ -116,11 +117,19 @@ app.get("/fix_bdd", async function (req, res) {
                 isModified = true;
             }
 
+            // 4. Remplacer le champ "dealerMissingTokens" par "stack"
+            if ('dealerMissingTokens' in jsonData) {
+                jsonData.stack = jsonData.dealerMissingTokens;
+                // Supprimer le champ dealerMissingTokens
+                delete jsonData.dealerMissingTokens;
+                isModified = true;
+            }
+
             // 3. Convertir le JSON modifié en chaîne de caractères et mettre à jour si modifié
             if (isModified) {
                 i += 1;
                 console.log(`${jsonData.name} has been modified.`);
-                modifiedObject = jsonData;
+                // modifiedObject = jsonData;
                 const updatedJson = JSON.stringify(jsonData);
 
                 // 4. Mettre à jour la ligne dans la base de données
@@ -371,7 +380,7 @@ function validateJsonContent(fileName, jsonContent) {
     try {
         const jsonData = JSON.parse(jsonContent);
 
-        const champsValides = ["name", "nbPlayer", "dealerMissingTokens", "dealer", "opponentLevel", "actions", "situations"];
+        const champsValides = ["name", "nbPlayer", "stack", "dealer", "opponentLevel", "actions", "situations"];
 
         // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
         const champsJson = Object.keys(jsonData);
@@ -395,7 +404,7 @@ function validateJsonContent(fileName, jsonContent) {
         const validations = {
             name: val => typeof val === 'string',
             nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
-            dealerMissingTokens: val => typeof val === 'number',
+            stack: val => typeof val === 'number',
             dealer: val => typeof val === 'string' && ['you', 'opponent1', 'opponent2'].includes(val),
             opponentLevel: val => typeof val === 'string' && ['fish', 'shark'].includes(val),
         };

@@ -10,7 +10,7 @@ export interface Situation {
 
     nbPlayer?: number;
 
-    dealerMissingTokens: number;
+    stack: number;
 
     position?: string;
 

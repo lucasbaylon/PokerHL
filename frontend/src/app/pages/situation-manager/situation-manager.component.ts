@@ -272,7 +272,7 @@ export class SituationManagerComponent {
                 this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau des ranges.`, 'error');
             } else {
                 // On check si il y a bien un nombre de jetons
-                if (!this.situation_obj.dealerMissingTokens) {
+                if (!this.situation_obj.stack) {
                     this.commonService.showSwalToast(`Veuillez remplir le champ "Stack effectif".`, 'error');
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
@@ -573,13 +573,13 @@ export class SituationManagerComponent {
     }
 
     /**
-  * Filtre et formate la saisie d'un champ de saisie HTML.
-  * Seules les valeurs numériques sont conservées.
-  * Limite la saisie à un maximum de 4 chiffres et s'assure que la valeur est entre 1 et 9999.
-  * 
-  * @param event L'événement d'entrée déclenché lors de la saisie dans le champ de saisie.
-  *              L'événement doit être de type `Event`.
-  */
+     * Filtre et formate la saisie d'un champ de saisie HTML.
+     * Seules les valeurs numériques sont conservées.
+     * Limite la saisie à un maximum de 4 chiffres et s'assure que la valeur est entre 1 et 9999.
+     * 
+     * @param event L'événement d'entrée déclenché lors de la saisie dans le champ de saisie.
+     *              L'événement doit être de type `Event`.
+     */
     formatAndRestrictNumberInput(event: Event): void {
         let input = event.target as HTMLInputElement;
         let value = input.value;
@@ -598,7 +598,7 @@ export class SituationManagerComponent {
         }
 
         // Mettre à jour la valeur du modèle et de l'input
-        this.situation_obj.dealerMissingTokens = Number(numbers);
+        this.situation_obj.stack = Number(numbers);
         input.value = numbers;
     }
 

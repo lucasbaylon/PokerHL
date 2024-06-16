@@ -104,7 +104,7 @@ export class TrainingComponent {
             right_card: cards.right_card,
             actions: situation.actions,
             result: result,
-            dealerMissingTokens: situation.dealerMissingTokens,
+            stack: situation.stack,
             opponentLevel: situation.opponentLevel,
             fishPosition: situation.fishPosition
         }

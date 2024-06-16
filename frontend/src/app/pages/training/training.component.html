@@ -21,7 +21,7 @@
                                 <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                                 <div
@@ -53,7 +53,7 @@
                                 }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -83,7 +83,7 @@
                                 }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'sb') {
                                 <div
@@ -104,7 +104,7 @@
                     <div class="w-1/2 flex flex-col items-center justify-center gap-1">
                         <i class="fa-solid fa-user text-2xl my-1"></i>
                         <h3 class="m-0">Vous</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.dealerMissingTokens}} BB</h3>
+                        <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                         <!-- Dealer coin -->
                         @if (activeSituation.nbPlayer === 2) {
                             @if (activeSituation.position == 'sb') {
