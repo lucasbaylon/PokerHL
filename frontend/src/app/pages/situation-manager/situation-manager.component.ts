@@ -289,6 +289,7 @@ export class SituationManagerComponent {
                     if (empty_action_input) {
                         this.commonService.showSwalToast(`Veuillez donner un nom aux actions utilisées dans le tableau.`, 'error');
                     } else {
+                        this.situation_obj.actions = this.situation_obj.actions.filter(action => uniqueActions.includes(action.id));
                         if (this.mode === "new") {
                             this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
