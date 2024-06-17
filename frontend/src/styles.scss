@@ -9,6 +9,8 @@
 
     //Dropdown primeNG
     .p-dropdown {
+        @apply border-gray-300;
+
         ul {
             padding: 0;
             border-radius: 5px;
@@ -21,7 +23,17 @@
     }
 
     .p-dropdown:hover {
-        @apply border-gray-600;
+        @apply border-gray-500;
+    }
+
+    input[type=text]:hover,
+    input[type=password]:hover {
+        @apply border-gray-500;
+    }
+
+    input[type=text],
+    input[type=password] {
+        @apply border-gray-300;
     }
 
     //Paginator primeNG
