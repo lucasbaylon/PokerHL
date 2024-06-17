@@ -380,7 +380,7 @@ function validateJsonContent(fileName, jsonContent) {
     try {
         const jsonData = JSON.parse(jsonContent);
 
-        const champsValides = ["name", "nbPlayer", "stack", "dealer", "opponentLevel", "actions", "situations"];
+        const champsValides = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "actions", "situations"];
 
         // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
         const champsJson = Object.keys(jsonData);
@@ -405,8 +405,9 @@ function validateJsonContent(fileName, jsonContent) {
             name: val => typeof val === 'string',
             nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
             stack: val => typeof val === 'number',
-            dealer: val => typeof val === 'string' && ['you', 'opponent1', 'opponent2'].includes(val),
-            opponentLevel: val => typeof val === 'string' && ['fish', 'shark'].includes(val),
+            type: val => typeof val === 'string' && ['preflop', 'flop'].includes(val),
+            position: val => typeof val === 'string' && ['sb', 'bb', 'bu'].includes(val),
+            opponentLevel: val => typeof val === 'string' && ['fish', 'shark', 'fish_shark'].includes(val),
         };
 
         for (const [key, validator] of Object.entries(validations)) {
