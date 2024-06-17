@@ -20,10 +20,10 @@ import { CardComponent } from '../../components/card/card.component';
 export class TrainingComponent {
 
     countResult: boolean = true;
-    GoodResponse: number = 0;
-    BadResponse: number = 0;
-    TotalResponse: number = 0;
-    SuccessRatePercentage: number = 0;
+    goodResponse: number = 0;
+    badResponse: number = 0;
+    totalResponse: number = 0;
+    successRatePercentage: number = 0;
     situationList: Situation[] = [];
     currentSituation!: Situation;
     currentSituationName: string = "";
@@ -218,26 +218,29 @@ export class TrainingComponent {
     }
 
     checkResultCase(result: string) {
-        if (this.countResult) this.TotalResponse += 1;
+        if (this.countResult) this.totalResponse += 1;
         if (this.activeSituation.result.includes(result)) {
-            if (this.countResult) this.GoodResponse += 1;
-            if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
+            if (this.countResult) {
+                this.goodResponse += 1;
+                this.successRatePercentage = Math.round((this.goodResponse / this.totalResponse) * 100);
+            }
             this.countResult = true;
             this.commonService.showSwalToast(`Bonne réponse !`);
             this.generateSituation();
         } else {
-            if (this.countResult) this.BadResponse += 1;
-            if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
+            if (this.countResult) {
+                this.badResponse += 1;
+                this.successRatePercentage = Math.round((this.goodResponse / this.totalResponse) * 100);
+            }
             const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
             if (userParams.displaySolution) {
-                this.countResult = false;
                 const modal = document.getElementById('wrong-answer-modal') as HTMLDialogElement;
                 if (modal) {
                     modal.showModal();
                 }
             } else {
                 this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
-                this.generateSituation();
+                this.countResult = false;
             }
         }
     }
@@ -255,6 +258,7 @@ export class TrainingComponent {
         if (modal) {
             modal.close();
         }
+        this.generateSituation();
     }
 
     /**

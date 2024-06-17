@@ -18,18 +18,18 @@
                         class="absolute top-[-10%] left-1/2 w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
                             @if (activeSituation.opponentLevel == "fish"){
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "shark") {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             <h3 class="m-0">Adversaire</h3>
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
-                            <div
-                                class="absolute top-[80%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
-                            </div>
+                                <div
+                                    class="absolute top-[80%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                    <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                </div>
                             }
                         </div>
                         <div class="w-1/2 flex items-center justify-center">
@@ -44,17 +44,15 @@
                         class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
                             @if (activeSituation.opponentLevel == "fish"){
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "shark") {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "fish_shark") {
-                            @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) ===
-                            "opponent1")
-                            {
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                            }
+                                @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent1") {
+                                    <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                } @else {
+                                    <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                }
                             }
                             <h3 class="m-0">Adversaire</h3>
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
@@ -76,17 +74,15 @@
                         class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
                             @if (activeSituation.opponentLevel == "fish"){
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "shark") {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "fish_shark") {
-                            @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) ===
-                            "opponent2")
-                            {
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                            }
+                                @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent2") {
+                                    <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                } @else {
+                                    <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                }
                             }
                             <h3 class="m-0">Adversaire</h3>
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
@@ -113,20 +109,20 @@
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.nbPlayer === 2) {
-                            @if (activeSituation.position == 'sb') {
-                            <div
-                                class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
-                            </div>
-                            }
+                                @if (activeSituation.position == 'sb') {
+                                    <div
+                                        class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                        <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                    </div>
+                                }
                             }
                             @if (activeSituation.nbPlayer === 3) {
-                            @if (activeSituation.position == 'bu') {
-                            <div
-                                class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
-                            </div>
-                            }
+                                @if (activeSituation.position == 'bu') {
+                                    <div
+                                        class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                        <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                    </div>
+                                }
                             }
                         </div>
                         <div class="w-1/2 flex items-center justify-center select-none">
@@ -150,10 +146,12 @@
             <div
                 class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
                 @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
-                @if (action.display_name) {
-                <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
-                    [id]="'button_' + action.id" (click)="checkResultCase(action.id)">{{action.display_name}}</div>
-                }
+                    @if (action.display_name) {
+                        <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
+                            [id]="'button_' + action.id" (click)="checkResultCase(action.id)">
+                            {{action.display_name}}
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -195,14 +193,14 @@
                         Solutions
                     </h4>
                     @for (action of activeSituation.actions; track i; let i = $index) {
-                    @if (action.display_name) {
-                    <div
-                        class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
-                        {{action.display_name}}
-                        <div class="h-7 w-7 ml-2 rounded shadow-md"
-                            [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
-                    </div>
-                    }
+                        @if (action.display_name) {
+                            <div
+                                class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
+                                {{action.display_name}}
+                                <div class="h-7 w-7 ml-2 rounded shadow-md"
+                                    [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
+                            </div>
+                        }
                     }
                     <div class="mt-16">
                         <h4
@@ -240,10 +238,10 @@
     <div
         class="absolute -left-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
         <div class="mb-1">
-            <span class="font-semibold">Ratio W/L :</span> {{GoodResponse}} / {{BadResponse}}
+            <span class="font-semibold">Ratio Bonne/Mauvaise réponse :</span> {{goodResponse}} / {{badResponse}}
         </div>
         <div class="mb-1">
-            <span class="font-semibold">Taux de réussite :</span> {{SuccessRatePercentage}}%
+            <span class="font-semibold">Taux de réussite :</span> {{successRatePercentage}}%
         </div>
         <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
     </div>
