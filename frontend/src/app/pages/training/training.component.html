@@ -1,156 +1,161 @@
 <div class="relative h-[calc(100vh-64px)]">
     @if (activeSituation) {
-    <div class="flex-col justify-center items-center">
-        <div class="flex justify-center items-center pt-10 animate-appear opacity-0">
-            <div class="relative w-full max-w-[50vw] h-[27vw] rounded-full border-solid border-8 border-gray-800 dark:border-gray-300 shadow-2xl"
-                [style.background]="backgroundColor">
-                <div class="flex items-center justify-center w-full h-full">
-                    <h1 class="opacity-60 font-semibold italic text-7xl select-none flex flex-col items-center">
-                        Poker HL
-                    </h1>
-                </div>
+    <div class="flex justify-center items-center h-[85%]">
+        <!-- Table de poker -->
+        <div class="flex-col justify-center items-center">
+            <div class="flex justify-center items-center animate-appear opacity-0">
+                <div class="relative w-[48vw] max-w-[1000px] h-[27vw] max-h-[550px] rounded-full border-solid border-8 border-gray-800 dark:border-gray-300 shadow-2xl"
+                    [style.background]="backgroundColor">
+                    <div class="flex items-center justify-center w-full h-full">
+                        <h1 class="opacity-60 font-semibold italic text-7xl select-none flex flex-col items-center">
+                            Poker HL
+                        </h1>
+                    </div>
 
-                <!-- Adversaire du milieu -->
-                @if (activeSituation.nbPlayer === 2) {
-                <div
-                    class="absolute top-[-10%] left-1/2 w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                    <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
-                        @if (activeSituation.opponentLevel == "fish"){
-                        <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        } @else if (activeSituation.opponentLevel == "shark") {
-                        <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        }
-                        <h3 class="m-0">Adversaire</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
-                        <!-- Dealer coin -->
-                        @if (activeSituation.position == 'bb') {
-                        <div
-                            class="absolute top-[80%] left-[120%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                            <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                    <!-- Adversaire du milieu -->
+                    @if (activeSituation.nbPlayer === 2) {
+                    <div
+                        class="absolute top-[-10%] left-1/2 w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'bb') {
+                            <div
+                                class="absolute top-[80%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
                         </div>
-                        }
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
                     </div>
-                    <div class="w-1/2 flex items-center justify-center">
-                        <app-default-cards></app-default-cards>
-                    </div>
-                </div>
-                }
+                    }
 
-                <!-- Adversaire de gauche -->
-                @if (activeSituation.nbPlayer === 3) {
-                <div
-                    class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                    <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
-                        @if (activeSituation.opponentLevel == "fish"){
-                        <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        } @else if (activeSituation.opponentLevel == "shark") {
-                        <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        } @else if (activeSituation.opponentLevel == "fish_shark") {
-                        @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent1")
-                        {
-                        <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        } @else {
-                        <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        }
-                        }
-                        <h3 class="m-0">Adversaire</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
-                        <!-- Dealer coin -->
-                        @if (activeSituation.position == 'bb') {
-                        <div
-                            class="absolute top-[130%] left-[40%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                            <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                    <!-- Adversaire de gauche -->
+                    @if (activeSituation.nbPlayer === 3) {
+                    <div
+                        class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "fish_shark") {
+                            @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) ===
+                            "opponent1")
+                            {
+                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else {
+                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            }
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'bb') {
+                            <div
+                                class="absolute top-[130%] left-[40%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
                         </div>
-                        }
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
                     </div>
-                    <div class="w-1/2 flex items-center justify-center">
-                        <app-default-cards></app-default-cards>
-                    </div>
-                </div>
 
-                <!-- Adversaire de droite -->
-                <div
-                    class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                    <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
-                        @if (activeSituation.opponentLevel == "fish"){
-                        <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        } @else if (activeSituation.opponentLevel == "shark") {
-                        <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        } @else if (activeSituation.opponentLevel == "fish_shark") {
-                        @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent2")
-                        {
-                        <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                        } @else {
-                        <i class="fa-solid fa-crown text-2xl my-1"></i>
-                        }
-                        }
-                        <h3 class="m-0">Adversaire</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
-                        <!-- Dealer coin -->
-                        @if (activeSituation.position == 'sb') {
-                        <div
-                            class="absolute top-[130%] left-[60%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                            <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                    <!-- Adversaire de droite -->
+                    <div
+                        class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "fish_shark") {
+                            @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) ===
+                            "opponent2")
+                            {
+                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else {
+                            <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            }
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'sb') {
+                            <div
+                                class="absolute top-[130%] left-[60%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
                         </div>
-                        }
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
                     </div>
-                    <div class="w-1/2 flex items-center justify-center">
-                        <app-default-cards></app-default-cards>
-                    </div>
-                </div>
-                }
+                    }
 
-                <!-- Joueur -->
-                <div
-                    class="absolute top-[86%] w-64 left-1/2 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                    <div class="w-1/2 flex flex-col items-center justify-center gap-1">
-                        <i class="fa-solid fa-user text-2xl my-1"></i>
-                        <h3 class="m-0">Vous</h3>
-                        <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
-                        <!-- Dealer coin -->
-                        @if (activeSituation.nbPlayer === 2) {
-                        @if (activeSituation.position == 'sb') {
-                        <div
-                            class="absolute top-[20%] left-[120%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                            <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                    <!-- Joueur -->
+                    <div
+                        class="absolute top-[86%] w-64 left-1/2 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1">
+                            <i class="fa-solid fa-user text-2xl my-1"></i>
+                            <h3 class="m-0">Vous</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.nbPlayer === 2) {
+                            @if (activeSituation.position == 'sb') {
+                            <div
+                                class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
+                            }
+                            @if (activeSituation.nbPlayer === 3) {
+                            @if (activeSituation.position == 'bu') {
+                            <div
+                                class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
+                            }
                         </div>
-                        }
-                        }
-                        @if (activeSituation.nbPlayer === 3) {
-                        @if (activeSituation.position == 'bu') {
-                        <div
-                            class="absolute top-[20%] left-[120%] w-[2.5vw] h-[2.5vw] bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                            <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
-                        </div>
-                        }
-                        }
-                    </div>
-                    <div class="w-1/2 flex items-center justify-center select-none">
-                        <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
-                            <card [cardColor]="activeSituation.left_card.color.color"
-                                [cardColorName]="activeSituation.left_card.color.name"
-                                [cardValue]="activeSituation.left_card.value"></card>
-                        </div>
-                        <div
-                            class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
-                            <card [cardColor]="activeSituation.right_card.color.color"
-                                [cardColorName]="activeSituation.right_card.color.name"
-                                [cardValue]="activeSituation.right_card.value"></card>
+                        <div class="w-1/2 flex items-center justify-center select-none">
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
+                                <card [cardColor]="activeSituation.left_card.color.color"
+                                    [cardColorName]="activeSituation.left_card.color.name"
+                                    [cardValue]="activeSituation.left_card.value"></card>
+                            </div>
+                            <div
+                                class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
+                                <card [cardColor]="activeSituation.right_card.color.color"
+                                    [cardColorName]="activeSituation.right_card.color.name"
+                                    [cardValue]="activeSituation.right_card.value"></card>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Div des boutons de réponses -->
-        <div
-            class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
-            @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
-            @if (action.display_name) {
-            <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
-                [id]="'button_' + action.id" (click)="checkResultCase(action.id)">{{action.display_name}}</div>
-            }
-            }
+            <!-- Div des boutons de réponses -->
+            <div
+                class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
+                @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
+                @if (action.display_name) {
+                <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
+                    [id]="'button_' + action.id" (click)="checkResultCase(action.id)">{{action.display_name}}</div>
+                }
+                }
+            </div>
         </div>
     </div>
     }
