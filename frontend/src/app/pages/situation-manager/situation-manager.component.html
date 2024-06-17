@@ -107,13 +107,14 @@
 </div>
 
 <!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
-<div class="flex items-start justify-center w-full my-16 mx-auto h-[500px]">
+<div [ngClass]="{'h-[500px]': nbPlayer.code === 3 && opponentLevel.code === 'fish_shark', 'h-[440px]': nbPlayer.code !== 3 || opponentLevel.code !== 'fish_shark'}" class="flex items-start justify-center w-full my-16 mx-auto ">
     <!-- Div SOLUTIONS MULTIPLES -->
     <div
-        class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
+        class="p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
-        <div class="max-h-[79%] overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start pt-4">
+        <div [ngClass]="{'max-h-[75%]': nbPlayer.code === 3 && opponentLevel.code === 'fish_shark', 'max-h-[70%]': nbPlayer.code !== 3 || opponentLevel.code !== 'fish_shark'}"
+        class="overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start mt-4">
             @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
             <div class="relative flex items-center my-4 w-full">
                 <!-- Surbrillance de la couleur sélectionnée -->
