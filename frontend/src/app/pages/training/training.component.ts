@@ -59,7 +59,7 @@ export class TrainingComponent {
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
 
             if (userParams.cardStyle === 'contrast') {
-                this.colorList = [{name: "heart", color: "red"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
+                this.colorList = [{ name: "heart", color: "#d20000"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
             }
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
