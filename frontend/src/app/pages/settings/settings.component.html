@@ -42,13 +42,6 @@
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Affichage de la situation en cours</div>
-                <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySituation"
-                    (onChange)="onChangeDisplaySituation()"></p-inputSwitch>
-            </div>
-            <div class="flex items-center justify-between w-full mt-4">
-                <div
-                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Style des cartes</div>
                 <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
                     placeholder="Sélectionne un style" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>

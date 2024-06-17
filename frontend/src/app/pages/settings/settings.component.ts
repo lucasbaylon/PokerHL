@@ -24,7 +24,6 @@ export class SettingsComponent {
 
     darkMode: boolean = false;
     displaySolutionOnError: boolean = true;
-    displaySituation: boolean = true;
     highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
 
@@ -47,7 +46,6 @@ export class SettingsComponent {
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
-        userParams.displaySituation ? this.displaySituation = userParams.displaySituation : this.displaySituation = false;
         userParams.autoMultipleSolutionName ? this.autoMultipleSolutionName = userParams.autoMultipleSolutionName : this.autoMultipleSolutionName = false;
         localStorage.getItem('theme') === 'light' ? this.darkMode = false : this.darkMode = true;
     }
@@ -55,12 +53,6 @@ export class SettingsComponent {
     onChangeDisplaySolutionOnError() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.displaySolution = this.displaySolutionOnError;
-        localStorage.setItem('userParams', JSON.stringify(userParams));
-    }
-
-    onChangeDisplaySituation() {
-        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.displaySituation = this.displaySituation;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 

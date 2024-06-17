@@ -30,7 +30,6 @@ export class TrainingComponent {
     currentSituationName: string = "";
     activeSituation!: ActiveSituation;
     backgroundColor!: string;
-    displaySituation!: boolean;
     hours: number = 1;
     minutes: number = 0;
     seconds: number = 0;
@@ -62,8 +61,6 @@ export class TrainingComponent {
             if (userParams.cardStyle === 'contrast') {
                 this.colorList = [{name: "heart", color: "red"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
             }
-
-            this.displaySituation = userParams.displaySituation;
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
