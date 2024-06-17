@@ -58,9 +58,6 @@
                 <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
                     [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
                     (click)="onColorAction(action.id)"></div>
-                <!-- <div #colorCell class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
-                        [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
-                        (click)="onColorAction(action.id, colorCell)"></div> -->
                 <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
                     [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
                     class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 px-5 text-base font-medium shadow transition-none">
@@ -116,7 +113,6 @@
         class="mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
-
         <div class="max-h-[79%] overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start pt-4">
             @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
             <div class="relative flex items-center my-4 w-full">
@@ -277,7 +273,7 @@
         @if (nbPlayer.code === 3 && opponentLevel.code === "fish_shark") {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Position du débutant
+                    Position du fish
                 </div>
                 <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
                     (onChange)="onChangeFishPosition()" optionLabel="name"></p-dropdown>
