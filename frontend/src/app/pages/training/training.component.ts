@@ -61,10 +61,6 @@ export class TrainingComponent {
                 this.colorList = [{ name: "heart", color: "#d20000"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
             }
 
-            if (window.innerHeight <= 1080) {
-                document.getElementById("poker-table-div")?.classList.add("scale-125");
-            }
-
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
             const currentUrl = this.router.url;
@@ -78,6 +74,12 @@ export class TrainingComponent {
 
     ngOnDestroy() {
         this.clearCountdown();
+    }
+
+    ngAfterViewInit() {
+        if (window.innerHeight >= 1080) {
+            document.getElementById("poker-table-div")?.classList.add("scale-125");
+        }
     }
 
     @HostListener('window:resize', ['$event'])
