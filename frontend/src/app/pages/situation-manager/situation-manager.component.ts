@@ -547,11 +547,16 @@ export class SituationManagerComponent {
         if (this.nbPlayer.code === 2) {
             this.availablePositionPlayer = this.allPositions.filter(pos => pos.code !== 'bu');
             this.availableOpponentsPlayersLevel = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
+            if (this.position.code === 'bu') {
+                this.position = this.availablePositionPlayer[0];
+            }
+            if (this.opponentLevel.code === 'fish_shark') {
+                this.opponentLevel = this.availableOpponentsPlayersLevel[0];
+            }
         } else {
             this.availablePositionPlayer = [...this.allPositions];
             this.availableOpponentsPlayersLevel = [...this.allOpponentLevels];
         }
-        this.position = this.availablePositionPlayer[0];
         this.updateAvailableFishPositions();
     }
 
