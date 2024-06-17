@@ -34,6 +34,15 @@
         @apply border-gray-300;
     }
 
+    // Boutons input number dans filtres
+    // span button{
+    //     @apply bg-secondary-dark-bg border-gray-800;
+    // }
+    
+    // span button:hover{
+    //     @apply bg-secondary-dark-bg border-gray-700;
+    // }
+
     //Paginator primeNG
     .p-paginator {
         @apply rounded-b-md rounded-t-none dark:bg-secondary-dark-bg border-none;
