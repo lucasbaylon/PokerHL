@@ -7,6 +7,13 @@
 
 @layer components {
 
+    input[type=text]:focus,
+    .p-inputtext:focus {
+        // @apply dark:bg-secondary-dark-bg;
+        border-color: red;
+        box-shadow: 0 0 0 0.2rem red;
+    }
+
     //Dropdown primeNG
     .p-dropdown {
         ul {
@@ -20,15 +27,15 @@
         }
     }
 
-    input[type=text]:hover,
-    input[type=password]:hover,
+    // input[type=text]:hover,
+    // input[type=password]:hover,
     .p-dropdown:hover,
     .p-inputnumber-input:hover {
         @apply border-gray-500;
     }
 
-    input[type=text],
-    input[type=password],
+    // input[type=text],
+    // input[type=password],
     .p-dropdown,
     .p-inputnumber-input {
         @apply border-gray-300;
