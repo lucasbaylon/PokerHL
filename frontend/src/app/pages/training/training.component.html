@@ -189,7 +189,11 @@
                         </tbody>
                     </table>
                 </div>
-                <div class=" ml-6 mr-5">
+                <div class="ml-6 mr-5">
+                    <h4
+                        class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                        Solutions
+                    </h4>
                     @for (action of activeSituation.actions; track i; let i = $index) {
                     @if (action.display_name) {
                     <div
@@ -200,8 +204,27 @@
                     </div>
                     }
                     }
+                    <div class="mt-16">
+                        <h4
+                            class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                            Vos cartes
+                        </h4>
+                        <div class="flex items-center justify-center select-none">
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
+                                <card [cardColor]="activeSituation.left_card.color.color"
+                                    [cardColorName]="activeSituation.left_card.color.name"
+                                    [cardValue]="activeSituation.left_card.value"></card>
+                            </div>
+                            <div
+                                class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
+                                <card [cardColor]="activeSituation.right_card.color.color"
+                                    [cardColorName]="activeSituation.right_card.color.name"
+                                    [cardValue]="activeSituation.right_card.value">
+                                </card>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
                 <div (click)="closeModal()"
