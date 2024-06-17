@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { Situation } from '../../interfaces/situation';
 import { ActiveSituation } from '../../interfaces/active-situation';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -61,6 +61,10 @@ export class TrainingComponent {
                 this.colorList = [{ name: "heart", color: "#d20000"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
             }
 
+            if (window.innerHeight <= 1080) {
+                document.getElementById("poker-table-div")?.classList.add("scale-125");
+            }
+
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
             const currentUrl = this.router.url;
@@ -74,6 +78,16 @@ export class TrainingComponent {
 
     ngOnDestroy() {
         this.clearCountdown();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        const div = document.getElementById("poker-table-div")!;
+        if (event.target.innerHeight > 1080) {
+            div.classList.add("scale-125");
+        } else {
+            div.classList.remove("scale-125");
+        }
     }
 
     filteredActionList(list: Action[], type: string) {
