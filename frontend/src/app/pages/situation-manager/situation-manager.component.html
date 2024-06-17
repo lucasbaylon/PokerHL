@@ -262,7 +262,7 @@
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Position
+                Votre position
             </div>
             <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangePosition()"
                 optionLabel="name"></p-dropdown>
@@ -277,7 +277,7 @@
         @if (nbPlayer.code === 3 && opponentLevel.code === "fish_shark") {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Position du fish
+                    Position du débutant
                 </div>
                 <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
                     (onChange)="onChangeFishPosition()" optionLabel="name"></p-dropdown>
