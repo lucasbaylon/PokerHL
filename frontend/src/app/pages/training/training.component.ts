@@ -24,7 +24,6 @@ export class TrainingComponent {
     BadResponse: number = 0;
     TotalResponse: number = 0;
     SuccessRatePercentage: number = 0;
-    randomizer: number = 0;
     situationList: Situation[] = [];
     currentSituation!: Situation;
     currentSituationName: string = "";
@@ -92,7 +91,6 @@ export class TrainingComponent {
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations);
         let cards = this.generateCards(situationCase);
-        this.randomizer = this.generateRandomNumber();
         let result = this.getResultCase(situationCase.action);
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
@@ -194,30 +192,18 @@ export class TrainingComponent {
         }
     }
 
-    getActionFromPercent(percent: number, actions: any): string | undefined {
-        let sum = 0;
-        for (const action of actions) {
-            sum += action.percent;
-            if (percent < sum) {
-                return action.color;
-            }
-        }
-        return undefined;
-    }
-
-    getResultCase(good_action: string): string {
+    getResultCase(good_action: string): string[] {
         let action = this.currentSituation.actions.filter(action => action.id === good_action)[0];
         if (action.type === "unique") {
-            return action.id;
+            return [action.id];
         } else {
-            const action_id = this.getActionFromPercent(this.randomizer, action.colorList);
-            return action_id!;
+            return action.colorList!.map(color => color.color);
         }
     }
 
     checkResultCase(result: string) {
         if (this.countResult) this.TotalResponse += 1;
-        if (result === this.activeSituation.result) {
+        if (this.activeSituation.result.includes(result)) {
             if (this.countResult) this.GoodResponse += 1;
             if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
             this.countResult = true;

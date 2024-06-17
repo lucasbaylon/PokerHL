@@ -21,7 +21,7 @@ export interface ActiveSituation {
 
     actions: Action[];
 
-    result: string;
+    result: string[];
 
     stack?: number;
 
