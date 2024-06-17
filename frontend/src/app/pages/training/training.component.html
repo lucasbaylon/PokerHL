@@ -210,13 +210,13 @@
                             Vos cartes
                         </h4>
                         <div class="flex items-center justify-center select-none">
-                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none">
                                 <card [cardColor]="activeSituation.left_card.color.color"
                                     [cardColorName]="activeSituation.left_card.color.name"
                                     [cardValue]="activeSituation.left_card.value"></card>
                             </div>
                             <div
-                                class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
+                                class="relative bg-white h-20 w-14 border border-gray-800 dark:border-l dark:border-l-gray-800 dark:border-t-0 dark:border-r-0 dark:border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
                                 <card [cardColor]="activeSituation.right_card.color.color"
                                     [cardColorName]="activeSituation.right_card.color.name"
                                     [cardValue]="activeSituation.right_card.value">
