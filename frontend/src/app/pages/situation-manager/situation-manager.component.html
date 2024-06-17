@@ -117,7 +117,7 @@
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
 
-        <div class="max-h-[300px] overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start pt-4">
+        <div class="max-h-[79%] overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start pt-4">
             @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
             <div class="relative flex items-center my-4 w-full">
                 <!-- Surbrillance de la couleur sélectionnée -->
@@ -159,7 +159,7 @@
             }
         </div>
 
-        <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2">
+        <div class="flex justify-center items-center mt-5">
             <div (click)="showAddMultiplesActionModal()"
                 class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
                 <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
