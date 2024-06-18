@@ -240,7 +240,7 @@
                 Type de situation</div>
             <div class="flex items-center justify-end w-1/3">
                 <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
-                    [options]="availableSituationType" (onChange)="onChangeSituationType()"
+                    [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
                     optionLabel="name"></p-dropdown>
             </div>
         </div>
@@ -260,7 +260,7 @@
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Votre position
             </div>
-            <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangePosition()"
+            <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
                 optionLabel="name"></p-dropdown>
         </div>
         <div class="flex items-center justify-between w-full mt-4">
@@ -268,7 +268,7 @@
                 Niveau des adversaires
             </div>
             <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
-                (onChange)="onChangeOpponentLevel()" optionLabel="name"></p-dropdown>
+                (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name"></p-dropdown>
         </div>
         @if (opponentLevel.code === "fish_shark") {
             <div class="flex items-center justify-between w-full mt-4">
@@ -276,10 +276,9 @@
                     Position du fish
                 </div>
                 <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
-                    (onChange)="onChangeFishPosition()" optionLabel="name"></p-dropdown>
+                    (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name"></p-dropdown>
             </div>
         }
-        
     </div>
 </div>
 

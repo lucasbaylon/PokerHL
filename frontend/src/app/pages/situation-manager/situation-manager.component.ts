@@ -37,8 +37,6 @@ export class SituationManagerComponent {
     mixedSolutionSliderMaxValue: number = 100;
     simpleSlider: boolean = true;
     multipleSlider: boolean = false;
-    // checkboxMultipleSolutionChecked: number = 0;
-    // multipleSolutionCheckedList: string[] = [];
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     editSituationName?: string;
@@ -59,22 +57,6 @@ export class SituationManagerComponent {
         { name: '2', code: 2 },
         { name: '3', code: 3 }
     ];
-
-    // availablePositionPlayer: any[] = [
-    //     { name: 'SB', code: 'sb' },
-    //     { name: 'BB', code: 'bb' }
-    // ];
-
-    // availableOpponentsPlayersLevel: any[] = [
-    //     { name: 'Débutant', code: 'fish' },
-    //     { name: 'Confirmé', code: 'shark' }
-    // ];
-
-    // availableFishPlayerPosition: any[] = [
-    //     // { name: 'SB', code: 'sb' },
-    //     { name: 'BB', code: 'bb' },
-    //     { name: 'BU', code: 'bu' }
-    // ];
 
     allPositions: any[] = [
         { name: 'SB', code: 'sb' },
@@ -117,21 +99,6 @@ export class SituationManagerComponent {
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
-
-        // this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
-        //     this.mode = "edit";
-        //     this.situation_obj = JSON.parse(situation_str);
-        //     this.editSituationName = this.situation_obj.name;
-        //     this.situation_objActionsRef = this.situation_obj.actions.slice();
-        //     this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
-        //     this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
-        //     this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
-        //     this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
-        //     this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
-
-        //     let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
-        //     this.countMultipleSolution = actionList.length;
-        // });
 
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
@@ -419,7 +386,6 @@ export class SituationManagerComponent {
             }
             actionsLst.push(obj);
         });
-        console.log(actionsLst);
         if (userParams.autoMultipleSolutionName) {
             this.multipleSolutionName = "";
             actionsLst.forEach((actionItem, index) => {
@@ -492,56 +458,21 @@ export class SituationManagerComponent {
         this.showAddMultiplesActionModal();
     }
 
-    deleteMultipleSolution(action_id: string) {
-        const index = this.situation_obj.actions.findIndex(action => action.id === action_id);
+    /**
+    * Supprime une solution multiple de la liste des solutions multiples de situation_obj en utilisant son identifiant.
+    * Met également à jour la référence locale situation_objActionsRef avec la liste des actions mise à jour.
+    *
+    * @param {string} multiple_solution_id - L'identifiant de la solution multiple à supprimer.
+    */
+    deleteMultipleSolution(multiple_solution_id: string) {
+        const actions = this.situation_obj.actions;
+        const index = actions.findIndex(action => action.id === multiple_solution_id);
+
         if (index !== -1) {
-            this.situation_obj.actions.splice(index, 1);
+            actions.splice(index, 1);
+            this.situation_objActionsRef = [...actions];
         }
-        this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
-
-    // onChangeNbPlayersTable() {
-    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
-    //     if (this.nbPlayer.code === 2) {
-    //         this.availablePositionPlayer.splice(2, 1);
-    //         this.availableFishPlayerPosition.splice(2, 1);
-    //     } else {
-    //         this.availablePositionPlayer.push({ name: 'BU', code: 'bu' });
-    //         this.availableOpponentsPlayersLevel.push({ name: 'Mixte', code: 'fish_shark' })
-    //     }
-    //     this.position = this.availablePositionPlayer[0];
-    // }
-
-    // onChangePosition() {
-    //     this.situation_obj.position = this.position.code;
-    //     console.log(this.position.code);
-    //     let index;
-    //     if (this.position.code === "sb") {
-    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "sb");
-    //     } else if (this.position.code === "bb") {
-    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "bb");
-    //     } else if (this.position.code === "bu") {
-    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "bu");
-    //     }
-    //     if (index) {
-    //         this.availableFishPlayerPosition.splice(index, 1);
-    //         console.log(index);
-    //         console.log(this.availableFishPlayerPosition);
-    //     }
-    // }
-
-    // onChangeNbPlayersTable() {
-    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
-    //     if (this.nbPlayer.code === 2) {
-    //         this.availablePositionPlayer = this.allPositions.filter(pos => pos.code !== 'bu');
-    //         this.availableOpponentsPlayersLevel = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
-    //     } else {
-    //         this.availablePositionPlayer = [...this.allPositions];
-    //         this.availableOpponentsPlayersLevel = [...this.allOpponentLevels];
-    //     }
-    //     this.position = this.availablePositionPlayer[0];
-    //     this.updateAvailableFishPositions();
-    // }
 
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
@@ -561,51 +492,18 @@ export class SituationManagerComponent {
         this.updateAvailableFishPositions();
     }
 
-    onChangePosition() {
-        this.situation_obj.position = this.position.code;
-        this.updateAvailableFishPositions();
-    }
-
-    onChangeSituationType() {
-        this.situation_obj.type = this.situationType.code;
-    }
-
-    onChangeOpponentLevel() {
-        this.situation_obj.opponentLevel = this.opponentLevel.code;
-    }
-
-    onChangeFishPosition() {
-        this.situation_obj.fishPosition = this.fishPosition!.code;
-    }
-
     /**
-     * Filtre et formate la saisie d'un champ de saisie HTML.
-     * Seules les valeurs numériques sont conservées.
-     * Limite la saisie à un maximum de 4 chiffres et s'assure que la valeur est entre 1 et 9999.
-     * 
-     * @param event L'événement d'entrée déclenché lors de la saisie dans le champ de saisie.
-     *              L'événement doit être de type `Event`.
-     */
-    formatAndRestrictNumberInput(event: Event): void {
-        let input = event.target as HTMLInputElement;
-        let value = input.value;
+    * Fonction générique pour gérer les changements de différentes propriétés de situation_obj.
+    * 
+    * @param {string} property - La propriété de situation_obj à mettre à jour.
+    * @param {any} value - La nouvelle valeur à attribuer à la propriété.
+    */
+    onChangeProperty(property: string, value: any) {
+        (this.situation_obj as any)[property] = value.code;
 
-        // Supprimer tout caractère non numérique
-        let numbers = value.replace(/\D/g, '');
-
-        // Limiter à 2 chiffres
-        numbers = numbers.slice(0, 4);
-
-        // S'assurer que la valeur est entre 1 et 9999
-        if (parseInt(numbers) < 1) {
-            numbers = '1';
-        } else if (parseInt(numbers) > 9999) {
-            numbers = '9999';
+        if (property === 'position') {
+            this.updateAvailableFishPositions();
         }
-
-        // Mettre à jour la valeur du modèle et de l'input
-        this.situation_obj.stack = Number(numbers);
-        input.value = numbers;
     }
 
 }
