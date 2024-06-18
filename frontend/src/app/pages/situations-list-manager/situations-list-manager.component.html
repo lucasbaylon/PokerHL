@@ -41,10 +41,9 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Niveau
-                        <!-- <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter> -->
-                        <p-columnFilter field="opponentLevel" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                            <ng-template pTemplate="filter" let-filter="filterCallback">
-                                <p-multiSelect [(ngModel)]="selectedOpponentLevels" [options]="opponentLevelList" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                        <p-columnFilter field="opponentLevel" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="opponentLevelList" placeholder="Niveau" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                     <ng-template let-option pTemplate="item">
                                         <div class="inline-block vertical-align-middle">
                                             <span class="ml-1 mt-1">{{ option.name }}</span>
@@ -102,8 +101,6 @@
             </tr>
         </ng-template>
     </p-table>
-    <!-- <p-paginator locale="fr-FR" styleClass="custom-paginator rounded-b-md rounded-t-none dark:bg-secondary-dark-bg"
-        [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" /> -->
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
     <div (click)="commonService.redirectTo('situations-manager')"

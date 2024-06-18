@@ -16,8 +16,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-situations-list-manager',
     standalone: true,
     imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule],
-    templateUrl: './situations-list-manager.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent {
 
@@ -32,19 +31,6 @@ export class SituationsListManagerComponent {
     ];
 
     selectedOpponentLevels: any[] = [];
-
-    representatives: any[] = [
-        { name: 'Amy Elsner', image: 'amyelsner.png' },
-        { name: 'Anna Fali', image: 'annafali.png' },
-        { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-        { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-        { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-        { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-        { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-        { name: 'Onyama Limba', image: 'onyamalimba.png' },
-        { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-        { name: 'Xuxue Feng', image: 'xuxuefeng.png' }
-    ];
 
     constructor(
         private router: Router,
@@ -98,10 +84,6 @@ export class SituationsListManagerComponent {
                 this.commonService.showSwalToast(`Situation supprimée !`);
             }
         });
-    }
-
-    updateFilter(filterCallback: any) {
-        filterCallback(this.selectedOpponentLevels);
     }
 
 }
