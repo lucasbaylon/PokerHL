@@ -242,6 +242,11 @@ export class TrainingComponent {
         }
     }
 
+    closeSolutionModal() {
+        this.commonService.closeModal('wrong-answer-modal');
+        this.generateSituation();
+    }
+
     /**
     * Génère un nombre entier aléatoire entre 0 et 100 inclus.
     * @returns Le nombre entier aléatoire généré.
