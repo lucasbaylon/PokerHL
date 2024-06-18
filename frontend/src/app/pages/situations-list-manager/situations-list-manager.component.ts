@@ -6,23 +6,31 @@ import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { TableModule } from 'primeng/table';
 import { CommonService } from './../../services/common.service';
-import { PaginatorModule } from 'primeng/paginator';
+import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe, TypePipe],
-    templateUrl: './situations-list-manager.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule],
+    templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent {
 
     situationList: Situation[] = [];
 
     nbRowsPerPage = 11;
+
+    opponentLevelList = [
+        { name: 'Débutant', value: "fish" },
+        { name: 'Confirmé', value: "shark" },
+        { name: 'Débutant/Confirmé', value: "fish_shark" }
+    ];
+
+    selectedOpponentLevels: any[] = [];
 
     constructor(
         private router: Router,
