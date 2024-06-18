@@ -218,6 +218,7 @@ export class TrainingComponent {
     }
 
     checkResultCase(result: string) {
+        console.log(this.countResult);
         if (this.countResult) this.totalResponse += 1;
         if (this.activeSituation.result.includes(result)) {
             if (this.countResult) {
@@ -240,6 +241,11 @@ export class TrainingComponent {
                 this.countResult = false;
             }
         }
+    }
+
+    closeSolutionModal() {
+        this.commonService.closeModal('wrong-answer-modal');
+        this.generateSituation();
     }
 
     /**
