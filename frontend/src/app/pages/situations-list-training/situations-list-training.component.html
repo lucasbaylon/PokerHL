@@ -84,7 +84,7 @@
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-700">
-                    <p-tableHeaderCheckbox class="custom-checkbox"></p-tableHeaderCheckbox>
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
             </tr>
         </ng-template>
@@ -109,14 +109,11 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td class="py-6 dark:border-gray-700">
-                    <p-tableCheckbox [value]="situation" class="custom-checkbox"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="situation"></p-tableCheckbox>
                 </td>
             </tr>
         </ng-template>
     </p-table>
-    <!-- <p-paginator locale="fr-FR"
-        styleClass="custom-paginator rounded-b-md rounded-t-none dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"
-        [totalRecords]="totalRecords" [rows]="nbRowsPerPage" (onPageChange)="onPageChange($event)" /> -->
 </div>
 <div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
     <div (click)="onStartTrainingButton()"
