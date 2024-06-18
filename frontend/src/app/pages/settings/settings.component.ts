@@ -31,7 +31,7 @@ export class SettingsComponent {
         { name: 'Standard', code: 'default' },
         { name: 'Contraste', code: 'contrast' },
     ];
-    
+
     availablePokerTableColors: any[] = [
         { name: 'Vert', code: 'green' },
         { name: 'Bleu', code: 'blue' },
@@ -50,76 +50,87 @@ export class SettingsComponent {
         localStorage.getItem('theme') === 'light' ? this.darkMode = false : this.darkMode = true;
     }
 
-    onChangeDisplaySolutionOnError() {
-        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.displaySolution = this.displaySolutionOnError;
-        localStorage.setItem('userParams', JSON.stringify(userParams));
-    }
-
-    onChangeAutoMultipleSolutionName() {
-        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.autoMultipleSolutionName = this.autoMultipleSolutionName;
-        localStorage.setItem('userParams', JSON.stringify(userParams));
-    }
-
-    onChangeDarkMode() {
+    /**
+    * Bascule le mode sombre et met à jour le thème dans le localStorage.
+    *
+    * @returns {void}
+    */
+    toggleDarkMode(): void {
         const htmlElement = document.documentElement;
         this.darkMode ? htmlElement.classList.add('dark') : htmlElement.classList.remove('dark');
         localStorage.setItem('theme', this.darkMode ? "dark" : "light");
     }
 
-    onChangeDropdownCardsStyle(e: any) {
+    /**
+    * Met à jour un paramètre utilisateur dans le localStorage.
+    *
+    * @param {keyof UserParams} key - La clé du paramètre utilisateur à mettre à jour.
+    * @param {UserParams[keyof UserParams]} value - La nouvelle valeur du paramètre utilisateur.
+    * @returns {void}
+    */
+    updateUserParam<K extends keyof UserParams>(key: K, value: UserParams[K]): void {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.cardStyle = e.value.code;
+        userParams[key] = value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
-    onChangeDropdownTableColor(e: any) {
-        const userParams = JSON.parse(localStorage.getItem('userParams')!);
-        userParams.playmatColor = e.value.code;
-        localStorage.setItem('userParams', JSON.stringify(userParams));
-    }
-
+    /**
+    * Fonction déclenchée lors du clic pour importer des situations.
+    * Cette fonction traite les fichiers sélectionnés par l'utilisateur et les importe
+    * via l'API, en fonction de leur type (ZIP ou JSON).
+    *
+    * @param {Event} event - L'événement de sélection de fichiers.
+    */
     onClickFileImport(event: any) {
         const fileList = event.target.files;
+
+        const handleFileImport = (file: File, type: string) => {
+            const blob = new Blob([file], { type });
+
+            let importObservable;
+            if (type === 'application/zip') {
+                importObservable = this.apiSituation.importZIPSituationsForUser(blob);
+            } else if (type === 'application/json') {
+                importObservable = this.apiSituation.importJSONSituationsForUser(file.name, blob);
+            } else {
+                console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier zip ou json.');
+                this.commonService.showSwalToast(`Veuillez sélectionner un fichier zip ou json.`, 'error');
+                return;
+            }
+
+            importObservable.subscribe({
+                next: (response) => {
+                    console.log(`${response.count} fichier(s) importé(s)`);
+                    this.commonService.showSwalToast(`${response.count} fichier(s) importé(s) avec succès !`);
+                },
+                error: (error) => {
+                    console.error('Erreur lors du téléchargement du fichier', error);
+                    this.commonService.showSwalToast(`Échec de l'import`, 'error');
+                }
+            });
+        };
+
         for (const file of fileList) {
             if (file) {
-                // Vérifier le type de fichier
                 if (file.type === 'application/zip' || file.type === 'application/x-compressed' || file.type === 'application/x-zip-compressed') {
-                    const blob = new Blob([file], { type: 'application/zip' });
-
-                    this.apiSituation.importZIPSituationsForUser(blob).subscribe({
-                        next: (response) => {
-                            console.log(`${response.count} fichier(s) importé(s)`);
-                            this.commonService.showSwalToast(`${response.count} fichier(s) importé(s) avec succès !`);
-                        },
-                        error: (error) => {
-                            console.error('Erreur lors du téléchargement du fichier', error);
-                            this.commonService.showSwalToast(`Échec de l\'import`, 'error');
-                        }
-                    });
+                    handleFileImport(file, 'application/zip');
                 } else if (file.type === 'application/json') {
-                    // Traiter le fichier json
-                    const blob = new Blob([file], { type: 'application/json' });
-                    this.apiSituation.importJSONSituationsForUser(file.name, blob).subscribe({
-                        next: (response) => {
-                            console.log(`Fichier JSON téléchargé avec succès.`);
-                            this.commonService.showSwalToast(`Fichier(s) importé(s) avec succès !`);
-                        },
-                        error: (error) => {
-                            console.error('Erreur lors du téléchargement du fichier JSON', error);
-                            this.commonService.showSwalToast(`Échec de l\'import`, 'error');
-                        }
-                    });
+                    handleFileImport(file, 'application/json');
                 } else {
-                    // Afficher un message d'erreur pour les types de fichiers non pris en charge
                     console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier zip ou json.');
                 }
             }
         }
+
         event.target.value = '';
     }
 
+
+    /**
+    * Fonction déclenchée lors du clic pour exporter les situations.
+    * Cette fonction appelle l'API pour exporter les situations de l'utilisateur,
+    * puis affiche un message toast pour indiquer que l'exportation a réussi.
+    */
     onClickFileExport() {
         this.apiSituation.exportSituationsForUser();
         this.commonService.showSwalToast(`Situations exportées !`);
