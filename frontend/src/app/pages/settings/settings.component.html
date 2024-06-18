@@ -17,7 +17,7 @@
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Activer le mode sombre</div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="darkMode"
-                    (onChange)="onChangeDarkMode()"></p-inputSwitch>
+                    (onChange)="toggleDarkMode()"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
@@ -37,21 +37,21 @@
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Affichage de la solution lors d'une erreur</div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySolutionOnError"
-                    (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
+                    (onChange)="updateUserParam('displaySolution', displaySolutionOnError)"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Style des cartes</div>
                 <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
-                    placeholder="Sélectionne un style" (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
+                    (onChange)="updateUserParam('cardStyle', $event.value.code)"></p-dropdown>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Couleur du tapis de jeu</div>
                 <p-dropdown [options]="availablePokerTableColors" [(ngModel)]="pokerTableColor" optionLabel="name"
-                    placeholder="Sélectionne une couleur" (onChange)="onChangeDropdownTableColor($event)" />
+                    (onChange)="updateUserParam('playmatColor', $event.value.code)" />
             </div>
         </div>
     </div>
@@ -68,7 +68,7 @@
                     Nom de situation multiple auto
                 </div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="autoMultipleSolutionName"
-                    (onChange)="onChangeAutoMultipleSolutionName()"></p-inputSwitch>
+                    (onChange)="updateUserParam('autoMultipleSolutionName', autoMultipleSolutionName)"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
