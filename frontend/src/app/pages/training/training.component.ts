@@ -44,7 +44,7 @@ export class TrainingComponent {
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private commonService: CommonService
+        protected commonService: CommonService
     ) { }
 
     ngOnInit(): void {
@@ -234,10 +234,7 @@ export class TrainingComponent {
             }
             const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
             if (userParams.displaySolution) {
-                const modal = document.getElementById('wrong-answer-modal') as HTMLDialogElement;
-                if (modal) {
-                    modal.showModal();
-                }
+                this.commonService.showModal('wrong-answer-modal');
             } else {
                 this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
                 this.countResult = false;
@@ -251,14 +248,6 @@ export class TrainingComponent {
     */
     generateRandomNumber(): number {
         return Math.floor(Math.random() * 101);
-    }
-
-    closeModal() {
-        const modal = document.getElementById('wrong-answer-modal') as HTMLDialogElement;
-        if (modal) {
-            modal.close();
-        }
-        this.generateSituation();
     }
 
     /**

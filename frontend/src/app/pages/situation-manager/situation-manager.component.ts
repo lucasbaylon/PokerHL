@@ -172,19 +172,7 @@ export class SituationManagerComponent {
         }
     }
 
-    showAddMultiplesActionModal() {
-        const modal = document.getElementById('add-multiples-solutions') as HTMLDialogElement;
-        if (modal) {
-            modal.showModal();
-        }
-    }
-
-    closeMultiplesActionModal() {
-        const modal = document.getElementById('add-multiples-solutions') as HTMLDialogElement;
-        if (modal) {
-            modal.close();
-        }
-    }
+    
 
     startSelection(event: any) {
         let cell_index = event.target.cellIndex;
@@ -432,7 +420,7 @@ export class SituationManagerComponent {
         this.multipleSolutionCheckBox = [];
         this.multipleSolutionName = "";
         this.multipleSituationId = undefined;
-        this.closeMultiplesActionModal();
+        this.commonService.closeModal('add-multiples-solutions');
     }
 
     editMultipleSolution(action_id: string) {
@@ -454,7 +442,7 @@ export class SituationManagerComponent {
             this.simpleSlider = false;
             this.multipleSlider = true;
         }
-        this.showAddMultiplesActionModal();
+        this.commonService.showModal('add-multiples-solutions');
     }
 
     /**
