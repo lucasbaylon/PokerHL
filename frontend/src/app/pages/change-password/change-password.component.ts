@@ -48,17 +48,15 @@ export class ChangePasswordComponent {
 
    /**
    * Change le mot de passe de l'utilisateur après avoir validé les champs nécessaires.
-   *
-   * @returns {void}
    */
     changePassword(): void {
         if (!this.oldPassword || !this.newPassword || !this.newPasswordConfirmation) {
-            this.commonService.showSwalToast('Veuillez remplir tous les champs', 'error');
+            this.commonService.showSwalToast('Veuillez remplir tous les champs.', 'error');
             return;
         }
 
         if (this.newPassword !== this.newPasswordConfirmation) {
-            this.commonService.showSwalToast('Les mots de passe ne correspondent pas', 'error');
+            this.commonService.showSwalToast('Les nouveaux mots de passe ne correspondent pas.', 'error');
             return;
         }
 
@@ -69,25 +67,9 @@ export class ChangePasswordComponent {
                 this.router.navigate(['settings']);
             })
             .catch(error => {
-                const errorMessage = this.getErrorMessage(error.code);
+                const errorMessage = this.commonService.getErrorMessage(error.code);
                 this.commonService.showSwalToast(`Erreur : ${errorMessage}`, 'error');
             });
-    }
-
-   /**
-   * Renvoie un message d'erreur correspondant au code d'erreur fourni.
-   *
-   * @param {string} errorCode - Le code d'erreur retourné par le service d'authentification.
-   * @returns {string} - Le message d'erreur correspondant.
-   */
-    getErrorMessage(errorCode: string): string {
-        const errorMessages: { [key: string]: string } = {
-            'auth/wrong-password': 'Le mot de passe actuel est incorrect.',
-            'auth/weak-password': 'Le nouveau mot de passe est trop faible.',
-            'auth/requires-recent-login': 'Cette opération nécessite une connexion récente. Veuillez vous reconnecter et réessayer.'
-        };
-
-        return errorMessages[errorCode] || 'Une erreur est survenue. Veuillez réessayer.';
     }
 
 }
