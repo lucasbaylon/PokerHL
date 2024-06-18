@@ -172,8 +172,6 @@ export class SituationManagerComponent {
         }
     }
 
-    
-
     startSelection(event: any) {
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
