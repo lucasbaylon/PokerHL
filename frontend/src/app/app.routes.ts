@@ -12,6 +12,7 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { SelectTrainingModeComponent } from './pages/select-training-mode/select-training-mode.component';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
     {
@@ -65,6 +66,10 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         canActivate: [authGuard]
+    },
+    {
+        path: 'test',
+        component: TestComponent
     },
     {
         path: 'login',

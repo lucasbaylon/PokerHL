@@ -6,15 +6,16 @@ import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { TableModule } from 'primeng/table';
 import { CommonService } from './../../services/common.service';
-import { PaginatorModule } from 'primeng/paginator';
+import { MultiSelectModule } from 'primeng/multiselect';
 import Swal from 'sweetalert2';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe, TypePipe],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule],
     templateUrl: './situations-list-manager.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -23,6 +24,27 @@ export class SituationsListManagerComponent {
     situationList: Situation[] = [];
 
     nbRowsPerPage = 11;
+
+    opponentLevelList = [
+        { name: 'Débutant', value: "fish" },
+        { name: 'Confirmé', value: "shark" },
+        { name: 'Débutant/Confirmé', value: "fish_shark" }
+    ];
+
+    selectedOpponentLevels: any[] = [];
+
+    representatives: any[] = [
+        { name: 'Amy Elsner', image: 'amyelsner.png' },
+        { name: 'Anna Fali', image: 'annafali.png' },
+        { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
+        { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
+        { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
+        { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
+        { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
+        { name: 'Onyama Limba', image: 'onyamalimba.png' },
+        { name: 'Stephen Shaw', image: 'stephenshaw.png' },
+        { name: 'Xuxue Feng', image: 'xuxuefeng.png' }
+    ];
 
     constructor(
         private router: Router,
@@ -76,6 +98,10 @@ export class SituationsListManagerComponent {
                 this.commonService.showSwalToast(`Situation supprimée !`);
             }
         });
+    }
+
+    updateFilter(filterCallback: any) {
+        filterCallback(this.selectedOpponentLevels);
     }
 
 }

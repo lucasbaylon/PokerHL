@@ -41,7 +41,18 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Niveau
-                        <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter>
+                        <!-- <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter> -->
+                        <p-columnFilter field="opponentLevel" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                            <ng-template pTemplate="filter" let-filter="filterCallback">
+                                <p-multiSelect [(ngModel)]="selectedOpponentLevels" [options]="opponentLevelList" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
                 <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
