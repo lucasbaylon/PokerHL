@@ -20,8 +20,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     selector: 'app-situation-manager',
     standalone: true,
     imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule],
-    templateUrl: './situation-manager.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    templateUrl: './situation-manager.component.html'
 })
 export class SituationManagerComponent {
 
@@ -37,8 +36,6 @@ export class SituationManagerComponent {
     mixedSolutionSliderMaxValue: number = 100;
     simpleSlider: boolean = true;
     multipleSlider: boolean = false;
-    // checkboxMultipleSolutionChecked: number = 0;
-    // multipleSolutionCheckedList: string[] = [];
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     editSituationName?: string;
@@ -60,32 +57,16 @@ export class SituationManagerComponent {
         { name: '3', code: 3 }
     ];
 
-    // availablePositionPlayer: any[] = [
-    //     { name: 'SB', code: 'sb' },
-    //     { name: 'BB', code: 'bb' }
-    // ];
-
-    // availableOpponentsPlayersLevel: any[] = [
-    //     { name: 'Débutant', code: 'fish' },
-    //     { name: 'Confirmé', code: 'shark' }
-    // ];
-
-    // availableFishPlayerPosition: any[] = [
-    //     // { name: 'SB', code: 'sb' },
-    //     { name: 'BB', code: 'bb' },
-    //     { name: 'BU', code: 'bu' }
-    // ];
-
     allPositions: any[] = [
         { name: 'SB', code: 'sb' },
         { name: 'BB', code: 'bb' },
-        { name: 'BU', code: 'bu' } // Ajouté pour le cas où nbPlayer = 3
+        { name: 'BU', code: 'bu' }
     ];
 
     allOpponentLevels: any[] = [
         { name: 'Débutant', code: 'fish' },
         { name: 'Confirmé', code: 'shark' },
-        { name: 'Mixte', code: 'fish_shark' } // Ajouté pour le cas où nbPlayer = 3
+        { name: 'Mixte', code: 'fish_shark' }
     ];
 
     availablePositionPlayer: any[] = this.allPositions.filter(pos => pos.code !== 'bu');
@@ -117,21 +98,6 @@ export class SituationManagerComponent {
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
-
-        // this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
-        //     this.mode = "edit";
-        //     this.situation_obj = JSON.parse(situation_str);
-        //     this.editSituationName = this.situation_obj.name;
-        //     this.situation_objActionsRef = this.situation_obj.actions.slice();
-        //     this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
-        //     this.position = this.availablePositionPlayer.find(position => position.code === this.situation_obj.position);
-        //     this.opponentLevel = this.availableOpponentsPlayersLevel.find((opponentLevel) => opponentLevel.code === this.situation_obj.opponentLevel);
-        //     this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
-        //     this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
-
-        //     let actionList = this.situation_obj.actions.filter(action => action.type === "mixed");
-        //     this.countMultipleSolution = actionList.length;
-        // });
 
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
@@ -499,49 +465,6 @@ export class SituationManagerComponent {
         }
         this.situation_objActionsRef = this.situation_obj.actions.slice();
     }
-
-    // onChangeNbPlayersTable() {
-    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
-    //     if (this.nbPlayer.code === 2) {
-    //         this.availablePositionPlayer.splice(2, 1);
-    //         this.availableFishPlayerPosition.splice(2, 1);
-    //     } else {
-    //         this.availablePositionPlayer.push({ name: 'BU', code: 'bu' });
-    //         this.availableOpponentsPlayersLevel.push({ name: 'Mixte', code: 'fish_shark' })
-    //     }
-    //     this.position = this.availablePositionPlayer[0];
-    // }
-
-    // onChangePosition() {
-    //     this.situation_obj.position = this.position.code;
-    //     console.log(this.position.code);
-    //     let index;
-    //     if (this.position.code === "sb") {
-    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "sb");
-    //     } else if (this.position.code === "bb") {
-    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "bb");
-    //     } else if (this.position.code === "bu") {
-    //         index = this.availableFishPlayerPosition.findIndex(position => position.code === "bu");
-    //     }
-    //     if (index) {
-    //         this.availableFishPlayerPosition.splice(index, 1);
-    //         console.log(index);
-    //         console.log(this.availableFishPlayerPosition);
-    //     }
-    // }
-
-    // onChangeNbPlayersTable() {
-    //     this.situation_obj.nbPlayer = this.nbPlayer.code;
-    //     if (this.nbPlayer.code === 2) {
-    //         this.availablePositionPlayer = this.allPositions.filter(pos => pos.code !== 'bu');
-    //         this.availableOpponentsPlayersLevel = this.allOpponentLevels.filter(level => level.code !== 'fish_shark');
-    //     } else {
-    //         this.availablePositionPlayer = [...this.allPositions];
-    //         this.availableOpponentsPlayersLevel = [...this.allOpponentLevels];
-    //     }
-    //     this.position = this.availablePositionPlayer[0];
-    //     this.updateAvailableFishPositions();
-    // }
 
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
