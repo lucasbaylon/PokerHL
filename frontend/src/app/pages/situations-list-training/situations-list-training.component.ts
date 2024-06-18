@@ -5,15 +5,16 @@ import { Situation } from '../../interfaces/situation';
 import { TableModule } from 'primeng/table';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
-import { PaginatorModule } from 'primeng/paginator';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { CommonService } from '../../services/common.service';
 import { TypePipe } from '../../pipes/type.pipe';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-situations-list-training',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PaginatorModule, PositionPipe, TypePipe],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, MultiSelectModule, FormsModule],
     templateUrl: './situations-list-training.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -26,6 +27,28 @@ export class SituationsListTrainingComponent {
     checkedSituations: number[] = [];
 
     nbRowsPerPage = 11;
+
+    opponentLevelLst = [
+        { name: 'Débutant', value: "fish" },
+        { name: 'Confirmé', value: "shark" },
+        { name: 'Débutant/Confirmé', value: "fish_shark" }
+    ];
+
+    typeLst = [
+        { name: 'Pré-flop', value: "preflop" },
+        { name: 'Flop', value: "flop" }
+    ];
+
+    positionLst = [
+        { name: 'SB', value: "sb" },
+        { name: 'BB', value: "bb" },
+        { name: 'BU', value: "bu" }
+    ];
+
+    nbPlayerLst = [
+        { name: '2', value: 2 },
+        { name: '3', value: 3 }
+    ];
 
     constructor(
         private router: Router,

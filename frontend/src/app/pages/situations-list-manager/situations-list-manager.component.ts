@@ -24,13 +24,27 @@ export class SituationsListManagerComponent {
 
     nbRowsPerPage = 11;
 
-    opponentLevelList = [
+    opponentLevelLst = [
         { name: 'Débutant', value: "fish" },
         { name: 'Confirmé', value: "shark" },
         { name: 'Débutant/Confirmé', value: "fish_shark" }
     ];
 
-    selectedOpponentLevels: any[] = [];
+    typeLst = [
+        { name: 'Pré-flop', value: "preflop" },
+        { name: 'Flop', value: "flop" }
+    ];
+
+    positionLst = [
+        { name: 'SB', value: "sb" },
+        { name: 'BB', value: "bb" },
+        { name: 'BU', value: "bu" }
+    ];
+
+    nbPlayerLst = [
+        { name: '2', value: 2 },
+        { name: '3', value: 3 }
+    ];
 
     constructor(
         private router: Router,
