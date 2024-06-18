@@ -20,8 +20,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     selector: 'app-situation-manager',
     standalone: true,
     imports: [FormsModule, NgStyle, NgClass, ActionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule],
-    templateUrl: './situation-manager.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    templateUrl: './situation-manager.component.html'
 })
 export class SituationManagerComponent {
 
@@ -61,13 +60,13 @@ export class SituationManagerComponent {
     allPositions: any[] = [
         { name: 'SB', code: 'sb' },
         { name: 'BB', code: 'bb' },
-        { name: 'BU', code: 'bu' } // Ajouté pour le cas où nbPlayer = 3
+        { name: 'BU', code: 'bu' }
     ];
 
     allOpponentLevels: any[] = [
         { name: 'Débutant', code: 'fish' },
         { name: 'Confirmé', code: 'shark' },
-        { name: 'Mixte', code: 'fish_shark' } // Ajouté pour le cas où nbPlayer = 3
+        { name: 'Mixte', code: 'fish_shark' }
     ];
 
     availablePositionPlayer: any[] = this.allPositions.filter(pos => pos.code !== 'bu');

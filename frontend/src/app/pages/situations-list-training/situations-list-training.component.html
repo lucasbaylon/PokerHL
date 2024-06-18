@@ -15,8 +15,17 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Type
-                        <p-columnFilter type="numeric" field="type" display="menu"
-                            class="ml-2"></p-columnFilter>
+                        <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
@@ -29,19 +38,49 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Nb joueurs
-                        <p-columnFilter type="numeric" field="nbPlayer" display="menu" class="ml-2"></p-columnFilter>
+                        <p-columnFilter field="nbPlayer" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="nbPlayerLst" placeholder="Nombre de joueur" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Position
-                        <p-columnFilter type="text" field="dealer" display="menu" class="ml-2"></p-columnFilter>
+                        <p-columnFilter field="position" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="positionLst" placeholder="Position" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Niveau
-                        <p-columnFilter type="text" field="opponentLevel" display="menu" class="ml-2"></p-columnFilter>
+                        <p-columnFilter field="opponentLevel" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="opponentLevelLst" placeholder="Niveau" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-700">
