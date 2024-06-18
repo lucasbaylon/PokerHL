@@ -21,35 +21,41 @@
     }
 
     // Ring on focus
-    input[type=text]:focus,
-    .p-inputtext:focus {
-        // @apply dark:bg-secondary-dark-bg;
-        border-color: red;
-        box-shadow: 0 0 0 0.2rem red;
-    }
+    // input[type=text]:focus,
+    // .p-inputtext:focus {
+    //     // @apply dark:bg-secondary-dark-bg;
+    //     border-color: none;
+    //     box-shadow: 0 0 0 0.2rem red;
+    // }
 
-    // input[type=text]:hover,
-    // input[type=password]:hover,
+    input[type=text]:hover,
+    input[type=password]:hover,
     .p-dropdown:hover,
-    .p-inputnumber-input:hover {
-        @apply border-gray-500;
+    .p-multiselect:hover,
+    .p-inputnumber-input:hover,
+    .p-multiselect-filter:hover {
+        @apply border-gray-400;
     }
 
-    // input[type=text],
-    // input[type=password],
+    input[type=text],
+    input[type=password],
     .p-dropdown,
-    .p-inputnumber-input {
+    .p-multiselect,
+    .p-inputnumber-input,
+    .p-multiselect-filter {
         @apply border-gray-300;
     }
 
-    // Boutons input number dans filtres
-    // span button{
-    //     @apply bg-secondary-dark-bg border-gray-800;
-    // }
-    
-    // span button:hover{
-    //     @apply bg-secondary-dark-bg border-gray-700;
-    // }
+    // Boutons des filtres
+    .p-button,
+    p-column-filter-buttonbar {
+        @apply border-gray-300 text-gray-800 bg-white;
+    }
+
+    .p-button:hover,
+    p-column-filter-buttonbar {
+        @apply bg-gray-100;
+    }
 
     //Paginator primeNG
     .p-paginator {
@@ -123,16 +129,16 @@
     }
 
     //Checkbox primeNG
-    .custom-checkbox .p-checkbox-box.p-highlight {
+    .p-checkbox .p-checkbox-box.p-highlight {
         @apply bg-gray-800 dark:bg-gray-600 border-gray-800 dark:border-gray-600;
         border-width: 0.5px;
     }
 
-    .custom-checkbox .p-checkbox-box:hover {
-        @apply border-gray-600 dark:border-gray-100;
+    .p-checkbox .p-checkbox-box:hover {
+        @apply border-gray-600;
     }
 
-    .custom-checkbox .p-hidden-accessible {
+    .p-checkbox.p-hidden-accessible {
         @apply hidden;
     }
 }

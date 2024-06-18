@@ -84,7 +84,7 @@
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-700">
-                    <p-tableHeaderCheckbox class="custom-checkbox"></p-tableHeaderCheckbox>
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
             </tr>
         </ng-template>
@@ -109,7 +109,7 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td class="py-6 dark:border-gray-700">
-                    <p-tableCheckbox [value]="situation" class="custom-checkbox"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="situation"></p-tableCheckbox>
                 </td>
             </tr>
         </ng-template>
