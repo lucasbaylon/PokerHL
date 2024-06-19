@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: "production",
+            name: "PokerHL",
             script: "./server.js",
             watch: true,
             env: {
