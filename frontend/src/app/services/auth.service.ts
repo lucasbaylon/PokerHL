@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword, UserCredential } from '@angular/fire/auth';
 import { CommonService } from './../services/common.service';
+import { UserParams } from '../interfaces/user-params';
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +31,7 @@ export class AuthService {
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',
-                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false })
+                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false, showParticules: false })
                     );
                 }
                 if (!localStorage.getItem('theme')) {
@@ -38,10 +39,11 @@ export class AuthService {
                 }
                 if (currentUrl.startsWith('/login')) {
                     this.router.navigate(['home']);
-                }
-                else if (!localStorage.getItem('userParams')) {
+                } else if (!localStorage.getItem('userParams')) {
                     this.router.navigate(['home']);
                 }
+                const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+                this.commonService.setShowParticule(userParams.showParticules);
             } else {
                 this.router.navigate(['login']);
             }

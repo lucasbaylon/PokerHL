@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Action } from '../interfaces/action';
 import { Situation } from '../interfaces/situation';
 import { Router } from '@angular/router';
@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
     providedIn: 'root'
 })
 export class CommonService {
+
+    private showParticules = signal<boolean>(false);
 
     constructor(
         private router: Router
@@ -152,6 +154,22 @@ export class CommonService {
         if (modal) {
             modal.close();
         }
+    }
+
+    /**
+     * Renvoie l'état actuel de l'activation des particules.
+     * @returns {boolean} L'état actuel de l'activation des particules.
+     */
+    getShowParticule() {
+        return this.showParticules();
+    }
+
+    /**
+     * Met à jour l'état de l'activation des particules.
+     * @param value La nouvelle valeur de l'activation des particules.
+     */
+    setShowParticule(value: boolean) {
+        this.showParticules.set(value);
     }
 
 }

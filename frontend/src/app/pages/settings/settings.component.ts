@@ -23,6 +23,7 @@ export class SettingsComponent {
     ) { }
 
     darkMode: boolean = false;
+    showParticules: boolean = false;
     displaySolutionOnError: boolean = true;
     highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
@@ -47,6 +48,7 @@ export class SettingsComponent {
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
         userParams.autoMultipleSolutionName ? this.autoMultipleSolutionName = userParams.autoMultipleSolutionName : this.autoMultipleSolutionName = false;
+        userParams.showParticules ? this.showParticules = userParams.showParticules : this.showParticules = false;
         localStorage.getItem('theme') === 'light' ? this.darkMode = false : this.darkMode = true;
     }
 
@@ -59,6 +61,16 @@ export class SettingsComponent {
         const htmlElement = document.documentElement;
         this.darkMode ? htmlElement.classList.add('dark') : htmlElement.classList.remove('dark');
         localStorage.setItem('theme', this.darkMode ? "dark" : "light");
+    }
+
+    /**
+    * Bascule l'activation des particules et met à jour le paramètre utilisateur dans le localStorage.
+    *
+    * @returns {void}
+    */
+    toggleShowParticules(): void {
+        this.commonService.setShowParticule(this.showParticules);
+        this.updateUserParam('showParticules', this.showParticules);
     }
 
     /**

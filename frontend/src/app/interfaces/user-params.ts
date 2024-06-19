@@ -8,4 +8,6 @@ export interface UserParams {
     displaySituation: boolean;
 
     autoMultipleSolutionName: boolean;
+
+    showParticules: boolean;
 }

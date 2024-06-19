@@ -1,3 +1,6 @@
+@if (commonService.getShowParticule()) {
+    <ngx-particles [id]="id" [options]="particlesOptions"></ngx-particles>
+}
 @if (authService.isLoading | async) {
     <app-loading></app-loading>
 } @else {

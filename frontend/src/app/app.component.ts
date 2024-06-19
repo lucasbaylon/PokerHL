@@ -6,17 +6,99 @@ import { AuthService } from './services/auth.service';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { LoadingComponent } from './components/loading/loading.component';
+import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
+import { Container, MoveDirection, OutMode } from '@tsparticles/engine';
+import { loadSlim } from '@tsparticles/slim';
+import { CommonService } from './services/common.service';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AsyncPipe, ToastModule, LoadingComponent],
+    imports: [RouterOutlet, AsyncPipe, ToastModule, LoadingComponent, NgxParticlesModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
 
-    constructor(public authService: AuthService, private config: PrimeNGConfig, private translateService: TranslateService) { }
+    id = "tsparticles";
+
+    /* or the classic JavaScript object */
+    particlesOptions = {
+        fpsLimit: 120,
+        interactivity: {
+            events: {
+                onClick: {
+                    enable: true,
+                    mode: "repulse",
+                },
+                onHover: {
+                    enable: true,
+                    mode: "grab",
+                }
+            },
+            modes: {
+                grab: {
+                    distance: 300,
+                    links: {
+                        opacity: 1,
+                    },
+                }
+            },
+        },
+        particles: {
+            color: {
+                value: "#ffffff",
+            },
+            links: {
+                color: "#ffffff",
+                distance: 300,
+                enable: true,
+                opacity: 0.4,
+                width: 1,
+            },
+            move: {
+                direction: MoveDirection.none,
+                enable: true,
+                outModes: {
+                    default: OutMode.bounce,
+                },
+                random: false,
+                speed: 4,
+                straight: false,
+                attract: {
+                    enable: true,
+                    rotateX: 600,
+                    rotateY: 1200
+                }
+            },
+            number: {
+                density: {
+                    enable: false,
+                    area: 800,
+                },
+                value: 50,
+            },
+            opacity: {
+                value: 0.5,
+            },
+            shape: {
+                type: "circle",
+                stroke: {
+                    color: "#000000",
+                    width: 0
+                },
+                polygon: {
+                    nb_sides: 5
+                }
+            },
+            size: {
+                value: 4
+            },
+        },
+        detectRetina: true,
+    };
+
+    constructor(public authService: AuthService, private config: PrimeNGConfig, private translateService: TranslateService, private readonly ngParticlesService: NgParticlesService, protected commonService: CommonService) { }
 
     ngOnInit() {
         this.translateService.addLangs(['fr']);
@@ -29,6 +111,10 @@ export class AppComponent {
             theme = 'light';
         }
         if (theme === 'dark') document.documentElement.classList.add(theme);
+
+        this.ngParticlesService.init(async (engine) => {
+            await loadSlim(engine);
+        });
     }
 
     translate(lang: string) {
