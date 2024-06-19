@@ -14,8 +14,7 @@ import { CardComponent } from '../../components/card/card.component';
     selector: 'app-training',
     standalone: true,
     imports: [NgStyle, ActionColorPipe, DefaultCardsComponent, CardComponent],
-    templateUrl: './training.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    templateUrl: './training.component.html'
 })
 export class TrainingComponent {
 

@@ -11,8 +11,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-settings',
     standalone: true,
     imports: [DropdownModule, InputSwitchModule, FormsModule],
-    templateUrl: './settings.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    templateUrl: './settings.component.html'
 })
 export class SettingsComponent {
 

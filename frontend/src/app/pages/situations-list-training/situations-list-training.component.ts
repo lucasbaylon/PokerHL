@@ -15,8 +15,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-situations-list-training',
     standalone: true,
     imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, MultiSelectModule, FormsModule],
-    templateUrl: './situations-list-training.component.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    templateUrl: './situations-list-training.component.html'
 })
 export class SituationsListTrainingComponent {
 
