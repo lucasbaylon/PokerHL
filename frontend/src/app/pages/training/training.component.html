@@ -1,157 +1,273 @@
-<ion-button class="backArrow" (click)="redirectTo('situations-list-training')">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-button>
-@if (activeSituation) {
-    <div class="inner-main">
-        <div class="flex_container">
-            <div class="poker_table_container">
-                <div class="poker_table" [style.background]="backgroundColor">
-                    <h1>Poker
-                        Trainer<br><span>&#9824;</span><span>&#9830;</span><span>&#9829;</span><span>&#9827;</span>
-                    </h1>
-    
-                    <!-- Adversaire du milieu  -->
-                    @if (activeSituation.nbPlayer == 2) {
-                        <div class="playerBox oponentBox0">
-                            <div>
-                                <img class="shark-fish-icon"
-                                    src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                                <h2>Adversaire</h2>
-                                <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                            </div>
-                        </div>
-                        @if (activeSituation.dealer == 'opponent1') {
-                            <div class="dealer-coin dealer-coin-oponent0">
-                                <span class="dealer-coin-text">D</span>
-                            </div>
-                        }
-                        <hr class="oponent0Hr">
-                        <div class="cardContainer oponent0Cards" style="width: 50%;">
-                            <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                            <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                        </div>
-                    }
-                    <!-- Adversaire de gauche  -->
-                    @if (activeSituation.nbPlayer == 3) {
-                        <div class="playerBox oponentBox1">
-                            <div>
-                                <img class="shark-fish-icon"
-                                    src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                                <h2>Adversaire</h2>
-                                <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                            </div>
-                        </div>
-                        @if (activeSituation.dealer == 'opponent1') {
-                            <div class="dealer-coin dealer-coin-oponent1">
-                                <span class="dealer-coin-text">D</span>
-                            </div>
-                        }
-                        <hr class="oponent1Hr">
-                        <div class="cardContainer oponent1Cards">
-                            <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                            <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                        </div>
-                    }
-                    
-    
-                    <!-- Adversaire de droite  -->
-                    @if (activeSituation.nbPlayer == 3) {
-                        <div class="playerBox oponentBox2">
-                            <div>
-                                <img class="shark-fish-icon"
-                                    src="../../../assets/img/{{activeSituation.opponentLevel}}.png">
-                                <h2>Adversaire</h2>
-                                <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                            </div>
-                        </div>
-                        @if (activeSituation.dealer == 'opponent2') {
-                            <div class="dealer-coin dealer-coin-oponent2">
-                                <span class="dealer-coin-text">D</span>
-                            </div>
-                        }
-                        
-                        <hr class="oponent2Hr">
-                        <div class="cardContainer oponent2Cards">
-                            <img class="card leftCard" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                            <img class="card" src="../../../assets/img/cards/{{cardStyle}}/default.png">
-                        </div>
-                    }
-    
-                    <!-- Joueur  -->
-                    <div class="playerBox userBox">
-                        <div>
-                            <ion-icon name="person-outline"></ion-icon>
-                            <h2>Vous</h2>
-                            <h3>{{activeSituation.dealerMissingTokens}} BB</h3>
-                            @if (activeSituation.dealer == 'you') {
-                                <div class="dealer-coin dealer-coin-player">
-                                    <span class="dealer-coin-text">D</span>
+<div class="relative h-[calc(100vh-64px)]">
+    @if (activeSituation) {
+    <div class="flex justify-center items-center h-[85%]">
+        <!-- Table de poker -->
+        <div class="flex-col justify-center items-center" id="poker-table-div">
+            <div class="flex justify-center items-center animate-appear opacity-0">
+                <div class="relative w-[48vw] max-w-[1000px] h-[27vw] max-h-[550px] rounded-full border-solid border-8 border-gray-800 dark:border-gray-300 shadow-2xl"
+                    [style.background]="backgroundColor">
+                    <div class="flex items-center justify-center w-full h-full">
+                        <h1 class="opacity-60 font-semibold italic text-7xl select-none flex flex-col items-center">
+                            Poker HL
+                        </h1>
+                    </div>
+
+                    <!-- Adversaire du milieu -->
+                    @if (activeSituation.nbPlayer === 2) {
+                    <div
+                        class="absolute top-[-10%] left-1/2 w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'bb') {
+                                <div
+                                    class="absolute top-[80%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                    <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
                                 </div>
                             }
-                            
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
                         </div>
                     </div>
-                    <div class="cardContainer userCards">
-                        <img class="card leftCard"
-                            src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.left_card}}.png">
-                        <img class="card" src="../../../assets/img/cards/{{cardStyle}}/{{activeSituation.right_card}}.png">
+                    }
+
+                    <!-- Adversaire de gauche -->
+                    @if (activeSituation.nbPlayer === 3) {
+                    <div
+                        class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "fish_shark") {
+                                @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent1") {
+                                    <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                } @else {
+                                    <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                }
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'bb') {
+                            <div
+                                class="absolute top-[130%] left-[40%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
                     </div>
-                    <hr class="userHr">
+
+                    <!-- Adversaire de droite -->
+                    <div
+                        class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                            @if (activeSituation.opponentLevel == "fish"){
+                                <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "shark") {
+                                <i class="fa-solid fa-crown text-2xl my-1"></i>
+                            } @else if (activeSituation.opponentLevel == "fish_shark") {
+                                @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) === "opponent2") {
+                                    <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
+                                } @else {
+                                    <i class="fa-solid fa-crown text-2xl my-1"></i>
+                                }
+                            }
+                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.position == 'sb') {
+                            <div
+                                class="absolute top-[130%] left-[60%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                            </div>
+                            }
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center">
+                            <app-default-cards></app-default-cards>
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Joueur -->
+                    <div
+                        class="absolute top-[86%] w-64 left-1/2 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1">
+                            <i class="fa-solid fa-user text-2xl my-1"></i>
+                            <h3 class="m-0">Vous</h3>
+                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <!-- Dealer coin -->
+                            @if (activeSituation.nbPlayer === 2) {
+                                @if (activeSituation.position == 'sb') {
+                                    <div
+                                        class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                        <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                    </div>
+                                }
+                            }
+                            @if (activeSituation.nbPlayer === 3) {
+                                @if (activeSituation.position == 'bu') {
+                                    <div
+                                        class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                                        <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center select-none">
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
+                                <card [cardColor]="activeSituation.left_card.color.color"
+                                    [cardColorName]="activeSituation.left_card.color.name"
+                                    [cardValue]="activeSituation.left_card.value"></card>
+                            </div>
+                            <div
+                                class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
+                                <card [cardColor]="activeSituation.right_card.color.color"
+                                    [cardColorName]="activeSituation.right_card.color.name"
+                                    [cardValue]="activeSituation.right_card.value"></card>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="answer_div_container">
-                <div class="answer_div">
-                    @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
-                        @if (action.display_name) {
-                            <button class="fill" [id]="'button_' + action.id" (click)="checkResultCase(action.id)">{{action.display_name}}</button>
-                        }
+
+            <!-- Div des boutons de réponses -->
+            <div
+                class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
+                @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
+                    @if (action.display_name) {
+                        <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
+                            [id]="'button_' + action.id" (click)="checkResultCase(action.id)">
+                            {{action.display_name}}
+                        </div>
                     }
-                </div>
+                }
             </div>
         </div>
     </div>
-}
-<div class="error-window-container" id="error-window-container" style="display: none;">
-    @if (currentSituation) {
-        <div class="error-window">
-            <h1>Mauvaise réponse !</h1>
-            <div class="parent">
-                <div class="tableaux">
+    }
+
+    <!-- Div affichée lors d'une mauvaise réponse -->
+    <dialog id="wrong-answer-modal" class="dui-modal">
+        <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+            <form method="dialog">
+                <button
+                    class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+            </form>
+            @if (currentSituation) {
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Mauvaise réponse...
+            </h4>
+            <div class="flex justify-center items-center">
+                <div class="mx-auto table-fixed border-separate border-spacing-1 ml-5">
                     <table>
                         <tbody>
                             @for (row of currentSituation.situations; track $index) {
-                                <tr>
-                                    @for (item of row; track $index) {
-                                        <td [style.background]="(item.action! | actionColor:currentSituation.actions)">
-                                            {{item.card}}
-                                        </td>
-                                    }
-                                </tr>
+                            <tr class="table-row animate-appear opacity-0">
+                                @for (item of row; track $index) {
+                                <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
+                                    [style.background]="(item.action! | actionColor:currentSituation.actions)">
+                                    {{item.card}}
+                                </td>
+                                }
+                            </tr>
                             }
                         </tbody>
                     </table>
                 </div>
-                <div class="color-solution-container">
+                <div class="ml-6 mr-5">
+                    <h4
+                        class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                        Solutions
+                    </h4>
                     @for (action of activeSituation.actions; track i; let i = $index) {
                         @if (action.display_name) {
-                            <div class="color-solution">
+                            <div
+                                class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
                                 {{action.display_name}}
-                                <div class="color-picker-square" [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
+                                <div class="h-7 w-7 ml-2 rounded shadow-md"
+                                    [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
                             </div>
                         }
                     }
+                    <div class="mt-16">
+                        <h4
+                            class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                            Vos cartes
+                        </h4>
+                        <div class="flex items-center justify-center select-none">
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none">
+                                <card [cardColor]="activeSituation.left_card.color.color"
+                                    [cardColorName]="activeSituation.left_card.color.name"
+                                    [cardValue]="activeSituation.left_card.value"></card>
+                            </div>
+                            <div
+                                class="relative bg-white h-20 w-14 border border-gray-800 dark:border-l dark:border-l-gray-800 dark:border-t-0 dark:border-r-0 dark:border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
+                                <card [cardColor]="activeSituation.right_card.color.color"
+                                    [cardColorName]="activeSituation.right_card.color.name"
+                                    [cardValue]="activeSituation.right_card.value">
+                                </card>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="fill" (click)="closeErrorWindow()">Compris !</button>
+            <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
+                <div (click)="closeSolutionModal()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    Compris !
+                </div>
+            </div>
+            }
         </div>
-    }
-    
-</div>
+    </dialog>
 
+    <!-- Div des infos -->
+    <div
+        class="absolute -left-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+        <div class="mb-1">
+            <span class="font-semibold">Ratio Bonne/Mauvaise réponse :</span> {{goodResponse}} / {{badResponse}}
+        </div>
+        <div class="mb-1">
+            <span class="font-semibold">Taux de réussite :</span> {{successRatePercentage}}%
+        </div>
+        <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
+    </div>
 
-<div class="white_div info">Situation actuelle : {{currentSituationName}}</div>
-<div class="white_div randomizer">Randomizer : {{randomizer}}%</div>
-<div class="white_div stats">Ratio W/L : {{GoodResponse}} / {{BadResponse}}<br>Taux de réussite :
-    {{SuccessRatePercentage}}%
-    <!-- <br>Nbre cas restants : ∞ -->
+    <!-- Compte à rebours -->
+    <div
+        class="hidden absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+        <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+            <div class="flex flex-col">
+                <span class="dui-countdown text-5xl">
+                    <span [style.--value]="hours"></span>
+                </span>
+                heure
+            </div>
+            <div class="flex flex-col">
+                <span class="dui-countdown text-5xl">
+                    <span [style.--value]="minutes"></span>
+                </span>
+                min
+            </div>
+            <div class="flex flex-col">
+                <span class="dui-countdown text-5xl">
+                    <span [style.--value]="seconds"></span>
+                </span>
+                sec
+            </div>
+        </div>
+    </div>
 </div>

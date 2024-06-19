@@ -6,13 +6,17 @@ export interface Situation {
 
     name?: string;
 
+    type:string;
+
     nbPlayer?: number;
 
-    dealerMissingTokens: number;
+    stack: number;
 
-    dealer?: string;
+    position?: string;
 
     opponentLevel?: string;
+
+    fishPosition?: string;
 
     actions: Action[];
 

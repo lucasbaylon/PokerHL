@@ -1,44 +1,39 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { Situation } from '../../interfaces/situation';
 import { ActiveSituation } from '../../interfaces/active-situation';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserParams } from '../../interfaces/user-params';
 import { Action } from '../../interfaces/action';
-import Swal from 'sweetalert2';
+import { CommonService } from './../../services/common.service';
 import { NgStyle } from '@angular/common';
 import { ActionColorPipe } from '../../pipes/action-color.pipe';
+import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
+import { CardComponent } from '../../components/card/card.component';
 
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, ActionColorPipe],
+    imports: [NgStyle, ActionColorPipe, DefaultCardsComponent, CardComponent],
     templateUrl: './training.component.html',
-    styleUrl: './training.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TrainingComponent {
 
     countResult: boolean = true;
-
-    GoodResponse: number = 0;
-
-    BadResponse: number = 0;
-
-    TotalResponse: number = 0;
-
-    SuccessRatePercentage: number = 0;
-
-    randomizer: number = 0;
-
+    goodResponse: number = 0;
+    badResponse: number = 0;
+    totalResponse: number = 0;
+    successRatePercentage: number = 0;
     situationList: Situation[] = [];
-
     currentSituation!: Situation;
-
     currentSituationName: string = "";
-
     activeSituation!: ActiveSituation;
-
-    colorList: string[] = ["Hearts", "Diamonds", "Clubs", "Spades"];
+    backgroundColor!: string;
+    hours: number = 1;
+    minutes: number = 0;
+    seconds: number = 0;
+    private countdownInterval: any;
+    colorList: any[] = [{name: "heart", color: "red"}, {name: "diamond", color: "red"}, {name: "club", color: "black"}, {name: "spade", color: "black"}];
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -46,13 +41,10 @@ export class TrainingComponent {
         "blue": "#3B82F6"
     }
 
-    backgroundColor!: string;
-
-    cardStyle!: string;
-
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        protected commonService: CommonService
     ) { }
 
     ngOnInit(): void {
@@ -65,20 +57,43 @@ export class TrainingComponent {
                 `radial-gradient(${tableColor}, black 150%)` :
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
 
-            this.cardStyle = userParams.cardStyle;
+            if (userParams.cardStyle === 'contrast') {
+                this.colorList = [{ name: "heart", color: "#d20000"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
+            }
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.generateSituation();
             const currentUrl = this.router.url;
             const baseUrl = currentUrl.split(';')[0];
             this.router.navigateByUrl(baseUrl);
+            this.startCountdown();
         } else {
             this.router.navigate(['situations-list-training']);
         }
     }
 
+    ngOnDestroy() {
+        this.clearCountdown();
+    }
+
+    ngAfterViewInit() {
+        if (window.innerHeight >= 1080) {
+            document.getElementById("poker-table-div")?.classList.add("scale-125");
+        }
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        const div = document.getElementById("poker-table-div")!;
+        if (event.target.innerHeight > 1080) {
+            div.classList.add("scale-125");
+        } else {
+            div.classList.remove("scale-125");
+        }
+    }
+
     filteredActionList(list: Action[], type: string) {
-        return list.filter(item => item.type === type);
+        return list.filter(item => item.type === type).reverse();;
     }
 
     getRandomSituation(array: any[]): any {
@@ -86,27 +101,45 @@ export class TrainingComponent {
         return array[randomIndex];
     }
 
-    redirectTo(page: string) {
-        this.router.navigate([page]);
-    }
-
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
-        let situationCase = this.getRandomCase(this.currentSituation.situations)
+        let situationCase = this.getRandomCase(this.currentSituation.situations);
         let cards = this.generateCards(situationCase);
-        this.randomizer = this.generateRandomNumber();
         let result = this.getResultCase(situationCase.action);
         this.activeSituation = {
             nbPlayer: situation.nbPlayer,
-            dealer: situation.dealer,
+            position: situation.position,
             left_card: cards.left_card,
             right_card: cards.right_card,
             actions: situation.actions,
             result: result,
-            dealerMissingTokens: situation.dealerMissingTokens,
-            opponentLevel: situation.opponentLevel
+            stack: situation.stack,
+            opponentLevel: situation.opponentLevel,
+            fishPosition: situation.fishPosition
+        }
+    }
+
+    getFishPosition(mainPlayerPosition: string, fishPlayerPosition: string): string {
+        if (mainPlayerPosition === "bu") {
+            if (fishPlayerPosition === "sb") {
+                return "opponent1";
+            } else {
+                return "opponent2";
+            }
+        } else if (mainPlayerPosition === "sb") {
+            if (fishPlayerPosition === "bb") {
+                return "opponent1";
+            } else  {
+                return "opponent2";
+            }
+        } else {
+            if (fishPlayerPosition === "bu") {
+                return "opponent1";
+            } else  {
+                return "opponent2";
+            }
         }
     }
 
@@ -141,8 +174,6 @@ export class TrainingComponent {
     }
 
     generateCards(situationCase: any): any {
-        let left_card;
-        let right_card;
         let card = situationCase.card;
         let card_split = card.split('');
         let nbColor = 2;
@@ -152,83 +183,69 @@ export class TrainingComponent {
             }
         }
         let colors = this.getRandomColors(nbColor);
+        const leftCardObj = {
+            color: "",
+            value: ""
+        }
+        const rightCardObj = {
+            color: "",
+            value: ""
+        }
         if (colors.length === 1) {
-            left_card = `${card_split[0]}_${colors[0]}`;
-            right_card = `${card_split[1]}_${colors[0]}`;
+            leftCardObj.color = colors[0];
+            leftCardObj.value = card_split[0];
+            rightCardObj.color = colors[0];
+            rightCardObj.value = card_split[1];
         } else if (colors.length === 2) {
-            left_card = `${card_split[0]}_${colors[0]}`;
-            right_card = `${card_split[1]}_${colors[1]}`;
+            leftCardObj.color = colors[0];
+            leftCardObj.value = card_split[0];
+            rightCardObj.color = colors[1];
+            rightCardObj.value = card_split[1];
         }
         return {
-            left_card: left_card,
-            right_card: right_card
+            left_card: leftCardObj,
+            right_card: rightCardObj
         }
     }
 
-    getActionFromPercent(percent: number, actions: any): string | undefined {
-        let sum = 0;
-        for (const action of actions) {
-            sum += action.percent;
-            if (percent < sum) {
-                return action.color;
-            }
-        }
-        return undefined;
-    }
-
-    getResultCase(good_action: string): string {
+    getResultCase(good_action: string): string[] {
         let action = this.currentSituation.actions.filter(action => action.id === good_action)[0];
         if (action.type === "unique") {
-            return action.id;
+            return [action.id];
         } else {
-            const action_id = this.getActionFromPercent(this.randomizer, action.colorList);
-            return action_id!;
+            return action.colorList!.map(color => color.color);
         }
     }
 
     checkResultCase(result: string) {
-        if (this.countResult) this.TotalResponse += 1;
-        if (result === this.activeSituation.result) {
-            if (this.countResult) this.GoodResponse += 1;
-            if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
+        console.log(this.countResult);
+        if (this.countResult) this.totalResponse += 1;
+        if (this.activeSituation.result.includes(result)) {
+            if (this.countResult) {
+                this.goodResponse += 1;
+                this.successRatePercentage = Math.round((this.goodResponse / this.totalResponse) * 100);
+            }
             this.countResult = true;
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'success',
-                title: '<span style="font-size: 1.3vw;">Bonne réponse !</span>',
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`Bonne réponse !`);
             this.generateSituation();
         } else {
-            if (this.countResult) this.BadResponse += 1;
-            if (this.countResult) this.SuccessRatePercentage = Math.round((this.GoodResponse / this.TotalResponse) * 100);
+            if (this.countResult) {
+                this.badResponse += 1;
+                this.successRatePercentage = Math.round((this.goodResponse / this.totalResponse) * 100);
+            }
             const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
             if (userParams.displaySolution) {
-                this.countResult = false;
-                let situationTable = document.getElementById("error-window-container");
-                situationTable!.style.display = "block";
-                let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
-                uniqueActionList.map(action => {
-                    let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
-                    button!.classList.remove("fill");
-                    button.disabled = true;
-                });
+                this.commonService.showModal('wrong-answer-modal');
             } else {
-                Swal.fire({
-                    position: 'top-end',
-                    toast: true,
-                    icon: 'error',
-                    title: '<span style="font-size: 1.3vw;">Mauvaise réponse !</span>',
-                    showConfirmButton: false,
-                    width: 'auto',
-                    timer: 2500
-                });
-                this.generateSituation();
+                this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
+                this.countResult = false;
             }
         }
+    }
+
+    closeSolutionModal() {
+        this.commonService.closeModal('wrong-answer-modal');
+        this.generateSituation();
     }
 
     /**
@@ -239,14 +256,33 @@ export class TrainingComponent {
         return Math.floor(Math.random() * 101);
     }
 
-    closeErrorWindow() {
-        document.getElementById("error-window-container")!.style.display = "none";
-        let uniqueActionList = this.activeSituation.actions.filter(action => action.type === "unique");
-        uniqueActionList.map(action => {
-            let button = document.getElementById(`button_${action.id}`) as HTMLButtonElement;
-            button!.classList.add("fill");
-            button.disabled = false;
-        })
+    /**
+   * Lance le compte à rebours en décrémentant les heures, minutes et secondes chaque seconde.
+   */
+    startCountdown() {
+        this.countdownInterval = setInterval(() => {
+            if (this.seconds > 0) {
+                this.seconds--;
+            } else if (this.minutes > 0) {
+                this.minutes--;
+                this.seconds = 59;
+            } else if (this.hours > 0) {
+                this.hours--;
+                this.minutes = 59;
+                this.seconds = 59;
+            } else {
+                this.clearCountdown();
+            }
+        }, 1000);
+    }
+
+    /**
+   * Arrête le compte à rebours et efface l'intervalle pour éviter les fuites de mémoire.
+   */
+    clearCountdown() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
     }
 
 }

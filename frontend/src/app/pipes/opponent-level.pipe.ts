@@ -11,6 +11,8 @@ export class OpponentLevelPipe implements PipeTransform {
             return "Débutant"
         } else if (value === "shark") {
             return "Confirmé"
+        } else if (value === "fish_shark") {
+            return "Débutant/Confirmé"
         }
         return undefined;
     }

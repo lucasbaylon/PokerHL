@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail } from '@angular/fire/auth';
-import Swal from 'sweetalert2';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword, UserCredential } from '@angular/fire/auth';
+import { CommonService } from './../services/common.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,8 @@ export class AuthService {
     isLoading = new BehaviorSubject<boolean>(true);
 
     constructor(
-        private router: Router
+        private router: Router,
+        private commonService: CommonService
     ) {
         this.authStateSubscription = authState(this.auth).subscribe((aUser: User | null) => {
             this.userSubject.next(aUser);
@@ -29,8 +30,11 @@ export class AuthService {
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',
-                        JSON.stringify({ darkMode: false, cardStyle: 'default', playmatColor: 'green', displaySolution: false })
+                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false })
                     );
+                }
+                if (!localStorage.getItem('theme')) {
+                    localStorage.setItem('theme', 'light');
                 }
                 if (currentUrl.startsWith('/login')) {
                     this.router.navigate(['home']);
@@ -50,48 +54,27 @@ export class AuthService {
 
     async signIn(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password).then((result) => {
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'success',
-                title: '<span style="font-size: 1.3vw;">Connexion réussie !</span>',
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`Connexion réussie !`);
         }).catch((error) => {
             let errorMessage = 'Échec de connexion';
             switch (error.code) {
                 case 'auth/invalid-email':
                     errorMessage = 'Adresse email non valide';
                     break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Mot de passe incorrect';
+                    break;
                 case 'auth/user-disabled':
                     errorMessage = 'Compte désactivé';
                     break;
             }
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'error',
-                title: `<span style="font-size: 1.3vw;">${errorMessage}</span>`,
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`${errorMessage}`, 'error');
         });
     }
 
     async signOut() {
         return signOut(this.auth).then((result) => {
-            Swal.fire({
-                position: 'top-end',
-                toast: true,
-                icon: 'success',
-                title: '<span style="font-size: 1.3vw;">Déconnexion réussie !</span>',
-                showConfirmButton: false,
-                width: 'auto',
-                timer: 2500
-            });
+            this.commonService.showSwalToast(`Déconnexion réussie !`);
         });
     }
 
@@ -105,5 +88,24 @@ export class AuthService {
 
     sendPasswordResetEmail(email: string) {
         return sendPasswordResetEmail(this.auth, email);
+    }
+
+    reauthenticate(currentPassword: string): Promise<UserCredential> {
+        const user = this.getUser();
+        if (user && user.email) {
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            return reauthenticateWithCredential(user, credential);
+        } else {
+            return Promise.reject('No user logged in');
+        }
+    }
+
+    async changePassword(newPassword: string): Promise<void> {
+        const user = this.getUser();
+        if (user) {
+            return updatePassword(user, newPassword);
+        } else {
+            return Promise.reject('No user logged in');
+        }
     }
 }

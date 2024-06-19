@@ -1,42 +1,41 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { CommonService } from '../../services/common.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [FormsModule],
+    imports: [CommonModule, FormsModule, InputTextModule],
     templateUrl: './login.component.html',
-    styleUrl: './login.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginComponent {
 
-    constructor(private authService: AuthService, private router: Router) { }
+    constructor(
+        private authService: AuthService,
+        protected commonService: CommonService,
+    ) { }
 
-    eyeIcon: string = 'eye-outline';
-    inputType: string = 'password';
-
+    passwordFieldType: string = 'password';
     email: string = '';
     password: string = '';
 
-    toggleEyeIcon(): void {
-        if (this.eyeIcon === 'eye-outline') {
-            this.eyeIcon = 'eye-off-outline';
-            this.inputType = 'text';
-        } else {
-            this.eyeIcon = 'eye-outline';
-            this.inputType = 'password';
-        }
+    /**
+    * Cette méthode change le type du champ de mot de passe entre 'password' et 'text',
+    * permettant de masquer ou afficher le mot de passe.
+    */
+    togglePasswordVisibility(): void {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
     }
 
+    /**
+    * Cette méthode vérifie si l'email et le mot de passe sont renseignés,
+    * puis appelle le service d'authentification pour se connecter avec ces informations.
+    */
     login(): void {
         if (this.email && this.password) this.authService.signIn(this.email, this.password);
     }
-
-    redirectTo(page: string) {
-        this.router.navigate([page]);
-    }
-
 }

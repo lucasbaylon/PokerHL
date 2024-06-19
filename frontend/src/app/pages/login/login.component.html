@@ -1,25 +1,51 @@
-<div class="login-container animate__animated animate__fadeInDown">
-    <div>
-        <div class="form">
-            <h3>Se connecter</h3>
-            <div class="form-holder">
-                <ion-button class="icon-div">
-                    <i class="fas fa-home"></i>
-                    <ion-icon name="person-outline"></ion-icon>
-                </ion-button>
-                <input type="text" class="form-control" [(ngModel)]="email" placeholder="Adresse mail">
+<section class="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-main-dark-bg">
+    <div
+        class="max-w-lg mx-auto space-y-8 rounded-lg p-6 md:p-8 lg:p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
+        <div class="space-y-2 text-center">
+            <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-300 m-0">Connexion</h1>
+            <p class="text-base md:text-sm lg:text-lg text-gray-500 dark:text-gray-300">Entrez vos identifiants de
+                connexion afin d'accéder à votre compte.</p>
+        </div>
+        <div class="space-y-6">
+            <div class="space-y-2">
+                <label
+                    class="text-xs md:text-sm lg:text-base font-medium leading-none flex items-center gap-2 text-gray-800 dark:text-gray-300"
+                    for="email">
+                    <i class="fa-solid fa-envelope text-gray-800 dark:text-gray-300"></i>
+                    Email
+                </label>
+                <input [(ngModel)]="email" type="email" placeholder="Entrez votre adresse email" class="w-full" name="email"
+                    id="email" autocomplete="off" pInputText (keydown.enter)="login()" />
             </div>
-            <div class="form-holder">
-                <ion-button class="icon-div">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                </ion-button>
-                <input [type]="inputType" class="form-control" [(ngModel)]="password" placeholder="Mot de passe">
-                <ion-button class="icon-div right-icon-div" (click)="toggleEyeIcon()">
-                    <ion-icon [name]="eyeIcon"></ion-icon>
-                </ion-button>
+            <div class="space-y-2">
+                <label
+                    class="text-xs md:text-sm lg:text-base font-medium leading-none flex items-center gap-2 text-gray-800 dark:text-gray-300"
+                    for="password">
+                    <i class="fa-solid fa-lock text-gray-800 dark:text-gray-300"></i>
+                    Mot de passe
+                </label>
+                <div class="relative flex items-center">
+                        <input [(ngModel)]="password" type="text" placeholder="Entrez votre mot de passe" class="w-full"
+                            name="password" id="password" [type]="passwordFieldType" autocomplete="off" pInputText (keydown.enter)="login()"/>
+                    <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer"
+                        (click)="togglePasswordVisibility()">
+                        <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
+                            class="fa-solid text-lg text-gray-800 dark:text-gray-800"></i>
+                    </div>
+                </div>
             </div>
-            <button class="fill" (click)="login()">Connexion</button>
-            <p class="forgot_password" (click)="redirectTo('forgot-password')">Mot de passe oublié ?</p>
+            <div class="space-y-4 text-center">
+                <div class="cursor-pointer inline-flex text-base items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 h-10 md:h-12 px-4 py-2 mt-2 w-full"
+                    (click)="login()">
+                    Se connecter
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <div (click)="commonService.redirectTo('forgot-password')"
+                    class="text-base w-fit text-gray-800 hover:underline dark:text-gray-300 cursor-pointer">
+                    Mot de passe oublié
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>

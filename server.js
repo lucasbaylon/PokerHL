@@ -14,6 +14,7 @@ const { getConnection } = require('./database');
 const http = require('http').Server(app);
 
 const serviceAccount = require('./serviceAccountKey.json');
+const { json } = require('body-parser');
 
 // Configuration de multer pour le stockage en mémoire
 const storage = multer.memoryStorage();
@@ -65,6 +66,91 @@ const protectedRouter = express.Router();
 if (process.env.NODE_ENV !== 'dev') {
     protectedRouter.use(authMiddleware);
 }
+
+app.get("/fix_bdd", async function (req, res) {
+    let connection;
+    try {
+        connection = await getConnection();
+        // 1. Récupérer toutes les lignes de la table
+        const [rows] = await connection.execute('SELECT id, json FROM situations');
+
+        let modifiedObject;
+        console.log(`${rows.length} situations found.`);
+        let i = 0;
+
+        for (const row of rows) {
+            let jsonData = JSON.parse(row.json);
+            let isModified = false;
+
+            // 2. Ajouter les nouveaux champs si non présents
+            if (!('type' in jsonData)) {
+                jsonData.type = 'preflop';
+                isModified = true;
+            }
+            if (!('fishPosition' in jsonData)) {
+                jsonData.fishPosition = undefined;
+                isModified = true;
+            }
+
+            // 3. Remplacer le champ "dealer" par "position"
+            if ('dealer' in jsonData) {
+                const nbPlayer = jsonData.nbPlayer;
+                const dealer = jsonData.dealer;
+
+                if (nbPlayer === 2) {
+                    if (dealer === 'you') {
+                        jsonData.position = 'sb';
+                    } else if (dealer === 'opponent1') {
+                        jsonData.position = 'bb';
+                    }
+                } else if (nbPlayer === 3) {
+                    if (dealer === 'you') {
+                        jsonData.position = 'bu';
+                    } else if (dealer === 'opponent1') {
+                        jsonData.position = 'bb';
+                    } else if (dealer === 'opponent2') {
+                        jsonData.position = 'sb';
+                    }
+                }
+                // Supprimer le champ dealer
+                delete jsonData.dealer;
+                isModified = true;
+            }
+
+            // 4. Remplacer le champ "dealerMissingTokens" par "stack"
+            if ('dealerMissingTokens' in jsonData) {
+                jsonData.stack = jsonData.dealerMissingTokens;
+                // Supprimer le champ dealerMissingTokens
+                delete jsonData.dealerMissingTokens;
+                isModified = true;
+            }
+
+            // 3. Convertir le JSON modifié en chaîne de caractères et mettre à jour si modifié
+            if (isModified) {
+                i += 1;
+                console.log(`${jsonData.name} has been modified.`);
+                // modifiedObject = jsonData;
+                const updatedJson = JSON.stringify(jsonData);
+
+                // 4. Mettre à jour la ligne dans la base de données
+                await connection.execute('UPDATE situations SET json = ? WHERE id = ?', [updatedJson, row.id]);
+            }
+        }
+
+        // console.log(modifiedObject);
+
+        console.log(`${i} situations have been modified.`);
+
+        console.log('All JSON fields have been updated successfully.');
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating JSON fields:', error);
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
 
 protectedRouter.get("/check_situations_for_user/:user", async function (req, res) {
     const user = req.params.user;
@@ -294,7 +380,7 @@ function validateJsonContent(fileName, jsonContent) {
     try {
         const jsonData = JSON.parse(jsonContent);
 
-        const champsValides = ["name", "nbPlayer", "dealerMissingTokens", "dealer", "opponentLevel", "actions", "situations"];
+        const champsValides = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "actions", "situations"];
 
         // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
         const champsJson = Object.keys(jsonData);
@@ -318,9 +404,10 @@ function validateJsonContent(fileName, jsonContent) {
         const validations = {
             name: val => typeof val === 'string',
             nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
-            dealerMissingTokens: val => typeof val === 'number',
-            dealer: val => typeof val === 'string' && ['you', 'opponent1', 'opponent2'].includes(val),
-            opponentLevel: val => typeof val === 'string' && ['fish', 'shark'].includes(val),
+            stack: val => typeof val === 'number',
+            type: val => typeof val === 'string' && ['preflop', 'flop'].includes(val),
+            position: val => typeof val === 'string' && ['sb', 'bb', 'bu'].includes(val),
+            opponentLevel: val => typeof val === 'string' && ['fish', 'shark', 'fish_shark'].includes(val),
         };
 
         for (const [key, validator] of Object.entries(validations)) {

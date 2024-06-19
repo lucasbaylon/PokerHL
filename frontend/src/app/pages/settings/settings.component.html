@@ -1,57 +1,126 @@
-<ion-button class="backArrow" (click)="redirectTo('home')">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-button>
-<div class="settings-container animate__animated animate__fadeInDown">
-    <div>
-        <div class="settings-div">
-            <h3>Paramètres</h3>
-            <p>Ajustez les paramètres selon vos préférences.</p>
-            <div class="flex-container">
-                <div class="settings-first-part">
-                    <h4>Global</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Activer le mode sombre</div>
-                        <p-inputSwitch [(ngModel)]="darkMode" (onChange)="onChangeDarkMode()"></p-inputSwitch>
-                    </div>
-                    <h4>Entraînement</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Solution lors d'une erreur</div>
-                        <p-inputSwitch [(ngModel)]="displaySolutionOnError"
-                            (onChange)="onChangeDisplaySolutionOnError()"></p-inputSwitch>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Style des cartes</div>
-                        <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name" optionValue="code"
-                            (onChange)="onChangeDropdownCardsStyle($event)"></p-dropdown>
-                    </div>
-                    <div class="switch-container">
-                        <div class="setting-description">Couleur du tapis de jeu</div>
-                        <p-dropdown [(ngModel)]="pokerTableColor" [options]="availablePokerTableColors"
-                            optionLabel="name" optionValue="code" (onChange)="onChangeDropdownTableColor($event)"></p-dropdown>
-                    </div>
+<h3
+    class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 transition-colors duration-500 m-0">
+    Paramètres</h3>
+<p
+    class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0 transition-colors duration-500">
+    Ajustez les
+    paramètres selon vos préférences.</p>
+<div class="flex">
+    <div class="w-1/2 min-w-[400px] mr-6">
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-50 transition-colors duration-500">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider transition-colors duration-500">
+                Global</h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Activer le mode sombre</div>
+                <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="darkMode"
+                    (onChange)="toggleDarkMode()"></p-inputSwitch>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Désactiver les particules</div>
+                <p-inputSwitch [disabled]="true" styleClass="custom-inputSwitch"></p-inputSwitch>
+            </div>
+        </div>
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
+            <h4
+                class="m-0 mb-4 font-semibold text-left text-lg uppercase text-gray-800 dark:text-gray-300 tracking-wider transition-colors duration-500">
+                Entraînement
+            </h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Affichage de la solution lors d'une erreur</div>
+                <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySolutionOnError"
+                    (onChange)="updateUserParam('displaySolution', displaySolutionOnError)"></p-inputSwitch>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Style des cartes</div>
+                <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
+                    (onChange)="updateUserParam('cardStyle', $event.value.code)"></p-dropdown>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Couleur du tapis de jeu</div>
+                <p-dropdown [options]="availablePokerTableColors" [(ngModel)]="pokerTableColor" optionLabel="name"
+                    (onChange)="updateUserParam('playmatColor', $event.value.code)" />
+            </div>
+        </div>
+    </div>
+    <div class="w-1/2 min-w-[400px] ml-6">
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider transition-colors duration-500">
+                Situations
+            </h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Nom de situation multiple auto
                 </div>
-                <div class="settings-second-part">
-                    <h4>Situations</h4>
-                    <div class="switch-container">
-                        <div class="setting-description">Nom de solution multiple auto</div>
-                        <p-inputSwitch [(ngModel)]="autoNameMultipleSituation"></p-inputSwitch>
-                    </div>
-                    <div class="buttons-container">
-                        <div class="side-buttons">
-                            <button class="fill" (click)="fileImportInput.click()">Importer</button>
-                            <button class="fill" (click)="onClickFileExport()">Exporter</button>
-
-                            <input type="file" #fileImportInput style="display: none;"
-                                (change)="onClickFileImport($event)" multiple>
-                        </div>
-                    </div>
-                    <h4 class="buttons-only-div">Compte</h4>
-                    <div class="buttons-container">
-                        <div class="side-buttons">
-                            <button class="fill">Changer le MDP</button>
-                            <button class="fill" (click)="apiAuth.signOut()">Se déconnecter</button>
-                        </div>
-                    </div>
+                <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="autoMultipleSolutionName"
+                    (onChange)="updateUserParam('autoMultipleSolutionName', autoMultipleSolutionName)"></p-inputSwitch>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Importer des situations
+                </div>
+                <div (click)="fileImportInput.click()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+                    <i class="fa-solid fa-download mr-4 h-4 w-4"></i>
+                    Importer
+                </div>
+                <input type="file" #fileImportInput style="display: none;" (change)="onClickFileImport($event)"
+                    multiple>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Exporter vos
+                    situations</div>
+                <div (click)="onClickFileExport()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+                    <i class="fa-solid fa-upload mr-4 h-4 w-4"></i>
+                    Exporter
+                </div>
+            </div>
+        </div>
+        <div
+            class="mx-auto mt-10 p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider transition-colors duration-500">
+                Compte</h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Modifier votre
+                    mot de
+                    passe</div>
+                <div (click)="commonService.redirectTo('change-password')"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+                    <i class="fa-solid fa-rotate mr-4 h-4 w-4"></i>
+                    Modification
+                </div>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                    Se déconnecter de
+                    votre compte</div>
+                <div (click)="apiAuth.signOut()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+                    <i class="fa-solid fa-arrow-right-from-bracket mr-4 h-4 w-4"></i>
+                    Déconnexion
                 </div>
             </div>
         </div>

@@ -1,162 +1,292 @@
-<ion-button class="backArrow" (click)="redirectTo('situations-list-manager')">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-button>
 @if (mode === 'new') {
-    <h1>Enregistrer une nouvelle situation</h1>
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
+    Créer une nouvelle situation</h3>
+<p class="text-gray-500 dark:text-gray-350 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Créez une nouvelle
+    situation en renseignant ses ranges ainsi que ses caractèristiques.</p>
 }
 @if (mode === 'edit') {
-    <h1>Modifier la situation</h1>
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
+    Modifier une situation</h3>
+<p class="text-gray-500 dark:text-gray-350 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Modifiez une de vos
+    situations existante en renseignant ses nouvelles ranges et caractèristiques.</p>
 }
-<div class="div-input-text field">
-    <input [(ngModel)]="situation_obj.name" type="text" class="styled-input-text" placeholder="Nom de la situation"
-        name="situationName" id='situationName' autocomplete="off" />
-    <label for="situationName" class="styled-input-text-label">Nom de la situation</label>
-</div>
-<!-- <div class="case-definition animate__animated animate__fadeIn"> -->
-<div class="case-definition">
-    <table (mouseleave)="endSelection($event)" oncontextmenu="return false;">
+
+<!-- Div container tableau + solutions -->
+<div class="flex items-center justify-center w-10/12 my-16 mx-auto">
+
+    <!-- Tableau des ranges -->
+    <table (mouseleave)="endSelection($event)" oncontextmenu="return false;"
+        class="mx-auto table-fixed border-separate border-spacing-1">
         <tbody>
             @for (row of situation_obj.situations; track i; let i = $index) {
-                <tr class="table-row animate__animated animate__fadeIn" [style.animation-delay]="i * 0.05+'s'">
-                    @for (item of row; track j; let j = $index) {
-                        <td (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)" (mouseup)="endSelection($event)" [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef), 'color': item.action ? 'white' : '#303030'}">
-                            {{item.card}}
-                        </td>
-                    }
-                </tr>
+            <tr class="table-row animate-appear opacity-0" [style.animation-delay]="i * 0.025+'s'">
+                @for (item of row; track j; let j = $index) {
+                <td class="rounded cursor-pointer font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl"
+                    (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)"
+                    (mouseup)="endSelection($event)"
+                    [ngStyle]="{'background': (item.action! | actionColor:situation_objActionsRef)}"
+                    [ngClass]="item.action ? 'text-white dark:text-gray-300' : 'text-gray-800'">
+                    {{item.card}}
+                </td>
+                }
+            </tr>
             }
         </tbody>
     </table>
-    <div class="solutions">
-        <h2>Solutions</h2>
+
+    <!-- Div solutions -->
+    <div
+        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-110 rounded-lg py-5 px-7 shadow-lg mx-auto flex flex-col items-center mb-2 animate-appear opacity-0 animation-delay-100">
+        <div class="text-left w-full">
+            <h4 class="mb-4 text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider m-0">
+                Solutions
+            </h4>
+        </div>
         @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-            <div class="solution-selector">
-                <input type="input" class="textInput" value="{{action.display_name}}" [id]="'input_' + action.id"
+        <div class="relative flex items-center mb-5">
+            <!-- Surbrillance de la couleur sélectionnée -->
+            <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
+                class="absolute -inset-2 -inset-x-5 z-0"></div>
+
+            <!-- Ligne solution -->
+            <div class="relative z-10 flex items-center">
+                <input type="input"
+                    [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': actionSelected === action.id, 'bg-white dark:bg-secondary-dark-bg transition-none': actionSelected !== action.id}"
+                    class="  text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300"
+                    value="{{action.display_name}}" [id]="'input_' + action.id"
                     (input)="onChangeActionName(action.id, $event)" placeholder="-" autocomplete="off" />
-                <div class="color-picker-square"
-                    [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"
+                <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
+                    [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}"
                     (click)="onColorAction(action.id)"></div>
-                <label>
-                    <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                        (click)="onChangeAction($event)" [checked]="i === 0 ? true : false">
-                    <span class="design"></span>
-                </label>
+                <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
+                    [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
+                    class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 px-5 text-base font-medium shadow transition-none">
+                    @if (actionSelected !== action.id) {
+                    <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
+                    }
+                    @if (actionSelected === action.id) {
+                    <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
+                    }
+                    {{actionSelected === action.id ? 'Choisi' : 'Sélectionner'}}
+                </div>
             </div>
-            <div class="color-picker-div color-picker-div-closed animate__animated animate__zoomIn"
+            <!-- Div qui apparait lorsqu'on clique sur un carré color picker -->
+            <div class="bg-white dark:bg-gray-700 p-4 mt-40 rounded shadow-lg absolute z-50 w-fit animate-appear opacity-0 duration-100 hidden"
                 [id]="'color-picker-div_' + action.id">
-                <div class="colors">
-                    <div class="color-picker-square" style="background: #d80c05"
+                <div class="grid grid-cols-5 gap-2">
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #d80c05"
                         (click)="onSelectColor(action.id, '#d80c05')"></div>
-                    <div class="color-picker-square" style="background: #ff9100"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #ff9100"
                         (click)="onSelectColor(action.id, '#ff9100')"></div>
-                    <div class="color-picker-square" style="background: #7a5a00"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #7a5a00"
                         (click)="onSelectColor(action.id, '#7a5a00')"></div>
-                    <div class="color-picker-square" style="background: #3f7a89"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #3f7a89"
                         (click)="onSelectColor(action.id, '#3f7a89')"></div>
-                    <div class="color-picker-square" style="background: #96c582"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #96c582"
                         (click)="onSelectColor(action.id, '#96c582')"></div>
-                    <div class="color-picker-square" style="background: #303030"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #303030"
                         (click)="onSelectColor(action.id, '#303030')"></div>
-                    <div class="color-picker-square" style="background: #1c51ff"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #1c51ff"
                         (click)="onSelectColor(action.id, '#1c51ff')"></div>
-                    <div class="color-picker-square" style="background: #00aeff"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #00aeff"
                         (click)="onSelectColor(action.id, '#00aeff')"></div>
-                    <div class="color-picker-square" style="background: #8400ff"
-                        (click)="onSelectColor(action.id, '#8400ff')"></div>
-                    <div class="color-picker-square" style="background: #e284ff"
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #8350ff"
+                        (click)="onSelectColor(action.id, '#8350ff')"></div>
+                    <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #e284ff"
                         (click)="onSelectColor(action.id, '#e284ff')"></div>
                 </div>
             </div>
+        </div>
         }
-        <button class="fill addButton" id="add-solution-button" (click)="addUniqueAction()">Ajouter +</button>
+        <div (click)="addUniqueAction()" id="add-solution-button"
+            class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
+            <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
+            Ajouter
+        </div>
     </div>
-    <div class="multiples-solutions-div">
-        <h2>Solutions multiples</h2>
-        <div class="multiples-solutions-container">
+</div>
+
+<!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
+<div [ngClass]="{'h-[500px]': opponentLevel.code === 'fish_shark', 'h-[440px]': opponentLevel.code !== 'fish_shark'}" class="flex items-start justify-center w-full my-16 mx-auto ">
+    <!-- Div SOLUTIONS MULTIPLES -->
+    <div
+        class="p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
+        <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Solutions multiples</h4>
+        <div [ngClass]="{'max-h-[75%]': opponentLevel.code === 'fish_shark', 'max-h-[70%]': opponentLevel.code !== 'fish_shark'}"
+        class="overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start mt-4">
             @for (action of filteredActionList(situation_obj.actions, 'mixed'); track $index) {
-                <div class="multiples-solutions">
-                    <div class="multiples-solutions-name">
+            <div class="relative flex items-center my-4 w-full">
+                <!-- Surbrillance de la couleur sélectionnée -->
+                <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': actionSelected === action.id}"
+                    class="absolute inset-0 -inset-y-2 rounded z-0"></div>
+
+                <!-- Ligne solution multiple -->
+                <div class="flex w-full items-center justify-evenly gap-4 px-3 relative z-10">
+                    <div
+                        class="w-5/12 text-lg border-none text-center text-gray-800 dark:text-gray-300 overflow-x-auto">
                         {{action.display_name}}
                     </div>
-                    <div class="color-picker-square"
-                        [ngStyle]="{'background': apiCommon.cellBackground(action, situation_objActionsRef)}"></div>
-                    <label>
-                        <input type="radio" name="radio_button" [id]="'radio_' + action.id" [value]="action.id"
-                            (click)="onChangeAction($event)">
-                        <span class="design"></span>
-                    </label>
-                    <ion-button (click)="editMultipleSolution(action.id)">
-                        <ion-icon name="pencil-outline"></ion-icon>
-                    </ion-button>
-                    <ion-button (click)="deleteMultipleSolution(action.id)">
-                        <ion-icon name="trash-outline"></ion-icon>
-                    </ion-button>
+                    <div class="flex items-center justify-center px-2">
+                        <div class="h-8 w-8 rounded shadow flex items-center justify-center"
+                            [ngStyle]="{'background': commonService.cellBackground(action, situation_objActionsRef)}">
+                        </div>
+                    </div>
+                    <div class="w-fit flex items-center justify-center">
+                        <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-300 text-gray-800"
+                            (click)="editMultipleSolution(action.id)"></i>
+                    </div>
+                    <div class="w-fit flex items-center justify-center">
+                        <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-300 text-gray-800"
+                            (click)="deleteMultipleSolution(action.id)"></i>
+                    </div>
+                    <div (click)="onChangeAction(action.id)" id="add-solution-button" [id]="'button_' + action.id"
+                        [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': actionSelected !== action.id}"
+                        class="flex h-12 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 text-base font-medium shadow transition-colors w-48">
+                        @if (actionSelected !== action.id) {
+                        <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
+                        }
+                        @if (actionSelected === action.id) {
+                        <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
+                        }
+                        {{actionSelected === action.id ? 'Choisi' : 'Sélectionner'}}
+                    </div>
                 </div>
+            </div>
             }
         </div>
-        <button class="fill addButton" (click)="showAddMultiplesAction()">Ajouter +</button>
-    </div>
-    <div class="add-multiples-solutions-container">
-        <div class="add-multiples-solutions animate__animated animate__fadeInDown" id="add-multiples-solutions">
-            <ion-button (click)="resetMultipleSituation()">
-                <ion-icon name="close-outline"></ion-icon>
-            </ion-button>
-            <h2 class="add-multiples-solutions-h2">Ajout d'une solution multiple</h2>
-            <div class="div-input-text field input-name-multiples-solutions">
-                <input [(ngModel)]="multipleSolutionName" type="text" class="styled-input-text" placeholder="Nom"
-                    name="multipleSolution" id='multipleSolution' autocomplete="off" />
-                <label for="multipleSolution" class="styled-input-text-label">Nom de la multiplicité</label>
+
+        <div class="flex justify-center items-center mt-5">
+            <div (click)="this.commonService.showModal('add-multiples-solutions');"
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
+                Ajouter
             </div>
-            @for (action of filteredActionList(situation_obj.actions, 'unique'); track i; let i = $index) {
-                <div class="solution-selector">{{action.display_name}}<div class="color-picker-square"
-                        [style]="'background: ' + action.color"></div>
-                    <input type="checkbox" class="cbx" [id]="'id_check_'+ action.id" (change)="onCheckChange($event)">
-                    <label [for]="'id_check_'+ action.id" class="check">
-                        <svg width="18px" height="18px" viewBox="0 0 18 18">
-                            <path
-                                d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z">
-                            </path>
-                            <polyline points="1 9 7 14 15 4"></polyline>
-                        </svg>
-                    </label>
+        </div>
+    </div>
+
+    <!-- Div AJOUTER SOLUTIONS MULTIPLES-->
+    <dialog id="add-multiples-solutions" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+        <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+            <form method="dialog">
+                <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none"
+                    (click)="resetMultipleSituation()">✕</button>
+            </form>
+            <h4
+                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Ajout d'une Solution multiple
+            </h4>
+            @if (!autoMultipleSolutionName) {
+            <div class="flex items-center justify-between w-full my-7">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Nom de la solution
                 </div>
+                <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
+                    name="multipleSolutionName" id='multipleSolution' autocomplete="off" pInputText />
+            </div>
+            }
+
+            @for (action of filteredActionList(situation_obj.actions, 'unique', true); track $index;) {
+            <div class="flex justify-center items-center w-full my-4">
+                <div class="grid grid-cols-3 w-1/2 items-center gap-4 px-3 mb-2">
+                    <div class="flex justify-center items-center">
+                        {{action.display_name}}
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <div class="h-8 w-8 rounded shadow cursor-pointer m-0" [style]="'background: ' + action.color">
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <p-checkbox [(ngModel)]="multipleSolutionCheckBox"
+                            name="multipleSolutionCheckBox" [value]="action.id" (onChange)="onCheckChange()" />
+                    </div>
+                </div>
+            </div>
             }
             @if (simpleSlider) {
-                <div class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
-                </div>
+            <div class="custom-slider">
+                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
+            </div>
             }
             @if (multipleSlider) {
-                <div class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                        [options]="options"></ngx-slider>
-                </div>
+            <div class="custom-slider">
+                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                    [options]="options"></ngx-slider>
+            </div>
             }
-            <button class="fill addButton" id="add-multiple-solution-button"
-                (click)="addMultipleAction()">Enregistrer</button>
+            <div class="flex justify-center mt-10">
+                <div (click)="saveMultipleSolution()"
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+                    Enregistrer la solution
+                </div>
+            </div>
         </div>
+    </dialog>
+
+    <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
+    <div
+        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-full">
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Caractéristiques de la situation</h4>
+        <div class="flex items-center justify-between w-full mt-4">
+            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                Nom de la situation</div>
+            <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
+                id='situationName' autocomplete="off" pInputText />
+        </div>
+        <div class="flex items-center justify-between w-full mt-4">
+            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                Type de situation</div>
+            <div class="flex items-center justify-end w-1/3">
+                <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
+                    [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
+                    optionLabel="name"></p-dropdown>
+            </div>
+        </div>
+        <div class="flex items-center justify-between w-full mt-4">
+            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                Stack effectif</div>
+            <p-inputNumber inputId="integeronly" [size]="5" [min]="0" [max]="999"
+                [(ngModel)]="situation_obj.stack"></p-inputNumber>
+        </div>
+        <div class="flex items-center justify-between w-full mt-4">
+            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                Nombre de joueurs sur la table</div>
+            <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
+                optionLabel="name"></p-dropdown>
+        </div>
+        <div class="flex items-center justify-between w-full mt-4">
+            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                Votre position
+            </div>
+            <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
+                optionLabel="name"></p-dropdown>
+        </div>
+        <div class="flex items-center justify-between w-full mt-4">
+            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                Niveau des adversaires
+            </div>
+            <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
+                (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name"></p-dropdown>
+        </div>
+        @if (opponentLevel.code === "fish_shark") {
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Position du fish
+                </div>
+                <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
+                    (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name"></p-dropdown>
+            </div>
+        }
     </div>
 </div>
-<div class="situation-caracteristics">
-    <h2>Caractéristiques de la situation</h2>
-    <div class="caracteristic-container">
-        <div class="caracteristic-description">Nombre de BB minimum sur la table</div>
-        <p-inputNumber inputId="integeronly" [size]="10" [min]="0" [(ngModel)]="situation_obj.dealerMissingTokens"></p-inputNumber>
-    </div>
-    <div class="caracteristic-container">
-        <div class="caracteristic-description">Nombre de joueurs sur la table</div>
-        <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
-            optionLabel="name"></p-dropdown>
-    </div>
-    <div class="caracteristic-container">
-        <div class="caracteristic-description">Joueur bouton</div>
-        <p-dropdown [(ngModel)]="dealer" [options]="availableDealerPlayer" (onChange)="onChangeDealer()"
-            optionLabel="name"></p-dropdown>
-    </div>
-    <div class="caracteristic-container">
-        <div class="caracteristic-description">Niveau des adversaires</div>
-        <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
-            (onChange)="onChangeOpponentLevel()" optionLabel="name"></p-dropdown>
+
+<!-- Bouton d'enregistrement de la situation -->
+<div class="flex justify-center items-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
+    <div (click)="saveSituation()"
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer absolute">
+        <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+        Enregistrer la situation
     </div>
 </div>
-<button class="fill saveButton animate__animated animate__fadeInUp" (click)="saveSituation()">Enregistrer</button>

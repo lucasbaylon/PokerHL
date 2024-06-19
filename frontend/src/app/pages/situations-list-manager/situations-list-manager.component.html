@@ -1,88 +1,140 @@
-<ion-button class="backArrow" (click)="redirectTo('home')">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-button>
-<h1>Gérer les situations</h1>
-<p>Supprimez, modifiez ou créez des situations</p>
-<div class="container">
-    <p-table [value]="situationList" dataKey="id" [rows]="nbRowsPerPage" [showCurrentPageReport]="true"
-        [paginator]="true">
+<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
+    Gestion des situations</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
+    créez des situations.</p>
+<div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto shadow-lg">
+    <p-table [value]="situationList" dataKey="id" [paginator]="true" [rows]="nbRowsPerPage">
         <ng-template pTemplate="header">
-            <tr class="animate__animated animate__fadeIn">
-                <th>
-                    <div class="flex align-items-center">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-700">
+                    <div class="flex items-center">
                         Nom
-                        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="name" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
-                        Nb BB minimum
-                        <p-columnFilter type="numeric" field="dealerMissingTokens" display="menu"></p-columnFilter>
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                    <div class="flex items-center">
+                        Type
+                        <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                    <div class="flex items-center">
+                        Stack effectif
+                        <p-columnFilter type="numeric" field="stack" display="menu"
+                            class="ml-2"></p-columnFilter>
+                    </div>
+                </th>
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                    <div class="flex items-center">
                         Nb joueurs
-                        <p-columnFilter type="numeric" field="nbPlayer" display="menu"></p-columnFilter>
+                        <p-columnFilter field="nbPlayer" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="nbPlayerLst" placeholder="Nombre de joueur" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
-                        Joueur bouton
-                        <p-columnFilter type="text" field="dealer" display="menu"></p-columnFilter>
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                    <div class="flex items-center">
+                        Position
+                        <p-columnFilter field="position" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="positionLst" placeholder="Position" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex align-items-center">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                    <div class="flex items-center">
                         Niveau
-                        <p-columnFilter type="text" field="opponentLevel" display="menu"></p-columnFilter>
+                        <p-columnFilter field="opponentLevel" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [ngModel]="value" [options]="opponentLevelLst" placeholder="Niveau" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter>
                     </div>
                 </th>
-                <th style="width: 4.5rem"></th>
-                <th style="width: 4.5rem"></th>
-                <th style="width: 4.5rem"></th>
+                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
+                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
+                <th
+                    class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-700">
+                </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-situation let-i="rowIndex">
-            <tr class="animate__animated animate__fadeIn"
-                [style.animation-delay]="0.1 + (i % nbRowsPerPage) * 0.1 + 's'">
-                <td>
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
+                <td class="dark:border-gray-700">
                     {{ situation.name }}
                 </td>
-                <td>
-                    {{ situation.dealerMissingTokens }}
+                <td class="dark:border-gray-700">
+                    {{ situation.type | type }}
                 </td>
-                <td>
+                <td class="dark:border-gray-700">
+                    {{ situation.stack }}
+                </td>
+                <td class="dark:border-gray-700">
                     {{ situation.nbPlayer }}
                 </td>
-                <td>
-                    {{ situation.dealer! | dealer }}
+                <td class="dark:border-gray-700">
+                    {{ situation.position | position }}
                 </td>
-                <td>
+                <td class="dark:border-gray-700">
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
-                <td>
-                    <ion-button class="icon-div" (click)="duplicateSituation(situation.id)">
-                        <ion-icon name="copy-outline"></ion-icon>
-                    </ion-button>
+                <td class="dark:border-gray-700">
+                    <i class="fa-solid fa-clone cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="duplicateSituation(situation.id)"></i>
                 </td>
-                <td>
-                    <ion-button class="icon-div" (click)="editSituation(situation.id)">
-                        <ion-icon name="pencil-outline"></ion-icon>
-                    </ion-button>
+                <td class="dark:border-gray-700">
+                    <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="editSituation(situation.id)"></i>
                 </td>
-                <td>
-                    <ion-button class="icon-div" (click)="removeSituation(situation.id)">
-                        <ion-icon name="trash-outline"></ion-icon>
-                    </ion-button>
+                <td class="dark:border-gray-700">
+                    <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="removeSituation(situation.id)"></i>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="8">Aucune situation trouvée.</td>
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                <td colspan="9">Aucune situation trouvée.</td>
             </tr>
         </ng-template>
     </p-table>
 </div>
-<button class="fill" (click)="redirectTo('situations-manager')">Créer une nouvelle situation</button>
+<div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
+    <div (click)="commonService.redirectTo('situations-manager')"
+        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+        <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>
+        Créer une nouvelle situation
+    </div>
+</div>

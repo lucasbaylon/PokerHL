@@ -2,40 +2,63 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { Situation } from '../../interfaces/situation';
 import { Router } from '@angular/router';
 import { SituationService } from '../../services/situation.service';
-import Swal from 'sweetalert2';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { TableModule } from 'primeng/table';
+import { CommonService } from './../../services/common.service';
+import { MultiSelectModule } from 'primeng/multiselect';
+import Swal from 'sweetalert2';
+import { PositionPipe } from '../../pipes/position.pipe';
+import { TypePipe } from '../../pipes/type.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe],
-    templateUrl: './situations-list-manager.component.html',
-    styleUrl: './situations-list-manager.component.scss',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule],
+    templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent {
 
     situationList: Situation[] = [];
 
-    nbRowsPerPage = 10;
+    nbRowsPerPage = 11;
 
-    paginatorAnimationDelay = "0s"
+    opponentLevelLst = [
+        { name: 'Débutant', value: "fish" },
+        { name: 'Confirmé', value: "shark" },
+        { name: 'Débutant/Confirmé', value: "fish_shark" }
+    ];
+
+    typeLst = [
+        { name: 'Pré-flop', value: "preflop" },
+        { name: 'Flop', value: "flop" }
+    ];
+
+    positionLst = [
+        { name: 'SB', value: "sb" },
+        { name: 'BB', value: "bb" },
+        { name: 'BU', value: "bu" }
+    ];
+
+    nbPlayerLst = [
+        { name: '2', value: 2 },
+        { name: '3', value: 3 }
+    ];
 
     constructor(
         private router: Router,
-        private apiSituation: SituationService
+        private apiSituation: SituationService,
+        protected commonService: CommonService
     ) { }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         if (event.target.innerHeight > 1080) {
-            this.nbRowsPerPage = 10;
+            this.nbRowsPerPage = 11;
         } else {
             this.nbRowsPerPage = 7;
         }
-        this.paginatorAnimationDelay = 0.1 + this.nbRowsPerPage * 0.075 + 's';
     }
 
     ngOnInit(): void {
@@ -50,48 +73,29 @@ export class SituationsListManagerComponent {
         }
     }
 
-    redirectTo(page: string) {
-        this.router.navigate([page]);
-    }
-
     editSituation(id: string) {
         this.router.navigate(['situations-manager', { situation_id: id }]);
     }
 
     duplicateSituation(id: string) {
         this.apiSituation.duplicateSituation(id);
-        Swal.fire({
-            position: 'top-end',
-            toast: true,
-            icon: 'success',
-            title: '<span style="font-size: 1.3vw;">Situation dupliquée !</span>',
-            showConfirmButton: false,
-            width: 'auto',
-            timer: 2500
-        });
+        this.commonService.showSwalToast(`Situation dupliquée !`);
     }
 
     removeSituation(id: string) {
         Swal.fire({
-            html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Attention !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière !</p>',
+            title: 'Attention !',
+            text: 'Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#303030',
             cancelButtonColor: '#d74c4c',
             confirmButtonText: 'Oui, supprimer !',
             cancelButtonText: 'Annuler'
         }).then((result) => {
             if (result.isConfirmed) {
                 this.apiSituation.removeSituation(id);
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: '<span style="font-size: 1.3vw;">Situation supprimée !</span>',
-                    showConfirmButton: false,
-                    width: 'auto',
-                    timer: 2500
-                });
+                this.commonService.showSwalToast(`Situation supprimée !`);
             }
         });
     }

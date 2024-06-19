@@ -1,17 +1,144 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-* {
-    font-family: 'Lato', sans-serif;
-    user-drag: none;
-}
+@layer components {
 
-body {
-    margin: 0;
-}
+    //Dropdown primeNG
+    .p-dropdown {
+        ul {
+            padding: 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-:root {
-    --primary: #ff6348;
-    --bg: blue;
+        li.p-highlight.p-focus {
+            @apply text-gray-800 bg-gray-300;
+        }
+    }
+
+    // Ring on focus
+    // input[type=text]:focus,
+    // .p-inputtext:focus {
+    //     // @apply dark:bg-secondary-dark-bg;
+    //     border-color: none;
+    //     box-shadow: 0 0 0 0.2rem red;
+    // }
+
+    input[type=text]:hover,
+    input[type=password]:hover,
+    .p-dropdown:hover,
+    .p-multiselect:hover,
+    .p-inputnumber-input:hover,
+    .p-multiselect-filter:hover {
+        @apply border-gray-400;
+    }
+
+    input[type=text],
+    input[type=password],
+    .p-dropdown,
+    .p-multiselect,
+    .p-inputnumber-input,
+    .p-multiselect-filter {
+        @apply border-gray-300;
+    }
+
+    // Boutons des filtres
+    .p-button,
+    p-column-filter-buttonbar {
+        @apply border-gray-300 text-gray-800 bg-white;
+    }
+
+    .p-button:hover,
+    p-column-filter-buttonbar {
+        @apply bg-gray-100;
+    }
+
+    //Paginator primeNG
+    .p-paginator {
+        @apply rounded-b-md rounded-t-none dark:bg-secondary-dark-bg border-none;
+    }
+
+    .p-paginator .p-ripple {
+        @apply text-gray-800 dark:text-gray-300 min-w-10 max-h-10;
+    }
+
+    .p-paginator .p-ripple.p-highlight {
+        @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10;
+    }
+
+    .p-paginator .p-ripple:hover {
+        @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10 transition-colors duration-300;
+    }
+
+    //Slider
+    .custom-slider .ngx-slider .ngx-slider-bar {
+        @apply bg-gray-200 dark:bg-white;
+        height: 3px;
+    }
+
+    .custom-slider .ngx-slider-bubble.ngx-slider-limit,
+    .custom-slider .ngx-slider-bubble {
+        @apply text-gray-800 dark:text-gray-300;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-selection {
+        @apply bg-gray-800 dark:bg-gray-500;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer {
+        @apply bg-gray-800 dark:bg-white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        margin-top: 5px;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer:hover {
+        cursor: grab;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer:active {
+        cursor: grabbing;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer:after {
+        @apply dark:bg-gray-800 bg-white;
+        top: 6px;
+        left: 6px;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-pointer.ngx-slider-active:after {
+        @apply dark:bg-gray-800 bg-white;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-floor {
+        margin-left: -6px !important;
+    }
+
+    .custom-slider .ngx-slider .ngx-slider-ceil {
+        margin-left: 16px !important;
+    }
+
+    //Input Switch primeNG
+    .custom-inputSwitch.p-inputswitch-checked .p-inputswitch-slider {
+        @apply bg-secondary-dark-bg dark:bg-gray-600 transition-colors duration-500;
+    }
+
+    //Checkbox primeNG
+    .p-checkbox .p-checkbox-box.p-highlight {
+        @apply bg-gray-800 dark:bg-gray-600 border-gray-800 dark:border-gray-600;
+        border-width: 0.5px;
+    }
+
+    .p-checkbox .p-checkbox-box:hover {
+        @apply border-gray-600;
+    }
+
+    .p-checkbox.p-hidden-accessible {
+        @apply hidden;
+    }
 }

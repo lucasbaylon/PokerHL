@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
-import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -10,6 +9,9 @@ import { SituationsListTrainingComponent } from './pages/situations-list-trainin
 import { TrainingComponent } from './pages/training/training.component';
 import { checkSituationGuard } from './guards/check-situation.guard';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { SelectTrainingModeComponent } from './pages/select-training-mode/select-training-mode.component';
 
 export const routes: Routes = [
     {
@@ -21,11 +23,6 @@ export const routes: Routes = [
         path: '',
         component: BaseLayoutComponent,
         children: [
-            {
-                path: 'home',
-                component: HomeComponent,
-                canActivate: [authGuard]
-            },
             {
                 path: 'situations-manager',
                 component: SituationManagerComponent,
@@ -50,20 +47,35 @@ export const routes: Routes = [
                 canActivate: [authGuard]
             },
             {
-                path: 'login',
-                component: LoginComponent
+                path: 'select-training-mode',
+                component: SelectTrainingModeComponent,
+                canActivate: [authGuard]
             },
             {
-                path: 'forgot-password',
-                component: ForgotPasswordComponent
+                path: 'training',
+                component: TrainingComponent,
+                canActivate: [
+                    checkSituationGuard,
+                    authGuard
+                ]
             }
         ]
     },
     {
-        path: 'training',
-        component: TrainingComponent,
-        canActivate: [
-            checkSituationGuard
-        ]
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
+    }, 
+    {
+        path: 'change-password',
+        component: ChangePasswordComponent
     }
 ];

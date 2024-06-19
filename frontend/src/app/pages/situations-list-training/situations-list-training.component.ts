@@ -2,17 +2,20 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { SituationService } from '../../services/situation.service';
 import { Router } from '@angular/router';
 import { Situation } from '../../interfaces/situation';
-import Swal from 'sweetalert2';
 import { TableModule } from 'primeng/table';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
+import { PositionPipe } from '../../pipes/position.pipe';
+import { CommonService } from '../../services/common.service';
+import { TypePipe } from '../../pipes/type.pipe';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-situations-list-training',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, MultiSelectModule, FormsModule],
     templateUrl: './situations-list-training.component.html',
-    styleUrl: './situations-list-training.component.scss',
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SituationsListTrainingComponent {
@@ -23,17 +26,40 @@ export class SituationsListTrainingComponent {
 
     checkedSituations: number[] = [];
 
-    nbRowsPerPage = 10;
+    nbRowsPerPage = 11;
+
+    opponentLevelLst = [
+        { name: 'Débutant', value: "fish" },
+        { name: 'Confirmé', value: "shark" },
+        { name: 'Débutant/Confirmé', value: "fish_shark" }
+    ];
+
+    typeLst = [
+        { name: 'Pré-flop', value: "preflop" },
+        { name: 'Flop', value: "flop" }
+    ];
+
+    positionLst = [
+        { name: 'SB', value: "sb" },
+        { name: 'BB', value: "bb" },
+        { name: 'BU', value: "bu" }
+    ];
+
+    nbPlayerLst = [
+        { name: '2', value: 2 },
+        { name: '3', value: 3 }
+    ];
 
     constructor(
         private router: Router,
-        private apiSituation: SituationService
+        private apiSituation: SituationService,
+        public commonService: CommonService,
     ) { }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         if (event.target.innerHeight > 1080) {
-            this.nbRowsPerPage = 10;
+            this.nbRowsPerPage = 11;
         } else {
             this.nbRowsPerPage = 7;
         }
@@ -57,12 +83,7 @@ export class SituationsListTrainingComponent {
 
     onStartTrainingButton() {
         if (this.selectedSituations.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                html: '<h1 style="font-family: \'Lato\', sans-serif; margin-top:-10px;">Erreur !</h1><p style="font-family: \'Lato\', sans-serif; margin-bottom:0; font-size: 1.2em;">Veuillez sélectionner au moins une situation.</p>',
-                confirmButtonColor: '#d74c4c',
-                confirmButtonText: '<p style="font-family: \'Lato\', sans-serif; margin-top:0; margin-bottom:0; font-size: 1.1em; font-weight: 600;">C\'est compris !</p>'
-            })
+            this.commonService.showSwalToast('Veuillez sélectionner au moins une situation.', 'error');
         } else {
             this.router.navigate(['training', { situationList: JSON.stringify(this.selectedSituations) }]);
         }

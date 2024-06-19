@@ -6,7 +6,7 @@ const pool = mysql.createPool({
     host: 'localhost',
     user: process.env.NODE_ENV === 'production' ? "zartop" : "root",
     password: process.env.NODE_ENV === 'production' ? "#$W&5*grhqd^BScca6kg" : "",
-    database: 'pokertraining',
+    database: 'pokerhl',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0

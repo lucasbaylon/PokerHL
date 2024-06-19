@@ -1,19 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Action } from '../interfaces/action';
 import { Situation } from '../interfaces/situation';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CommonService {
 
+    constructor(
+        private router: Router
+    ) { }
+
+    public isCollapsed: boolean = false;
     empty_situation_obj: Situation = {
         id: undefined,
         name: undefined,
+        type: "preflop",
         nbPlayer: 3,
-        dealerMissingTokens: 0,
-        dealer: "you",
+        stack: 0,
+        position: "sb",
         opponentLevel: "fish",
+        fishPosition: undefined,
         actions: [
             {
                 id: "unique_action_0",
@@ -51,8 +60,13 @@ export class CommonService {
         ]
     }
 
-    constructor() { }
-
+    /**
+     * Crée un dégradé linéaire pour l'arrière-plan d'une cellule
+     * en fonction du type d'action (unique ou mixte) et des couleurs associées.
+     * @param action L'action pour laquelle l'arrière-plan est généré.
+     * @param actionSituations La liste des actions pour récupérer les couleurs associées.
+     * @returns La chaîne CSS représentant le dégradé de l'arrière-plan de la cellule.
+     */
     cellBackground(action: Action, actionSituations: Action[]) {
         if (action.type === "unique") {
             return `linear-gradient(to right, ${action.color} 0%, ${action.color} 100%)`;
@@ -68,6 +82,76 @@ export class CommonService {
             return gradient;
         }
         return '';
+    }
+
+
+    /**
+     * Utilise le routeur pour naviguer vers une page donnée.
+     *
+     * @param {string} page - Le chemin de la page vers laquelle rediriger.
+     */
+    redirectTo(page: string) {
+        this.router.navigate([page]);
+    }
+
+    /**
+    * Affiche une notification toast avec SweetAlert2.
+    * 
+    * @param {string} message - Le message à afficher dans la notification.
+    * @param {'success' | 'error' | 'warning' | 'info' | 'question'} [icon='success'] - L'icône à afficher dans la notification. Peut être 'success', 'error', 'warning', 'info' ou 'question'.
+    */
+    showSwalToast(message: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question' = 'success') {
+        Swal.fire({
+            position: 'top-end',
+            toast: true,
+            icon: icon,
+            title: `<div class="text-xl">${message}</div>`,
+            showConfirmButton: false,
+            width: 'auto',
+            timer: 2500,
+        });
+    }
+
+    /**
+    * Renvoie un message d'erreur correspondant au code d'erreur fourni.
+    *
+    * @param {string} errorCode - Le code d'erreur retourné par le service d'authentification.
+    * @returns {string} - Le message d'erreur correspondant.
+    */
+    getErrorMessage(errorCode: string): string {
+        const errorMessages: { [key: string]: string } = {
+            'auth/wrong-password': 'Le mot de passe actuel est incorrect.',
+            'auth/weak-password': 'Le nouveau mot de passe est trop faible.',
+            'auth/requires-recent-login': 'Cette opération nécessite une connexion récente. Veuillez vous reconnecter et réessayer.',
+            'auth/invalid-email': 'L\'adresse email n\'est pas valide.',
+            'auth/user-not-found': 'Aucun utilisateur trouvé avec cette adresse email.'
+        };
+
+        return errorMessages[errorCode] || 'Une erreur est survenue. Veuillez réessayer.';
+    }
+
+    /**
+    * Affiche une modal spécifiée par son identifiant.
+    * 
+    * @param {string} id - L'identifiant de l'élément modal à afficher.
+    */
+    showModal(id: string) {
+        const modal = document.getElementById(id) as HTMLDialogElement;
+        if (modal) {
+            modal.showModal();
+        }
+    }
+
+    /**
+    * Ferme une modal spécifiée par son identifiant.
+    * 
+    * @param {string} id - L'identifiant de l'élément modal à fermer.
+    */
+    closeModal(id: string) {
+        const modal = document.getElementById(id) as HTMLDialogElement;
+        if (modal) {
+            modal.close();
+        }
     }
 
 }
