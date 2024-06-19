@@ -1,6 +1,6 @@
 $dossierCourant = Get-Location
 $prod = Join-Path (Get-Location) "prod"
-$distFolder = Join-Path (Get-Location) "frontend/dist"
+$distFolder = Join-Path (Get-Location) "frontend/dist/frontend/browser"
 
 # On supprime le dossier dist dans frontend
 Remove-Item -Path $distFolder -Recurse -Force
@@ -24,4 +24,4 @@ New-Item -ItemType "directory" -Path $prod
 Copy-Item $distFolder -Destination (Join-Path $prod "\dist") -Recurse
 
 # on copie les fichiers et dossier du backend dans le dossier de prod
-Copy-Item './server.js', './node_modules', './serviceAccountKey.json', './database.js' -Destination $prod -Exclude "frontend/" -Recurse
+Copy-Item './server.js', './package.json', './node_modules', './serviceAccountKey.json', './database.js' -Destination $prod -Exclude "frontend/" -Recurse

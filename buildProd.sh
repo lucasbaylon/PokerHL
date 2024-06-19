@@ -3,7 +3,7 @@
 # Définissez vos chemins
 dossierCourant=$(pwd)
 prod="$dossierCourant/prod"
-distFolder="$dossierCourant/frontend/dist"
+distFolder="$dossierCourant/frontend/dist/frontend/browser"
 
 # Supprimez le dossier dist dans frontend
 rm -rf $distFolder
@@ -28,6 +28,3 @@ cp -r $distFolder $prod/dist
 
 # Copiez les fichiers et dossiers du backend dans le dossier prod
 cp -r server.js database.js node_modules serviceAccountKey.json ecosystem_production.config.js $prod
-
-# Créez le dossier Situations
-mkdir -p $prod/situations
