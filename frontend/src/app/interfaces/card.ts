@@ -1,4 +1,4 @@
 export interface Card {
     card: string;
-    action: string | undefined;
+    solution: string | undefined;
 }

@@ -1,5 +1,5 @@
-import { Action } from "./action";
 import { Card } from "./card";
+import { Solution } from "./solution";
 
 export interface Situation {
     id?: number;
@@ -18,7 +18,7 @@ export interface Situation {
 
     fishPosition?: string;
 
-    actions: Action[];
+    solutions: Solution[];
 
     situations: Card[][];
 }

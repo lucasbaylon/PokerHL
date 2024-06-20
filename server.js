@@ -63,6 +63,87 @@ const authMiddleware = (req, res, next) => {
 
 const protectedRouter = express.Router();
 
+app.get("/fix_bdd", async function (req, res) {
+    let connection;
+    try {
+        connection = await getConnection();
+        const [results] = await connection.execute('SELECT * FROM situations');
+
+        if (results.length === 0) {
+            res.status(200).json({ authorized: false, message: "NO_SITUATION" });
+            return;
+        }
+
+        for (let row of results) {
+            const id = row.id;
+            let jsonData = JSON.parse(row.json);
+
+            // Rename 'actions' to 'solutions'
+            if (jsonData.actions) {
+                jsonData.solutions = jsonData.actions.map(action => {
+                    // Rename 'unique_action_' to 'unique_solution_'
+                    if (action.id.startsWith('unique_action_')) {
+                        action.id = action.id.replace('unique_action_', 'unique_solution_');
+                    }
+                    // Rename 'mixed_action_' to 'mixed_solution_'
+                    if (action.id.startsWith('mixed_action_')) {
+                        action.id = action.id.replace('mixed_action_', 'mixed_solution_');
+                    }
+
+                    // Rename 'colorList' values in 'solutions'
+                    if (action.colorList) {
+                        action.colorList = action.colorList.map(colorItem => {
+                            if (colorItem.color.startsWith('unique_action_')) {
+                                colorItem.color = colorItem.color.replace('unique_action_', 'unique_solution_');
+                            }
+                            return colorItem;
+                        });
+                    }
+
+                    return action;
+                });
+                delete jsonData.actions;
+            }
+
+            // Rename 'action' to 'solution' in 'situations' and update values of 'solution'
+            if (jsonData.situations) {
+                jsonData.situations = jsonData.situations.map(situationArray => {
+                    return situationArray.map(situation => {
+                        if (situation.action !== undefined) {
+                            situation.solution = situation.action;
+
+                            // Rename values of 'solution'
+                            if (situation.solution.startsWith('unique_action_')) {
+                                situation.solution = situation.solution.replace('unique_action_', 'unique_solution_');
+                            }
+                            if (situation.solution.startsWith('mixed_action_')) {
+                                situation.solution = situation.solution.replace('mixed_action_', 'mixed_solution_');
+                            }
+
+                            delete situation.action;
+                        }
+                        return situation;
+                    });
+                });
+            }
+
+            // Update the database with the modified JSON
+            // console.log(jsonData.situations);
+            const updatedJson = JSON.stringify(jsonData);
+            await connection.execute('UPDATE situations SET json = ? WHERE id = ?', [updatedJson, id]);
+        }
+
+        res.status(200).json({ authorized: true, message: "Database updated successfully" });
+    } catch (error) {
+        console.error('Error querying the database:', error);
+        res.status(500).json({ error: 'An error occurred while updating the database' });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
+
 if (process.env.NODE_ENV !== 'dev') {
     protectedRouter.use(authMiddleware);
 }
@@ -295,7 +376,7 @@ function validateJsonContent(fileName, jsonContent) {
     try {
         const jsonData = JSON.parse(jsonContent);
 
-        const champsValides = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "actions", "situations"];
+        const champsValides = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "solutions", "situations"];
 
         // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
         const champsJson = Object.keys(jsonData);
@@ -334,51 +415,51 @@ function validateJsonContent(fileName, jsonContent) {
             }
         }
 
-        // Validation spécifique pour le champ 'actions'
-        if (!Array.isArray(jsonData.actions)) {
+        // Validation spécifique pour le champ 'solutions'
+        if (!Array.isArray(jsonData.solutions)) {
             return {
                 isValid: false,
-                message: `Le champ 'actions' doit être un tableau dans le fichier ${fileName}.`
+                message: `Le champ 'solutions' doit être un tableau dans le fichier ${fileName}.`
             };
         }
 
-        const actionErrors = [];
-        jsonData.actions.forEach((action, index) => {
-            if (!/^(unique_action_|mixed_action_)\d+$/.test(action.id)) {
-                actionErrors.push(`Action ${index}: 'id' invalide.`);
+        const solutionErrors = [];
+        jsonData.solutions.forEach((solution, index) => {
+            if (!/^(unique_solution_|mixed_solution_)\d+$/.test(solution.id)) {
+                solutionErrors.push(`Solution ${index}: 'id' invalide.`);
             }
 
-            if (!['unique', 'mixed'].includes(action.type)) {
-                actionErrors.push(`Action ${index}: 'type' invalide.`);
+            if (!['unique', 'mixed'].includes(solution.type)) {
+                solutionErrors.push(`Solution ${index}: 'type' invalide.`);
             }
 
-            if (typeof action.display_name !== 'string') {
-                actionErrors.push(`Action ${index}: 'display_name' doit être une chaîne de caractères.`);
+            if (typeof solution.display_name !== 'string') {
+                solutionErrors.push(`Solution ${index}: 'display_name' doit être une chaîne de caractères.`);
             }
 
-            if (typeof action.color === 'string') {
-                if (!/^#[0-9A-Fa-f]{6}$/.test(action.color)) {
-                    actionErrors.push(`Action ${index}: 'color' doit être au format hexadécimal.`);
+            if (typeof solution.color === 'string') {
+                if (!/^#[0-9A-Fa-f]{6}$/.test(solution.color)) {
+                    solutionErrors.push(`Solution ${index}: 'color' doit être au format hexadécimal.`);
                 }
-            } else if (Array.isArray(action.colorList)) {
-                action.colorList.forEach((colorItem, colorIndex) => {
-                    if (!/^unique_action_\d+$/.test(colorItem.color)) {
-                        actionErrors.push(`Action ${index}, Color ${colorIndex}: 'color' invalide.`);
+            } else if (Array.isArray(solution.colorList)) {
+                solution.colorList.forEach((colorItem, colorIndex) => {
+                    if (!/^unique_solution_\d+$/.test(colorItem.color)) {
+                        solutionErrors.push(`Solution ${index}, Color ${colorIndex}: 'color' invalide.`);
                     }
                     if (typeof colorItem.percent !== 'number' || colorItem.percent < 0 || colorItem.percent > 100) {
-                        actionErrors.push(`Action ${index}, Color ${colorIndex}: 'percent' doit être un nombre entre 0 et 100.`);
+                        solutionErrors.push(`Solution ${index}, Color ${colorIndex}: 'percent' doit être un nombre entre 0 et 100.`);
                     }
                 });
             } else {
-                actionErrors.push(`Action ${index}: doit avoir un 'color' hexadécimal ou une 'colorList'.`);
+                solutionErrors.push(`Solution ${index}: doit avoir un 'color' hexadécimal ou une 'colorList'.`);
             }
         });
 
-        if (actionErrors.length > 0) {
+        if (solutionErrors.length > 0) {
             return {
                 isValid: false,
-                message: `Erreurs détectées dans le champ 'actions' du fichier ${fileName}`,
-                errors: actionErrors
+                message: `Erreurs détectées dans le champ 'solutions' du fichier ${fileName}`,
+                errors: solutionErrors
             };
         }
 
@@ -401,8 +482,8 @@ function validateJsonContent(fileName, jsonContent) {
                 if (typeof situation.card !== 'string') {
                     situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'card' doit être une chaîne de caractères.`);
                 }
-                if (!/^(unique_action_|mixed_action_)\d+$/.test(situation.action)) {
-                    situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'action' invalide.`);
+                if (!/^(unique_solution_|mixed_solution_)\d+$/.test(situation.solution)) {
+                    situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'solution' invalide.`);
                 }
             });
         });

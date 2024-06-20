@@ -1,19 +1,20 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
-import { Situation } from '../../interfaces/situation';
-import { ActiveSituation } from '../../interfaces/active-situation';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UserParams } from '../../interfaces/user-params';
-import { Action } from '../../interfaces/action';
-import { CommonService } from './../../services/common.service';
 import { NgStyle } from '@angular/common';
-import { ActionColorPipe } from '../../pipes/action-color.pipe';
-import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
+import { Component, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
+import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
+import { ActiveSituation, TableCard, TableColorCard, TableColorCardObj } from '../../interfaces/active-situation';
+import { Card } from '../../interfaces/card';
+import { Situation } from '../../interfaces/situation';
+import { Solution } from '../../interfaces/solution';
+import { UserParams } from '../../interfaces/user-params';
+import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
+import { CommonService } from './../../services/common.service';
 
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, ActionColorPipe, DefaultCardsComponent, CardComponent],
+    imports: [NgStyle, SolutionColorPipe, DefaultCardsComponent, CardComponent],
     templateUrl: './training.component.html'
 })
 export class TrainingComponent {
@@ -32,7 +33,7 @@ export class TrainingComponent {
     minutes: number = 0;
     seconds: number = 0;
     private countdownInterval: any;
-    colorList: any[] = [{name: "heart", color: "red"}, {name: "diamond", color: "red"}, {name: "club", color: "black"}, {name: "spade", color: "black"}];
+    colorList: any[] = [{ name: "heart", color: "red" }, { name: "diamond", color: "red" }, { name: "club", color: "black" }, { name: "spade", color: "black" }];
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -57,7 +58,7 @@ export class TrainingComponent {
                 'radial-gradient(rgb(0, 151, 0), black 150%)';
 
             if (userParams.cardStyle === 'contrast') {
-                this.colorList = [{ name: "heart", color: "#d20000"}, {name: "diamond", color: "#3B82F6"}, {name: "club", color: "#009700"}, {name: "spade", color: "black"}];
+                this.colorList = [{ name: "heart", color: "#d20000" }, { name: "diamond", color: "#3B82F6" }, { name: "club", color: "#009700" }, { name: "spade", color: "black" }];
             }
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
@@ -91,13 +92,13 @@ export class TrainingComponent {
         }
     }
 
-    filteredActionList(list: Action[], type: string) {
-        return list.filter(item => item.type === type).reverse();;
+    filteredSolutionLst(solutionLst: Solution[], type: string) {
+        return solutionLst.filter(solution => solution.type === type).reverse();;
     }
 
-    getRandomSituation(array: any[]): any {
-        const randomIndex = Math.floor(Math.random() * array.length);
-        return array[randomIndex];
+    getRandomSituation(situationLst: Situation[]): Situation {
+        const randomIndex = Math.floor(Math.random() * situationLst.length);
+        return situationLst[randomIndex];
     }
 
     generateSituation() {
@@ -106,13 +107,13 @@ export class TrainingComponent {
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations);
         let cards = this.generateCards(situationCase);
-        let result = this.getResultCase(situationCase.action);
+        let result = this.getResultCase(situationCase.solution!);
         this.activeSituation = {
-            nbPlayer: situation.nbPlayer,
+            nbPlayer: situation.nbPlayer!,
             position: situation.position,
-            left_card: cards.left_card,
-            right_card: cards.right_card,
-            actions: situation.actions,
+            leftCard: cards.leftCard,
+            rightCard: cards.rightCard,
+            solutions: situation.solutions,
             result: result,
             stack: situation.stack,
             opponentLevel: situation.opponentLevel,
@@ -130,33 +131,33 @@ export class TrainingComponent {
         } else if (mainPlayerPosition === "sb") {
             if (fishPlayerPosition === "bb") {
                 return "opponent1";
-            } else  {
+            } else {
                 return "opponent2";
             }
         } else {
             if (fishPlayerPosition === "bu") {
                 return "opponent1";
-            } else  {
+            } else {
                 return "opponent2";
             }
         }
     }
 
-    getRandomCase(array: any[][]): any {
+    getRandomCase(array: Card[][]): Card {
         const outerArrayIndex = Math.floor(Math.random() * array.length);
         const innerArray = array[outerArrayIndex];
         const innerArrayIndex = Math.floor(Math.random() * innerArray.length);
         return innerArray[innerArrayIndex];
     }
 
-    getRandomColors(num: number): string[] {
+    getRandomColors(num: number): TableColorCardObj[] {
         // Vérifiez que le numéro de couleurs est valide (supérieur à 0)
         if (num <= 0) {
             throw new Error('Numéro de couleurs non valide');
         }
 
         // Créez un tableau vide pour stocker les couleurs aléatoires
-        const randomColors: string[] = [];
+        const randomColors: TableColorCardObj[] = [];
 
         // Générez des couleurs aléatoires et ajoutez-les au tableau
         for (let i = 0; i < num; i++) {
@@ -172,47 +173,44 @@ export class TrainingComponent {
         return randomColors;
     }
 
-    generateCards(situationCase: any): any {
-        let card = situationCase.card;
-        let card_split = card.split('');
-        let nbColor = 2;
-        if (card_split.length === 3) {
-            if (card_split.at(-1) === 's') {
-                nbColor = 1;
-            }
-        }
-        let colors = this.getRandomColors(nbColor);
-        const leftCardObj = {
-            color: "",
-            value: ""
-        }
-        const rightCardObj = {
-            color: "",
-            value: ""
-        }
+    generateCards(situationCase: Card): TableCard {
+        const card = situationCase.card;
+        const card_split = card.split('');
+        const nbColor = (card_split.length === 3 && card_split.at(-1) === 's') ? 1 : 2;
+        const colors = this.getRandomColors(nbColor);
+
+        const defaultColorCardObj: TableColorCardObj = { name: 'default', color: 'default' };
+
+        const leftCardObj: TableColorCard = {
+            color: defaultColorCardObj,
+            value: card_split[0]
+        };
+
+        const rightCardObj: TableColorCard = {
+            color: defaultColorCardObj,
+            value: card_split[1]
+        };
+
         if (colors.length === 1) {
             leftCardObj.color = colors[0];
-            leftCardObj.value = card_split[0];
             rightCardObj.color = colors[0];
-            rightCardObj.value = card_split[1];
         } else if (colors.length === 2) {
             leftCardObj.color = colors[0];
-            leftCardObj.value = card_split[0];
             rightCardObj.color = colors[1];
-            rightCardObj.value = card_split[1];
         }
+
         return {
-            left_card: leftCardObj,
-            right_card: rightCardObj
-        }
+            leftCard: leftCardObj,
+            rightCard: rightCardObj
+        };
     }
 
-    getResultCase(good_action: string): string[] {
-        let action = this.currentSituation.actions.filter(action => action.id === good_action)[0];
-        if (action.type === "unique") {
-            return [action.id];
+    getResultCase(good_solution: string): string[] {
+        let solution = this.currentSituation.solutions.filter(solution => solution.id === good_solution)[0];
+        if (solution.type === "unique") {
+            return [solution.id];
         } else {
-            return action.colorList!.map(color => color.color);
+            return solution.colorList!.map(color => color.color);
         }
     }
 

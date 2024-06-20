@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { Action } from '../interfaces/action';
-import { Situation } from '../interfaces/situation';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Situation } from '../interfaces/situation';
+import { Solution } from '../interfaces/solution';
 
 @Injectable({
     providedIn: 'root'
@@ -25,58 +25,57 @@ export class CommonService {
         position: "sb",
         opponentLevel: "fish",
         fishPosition: undefined,
-        actions: [
+        solutions: [
             {
-                id: "unique_action_0",
+                id: "unique_solution_0",
                 type: "unique",
                 display_name: "All In",
                 color: "#d80c05"
             },
             {
-                id: "unique_action_1",
+                id: "unique_solution_1",
                 type: "unique",
                 display_name: "Call",
                 color: "#00aeff"
             },
             {
-                id: "unique_action_2",
+                id: "unique_solution_2",
                 type: "unique",
                 display_name: "Check",
                 color: "#96c582"
             }
         ],
         situations: [
-            [{ "card": "AA", "action": undefined }, { "card": "AKs", "action": undefined }, { "card": "AQs", "action": undefined }, { "card": "AJs", "action": undefined }, { "card": "ATs", "action": undefined }, { "card": "A9s", "action": undefined }, { "card": "A8s", "action": undefined }, { "card": "A7s", "action": undefined }, { "card": "A6s", "action": undefined }, { "card": "A5s", "action": undefined }, { "card": "A4s", "action": undefined }, { "card": "A3s", "action": undefined }, { "card": "A2s", "action": undefined }],
-            [{ "card": "AKo", "action": undefined }, { "card": "KK", "action": undefined }, { "card": "KQs", "action": undefined }, { "card": "KJs", "action": undefined }, { "card": "KTs", "action": undefined }, { "card": "K9s", "action": undefined }, { "card": "K8s", "action": undefined }, { "card": "K7s", "action": undefined }, { "card": "K6s", "action": undefined }, { "card": "K5s", "action": undefined }, { "card": "K4s", "action": undefined }, { "card": "K3s", "action": undefined }, { "card": "K2s", "action": undefined }],
-            [{ "card": "AQo", "action": undefined }, { "card": "KQo", "action": undefined }, { "card": "QQ", "action": undefined }, { "card": "QJs", "action": undefined }, { "card": "QTs", "action": undefined }, { "card": "Q9s", "action": undefined }, { "card": "Q8s", "action": undefined }, { "card": "Q7s", "action": undefined }, { "card": "Q6s", "action": undefined }, { "card": "Q5s", "action": undefined }, { "card": "Q4s", "action": undefined }, { "card": "Q3s", "action": undefined }, { "card": "Q2s", "action": undefined }],
-            [{ "card": "AJo", "action": undefined }, { "card": "KJo", "action": undefined }, { "card": "QJo", "action": undefined }, { "card": "JJ", "action": undefined }, { "card": "JTs", "action": undefined }, { "card": "J9s", "action": undefined }, { "card": "J8s", "action": undefined }, { "card": "J7s", "action": undefined }, { "card": "J6s", "action": undefined }, { "card": "J5s", "action": undefined }, { "card": "J4s", "action": undefined }, { "card": "J3s", "action": undefined }, { "card": "J2s", "action": undefined }],
-            [{ "card": "ATo", "action": undefined }, { "card": "KTo", "action": undefined }, { "card": "QTo", "action": undefined }, { "card": "JTo", "action": undefined }, { "card": "TT", "action": undefined }, { "card": "T9s", "action": undefined }, { "card": "T8s", "action": undefined }, { "card": "T7s", "action": undefined }, { "card": "T6s", "action": undefined }, { "card": "T5s", "action": undefined }, { "card": "T4s", "action": undefined }, { "card": "T3s", "action": undefined }, { "card": "T2s", "action": undefined }],
-            [{ "card": "A9o", "action": undefined }, { "card": "K9o", "action": undefined }, { "card": "Q9o", "action": undefined }, { "card": "J9o", "action": undefined }, { "card": "T9o", "action": undefined }, { "card": "99", "action": undefined }, { "card": "98s", "action": undefined }, { "card": "97s", "action": undefined }, { "card": "96s", "action": undefined }, { "card": "95s", "action": undefined }, { "card": "94s", "action": undefined }, { "card": "93s", "action": undefined }, { "card": "92s", "action": undefined }],
-            [{ "card": "A8o", "action": undefined }, { "card": "K8o", "action": undefined }, { "card": "Q8o", "action": undefined }, { "card": "J8o", "action": undefined }, { "card": "T8o", "action": undefined }, { "card": "98o", "action": undefined }, { "card": "88", "action": undefined }, { "card": "87s", "action": undefined }, { "card": "86s", "action": undefined }, { "card": "85s", "action": undefined }, { "card": "84s", "action": undefined }, { "card": "83s", "action": undefined }, { "card": "82s", "action": undefined }],
-            [{ "card": "A7o", "action": undefined }, { "card": "K7o", "action": undefined }, { "card": "Q7o", "action": undefined }, { "card": "J7o", "action": undefined }, { "card": "T7o", "action": undefined }, { "card": "97o", "action": undefined }, { "card": "87o", "action": undefined }, { "card": "77", "action": undefined }, { "card": "76s", "action": undefined }, { "card": "75s", "action": undefined }, { "card": "74s", "action": undefined }, { "card": "73s", "action": undefined }, { "card": "72s", "action": undefined }],
-            [{ "card": "A6o", "action": undefined }, { "card": "K6o", "action": undefined }, { "card": "Q6o", "action": undefined }, { "card": "J6o", "action": undefined }, { "card": "T6o", "action": undefined }, { "card": "96o", "action": undefined }, { "card": "86o", "action": undefined }, { "card": "76o", "action": undefined }, { "card": "66", "action": undefined }, { "card": "65s", "action": undefined }, { "card": "64s", "action": undefined }, { "card": "63s", "action": undefined }, { "card": "62s", "action": undefined }],
-            [{ "card": "A5o", "action": undefined }, { "card": "K5o", "action": undefined }, { "card": "Q5o", "action": undefined }, { "card": "J5o", "action": undefined }, { "card": "T5o", "action": undefined }, { "card": "95o", "action": undefined }, { "card": "85o", "action": undefined }, { "card": "75o", "action": undefined }, { "card": "65o", "action": undefined }, { "card": "55", "action": undefined }, { "card": "54s", "action": undefined }, { "card": "53s", "action": undefined }, { "card": "52s", "action": undefined }],
-            [{ "card": "A4o", "action": undefined }, { "card": "K4o", "action": undefined }, { "card": "Q4o", "action": undefined }, { "card": "J4o", "action": undefined }, { "card": "T4o", "action": undefined }, { "card": "94o", "action": undefined }, { "card": "84o", "action": undefined }, { "card": "74o", "action": undefined }, { "card": "64o", "action": undefined }, { "card": "54o", "action": undefined }, { "card": "44", "action": undefined }, { "card": "43s", "action": undefined }, { "card": "42s", "action": undefined }],
-            [{ "card": "A3o", "action": undefined }, { "card": "K3o", "action": undefined }, { "card": "Q3o", "action": undefined }, { "card": "J3o", "action": undefined }, { "card": "T3o", "action": undefined }, { "card": "93o", "action": undefined }, { "card": "83o", "action": undefined }, { "card": "73o", "action": undefined }, { "card": "63o", "action": undefined }, { "card": "53o", "action": undefined }, { "card": "43o", "action": undefined }, { "card": "33", "action": undefined }, { "card": "32s", "action": undefined }],
-            [{ "card": "A2o", "action": undefined }, { "card": "K2o", "action": undefined }, { "card": "Q2o", "action": undefined }, { "card": "J2o", "action": undefined }, { "card": "T2o", "action": undefined }, { "card": "92o", "action": undefined }, { "card": "82o", "action": undefined }, { "card": "72o", "action": undefined }, { "card": "62o", "action": undefined }, { "card": "52o", "action": undefined }, { "card": "42o", "action": undefined }, { "card": "32o", "action": undefined }, { "card": "22", "action": undefined }]
+            [{ card: "AA", solution: undefined }, { card: "AKs", solution: undefined }, { card: "AQs", solution: undefined }, { card: "AJs", solution: undefined }, { card: "ATs", solution: undefined }, { card: "A9s", solution: undefined }, { card: "A8s", solution: undefined }, { card: "A7s", solution: undefined }, { card: "A6s", solution: undefined }, { card: "A5s", solution: undefined }, { card: "A4s", solution: undefined }, { card: "A3s", solution: undefined }, { card: "A2s", solution: undefined }],
+            [{ card: "AKo", solution: undefined }, { card: "KK", solution: undefined }, { card: "KQs", solution: undefined }, { card: "KJs", solution: undefined }, { card: "KTs", solution: undefined }, { card: "K9s", solution: undefined }, { card: "K8s", solution: undefined }, { card: "K7s", solution: undefined }, { card: "K6s", solution: undefined }, { card: "K5s", solution: undefined }, { card: "K4s", solution: undefined }, { card: "K3s", solution: undefined }, { card: "K2s", solution: undefined }],
+            [{ card: "AQo", solution: undefined }, { card: "KQo", solution: undefined }, { card: "QQ", solution: undefined }, { card: "QJs", solution: undefined }, { card: "QTs", solution: undefined }, { card: "Q9s", solution: undefined }, { card: "Q8s", solution: undefined }, { card: "Q7s", solution: undefined }, { card: "Q6s", solution: undefined }, { card: "Q5s", solution: undefined }, { card: "Q4s", solution: undefined }, { card: "Q3s", solution: undefined }, { card: "Q2s", solution: undefined }],
+            [{ card: "AJo", solution: undefined }, { card: "KJo", solution: undefined }, { card: "QJo", solution: undefined }, { card: "JJ", solution: undefined }, { card: "JTs", solution: undefined }, { card: "J9s", solution: undefined }, { card: "J8s", solution: undefined }, { card: "J7s", solution: undefined }, { card: "J6s", solution: undefined }, { card: "J5s", solution: undefined }, { card: "J4s", solution: undefined }, { card: "J3s", solution: undefined }, { card: "J2s", solution: undefined }],
+            [{ card: "ATo", solution: undefined }, { card: "KTo", solution: undefined }, { card: "QTo", solution: undefined }, { card: "JTo", solution: undefined }, { card: "TT", solution: undefined }, { card: "T9s", solution: undefined }, { card: "T8s", solution: undefined }, { card: "T7s", solution: undefined }, { card: "T6s", solution: undefined }, { card: "T5s", solution: undefined }, { card: "T4s", solution: undefined }, { card: "T3s", solution: undefined }, { card: "T2s", solution: undefined }],
+            [{ card: "A9o", solution: undefined }, { card: "K9o", solution: undefined }, { card: "Q9o", solution: undefined }, { card: "J9o", solution: undefined }, { card: "T9o", solution: undefined }, { card: "99", solution: undefined }, { card: "98s", solution: undefined }, { card: "97s", solution: undefined }, { card: "96s", solution: undefined }, { card: "95s", solution: undefined }, { card: "94s", solution: undefined }, { card: "93s", solution: undefined }, { card: "92s", solution: undefined }],
+            [{ card: "A8o", solution: undefined }, { card: "K8o", solution: undefined }, { card: "Q8o", solution: undefined }, { card: "J8o", solution: undefined }, { card: "T8o", solution: undefined }, { card: "98o", solution: undefined }, { card: "88", solution: undefined }, { card: "87s", solution: undefined }, { card: "86s", solution: undefined }, { card: "85s", solution: undefined }, { card: "84s", solution: undefined }, { card: "83s", solution: undefined }, { card: "82s", solution: undefined }],
+            [{ card: "A7o", solution: undefined }, { card: "K7o", solution: undefined }, { card: "Q7o", solution: undefined }, { card: "J7o", solution: undefined }, { card: "T7o", solution: undefined }, { card: "97o", solution: undefined }, { card: "87o", solution: undefined }, { card: "77", solution: undefined }, { card: "76s", solution: undefined }, { card: "75s", solution: undefined }, { card: "74s", solution: undefined }, { card: "73s", solution: undefined }, { card: "72s", solution: undefined }],
+            [{ card: "A6o", solution: undefined }, { card: "K6o", solution: undefined }, { card: "Q6o", solution: undefined }, { card: "J6o", solution: undefined }, { card: "T6o", solution: undefined }, { card: "96o", solution: undefined }, { card: "86o", solution: undefined }, { card: "76o", solution: undefined }, { card: "66", solution: undefined }, { card: "65s", solution: undefined }, { card: "64s", solution: undefined }, { card: "63s", solution: undefined }, { card: "62s", solution: undefined }],
+            [{ card: "A5o", solution: undefined }, { card: "K5o", solution: undefined }, { card: "Q5o", solution: undefined }, { card: "J5o", solution: undefined }, { card: "T5o", solution: undefined }, { card: "95o", solution: undefined }, { card: "85o", solution: undefined }, { card: "75o", solution: undefined }, { card: "65o", solution: undefined }, { card: "55", solution: undefined }, { card: "54s", solution: undefined }, { card: "53s", solution: undefined }, { card: "52s", solution: undefined }],
+            [{ card: "A4o", solution: undefined }, { card: "K4o", solution: undefined }, { card: "Q4o", solution: undefined }, { card: "J4o", solution: undefined }, { card: "T4o", solution: undefined }, { card: "94o", solution: undefined }, { card: "84o", solution: undefined }, { card: "74o", solution: undefined }, { card: "64o", solution: undefined }, { card: "54o", solution: undefined }, { card: "44", solution: undefined }, { card: "43s", solution: undefined }, { card: "42s", solution: undefined }],
+            [{ card: "A3o", solution: undefined }, { card: "K3o", solution: undefined }, { card: "Q3o", solution: undefined }, { card: "J3o", solution: undefined }, { card: "T3o", solution: undefined }, { card: "93o", solution: undefined }, { card: "83o", solution: undefined }, { card: "73o", solution: undefined }, { card: "63o", solution: undefined }, { card: "53o", solution: undefined }, { card: "43o", solution: undefined }, { card: "33", solution: undefined }, { card: "32s", solution: undefined }],
+            [{ card: "A2o", solution: undefined }, { card: "K2o", solution: undefined }, { card: "Q2o", solution: undefined }, { card: "J2o", solution: undefined }, { card: "T2o", solution: undefined }, { card: "92o", solution: undefined }, { card: "82o", solution: undefined }, { card: "72o", solution: undefined }, { card: "62o", solution: undefined }, { card: "52o", solution: undefined }, { card: "42o", solution: undefined }, { card: "32o", solution: undefined }, { card: "22", solution: undefined }]
         ]
     }
 
     /**
-     * Crée un dégradé linéaire pour l'arrière-plan d'une cellule
-     * en fonction du type d'action (unique ou mixte) et des couleurs associées.
-     * @param action L'action pour laquelle l'arrière-plan est généré.
-     * @param actionSituations La liste des actions pour récupérer les couleurs associées.
+     * Crée un dégradé linéaire pour l'arrière-plan d'une cellule en fonction du type de solution (unique ou mixte) et des couleurs associées.
+     * @param solution La solution pour laquelle l'arrière-plan est généré.
+     * @param solutionLst La liste des solutions pour récupérer les couleurs associées.
      * @returns La chaîne CSS représentant le dégradé de l'arrière-plan de la cellule.
      */
-    cellBackground(action: Action, actionSituations: Action[]) {
-        if (action.type === "unique") {
-            return `linear-gradient(to right, ${action.color} 0%, ${action.color} 100%)`;
-        } else if (action.type === "mixed") {
+    cellBackground(solution: Solution, solutionLst: Solution[]) {
+        if (solution.type === "unique") {
+            return `linear-gradient(to right, ${solution.color} 0%, ${solution.color} 100%)`;
+        } else if (solution.type === "mixed") {
             let gradient = "linear-gradient(to right";
             let total = 0;
-            action.colorList!.map((d: any) => {
-                let goodColor = actionSituations.filter(action => action.id === d.color)[0];
+            solution.colorList!.map((d: any) => {
+                let goodColor = solutionLst.filter(solutionItem => solutionItem.id === d.color)[0];
                 total += d.percent;
                 gradient += `, ${goodColor.color} ${total - d.percent}%, ${goodColor.color} ${total}%`
             });

@@ -127,15 +127,15 @@
                         </div>
                         <div class="w-1/2 flex items-center justify-center select-none">
                             <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
-                                <card [cardColor]="activeSituation.left_card.color.color"
-                                    [cardColorName]="activeSituation.left_card.color.name"
-                                    [cardValue]="activeSituation.left_card.value"></card>
+                                <card [cardColor]="activeSituation.leftCard.color.color"
+                                    [cardColorName]="activeSituation.leftCard.color.name"
+                                    [cardValue]="activeSituation.leftCard.value"></card>
                             </div>
                             <div
                                 class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
-                                <card [cardColor]="activeSituation.right_card.color.color"
-                                    [cardColorName]="activeSituation.right_card.color.name"
-                                    [cardValue]="activeSituation.right_card.value"></card>
+                                <card [cardColor]="activeSituation.rightCard.color.color"
+                                    [cardColorName]="activeSituation.rightCard.color.name"
+                                    [cardValue]="activeSituation.rightCard.value"></card>
                             </div>
                         </div>
                     </div>
@@ -145,11 +145,11 @@
             <!-- Div des boutons de réponses -->
             <div
                 class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
-                @for (action of filteredActionList(activeSituation.actions, 'unique'); track $index) {
-                    @if (action.display_name) {
+                @for (solution of filteredSolutionLst(activeSituation.solutions, 'unique'); track $index) {
+                    @if (solution.display_name) {
                         <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
-                            [id]="'button_' + action.id" (click)="checkResultCase(action.id)">
-                            {{action.display_name}}
+                            [id]="'button_' + solution.id" (click)="checkResultCase(solution.id)">
+                            {{solution.display_name}}
                         </div>
                     }
                 }
@@ -178,7 +178,7 @@
                             <tr class="table-row animate-appear opacity-0">
                                 @for (item of row; track $index) {
                                 <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
-                                    [style.background]="(item.action! | actionColor:currentSituation.actions)">
+                                    [style.background]="(item.solution! | solutionColor:currentSituation.solutions)">
                                     {{item.card}}
                                 </td>
                                 }
@@ -192,13 +192,13 @@
                         class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                         Solutions
                     </h4>
-                    @for (action of activeSituation.actions; track i; let i = $index) {
-                        @if (action.display_name) {
+                    @for (solution of activeSituation.solutions; track i; let i = $index) {
+                        @if (solution.display_name) {
                             <div
                                 class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
-                                {{action.display_name}}
+                                {{solution.display_name}}
                                 <div class="h-7 w-7 ml-2 rounded shadow-md"
-                                    [ngStyle]="{'background': (action.id | actionColor:activeSituation.actions)}"></div>
+                                    [ngStyle]="{'background': (solution.id | solutionColor:activeSituation.solutions)}"></div>
                             </div>
                         }
                     }
@@ -209,15 +209,15 @@
                         </h4>
                         <div class="flex items-center justify-center select-none">
                             <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none">
-                                <card [cardColor]="activeSituation.left_card.color.color"
-                                    [cardColorName]="activeSituation.left_card.color.name"
-                                    [cardValue]="activeSituation.left_card.value"></card>
+                                <card [cardColor]="activeSituation.leftCard.color.color"
+                                    [cardColorName]="activeSituation.leftCard.color.name"
+                                    [cardValue]="activeSituation.leftCard.value"></card>
                             </div>
                             <div
                                 class="relative bg-white h-20 w-14 border border-gray-800 dark:border-l dark:border-l-gray-800 dark:border-t-0 dark:border-r-0 dark:border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
-                                <card [cardColor]="activeSituation.right_card.color.color"
-                                    [cardColorName]="activeSituation.right_card.color.name"
-                                    [cardValue]="activeSituation.right_card.value">
+                                <card [cardColor]="activeSituation.rightCard.color.color"
+                                    [cardColorName]="activeSituation.rightCard.color.name"
+                                    [cardValue]="activeSituation.rightCard.value">
                                 </card>
                             </div>
                         </div>

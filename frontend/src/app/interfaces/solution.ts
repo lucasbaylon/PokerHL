@@ -1,4 +1,4 @@
-export interface Action {
+export interface Solution {
     id: string;
 
     type: string;

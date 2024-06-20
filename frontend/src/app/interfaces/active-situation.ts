@@ -1,13 +1,18 @@
-import { Action } from "./action";
+import { Solution } from "./solution";
 
-interface ColorCard {
+export interface TableColorCardObj {
     name: string;
     color: string;
 }
 
-interface Card {
-    color: ColorCard;
+export interface TableColorCard {
+    color: TableColorCardObj;
     value: string;
+}
+
+export interface TableCard {
+    leftCard: TableColorCard;
+    rightCard: TableColorCard;
 }
 
 export interface ActiveSituation {
@@ -15,11 +20,11 @@ export interface ActiveSituation {
 
     position?: string;
 
-    left_card: Card;
+    leftCard: TableColorCard;
 
-    right_card: Card;
+    rightCard: TableColorCard;
 
-    actions: Action[];
+    solutions: Solution[];
 
     result: string[];
 
