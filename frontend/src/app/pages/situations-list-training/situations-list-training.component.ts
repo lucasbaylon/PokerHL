@@ -1,15 +1,15 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
-import { SituationService } from '../../services/situation.service';
+import { Component, HostListener } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Situation } from '../../interfaces/situation';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
+import { Situation } from '../../interfaces/situation';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
-import { CommonService } from '../../services/common.service';
 import { TypePipe } from '../../pipes/type.pipe';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { FormsModule } from '@angular/forms';
+import { CommonService } from '../../services/common.service';
+import { SituationService } from '../../services/situation.service';
 
 @Component({
     selector: 'app-situations-list-training',
@@ -28,9 +28,9 @@ export class SituationsListTrainingComponent {
     nbRowsPerPage = 11;
 
     opponentLevelLst = [
-        { name: 'Débutant', value: "fish" },
-        { name: 'Confirmé', value: "shark" },
-        { name: 'Débutant/Confirmé', value: "fish_shark" }
+        { name: 'Fish', value: "fish" },
+        { name: 'Reg', value: "shark" },
+        { name: 'Fish/Reg', value: "fish_shark" }
     ];
 
     typeLst = [

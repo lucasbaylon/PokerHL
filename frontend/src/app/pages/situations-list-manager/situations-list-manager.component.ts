@@ -1,16 +1,16 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
-import { Situation } from '../../interfaces/situation';
+import { Component, HostListener } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SituationService } from '../../services/situation.service';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TableModule } from 'primeng/table';
+import Swal from 'sweetalert2';
+import { Situation } from '../../interfaces/situation';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
-import { TableModule } from 'primeng/table';
-import { CommonService } from './../../services/common.service';
-import { MultiSelectModule } from 'primeng/multiselect';
-import Swal from 'sweetalert2';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
-import { FormsModule } from '@angular/forms';
+import { SituationService } from '../../services/situation.service';
+import { CommonService } from './../../services/common.service';
 
 @Component({
     selector: 'app-situations-list-manager',
@@ -25,9 +25,9 @@ export class SituationsListManagerComponent {
     nbRowsPerPage = 11;
 
     opponentLevelLst = [
-        { name: 'Débutant', value: "fish" },
-        { name: 'Confirmé', value: "shark" },
-        { name: 'Débutant/Confirmé', value: "fish_shark" }
+        { name: 'Fish', value: "fish" },
+        { name: 'Reg', value: "shark" },
+        { name: 'Fish/Reg', value: "fish_shark" }
     ];
 
     typeLst = [

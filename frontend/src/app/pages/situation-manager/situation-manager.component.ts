@@ -64,8 +64,8 @@ export class SituationManagerComponent {
     ];
 
     allOpponentLevels: any[] = [
-        { name: 'Débutant', code: 'fish' },
-        { name: 'Confirmé', code: 'shark' },
+        { name: 'Fish', code: 'fish' },
+        { name: 'Reg', code: 'shark' },
         { name: 'Mixte', code: 'fish_shark' }
     ];
 

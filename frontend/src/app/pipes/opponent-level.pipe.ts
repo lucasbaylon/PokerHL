@@ -8,11 +8,11 @@ export class OpponentLevelPipe implements PipeTransform {
 
     transform(value: string): string | undefined {
         if (value === "fish") {
-            return "Débutant"
+            return "Fish"
         } else if (value === "shark") {
-            return "Confirmé"
+            return "Reg"
         } else if (value === "fish_shark") {
-            return "Débutant/Confirmé"
+            return "Fish/Reg"
         }
         return undefined;
     }
