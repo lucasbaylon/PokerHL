@@ -36,27 +36,28 @@
             </h4>
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="flex items-center w-full my-1.5">
-                    <div
-                        class="relative w-24 h-24 rounded-full hover:cursor-pointer overflow-hidden group transition-opacity duration-300" (click)="avatarInput.click()">
-                        <!-- <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-                            class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" /> -->
+                    <div class="relative w-24 h-24 rounded-full hover:cursor-pointer overflow-hidden group transition-all duration-300"
+                        (click)="avatarInput.click()">
                         @if (authService.getUserAvatar()) {
-                            <img [src]="authService.getUserAvatar()" class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" />
+                        <img [src]="authService.getUserAvatar()"
+                            class="w-full h-full object-cover transition-all duration-300" />
                         } @else {
-                            <img src="https://imgs.search.brave.com/6Abd5TBbHIoBHK1py-tGSUv7eRH_hf3KVb5Px1DBNMs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA4LzIzLzkxLzU1/LzM2MF9GXzgyMzkx/NTUzM19PalFLUGtD/TTNzaGRxRmdwWjVz/d01LV3U1cHhnMzls/VS5qcGc" class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" />
+                        <img src="https://imgs.search.brave.com/6Abd5TBbHIoBHK1py-tGSUv7eRH_hf3KVb5Px1DBNMs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA4LzIzLzkxLzU1/LzM2MF9GXzgyMzkx/NTUzM19PalFLUGtD/TTNzaGRxRmdwWjVz/d01LV3U1cHhnMzls/VS5qcGc"
+                            class="w-full h-full object-cover transition-all duration-300" />
                         }
                         <input type="file" #avatarInput (change)="onChangeAvatar($event)" class="hidden">
                         <div
-                            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <i class="fas fa-pencil-alt text-white text-3xl"></i>
+                            class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300">
+                            <i
+                                class="fas fa-pencil-alt text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                         </div>
                     </div>
                     <div class="ml-4">
                         <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
                             @if (authService.getUserDisplayName()) {
-                                {{ authService.getUserDisplayName() }}
+                            {{ authService.getUserDisplayName() }}
                             } @else {
-                                Nom d'utilisateur
+                            Nom d'utilisateur
                             }
                         </p>
                     </div>
@@ -172,13 +173,13 @@
                 class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
         </form>
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Modification de votre nom d'utilisateur
+            Modification du nom d'utilisateur
         </h4>
-        <input class="my-2 w-full" type="text" placeholder="Entrez votre nouveau nom d'utilisateur" name="newUserName" id='newUserName'
-            autocomplete="off" pInputText [(ngModel)]="newUserName" [maxlength]="16" />
+        <input class="my-2 w-full" type="text" placeholder="Entrez votre nouveau nom d'utilisateur" name="newUserName"
+            id='newUserName' autocomplete="off" pInputText [(ngModel)]="newUserName" [maxlength]="16" />
         <div class="flex justify-center items-center mt-5">
-            <div
-                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer" (click)="changeUserName()">
+            <div class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer"
+                (click)="changeUserName()">
                 <i class="fa-solid fa-save mr-4 h-4 w-5"></i>
                 Enregistrer
             </div>

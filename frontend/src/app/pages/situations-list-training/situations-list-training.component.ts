@@ -66,7 +66,12 @@ export class SituationsListTrainingComponent {
 
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
-            this.situationList = data;
+            this.situationList = data.sort((a: Situation, b: Situation) => {
+                if (a.name && b.name) {
+                    return a.name.localeCompare(b.name);
+                }
+                return 0; // Si l'un des noms est undefined, ils restent dans leur position actuelle
+            });
         });
 
         this.apiSituation.getSituations();
