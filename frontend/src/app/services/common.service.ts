@@ -10,6 +10,7 @@ import { Solution } from '../interfaces/solution';
 export class CommonService {
 
     private showParticules = signal<boolean>(false);
+    private darkMode = signal<boolean>(false);
 
     constructor(
         private router: Router
@@ -169,6 +170,22 @@ export class CommonService {
      */
     setShowParticule(value: boolean) {
         this.showParticules.set(value);
+    }
+    
+    /**
+     * Renvoie l'état actuel du dark mode.
+     * @returns {boolean} L'état actuel du dark mode.
+     */
+    getDarkMode() {
+        return this.darkMode();
+    }
+
+    /**
+     * Met à jour l'état du dark mode.
+     * @param value La nouvelle valeur du dark mode.
+     */
+    setDarkMode(value: boolean) {
+        this.darkMode.set(value);
     }
 
 }

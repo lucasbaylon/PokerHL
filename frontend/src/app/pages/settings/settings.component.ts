@@ -63,6 +63,7 @@ export class SettingsComponent {
         const htmlElement = document.documentElement;
         this.darkMode ? htmlElement.classList.add('dark') : htmlElement.classList.remove('dark');
         localStorage.setItem('theme', this.darkMode ? "dark" : "light");
+        this.commonService.setDarkMode(this.darkMode);
     }
 
     /**

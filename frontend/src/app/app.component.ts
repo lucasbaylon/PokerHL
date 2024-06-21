@@ -27,7 +27,7 @@ export class AppComponent {
         fpsLimit: 120,
         particles: {
             color: {
-                value: "#ffffff",
+                value: this.commonService.getDarkMode() ? "#ffffff" : "#303030",
             },
             links: {
                 color: "#ffffff",
@@ -96,6 +96,8 @@ export class AppComponent {
             theme = 'light';
         }
         if (theme === 'dark') document.documentElement.classList.add(theme);
+        this.particlesOptions.particles.color.value = theme === 'dark' ? "#ffffff" : "#303030";
+        this.particlesOptions.particles.links.color = theme === 'dark' ? "#ffffff" : "#303030";
 
         this.ngParticlesService.init(async (engine) => {
             await loadSlim(engine);
