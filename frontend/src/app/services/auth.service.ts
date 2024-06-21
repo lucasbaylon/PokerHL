@@ -123,17 +123,17 @@ export class AuthService {
     }
 
     uploadAvatar(file: File) {
+        const fileName = `avatar/${this.getUserEmail() as string}`
         try {
-            this.removeAvatar(this.getUserEmail() as string);
+            this.removeAvatar(fileName);
         } catch(e) {
             console.error(e);
         }
-        const storageRef = ref(this.storage, this.getUserEmail() as string);
+        const storageRef = ref(this.storage, fileName);
         uploadBytesResumable(storageRef, file).then(async (res) => {
             const url = await getDownloadURL(res.ref);
             this.setUserAvatar(url);
         });
-        
     }
 
     sendPasswordResetEmail(email: string) {
