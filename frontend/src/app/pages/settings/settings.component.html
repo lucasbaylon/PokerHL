@@ -24,7 +24,8 @@
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Désactiver les particules
                 </div>
-                <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="showParticules" (onChange)="toggleShowParticules()"></p-inputSwitch>
+                <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="showParticules"
+                    (onChange)="toggleShowParticules()"></p-inputSwitch>
             </div>
         </div>
         <div
@@ -101,6 +102,27 @@
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider transition-colors duration-500">
                 Compte</h4>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="flex items-center w-full">
+                    <div
+                        class="relative w-24 h-24 rounded-full hover:cursor-pointer overflow-hidden group transition-opacity duration-300">
+                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                            class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" />
+                        <div
+                            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i class="fas fa-pencil-alt text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">Nom d'utilisateur</p>
+                    </div>
+                </div>
+                <div
+                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
+                    <i class="fa-solid fa-pencil-alt mr-4 h-4 w-4"></i>
+                    Modification
+                </div>
+            </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
