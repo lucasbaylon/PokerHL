@@ -52,7 +52,13 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">Nom d'utilisateur</p>
+                        <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
+                            @if (authService.getUserDisplayName()) {
+                                {{ authService.getUserDisplayName() }}
+                            } @else {
+                                Nom d'utilisateur
+                            }
+                        </p>
                     </div>
                 </div>
                 <div (click)="this.commonService.showModal('change-user-name')"
@@ -169,10 +175,10 @@
             Modification de votre nom d'utilisateur
         </h4>
         <input class="my-2 w-full" type="text" placeholder="Entrez votre nouveau nom d'utilisateur" name="newUserName" id='newUserName'
-            autocomplete="off" pInputText />
+            autocomplete="off" pInputText [(ngModel)]="newUserName" [maxlength]="16" />
         <div class="flex justify-center items-center mt-5">
             <div
-                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer" (click)="changeUserName()">
                 <i class="fa-solid fa-save mr-4 h-4 w-5"></i>
                 Enregistrer
             </div>

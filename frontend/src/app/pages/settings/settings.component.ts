@@ -28,6 +28,8 @@ export class SettingsComponent {
     highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
 
+    newUserName: string = '';
+
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
         { name: 'Contraste', code: 'contrast' },
@@ -175,5 +177,10 @@ export class SettingsComponent {
     onClickFileExport() {
         this.apiSituation.exportSituationsForUser();
         this.commonService.showSwalToast(`Situations exportées !`);
+    }
+
+    changeUserName(){
+        this.authService.setUserDisplayName(this.newUserName);
+        this.commonService.closeModal("change-user-name");
     }
 }
