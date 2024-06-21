@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 
 @Component({
@@ -12,6 +13,7 @@ export class SidebarComponent {
 
     constructor(
         protected commonService: CommonService,
+        protected authService: AuthService
     ) { }
 
     /**

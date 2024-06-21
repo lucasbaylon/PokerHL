@@ -57,23 +57,6 @@
         @apply bg-gray-100;
     }
 
-    //Paginator primeNG
-    .p-paginator {
-        @apply rounded-b-md rounded-t-none dark:bg-secondary-dark-bg border-none;
-    }
-
-    .p-paginator .p-ripple {
-        @apply text-gray-800 dark:text-gray-300 min-w-10 max-h-10;
-    }
-
-    .p-paginator .p-ripple.p-highlight {
-        @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10;
-    }
-
-    .p-paginator .p-ripple:hover {
-        @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10 transition-colors duration-300;
-    }
-
     //Slider
     .custom-slider .ngx-slider .ngx-slider-bar {
         @apply bg-gray-200 dark:bg-white;
@@ -141,4 +124,21 @@
     .p-checkbox.p-hidden-accessible {
         @apply hidden;
     }
+}
+
+//Paginator primeNG
+.p-paginator {
+    @apply rounded-b-md rounded-t-none dark:bg-secondary-dark-bg border-none;
+}
+
+.p-paginator .p-ripple {
+    @apply text-gray-800 dark:text-gray-300 min-w-10 max-h-10;
+}
+
+.p-paginator .p-ripple.p-highlight {
+    @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10;
+}
+
+.p-paginator .p-ripple:hover {
+    @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10 transition-colors duration-300;
 }

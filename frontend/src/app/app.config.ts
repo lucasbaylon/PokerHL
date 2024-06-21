@@ -1,15 +1,16 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getStorage, provideStorage } from '@angular/fire/storage';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
+import { routes } from './app.routes';
 import { appInterceptor } from './interceptors/app.interceptor';
 
 const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
             messagingSenderId: "812892987669",
             appId: "1:812892987669:web:911a0142ec81c1429b091c"
         })),
+        provideStorage(() => getStorage()),
         provideAuth(() => getAuth()),
         importProvidersFrom(SocketIoModule.forRoot(config)),
     ]

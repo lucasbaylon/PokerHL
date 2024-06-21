@@ -48,16 +48,25 @@
     <div class="absolute bottom-0 flex items-center p-4">
         <div class="dui-avatar">
             <div class="w-12 rounded-full shadow-lg">
-                <img
-                    src="https://imgs.search.brave.com/6Abd5TBbHIoBHK1py-tGSUv7eRH_hf3KVb5Px1DBNMs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA4LzIzLzkxLzU1/LzM2MF9GXzgyMzkx/NTUzM19PalFLUGtD/TTNzaGRxRmdwWjVz/d01LV3U1cHhnMzls/VS5qcGc" />
+                @if (authService.getUserAvatar()) {
+                    <img [src]="authService.getUserAvatar()" />
+                } @else {
+                    <img src="https://imgs.search.brave.com/6Abd5TBbHIoBHK1py-tGSUv7eRH_hf3KVb5Px1DBNMs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA4LzIzLzkxLzU1/LzM2MF9GXzgyMzkx/NTUzM19PalFLUGtD/TTNzaGRxRmdwWjVz/d01LV3U1cHhnMzls/VS5qcGc" />
+                }
             </div>
         </div>
         <div [ngClass]="{ 'whitespace-nowrap overflow-hidden': commonService.isCollapsed }" class="ml-4">
-            <p class="font-semibold text-gray-800 dark:text-gray-300 transition-all duration-500 m-0 mb-1">Joueur
+            <p class="font-semibold text-gray-800 dark:text-gray-300 transition-all duration-500 m-0 mb-1">
+                @if (authService.getUserDisplayName()) {
+                    {{ authService.getUserDisplayName() }}
+                } @else {
+                    Joueur
+                }
             </p>
             <div (click)="commonService.redirectTo('settings')"
                 class="hover:underline text-gray-800 dark:text-gray-300 cursor-pointer transition-all duration-500">
-                Gérer le compte</div>
+                Gérer le compte
+            </div>
         </div>
     </div>
 </div>

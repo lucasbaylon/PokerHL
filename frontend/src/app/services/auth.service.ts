@@ -1,15 +1,18 @@
 import { inject, Injectable } from '@angular/core';
+import { Auth, authState, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, updateProfile, User, UserCredential } from '@angular/fire/auth';
+import { deleteObject, getDownloadURL, ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword, UserCredential } from '@angular/fire/auth';
-import { CommonService } from './../services/common.service';
 import { UserParams } from '../interfaces/user-params';
+import { CommonService } from './../services/common.service';
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
+    private readonly storage: Storage = inject(Storage);
     private auth: Auth = inject(Auth);
     authState$ = authState(this.auth);
     authStateSubscription: Subscription;
@@ -86,6 +89,51 @@ export class AuthService {
 
     getUser(): User | null {
         return this.userSubject.value;
+    }
+
+    getUserDisplayName(): string | null | undefined {
+        return this.userSubject.value?.displayName;
+    }
+
+    getUserEmail(): string | null | undefined {
+        return this.userSubject.value?.email;
+    }
+
+    getUserAvatar(): string | null | undefined {
+        return this.userSubject.value?.photoURL;
+    }
+
+    setUserDisplayName(displayName: string) {
+        const user = this.getUser();
+        if (user) {
+            updateProfile(user, { displayName });
+        }
+    }
+
+    setUserAvatar(newAvatar: string) {
+        const user = this.getUser();
+        if (user) {
+            updateProfile(user, { photoURL: newAvatar });
+        }
+    }
+
+    removeAvatar(fileName: string) {
+        const storageRef = ref(this.storage, fileName);
+        deleteObject(storageRef);
+    }
+
+    uploadAvatar(file: File) {
+        try {
+            this.removeAvatar(this.getUserEmail() as string);
+        } catch(e) {
+            console.error(e);
+        }
+        const storageRef = ref(this.storage, this.getUserEmail() as string);
+        uploadBytesResumable(storageRef, file).then(async (res) => {
+            const url = await getDownloadURL(res.ref);
+            this.setUserAvatar(url);
+        });
+        
     }
 
     sendPasswordResetEmail(email: string) {

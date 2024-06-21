@@ -32,20 +32,33 @@
             class="mx-auto mt-10 p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 transition-colors duration-500">
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider transition-colors duration-500">
-                Compte</h4>
+                Compte
+            </h4>
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="flex items-center w-full my-1.5">
                     <div
-                        class="relative w-24 h-24 rounded-full hover:cursor-pointer overflow-hidden group transition-opacity duration-300">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-                            class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" />
+                        class="relative w-24 h-24 rounded-full hover:cursor-pointer overflow-hidden group transition-opacity duration-300" (click)="avatarInput.click()">
+                        <!-- <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                            class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" /> -->
+                        @if (authService.getUserAvatar()) {
+                            <img [src]="authService.getUserAvatar()" class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" />
+                        } @else {
+                            <img src="https://imgs.search.brave.com/6Abd5TBbHIoBHK1py-tGSUv7eRH_hf3KVb5Px1DBNMs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA4LzIzLzkxLzU1/LzM2MF9GXzgyMzkx/NTUzM19PalFLUGtD/TTNzaGRxRmdwWjVz/d01LV3U1cHhnMzls/VS5qcGc" class="w-full h-full object-cover group-hover:opacity-20 transition-opacity duration-300" />
+                        }
+                        <input type="file" #avatarInput (change)="onChangeAvatar($event)" class="hidden">
                         <div
                             class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <i class="fas fa-pencil-alt text-white text-3xl"></i>
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">Nom d'utilisateur</p>
+                        <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
+                            @if (authService.getUserDisplayName()) {
+                                {{ authService.getUserDisplayName() }}
+                            } @else {
+                                Nom d'utilisateur
+                            }
+                        </p>
                     </div>
                 </div>
                 <div (click)="this.commonService.showModal('change-user-name')"
@@ -57,9 +70,8 @@
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Changer votre
-                    mot de
-                    passe</div>
+                    Changer votre mot de passe
+                </div>
                 <div (click)="commonService.redirectTo('change-password')"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
                     <i class="fa-solid fa-rotate mr-4 h-4 w-4"></i>
@@ -71,7 +83,7 @@
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Se déconnecter de
                     votre compte</div>
-                <div (click)="apiAuth.signOut()"
+                <div (click)="authService.signOut()"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
                     <i class="fa-solid fa-arrow-right-from-bracket mr-4 h-4 w-4"></i>
                     Déconnexion
@@ -110,8 +122,8 @@
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Exporter vos
-                    situations</div>
+                    Exporter vos situations
+                </div>
                 <div (click)="onClickFileExport()"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
                     <i class="fa-solid fa-upload mr-4 h-4 w-4"></i>
@@ -128,21 +140,24 @@
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Affichage de la solution lors d'une erreur</div>
+                    Affichage de la solution lors d'une erreur
+                </div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySolutionOnError"
                     (onChange)="updateUserParam('displaySolution', displaySolutionOnError)"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Style des cartes</div>
+                    Style des cartes
+                </div>
                 <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
                     (onChange)="updateUserParam('cardStyle', $event.value.code)"></p-dropdown>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div
                     class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
-                    Couleur du tapis de jeu</div>
+                    Couleur du tapis de jeu
+                </div>
                 <p-dropdown [options]="availablePokerTableColors" [(ngModel)]="pokerTableColor" optionLabel="name"
                     (onChange)="updateUserParam('playmatColor', $event.value.code)" />
             </div>
@@ -160,10 +175,10 @@
             Modification de votre nom d'utilisateur
         </h4>
         <input class="my-2 w-full" type="text" placeholder="Entrez votre nouveau nom d'utilisateur" name="newUserName" id='newUserName'
-            autocomplete="off" pInputText />
+            autocomplete="off" pInputText [(ngModel)]="newUserName" [maxlength]="16" />
         <div class="flex justify-center items-center mt-5">
             <div
-                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer" (click)="changeUserName()">
                 <i class="fa-solid fa-save mr-4 h-4 w-5"></i>
                 Enregistrer
             </div>

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { SituationService } from '../../services/situation.service';
-import { UserParams } from '../../interfaces/user-params';
+import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
+import { UserParams } from '../../interfaces/user-params';
+import { AuthService } from '../../services/auth.service';
+import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-settings',
@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 export class SettingsComponent {
 
     constructor(
-        protected apiAuth: AuthService,
+        protected authService: AuthService,
         private apiSituation: SituationService,
         protected commonService: CommonService
     ) { }
@@ -27,6 +27,8 @@ export class SettingsComponent {
     displaySolutionOnError: boolean = true;
     highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
+
+    newUserName: string = '';
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
@@ -84,6 +86,20 @@ export class SettingsComponent {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams[key] = value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
+    }
+
+    onChangeAvatar(event: any) {
+        const input = event.target as HTMLInputElement;
+        if (!input.files) return
+
+        const files: FileList = input.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+            if (file) {
+                this.authService.uploadAvatar(file);
+            }
+        }
     }
 
     /**
@@ -146,5 +162,10 @@ export class SettingsComponent {
     onClickFileExport() {
         this.apiSituation.exportSituationsForUser();
         this.commonService.showSwalToast(`Situations exportées !`);
+    }
+
+    changeUserName(){
+        this.authService.setUserDisplayName(this.newUserName);
+        this.commonService.closeModal("change-user-name");
     }
 }
