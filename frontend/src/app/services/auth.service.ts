@@ -31,7 +31,6 @@ export class AuthService {
 
             const currentUrl = this.router.url;
             if (aUser) {
-                console.log(aUser);
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',

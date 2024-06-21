@@ -16,10 +16,6 @@ export class SidebarComponent {
         protected authService: AuthService
     ) { }
 
-    ngOnInit() {
-        console.log(this.authService.getUserAvatar());
-    }
-
     /**
     * Inverse la valeur de la propriété `isCollapsed`,
     * permettant d'afficher ou de masquer la barre latérale.

@@ -90,21 +90,6 @@ export class SettingsComponent {
 
     onChangeAvatar(event: any) {
         const input = event.target as HTMLInputElement;
-        // console.log(event);
-        // console.log(input.files);
-        // if (input.files && input.files[0]) {
-        //     const reader = new FileReader();
-        //     reader.onload = (e) => {
-        //         const target = e.target as FileReader;
-        //         console.log(target.result);
-        //         this.authService.setUserAvatar(target.result as string);
-        //     };
-        //     reader.onerror = (e) => {
-        //         console.log(e);
-        //     }
-        //     reader.readAsDataURL(input.files[0]);
-            
-        // }
         if (!input.files) return
 
         const files: FileList = input.files;
