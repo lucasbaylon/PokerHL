@@ -25,26 +25,6 @@ export class AppComponent {
     /* or the classic JavaScript object */
     particlesOptions = {
         fpsLimit: 120,
-        interactivity: {
-            events: {
-                onClick: {
-                    enable: true,
-                    mode: "repulse",
-                },
-                onHover: {
-                    enable: true,
-                    mode: "grab",
-                }
-            },
-            modes: {
-                grab: {
-                    distance: 300,
-                    links: {
-                        opacity: 1,
-                    },
-                }
-            },
-        },
         particles: {
             color: {
                 value: "#ffffff",
@@ -63,7 +43,7 @@ export class AppComponent {
                     default: OutMode.bounce,
                 },
                 random: false,
-                speed: 4,
+                speed: 0.4,
                 straight: false,
                 attract: {
                     enable: true,
@@ -74,9 +54,9 @@ export class AppComponent {
             number: {
                 density: {
                     enable: false,
-                    area: 800,
+                    area: 600,
                 },
-                value: 50,
+                value: 30,
             },
             opacity: {
                 value: 0.5,
@@ -98,7 +78,12 @@ export class AppComponent {
         detectRetina: true,
     };
 
-    constructor(public authService: AuthService, private config: PrimeNGConfig, private translateService: TranslateService, private readonly ngParticlesService: NgParticlesService, protected commonService: CommonService) { }
+    constructor(
+        public authService: AuthService,
+        private config: PrimeNGConfig,
+        private translateService: TranslateService,
+        private readonly ngParticlesService: NgParticlesService,
+        protected commonService: CommonService) { }
 
     ngOnInit() {
         this.translateService.addLangs(['fr']);

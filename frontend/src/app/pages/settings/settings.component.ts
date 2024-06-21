@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
 import { UserParams } from '../../interfaces/user-params';
 import { AuthService } from '../../services/auth.service';
 import { SituationService } from '../../services/situation.service';
@@ -10,7 +11,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [DropdownModule, InputSwitchModule, FormsModule],
+    imports: [DropdownModule, InputSwitchModule, FormsModule, InputTextModule],
     templateUrl: './settings.component.html'
 })
 export class SettingsComponent {
