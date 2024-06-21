@@ -48,14 +48,15 @@
                         <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">Nom d'utilisateur</p>
                     </div>
                 </div>
-                <div
+                <div (click)="this.commonService.showModal('change-user-name')"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors duration-500 cursor-pointer">
                     <i class="fa-solid fa-pencil-alt mr-4 h-4 w-4"></i>
                     Modification
                 </div>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Changer votre
                     mot de
                     passe</div>
@@ -66,7 +67,8 @@
                 </div>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Se déconnecter de
                     votre compte</div>
                 <div (click)="apiAuth.signOut()"
@@ -124,19 +126,22 @@
                 Entraînement
             </h4>
             <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Affichage de la solution lors d'une erreur</div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySolutionOnError"
                     (onChange)="updateUserParam('displaySolution', displaySolutionOnError)"></p-inputSwitch>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Style des cartes</div>
                 <p-dropdown [(ngModel)]="cardsStyle" [options]="availableCardsStyles" optionLabel="name"
                     (onChange)="updateUserParam('cardStyle', $event.value.code)"></p-dropdown>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
+                <div
+                    class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider transition-colors duration-500">
                     Couleur du tapis de jeu</div>
                 <p-dropdown [options]="availablePokerTableColors" [(ngModel)]="pokerTableColor" optionLabel="name"
                     (onChange)="updateUserParam('playmatColor', $event.value.code)" />
@@ -144,3 +149,24 @@
         </div>
     </div>
 </div>
+
+<dialog id="change-user-name" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <form method="dialog">
+            <button
+                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+        </form>
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Modification de votre nom d'utilisateur
+        </h4>
+        <input class="my-2 w-full" type="text" placeholder="Entrez votre nouveau nom d'utilisateur" name="newUserName" id='newUserName'
+            autocomplete="off" pInputText />
+        <div class="flex justify-center items-center mt-5">
+            <div
+                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-save mr-4 h-4 w-5"></i>
+                Enregistrer
+            </div>
+        </div>
+    </div>
+</dialog>
