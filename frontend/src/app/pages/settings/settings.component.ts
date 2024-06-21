@@ -1,11 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { SituationService } from '../../services/situation.service';
-import { UserParams } from '../../interfaces/user-params';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { UserParams } from '../../interfaces/user-params';
+import { AuthService } from '../../services/auth.service';
+import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-settings',
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 export class SettingsComponent {
 
     constructor(
-        protected apiAuth: AuthService,
+        protected authService: AuthService,
         private apiSituation: SituationService,
         protected commonService: CommonService
     ) { }
@@ -83,6 +83,35 @@ export class SettingsComponent {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams[key] = value;
         localStorage.setItem('userParams', JSON.stringify(userParams));
+    }
+
+    onChangeAvatar(event: any) {
+        const input = event.target as HTMLInputElement;
+        // console.log(event);
+        // console.log(input.files);
+        // if (input.files && input.files[0]) {
+        //     const reader = new FileReader();
+        //     reader.onload = (e) => {
+        //         const target = e.target as FileReader;
+        //         console.log(target.result);
+        //         this.authService.setUserAvatar(target.result as string);
+        //     };
+        //     reader.onerror = (e) => {
+        //         console.log(e);
+        //     }
+        //     reader.readAsDataURL(input.files[0]);
+            
+        // }
+        if (!input.files) return
+
+        const files: FileList = input.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+            if (file) {
+                this.authService.uploadAvatar(file);
+            }
+        }
     }
 
     /**
