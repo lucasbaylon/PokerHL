@@ -27,10 +27,6 @@ export class AppComponent {
         fpsLimit: 120,
         interactivity: {
             events: {
-                onClick: {
-                    enable: true,
-                    mode: "repulse",
-                },
                 onHover: {
                     enable: true,
                     mode: "grab",
@@ -63,7 +59,7 @@ export class AppComponent {
                     default: OutMode.bounce,
                 },
                 random: false,
-                speed: 4,
+                speed: 0.5,
                 straight: false,
                 attract: {
                     enable: true,
@@ -98,7 +94,12 @@ export class AppComponent {
         detectRetina: true,
     };
 
-    constructor(public authService: AuthService, private config: PrimeNGConfig, private translateService: TranslateService, private readonly ngParticlesService: NgParticlesService, protected commonService: CommonService) { }
+    constructor(
+        public authService: AuthService,
+        private config: PrimeNGConfig,
+        private translateService: TranslateService,
+        private readonly ngParticlesService: NgParticlesService,
+        protected commonService: CommonService) { }
 
     ngOnInit() {
         this.translateService.addLangs(['fr']);
