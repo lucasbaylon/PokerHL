@@ -1,9 +1,8 @@
 @if (commonService.getShowParticule()) {
-    <ngx-particles #particles [id]="particlesId" [options]="particlesOptions"></ngx-particles>
+    <ngx-particles [id]="id" [options]="particlesOptions"></ngx-particles>
 }
 @if (authService.isLoading | async) {
     <app-loading></app-loading>
 } @else {
     <router-outlet></router-outlet>
 }
-<button (click)="test()" class="z-50 w-full">Test</button>

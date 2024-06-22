@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Situation } from '../interfaces/situation';
 import { Solution } from '../interfaces/solution';
@@ -11,9 +10,7 @@ import { Solution } from '../interfaces/solution';
 export class CommonService {
 
     private showParticules = signal<boolean>(false);
-    // public darkMode = signal<boolean>(false);
-    private darkModeSubject = new BehaviorSubject<boolean>(false);
-    darkMode$ = this.darkModeSubject.asObservable();
+    private darkMode = signal<boolean>(false);
 
     constructor(
         private router: Router
@@ -174,29 +171,21 @@ export class CommonService {
     setShowParticule(value: boolean) {
         this.showParticules.set(value);
     }
-
+    
     /**
      * Renvoie l'état actuel du dark mode.
      * @returns {boolean} L'état actuel du dark mode.
      */
-    // getDarkMode() {
-    //     return this.darkMode();
-    // }
-
-    // /**
-    //  * Met à jour l'état du dark mode.
-    //  * @param value La nouvelle valeur du dark mode.
-    //  */
-    // setDarkMode(value: boolean) {
-    //     this.darkMode.set(value);
-    // }
-
-    setDarkMode(isDarkMode: boolean): void {
-        this.darkModeSubject.next(isDarkMode);
+    getDarkMode() {
+        return this.darkMode();
     }
 
-    getDarkMode(): boolean {
-        return this.darkModeSubject.getValue();
+    /**
+     * Met à jour l'état du dark mode.
+     * @param value La nouvelle valeur du dark mode.
+     */
+    setDarkMode(value: boolean) {
+        this.darkMode.set(value);
     }
 
 }
