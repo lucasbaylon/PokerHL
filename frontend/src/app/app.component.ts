@@ -1,14 +1,14 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ToastModule } from 'primeng/toast';
-import { AuthService } from './services/auth.service';
-import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { LoadingComponent } from './components/loading/loading.component';
 import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
-import { Container, MoveDirection, OutMode } from '@tsparticles/engine';
+import { MoveDirection, OutMode } from '@tsparticles/engine';
 import { loadSlim } from '@tsparticles/slim';
+import { PrimeNGConfig } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { LoadingComponent } from './components/loading/loading.component';
+import { AuthService } from './services/auth.service';
 import { CommonService } from './services/common.service';
 
 @Component({
