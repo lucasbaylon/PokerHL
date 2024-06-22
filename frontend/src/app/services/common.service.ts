@@ -188,4 +188,13 @@ export class CommonService {
         this.darkMode.set(value);
     }
 
+    getNbRowsPerPage(height: number): number {
+        if (height > 1080) {
+            return 11;
+        } else if (height <= 750) {
+            return 5;
+        } else {
+            return 7;
+        }
+    }
 }
