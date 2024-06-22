@@ -56,6 +56,8 @@ export class SituationsListManagerComponent {
     onResize(event: any) {
         if (event.target.innerHeight > 1080) {
             this.nbRowsPerPage = 11;
+        } else if (event.target.innerHeight <= 650) {
+            this.nbRowsPerPage = 5;
         } else {
             this.nbRowsPerPage = 7;
         }
@@ -75,6 +77,8 @@ export class SituationsListManagerComponent {
 
         if (window.innerHeight <= 1080) {
             this.nbRowsPerPage = 7;
+        } else if (window.innerHeight >= 650){
+            this.nbRowsPerPage = 5;
         }
     }
 
