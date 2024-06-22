@@ -10,6 +10,7 @@ import { Solution } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from './../../services/common.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-training',
@@ -44,7 +45,8 @@ export class TrainingComponent {
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        protected commonService: CommonService
+        protected commonService: CommonService,
+        protected authService: AuthService,
     ) { }
 
     ngOnInit(): void {
