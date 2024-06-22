@@ -262,27 +262,45 @@
     </div>
 
     <!-- Compte à rebours -->
-    <div
-        class="hidden absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
-        <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
-            <div class="flex flex-col">
-                <span class="dui-countdown text-5xl">
-                    <span [style.--value]="hours"></span>
-                </span>
-                heure
+    @if (showTimer) {
+        <div
+            class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+            <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+                <div class="flex flex-col">
+                    <span class="dui-countdown text-5xl">
+                        <span [style.--value]="hours"></span>
+                    </span>
+                    heure
+                </div>
+                <div class="flex flex-col">
+                    <span class="dui-countdown text-5xl">
+                        <span [style.--value]="minutes"></span>
+                    </span>
+                    min
+                </div>
+                <div class="flex flex-col">
+                    <span class="dui-countdown text-5xl">
+                        <span [style.--value]="seconds"></span>
+                    </span>
+                    sec
+                </div>
             </div>
-            <div class="flex flex-col">
-                <span class="dui-countdown text-5xl">
-                    <span [style.--value]="minutes"></span>
-                </span>
-                min
-            </div>
-            <div class="flex flex-col">
-                <span class="dui-countdown text-5xl">
-                    <span [style.--value]="seconds"></span>
-                </span>
-                sec
+        </div>
+    }
+</div>
+<dialog id="end-session-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <div class="flex flex-col gap-8 justify-center items-center my-4">
+            <span>Bravo ! Vous avez terminé la session turbo.</span>
+            <span>Votre score est de {{goodResponse}} / {{totalResponse}}</span>
+            <span>Taux de réussite : {{successRatePercentage}}%</span>
+        </div>
+        <div class="flex justify-center mt-8">
+            <div (click)="resetSession()"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+                Démarrer une nouvelle session
             </div>
         </div>
     </div>
-</div>
+</dialog>

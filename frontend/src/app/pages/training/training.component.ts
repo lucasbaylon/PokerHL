@@ -9,8 +9,8 @@ import { Situation } from '../../interfaces/situation';
 import { Solution } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
-import { CommonService } from './../../services/common.service';
 import { AuthService } from '../../services/auth.service';
+import { CommonService } from './../../services/common.service';
 
 @Component({
     selector: 'app-training',
@@ -20,6 +20,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class TrainingComponent {
 
+    mode: string = "";
     countResult: boolean = true;
     goodResponse: number = 0;
     badResponse: number = 0;
@@ -30,7 +31,9 @@ export class TrainingComponent {
     currentSituationName: string = "";
     activeSituation!: ActiveSituation;
     backgroundColor!: string;
-    hours: number = 1;
+    initialTimer = { heure: 0, minute: 0, seconds: 0 };
+    showTimer: boolean = false;
+    hours: number = 0;
     minutes: number = 0;
     seconds: number = 0;
     private countdownInterval: any;
@@ -50,7 +53,7 @@ export class TrainingComponent {
     ) { }
 
     ngOnInit(): void {
-        if (this.activatedRoute.snapshot.params.hasOwnProperty('situationList')) {
+        if (this.activatedRoute.snapshot.params.hasOwnProperty('situationList') && this.activatedRoute.snapshot.params.hasOwnProperty('mode')) {
 
             const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
             const tableColor = this.tableColors[userParams.playmatColor];
@@ -64,11 +67,28 @@ export class TrainingComponent {
             }
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
-            this.generateSituation();
+            this.mode = this.activatedRoute.snapshot.params['mode'];
+            switch (this.mode) {
+                case 'infinite':
+                    this.generateSituation();
+                    break;
+                case 'turbo':
+                    if (this.activatedRoute.snapshot.params.hasOwnProperty('timer')) {
+                        const timer = JSON.parse(this.activatedRoute.snapshot.params['timer']);
+                        this.initialTimer = timer;
+                        this.generateSituation();
+                        this.showTimer = true;
+                        this.startCountdown();
+                    }
+                    break;
+                case 'challenge':
+                    break;
+                default:
+                    break;
+            }
             const currentUrl = this.router.url;
             const baseUrl = currentUrl.split(';')[0];
             this.router.navigateByUrl(baseUrl);
-            this.startCountdown();
         } else {
             this.router.navigate(['situations-list-training']);
         }
@@ -233,12 +253,24 @@ export class TrainingComponent {
                 this.badResponse += 1;
                 this.successRatePercentage = Math.round((this.goodResponse / this.totalResponse) * 100);
             }
-            const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-            if (userParams.displaySolution) {
-                this.commonService.showModal('wrong-answer-modal');
-            } else {
-                this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
-                this.countResult = false;
+            switch (this.mode) {
+                case 'infinite':
+                    const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+                    if (userParams.displaySolution) {
+                        this.commonService.showModal('wrong-answer-modal');
+                    } else {
+                        this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
+                        this.countResult = false;
+                    }
+                    break;
+                case 'turbo':
+                    this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
+                    this.generateSituation();
+                    break;
+                case 'challenge':
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -256,10 +288,24 @@ export class TrainingComponent {
         return Math.floor(Math.random() * 101);
     }
 
+    resetSession() {
+        this.commonService.closeModal('end-session-modal');
+        this.goodResponse = 0;
+        this.badResponse = 0;
+        this.totalResponse = 0;
+        this.successRatePercentage = 0;
+        this.countResult = true;
+        this.startCountdown();
+        this.generateSituation();
+    }
+
     /**
    * Lance le compte à rebours en décrémentant les heures, minutes et secondes chaque seconde.
    */
     startCountdown() {
+        this.hours = this.initialTimer.heure;
+        this.minutes = this.initialTimer.minute;
+        this.seconds = this.initialTimer.seconds;
         this.countdownInterval = setInterval(() => {
             if (this.seconds > 0) {
                 this.seconds--;
@@ -272,6 +318,7 @@ export class TrainingComponent {
                 this.seconds = 59;
             } else {
                 this.clearCountdown();
+                this.commonService.showModal('end-session-modal');
             }
         }, 1000);
     }
