@@ -169,4 +169,8 @@ export class SettingsComponent {
         this.authService.setUserDisplayName(this.newUserName);
         this.commonService.closeModal("change-user-name");
     }
+
+    test() {
+        console.log(this.commonService.getDarkMode());
+    }
 }
