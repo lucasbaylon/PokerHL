@@ -82,7 +82,7 @@ export class TrainingComponent {
         if (window.innerHeight >= 1080) {
             document.getElementById("poker-table-div")?.classList.add("scale-125");
         } else if (window.innerHeight <= 750) {
-            document.getElementById("poker-table-div")?.classList.add("scale-75");
+            document.getElementById("poker-table-div")?.classList.add("scale-85");
         }
     }
 
