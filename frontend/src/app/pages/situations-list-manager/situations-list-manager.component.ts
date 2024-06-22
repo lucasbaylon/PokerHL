@@ -54,13 +54,7 @@ export class SituationsListManagerComponent {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-        if (event.target.innerHeight > 1080) {
-            this.nbRowsPerPage = 11;
-        } else if (event.target.innerHeight <= 650) {
-            this.nbRowsPerPage = 5;
-        } else {
-            this.nbRowsPerPage = 7;
-        }
+        this.nbRowsPerPage = this.commonService.getNbRowsPerPage(event.target.innerHeight);
     }
 
     ngOnInit(): void {
@@ -75,11 +69,7 @@ export class SituationsListManagerComponent {
 
         this.apiSituation.getSituations();
 
-        if (window.innerHeight <= 1080) {
-            this.nbRowsPerPage = 7;
-        } else if (window.innerHeight >= 650){
-            this.nbRowsPerPage = 5;
-        }
+        this.nbRowsPerPage = this.commonService.getNbRowsPerPage(window.innerHeight);
     }
 
     editSituation(id: string) {
