@@ -83,7 +83,7 @@ export class SituationsListTrainingComponent {
         if (this.selectedSituations.length === 0) {
             this.commonService.showSwalToast('Veuillez sélectionner au moins une situation.', 'error');
         } else {
-            this.router.navigate(['training', { situationList: JSON.stringify(this.selectedSituations) }]);
+            this.router.navigate(['select-training-mode', { situationList: JSON.stringify(this.selectedSituations) }]);
         }
     }
 

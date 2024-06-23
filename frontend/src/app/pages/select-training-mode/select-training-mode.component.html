@@ -5,17 +5,19 @@
     Choisissez le mode d'entraînement auquel vous souhaitez jouer.
 </p>
 <div class="flex mt-24 justify-around items-center">
-    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200">
+    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200"
+        (click)="onSelectMode('infinite')">
         <figure class="dark:bg-main-dark-bg w-full m-0">
             <img src="../../../assets/img/infinite.jpg" alt="infinite" class="w-full" />
         </figure>
         <div class="dui-card-body dark:text-gray-300 dark:bg-secondary-dark-bg rounded-b-xl flex justify-center">
             <h2 class="dui-card-title m-0">Infini</h2>
-            <p>Répondez aux situations qui se présentent à vous de manière infinie, et stoppez quand vous le
-                souhaitez.</p>
+            <p>Répondez aux situations qui se présentent à vous de manière infinie, et stoppez quand vous le souhaitez.
+            </p>
         </div>
     </div>
-    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200">
+    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200"
+        (click)="onSelectMode('turbo')">
         <figure class="dark:bg-main-dark-bg w-full m-0">
             <img src="../../../assets/img/turbo.jpg" alt="turbo" class="w-full" />
         </figure>
@@ -24,7 +26,8 @@
             <p>Un mode basé sur la rapidité. Répondez à un maximum de situations dans le temps imparti.</p>
         </div>
     </div>
-    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200">
+    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200"
+        (click)="onSelectMode('challenge')">
         <figure class="dark:bg-main-dark-bg w-full m-0" class="w-full m-0">
             <img src="../../../assets/img/defi.jpg" alt="defi" class="w-full" />
         </figure>
@@ -35,3 +38,29 @@
         </div>
     </div>
 </div>
+
+<dialog id="turbo-timer-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <div class="flex flex-row gap-8 justify-center items-center my-4">
+            <p-floatLabel>
+                <p-inputNumber inputId="integeronly" [(ngModel)]="heure" inputStyleClass="w-24" />
+                <label for="number-input">Heures</label>
+            </p-floatLabel>
+            <p-floatLabel>
+                <p-inputNumber inputId="integeronly" [(ngModel)]="minute" inputStyleClass="w-24" />
+                <label for="number-input">Minutes</label>
+            </p-floatLabel>
+            <p-floatLabel>
+                <p-inputNumber inputId="integeronly" [(ngModel)]="seconds" inputStyleClass="w-24" />
+                <label for="number-input">Secondes</label>
+            </p-floatLabel>
+        </div>
+        <div class="flex justify-center mt-8">
+            <div (click)="startTurboSession()"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+                Démarrer la session
+            </div>
+        </div>
+    </div>
+</dialog>
