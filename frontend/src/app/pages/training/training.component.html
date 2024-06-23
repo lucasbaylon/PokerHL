@@ -290,16 +290,19 @@
 </div>
 <dialog id="end-session-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
     <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-        <div class="flex flex-col gap-8 justify-center items-center my-4">
-            <span>Bravo ! Vous avez terminé la session turbo.</span>
-            <span>Votre score est de {{goodResponse}} / {{totalResponse}}</span>
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Session terminée !
+        </h4>
+        <div class="flex flex-col gap-5 justify-center items-center my-4">
+            <span>Le temps est écoulé ! Vous avez terminé la session Turbo.</span>
+            <span>Score : {{goodResponse}} / {{totalResponse}}</span>
             <span>Taux de réussite : {{successRatePercentage}}%</span>
         </div>
         <div class="flex justify-center mt-8">
             <div (click)="resetSession()"
                 class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
-                Démarrer une nouvelle session
+                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
+                Rejouer
             </div>
         </div>
     </div>
