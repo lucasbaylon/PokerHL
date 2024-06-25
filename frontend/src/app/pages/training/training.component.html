@@ -298,9 +298,14 @@
             <span>Score : {{goodResponse}} / {{totalResponse}}</span>
             <span>Taux de réussite : {{successRatePercentage}}%</span>
         </div>
-        <div class="flex justify-center mt-8">
+        <div class="flex justify-center items-center space-x-5 mt-8">
+            <div (click)="this.commonService.redirectTo('situations-list-training')"
+                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-arrow-right-from-bracket mr-3 h-4 w-4"></i>
+                Retour
+            </div>
             <div (click)="resetSession()"
-                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
                 <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
                 Rejouer
             </div>
