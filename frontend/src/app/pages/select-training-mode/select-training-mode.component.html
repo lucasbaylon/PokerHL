@@ -39,8 +39,8 @@
     </div>
 </div>
 
-<dialog id="turbo-timer-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
-    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+<dialog id="turbo-timer-modal" class="dui-modal">
+    <div class="dui-modal-box w-fit max-w-2xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
         <form method="dialog">
             <button
                 class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
@@ -48,21 +48,21 @@
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Sélection du temps d'entraînement
         </h4>
-        <div class="flex flex-row gap-8 justify-center items-center my-10">
-            <p-floatLabel>
+        <div class="flex flex-row gap-8 justify-center items-center my-10 w-fit">
+            <p-floatLabel class="ml-3">
                 <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="23" [(ngModel)]="heure"
                     inputStyleClass="w-24" />
                 <label class="text-gray-800 dark:text-gray-300">Heures</label>
             </p-floatLabel>
             <p-floatLabel>
-                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="60" [(ngModel)]="minute"
+                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="59" [(ngModel)]="minute"
                     inputStyleClass="w-24" />
                 <label class="text-gray-800 dark:text-gray-300">Minutes</label>
             </p-floatLabel>
-            <p-floatLabel>
-                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="60" [(ngModel)]="seconds"
+            <p-floatLabel class="mr-3">
+                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="59" [(ngModel)]="seconds"
                     inputStyleClass="w-24" />
-                <label class="text-gray-800 dark:text-gray-300">Secondes</label>
+                <label class="text-gray-800 dark:text-gray-300 px-10">Secondes</label>
             </p-floatLabel>
         </div>
         <div class="flex justify-center mt-8">
