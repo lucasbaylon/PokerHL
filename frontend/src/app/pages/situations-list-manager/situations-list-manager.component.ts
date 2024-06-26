@@ -1,7 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import Swal from 'sweetalert2';
 import { Situation } from '../../interfaces/situation';
@@ -55,6 +55,11 @@ export class SituationsListManagerComponent {
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         this.nbRowsPerPage = this.commonService.getNbRowsPerPage(event.target.innerHeight);
+    }
+
+    @ViewChild('multiSelect') multiSelect!: MultiSelect;
+    openMultiSelect(){
+        this.multiSelect.show();
     }
 
     ngOnInit(): void {

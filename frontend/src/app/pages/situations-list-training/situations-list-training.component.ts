@@ -1,7 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { Situation } from '../../interfaces/situation';
 import { DealerPipe } from '../../pipes/dealer.pipe';
@@ -85,6 +85,11 @@ export class SituationsListTrainingComponent {
         } else {
             this.router.navigate(['select-training-mode', { situationList: JSON.stringify(this.selectedSituations) }]);
         }
+    }
+
+    @ViewChild('multiSelect') multiSelect!: MultiSelect;
+    openMultiSelect() {
+        this.multiSelect.show();
     }
 
 }

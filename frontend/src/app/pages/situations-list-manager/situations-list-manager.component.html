@@ -15,9 +15,12 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Type
-                        <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                        <p-columnFilter (onShow)="openMultiSelect()" field="type" matchMode="in" display="menu"
+                            [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                            [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type"
+                                    (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                     <ng-template let-option pTemplate="item">
                                         <div class="inline-block vertical-align-middle">
                                             <span class="ml-1 mt-1">{{ option.name }}</span>
@@ -31,16 +34,19 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Stack effectif
-                        <p-columnFilter type="numeric" field="stack" display="menu"
-                            class="ml-2"></p-columnFilter>
+                        <p-columnFilter type="numeric" field="stack" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Nb joueurs
-                        <p-columnFilter field="nbPlayer" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                        <p-columnFilter (onShow)="openMultiSelect()" field="nbPlayer" matchMode="in" display="menu"
+                            [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                            [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect [ngModel]="value" [options]="nbPlayerLst" placeholder="Nombre de joueur" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="nbPlayerLst"
+                                    placeholder="Nombre de joueur" (onChange)="filter($event.value)" optionLabel="name"
+                                    optionValue="value">
                                     <ng-template let-option pTemplate="item">
                                         <div class="inline-block vertical-align-middle">
                                             <span class="ml-1 mt-1">{{ option.name }}</span>
@@ -54,9 +60,13 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Position
-                        <p-columnFilter field="position" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                        <p-columnFilter (onShow)="openMultiSelect()" field="position" matchMode="in" display="menu"
+                            [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                            [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect [ngModel]="value" [options]="positionLst" placeholder="Position" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="positionLst"
+                                    placeholder="Position" (onChange)="filter($event.value)" optionLabel="name"
+                                    optionValue="value">
                                     <ng-template let-option pTemplate="item">
                                         <div class="inline-block vertical-align-middle">
                                             <span class="ml-1 mt-1">{{ option.name }}</span>
@@ -70,9 +80,13 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Niveau
-                        <p-columnFilter field="opponentLevel" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showApplyButton]="false" class="ml-2">
+                        <p-columnFilter (onShow)="openMultiSelect()" field="opponentLevel" matchMode="in" display="menu"
+                            [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                            [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect [ngModel]="value" [options]="opponentLevelLst" placeholder="Niveau" (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="opponentLevelLst"
+                                    placeholder="Niveau" (onChange)="filter($event.value)" optionLabel="name"
+                                    optionValue="value">
                                     <ng-template let-option pTemplate="item">
                                         <div class="inline-block vertical-align-middle">
                                             <span class="ml-1 mt-1">{{ option.name }}</span>
@@ -83,6 +97,7 @@
                         </p-columnFilter>
                     </div>
                 </th>
+                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
                 <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
                 <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
                 <th
@@ -111,6 +126,10 @@
                     {{ situation.opponentLevel! | opponentLevel }}
                 </td>
                 <td class="dark:border-gray-700">
+                    <i class="fa-solid fa-eye cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
+                        (click)="duplicateSituation(situation.id)"></i>
+                </td>
+                <td class="dark:border-gray-700">
                     <i class="fa-solid fa-clone cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
                         (click)="duplicateSituation(situation.id)"></i>
                 </td>
@@ -126,7 +145,7 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
-                <td colspan="9">Aucune situation trouvée.</td>
+                <td colspan="10">Aucune situation trouvée.</td>
             </tr>
         </ng-template>
     </p-table>
@@ -138,3 +157,58 @@
         Créer une nouvelle situation
     </div>
 </div>
+
+<!-- Div affichée lors d'un click sur icone "oeil" pour voir la situation -->
+<!-- <dialog id="wrong-answer-modal" class="dui-modal">
+    <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <form method="dialog">
+            <button
+                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+        </form>
+        @if (currentSituation) {
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            {situationName}
+        </h4>
+        <div class="flex justify-center items-center">
+            <div class="mx-auto table-fixed border-separate border-spacing-1 ml-5">
+                <table>
+                    <tbody>
+                        @for (row of currentSituation.situations; track $index) {
+                        <tr class="table-row animate-appear opacity-0">
+                            @for (item of row; track $index) {
+                            <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
+                                [style.background]="(item.solution! | solutionColor:currentSituation.solutions)">
+                                {{item.card}}
+                            </td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="ml-6 mr-5">
+                <h4
+                    class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    Solutions
+                </h4>
+                @for (solution of activeSituation.solutions; track i; let i = $index) {
+                @if (solution.display_name) {
+                <div
+                    class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
+                    {{solution.display_name}}
+                    <div class="h-7 w-7 ml-2 rounded shadow-md"
+                        [ngStyle]="{'background': (solution.id | solutionColor:activeSituation.solutions)}"></div>
+                </div>
+                }
+                }
+            </div>
+        </div>
+        <div class="flex justify-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
+            <div (click)="closeSolutionModal()"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                Compris !
+            </div>
+        </div>
+        }
+    </div>
+</dialog> -->
