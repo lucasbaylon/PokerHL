@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, authState, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, updateProfile, User, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, updateProfile, User, UserCredential } from '@angular/fire/auth';
 import { deleteObject, getDownloadURL, ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -80,6 +80,30 @@ export class AuthService {
     async signOut() {
         return signOut(this.auth).then((result) => {
             this.commonService.showSwalToast(`Déconnexion réussie !`);
+        });
+    }
+
+    async signUp(email: string, password: string, displayName: string) {
+        return createUserWithEmailAndPassword(this.auth, email, password).then((result) => {
+            this.commonService.showSwalToast(`Inscription réussie !`);
+            this.router.navigate(['home']);
+            setTimeout(() => {
+                this.setUserDisplayName(displayName);
+            }, 500);
+        }).catch((error) => {
+            let errorMessage = 'Échec de l\'inscription';
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'Adresse email déjà utilisée';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Adresse email non valide';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'Mot de passe trop faible';
+                    break;
+            }
+            this.commonService.showSwalToast(`${errorMessage}`, 'error');
         });
     }
 

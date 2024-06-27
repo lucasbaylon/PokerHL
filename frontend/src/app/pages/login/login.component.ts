@@ -1,26 +1,26 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { CommonService } from '../../services/common.service';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthService } from '../../services/auth.service';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule, InputTextModule],
+    imports: [FormsModule, InputTextModule, NgClass],
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
+
+    passwordFieldType: string = 'password';
+    email: string = '';
+    password: string = '';
 
     constructor(
         private authService: AuthService,
         protected commonService: CommonService,
     ) { }
-
-    passwordFieldType: string = 'password';
-    email: string = '';
-    password: string = '';
 
     /**
     * Cette méthode change le type du champ de mot de passe entre 'password' et 'text',

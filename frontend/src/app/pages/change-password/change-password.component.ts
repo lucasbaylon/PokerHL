@@ -1,10 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { CommonService } from '../../services/common.service';
 import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthService } from '../../services/auth.service';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-change-password',
@@ -30,8 +30,7 @@ export class ChangePasswordComponent {
    /**
    * Bascule la visibilité du champ de mot de passe.
    *
-   * @param {string} field - Le champ dont la visibilité doit être basculée.
-   *                         Peut être 'old', 'new' ou 'confirm'.
+   * @param {string} field Le champ dont la visibilité doit être basculée. Peut être 'old', 'new' ou 'confirm'.
    */
     togglePasswordVisibility(field: string): void {
         const fields: { [key: string]: 'passwordFieldTypeOld' | 'passwordFieldTypeNew' | 'passwordFieldTypeConfirm' } = {

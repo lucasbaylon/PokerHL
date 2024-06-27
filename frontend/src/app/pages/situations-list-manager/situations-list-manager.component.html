@@ -166,7 +166,7 @@
                 class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
         </form>
         @if (situationToDisplay) {
-            <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            <h4 class="m-0 mb-4 text-center text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                 {{situationToDisplay.name}}
             </h4>
             <div class="flex justify-center items-center">
@@ -174,7 +174,7 @@
                     <table>
                         <tbody>
                             @for (row of situationToDisplay.situations; track $index) {
-                                <tr class="table-row animate-appear opacity-0">
+                                <tr class="table-row">
                                     @for (item of row; track $index) {
                                         <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
                                             [style.background]="(item.solution! | solutionColor:situationToDisplay.solutions)">
@@ -203,7 +203,7 @@
                     }
                 </div>
             </div>
-            <div class="flex justify-center mt-6 mb-4 animate-appear opacity-0 animation-delay-200">
+            <div class="flex justify-center mt-6 mb-4 animation-delay-200">
                 <div (click)="closeDisplaySituationModal()"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     Compris !
