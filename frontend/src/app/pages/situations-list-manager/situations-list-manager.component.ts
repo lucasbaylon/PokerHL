@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,6 +9,7 @@ import { Situation } from '../../interfaces/situation';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
+import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
 import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
@@ -15,7 +17,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle],
     templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent {
@@ -46,6 +48,8 @@ export class SituationsListManagerComponent {
         { name: '3', value: 3 }
     ];
 
+    situationToDisplay!: Situation;
+
     constructor(
         private router: Router,
         private apiSituation: SituationService,
@@ -75,6 +79,15 @@ export class SituationsListManagerComponent {
         this.apiSituation.getSituations();
 
         this.nbRowsPerPage = this.commonService.getNbRowsPerPage(window.innerHeight);
+    }
+
+    displaySituation(situation: Situation) {
+        this.situationToDisplay = situation;
+        this.commonService.showModal('displaySituationModal');
+    }
+
+    closeDisplaySituationModal() {
+        this.commonService.closeModal('displaySituationModal');
     }
 
     editSituation(id: string) {
