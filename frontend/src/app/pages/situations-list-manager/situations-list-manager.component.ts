@@ -70,7 +70,25 @@ export class SituationsListManagerComponent {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data.sort((a: Situation, b: Situation) => {
                 if (a.name && b.name) {
-                    return a.name.localeCompare(b.name);
+                    // Extraction des parties textuelles et numériques
+                    const extractParts = (name: string): [string, number] => {
+                        const match = name.match(/([^\d]+)(\d+)?/);
+                        const textPart = match ? match[1] : name;
+                        const numberPart = match && match[2] ? parseInt(match[2], 10) : Number.MAX_SAFE_INTEGER;
+                        return [textPart, numberPart];
+                    };
+
+                    const [textA, numberA] = extractParts(a.name);
+                    const [textB, numberB] = extractParts(b.name);
+
+                    // Comparaison des parties textuelles
+                    const textComparison = textA.localeCompare(textB);
+                    if (textComparison !== 0) {
+                        return textComparison;
+                    }
+
+                    // Comparaison des parties numériques
+                    return numberA - numberB;
                 }
                 return 0; // Si l'un des noms est undefined, ils restent dans leur position actuelle
             });
@@ -84,10 +102,6 @@ export class SituationsListManagerComponent {
     displaySituation(situation: Situation) {
         this.situationToDisplay = situation;
         this.commonService.showModal('displaySituationModal');
-    }
-
-    closeDisplaySituationModal() {
-        this.commonService.closeModal('displaySituationModal');
     }
 
     editSituation(id: string) {

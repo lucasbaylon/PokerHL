@@ -161,54 +161,48 @@
 <!-- Div affichée lors d'un click sur icon "oeil" pour voir la situation -->
 <dialog id="displaySituationModal" class="dui-modal">
     <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-        <form method="dialog">
-            <button
-                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
-        </form>
         @if (situationToDisplay) {
-            <h4 class="m-0 mb-4 text-center text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                {{situationToDisplay.name}}
-            </h4>
-            <div class="flex justify-center items-center">
-                <div class="mx-auto table-fixed border-separate border-spacing-1 ml-5">
-                    <table>
-                        <tbody>
-                            @for (row of situationToDisplay.situations; track $index) {
-                                <tr class="table-row">
-                                    @for (item of row; track $index) {
-                                        <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
-                                            [style.background]="(item.solution! | solutionColor:situationToDisplay.solutions)">
-                                            {{item.card}}
-                                        </td>
-                                    }
-                                </tr>
+        <h4
+            class="m-0 mb-4 text-center text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            {{situationToDisplay.name}}
+        </h4>
+        <div class="flex justify-center items-center mb-3">
+            <div class="mx-auto table-fixed border-separate border-spacing-1 ml-5">
+                <table>
+                    <tbody>
+                        @for (row of situationToDisplay.situations; track $index) {
+                        <tr class="table-row">
+                            @for (item of row; track $index) {
+                            <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
+                                [style.background]="(item.solution! | solutionColor:situationToDisplay.solutions)">
+                                {{item.card}}
+                            </td>
                             }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="ml-6 mr-5">
-                    <h4
-                        class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                        Solutions
-                    </h4>
-                    @for (solution of situationToDisplay.solutions; track i; let i = $index) {
-                        @if (solution.display_name) {
-                            <div
-                                class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
-                                {{solution.display_name}}
-                                <div class="h-7 w-7 ml-2 rounded shadow-md"
-                                    [ngStyle]="{'background': (solution.id | solutionColor:situationToDisplay.solutions)}"></div>
-                            </div>
+                        </tr>
                         }
-                    }
-                </div>
+                    </tbody>
+                </table>
             </div>
-            <div class="flex justify-center mt-6 mb-4 animation-delay-200">
-                <div (click)="closeDisplaySituationModal()"
-                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                    Compris !
+            <div class="ml-6 mr-5">
+                <h4
+                    class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    Solutions
+                </h4>
+                @for (solution of situationToDisplay.solutions; track i; let i = $index) {
+                @if (solution.display_name) {
+                <div
+                    class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
+                    {{solution.display_name}}
+                    <div class="h-7 w-7 ml-2 rounded shadow-md"
+                        [ngStyle]="{'background': (solution.id | solutionColor:situationToDisplay.solutions)}"></div>
                 </div>
+                }
+                }
             </div>
+        </div>
         }
     </div>
+    <form method="dialog" class="dui-modal-backdrop">
+        <button class="outline-none border-none bg-transparent"></button>
+    </form>
 </dialog>
