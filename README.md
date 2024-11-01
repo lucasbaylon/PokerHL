@@ -18,7 +18,7 @@ Une fois que vous avez sélectionné les situations sur lesquelles vous souhaite
 
 - **Turbo** : Dans ce mode, la rapidité est essentielle. Vous avez un temps imparti pour répondre à un maximum de situations. C'est un mode d'entraînement idéal pour tester vos réflexes et votre capacité à prendre des décisions rapidement sous pression.
 
-- **Défi** : Ce mode est plus difficile et axé sur la précision. Vous devez répondre correctement à un nombre prédéfini de situations pour réussir l'entraînement. Cependant, la moindre erreur vous fait perdre le défi. Ce mode est conçu pour les joueurs qui souhaitent affiner leur précision et leur discipline dans la prise de décisions.
+- **Défi** : Ce mode est plus difficile et axé sur la précision. Vous devez répondre correctement à un nombre prédéfini de situations pour réussir l'entraînement. Cependant, la moindre erreur vous fait perdre le défi.
 
 #### Écran d'Entraînement
 
