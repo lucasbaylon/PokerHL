@@ -33,14 +33,7 @@ export const appConfig: ApplicationConfig = {
                 deps: [HttpClient],
             },
         })),
-        provideFirebaseApp(() => initializeApp({
-            apiKey: "AIzaSyB2BrtaN_2h-T0iWEZFe3SZVNhrUxyzYV8",
-            authDomain: "pokertraining-ab684.firebaseapp.com",
-            projectId: "pokertraining-ab684",
-            storageBucket: "pokertraining-ab684.appspot.com",
-            messagingSenderId: "812892987669",
-            appId: "1:812892987669:web:911a0142ec81c1429b091c"
-        })),
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideStorage(() => getStorage()),
         provideAuth(() => getAuth()),
         importProvidersFrom(SocketIoModule.forRoot(config)),

@@ -13,7 +13,7 @@ const { getConnection } = require('./database');
 
 const http = require('http').Server(app);
 
-const serviceAccount = require('./serviceAccountKey.json');
+// const serviceAccount = require('./serviceAccountKey.json');
 const { json } = require('body-parser');
 
 // Configuration de multer pour le stockage en mémoire
@@ -21,7 +21,11 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert({
+        private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.FIREBASE_CLIENT_EMAIL,
+        project_id: process.env.FIREBASE_PROJECT_ID
+    })
 });
 
 app.set('port', 3000);
