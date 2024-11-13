@@ -3,10 +3,10 @@ const mysql = require('mysql2/promise');
 
 // Création du pool de connexions
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: process.env.NODE_ENV === 'production' ? "zartop" : "root",
-    password: process.env.NODE_ENV === 'production' ? "#$W&5*grhqd^BScca6kg" : "",
-    database: 'pokerhl',
+    host: process.env.NODE_ENV === 'production' ? process.env.DB_HOST : "localhost",
+    user: process.env.NODE_ENV === 'production' ? process.env.DB_USERNAME : "root",
+    password: process.env.NODE_ENV === 'production' ? process.env.DB_PASSWORD : "",
+    database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
