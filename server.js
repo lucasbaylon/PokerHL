@@ -2,6 +2,7 @@ const express = require('express');
 cors = require('cors');
 const app = express();
 
+require('dotenv').config()
 const path = require('path');
 const fs = require('fs');
 const JSZip = require('jszip');
