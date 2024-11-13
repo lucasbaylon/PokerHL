@@ -2,9 +2,7 @@ const express = require('express');
 cors = require('cors');
 const app = express();
 
-require('dotenv').config()
-const path = require('path');
-const fs = require('fs');
+require('dotenv').config();
 const JSZip = require('jszip');
 const multer = require('multer');
 
@@ -13,9 +11,6 @@ const admin = require('firebase-admin');
 const { getConnection } = require('./database');
 
 const http = require('http').Server(app);
-
-// const serviceAccount = require('./serviceAccountKey.json');
-const { json } = require('body-parser');
 
 // Configuration de multer pour le stockage en mémoire
 const storage = multer.memoryStorage();
