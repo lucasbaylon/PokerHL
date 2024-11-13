@@ -27,4 +27,4 @@ mkdir -p $prod
 cp -r $distFolder $prod/dist
 
 # Copiez les fichiers et dossiers du backend dans le dossier prod
-cp -r server.js database.js node_modules serviceAccountKey.json ecosystem_production.config.js $prod
+cp -r server.js database.js node_modules .env ecosystem_production.config.js $prod
