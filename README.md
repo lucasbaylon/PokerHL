@@ -5,8 +5,8 @@ Bienvenue sur **Poker HL**, l'application pour perfectionner vos compétences au
 Accédez à Poker HL directement ici : [https://pokerhl.lucasbaylon.fr/home](https://pokerhl.lucasbaylon.fr/home)
 
 Pour tester, vous pouvez utiliser le compte suivant :
-Identifiant : demo@gmail.com
-Mot de passe : demo_test
+Identifiant : demo@gmail.com  
+Mot de passe : demo_test  
 
 Remarque : Le site Poker HL n'est pas optimisé pour une utilisation sur un format téléphone. Pour une expérience optimale, nous vous recommandons de l'utiliser sur un ordinateur.
 
