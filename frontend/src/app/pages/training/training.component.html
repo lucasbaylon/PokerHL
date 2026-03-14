@@ -12,7 +12,7 @@
                         </h1>
                     </div>
 
-                    <!-- Adversaire du milieu -->
+                    <!-- Adversaire du milieu (HU) -->
                     @if (activeSituation.nbPlayer === 2) {
                     <div
                         class="absolute top-[-10%] left-1/2 w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
@@ -23,7 +23,7 @@
                             <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -33,12 +33,18 @@
                             }
                         </div>
                         <div class="w-1/2 flex items-center justify-center">
+                            @if (activeSituation.previousPlayer1Action === 'Fold') {
+                            <div class="flex items-center justify-center h-16 w-20 bg-gray-700 rounded-lg">
+                                <span class="text-gray-400 font-bold text-xl tracking-widest">FOLD</span>
+                            </div>
+                            } @else {
                             <app-default-cards></app-default-cards>
+                            }
                         </div>
                     </div>
                     }
 
-                    <!-- Adversaire de gauche -->
+                    <!-- Adversaire de gauche (3W, BU = player1) -->
                     @if (activeSituation.nbPlayer === 3) {
                     <div
                         class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
@@ -56,12 +62,7 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <!-- Active Action or Stack -->
-                            @if (activeSituation.previousPlayer1Action && activeSituation.previousPlayer1Action !== 'Aucune') {
-                            <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer1Action}}</h3>
-                            } @else {
-                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
-                            }
+                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -71,12 +72,18 @@
                             }
                         </div>
                         <div class="w-1/2 flex items-center justify-center">
+                            @if (activeSituation.previousPlayer1Action === 'Fold') {
+                            <div class="flex items-center justify-center h-16 w-20 bg-gray-700 rounded-lg">
+                                <span class="text-gray-400 font-bold text-xl tracking-widest">FOLD</span>
+                            </div>
+                            } @else {
                             <app-default-cards></app-default-cards>
+                            }
                         </div>
                     </div>
                     }
 
-                    <!-- Adversaire de droite -->
+                    <!-- Adversaire de droite (3W, SB = player2) -->
                     @if (activeSituation.nbPlayer === 3) {
                     <div
                         class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
@@ -94,12 +101,7 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <!-- Active Action or Stack -->
-                            @if (activeSituation.previousPlayer2Action && activeSituation.previousPlayer2Action !== 'Aucune') {
-                            <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer2Action}}</h3>
-                            } @else {
-                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
-                            }
+                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.previousPlayer2Action, activeSituation.stack)}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'sb') {
                             <div
@@ -109,7 +111,13 @@
                             }
                         </div>
                         <div class="w-1/2 flex items-center justify-center">
+                            @if (activeSituation.previousPlayer2Action === 'Fold') {
+                            <div class="flex items-center justify-center h-16 w-20 bg-gray-700 rounded-lg">
+                                <span class="text-gray-400 font-bold text-xl tracking-widest">FOLD</span>
+                            </div>
+                            } @else {
                             <app-default-cards></app-default-cards>
+                            }
                         </div>
                     </div>
                     }
@@ -170,27 +178,50 @@
 
                     <!-- ===== JETONS SUR LA TABLE ===== -->
 
-                    <!-- Jetons HU : adversaire du milieu (top center) -->
-                    @if (activeSituation.nbPlayer === 2 && activeSituation.previousPlayer1Action && activeSituation.previousPlayer1Action !== 'Aucune' && getChipImage(activeSituation.previousPlayer1Action)) {
-                    <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                        <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{activeSituation.previousPlayer1Action}}</span>
-                    </div>
+                    <!-- Jetons HU : adversaire (position déterminée par la position du joueur) -->
+                    @if (activeSituation.nbPlayer === 2) {
+                        @let huOppPos = getHUOpponentPosition(activeSituation.position!);
+                        @let huChip = getChipImageForBet(activeSituation.previousPlayer1Action, huOppPos);
+                        @let huBet = getBetAmountStr(huOppPos, activeSituation.previousPlayer1Action, activeSituation.stack);
+                        @if (huChip) {
+                        <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                            <img [src]="huChip" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                            @if (huBet) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{huBet}}</span> }
+                        </div>
+                        }
                     }
 
-                    <!-- Jetons 3W : adversaire de gauche (opponent1) -->
-                    @if (activeSituation.nbPlayer === 3 && activeSituation.previousPlayer1Action && activeSituation.previousPlayer1Action !== 'Aucune' && getChipImage(activeSituation.previousPlayer1Action)) {
-                    <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                        <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{activeSituation.previousPlayer1Action}}</span>
-                    </div>
+                    <!-- Jetons 3W : adversaire de gauche (BU = player1, pas de blind) -->
+                    @if (activeSituation.nbPlayer === 3) {
+                        @let chip1 = getChipImageForBet(activeSituation.previousPlayer1Action, 'bu');
+                        @let bet1 = getBetAmountStr('bu', activeSituation.previousPlayer1Action, activeSituation.stack);
+                        @if (chip1) {
+                        <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                            <img [src]="chip1" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                            @if (bet1) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{bet1}}</span> }
+                        </div>
+                        }
                     }
 
-                    <!-- Jetons 3W : adversaire de droite (opponent2) -->
-                    @if (activeSituation.nbPlayer === 3 && activeSituation.previousPlayer2Action && activeSituation.previousPlayer2Action !== 'Aucune' && getChipImage(activeSituation.previousPlayer2Action)) {
-                    <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                        <img [src]="getChipImage(activeSituation.previousPlayer2Action)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{activeSituation.previousPlayer2Action}}</span>
+                    <!-- Jetons 3W : adversaire de droite (SB = player2, toujours 0.5BB) -->
+                    @if (activeSituation.nbPlayer === 3) {
+                        @let chip2 = getChipImageForBet(activeSituation.previousPlayer2Action, 'sb');
+                        @let bet2 = getBetAmountStr('sb', activeSituation.previousPlayer2Action, activeSituation.stack);
+                        @if (chip2) {
+                        <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                            <img [src]="chip2" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                            @if (bet2) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{bet2}}</span> }
+                        </div>
+                        }
+                    }
+
+                    <!-- Jetons du joueur (blind selon sa position) -->
+                    @let userChip = getChipImageForBet(undefined, activeSituation.position!);
+                    @let userBet = getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack);
+                    @if (userChip) {
+                    <div class="absolute top-[72%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="userChip" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        @if (userBet) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{userBet}}</span> }
                     </div>
                     }
 

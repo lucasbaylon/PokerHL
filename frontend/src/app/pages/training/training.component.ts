@@ -256,6 +256,62 @@ export class TrainingComponent {
         return 'assets/images/chip-medium.png';
     }
 
+    /**
+     * Retourne le montant misé en BB selon la position et l'action précédente.
+     * utilisé pour le texte affiché sous les jetons sur la table.
+     */
+    getBetAmountStr(position: string, action: string | undefined, stack: number): string {
+        const blindBet: Record<string, string> = { 'bb': '1 BB', 'sb': '0.5 BB', 'bu': '' };
+        const base = blindBet[position] ?? '';
+
+        if (!action || action === 'Aucune' || action === 'Check') return base;
+        if (action === 'Fold') return base; // blind déjà misé avant le fold
+
+        switch (action) {
+            case 'Limp': return '1 BB';
+            case 'Call': return '1 BB';
+            case 'Raise 2BB': return '2 BB';
+            case 'Raise 2.5BB': return '2.5 BB';
+            case 'Raise 3BB': return '3 BB';
+            case 'Raise 4BB': return '4 BB';
+            case 'Raise 5BB': return '5 BB';
+            case 'Raise 10BB': return '10 BB';
+            case 'All In': return `${stack} BB`;
+            default: return base;
+        }
+    }
+
+    /**
+     * Retourne l'image de jeton pour une position/action donnée,
+     * y compris pour les blindes (BB/SB même sans action).
+     */
+    getChipImageForBet(action: string | undefined, position: string): string {
+        if (!action || action === 'Aucune' || action === 'Check') {
+            // Afficher les jetons de blind pour BB et SB
+            return (position === 'bb' || position === 'sb') ? 'assets/images/chip-small.png' : '';
+        }
+        if (action === 'Fold') {
+            // Blind déjà posé avant le fold
+            return (position === 'bb' || position === 'sb') ? 'assets/images/chip-small.png' : '';
+        }
+        return this.getChipImage(action);
+    }
+
+    /**
+     * Retourne le stack restant après une action.
+     * All In → 0 BB, sinon stack inchangé.
+     */
+    getOpponentRemainingStack(action: string | undefined, stack: number): number {
+        return action === 'All In' ? 0 : stack;
+    }
+
+    /**
+     * En HU, retourne la position de l'adversaire à partir de la position du joueur.
+     */
+    getHUOpponentPosition(userPosition: string): string {
+        return userPosition === 'sb' ? 'bb' : 'sb';
+    }
+
     checkResultCase(result: string) {
         if (this.countResult) this.totalResponse += 1;
         if (this.activeSituation.result.includes(result)) {
