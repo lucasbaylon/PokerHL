@@ -178,50 +178,43 @@
 
                     <!-- ===== JETONS SUR LA TABLE ===== -->
 
-                    <!-- Jetons HU : adversaire (position déterminée par la position du joueur) -->
-                    @if (activeSituation.nbPlayer === 2) {
-                        @let huOppPos = getHUOpponentPosition(activeSituation.position!);
-                        @let huChip = getChipImageForBet(activeSituation.previousPlayer1Action, huOppPos);
-                        @let huBet = getBetAmountStr(huOppPos, activeSituation.previousPlayer1Action, activeSituation.stack);
-                        @if (huChip) {
-                        <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                            <img [src]="huChip" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                            @if (huBet) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{huBet}}</span> }
-                        </div>
+                    <!-- Jetons HU : adversaire -->
+                    @if (activeSituation.nbPlayer === 2 && getChipImageForBet(activeSituation.previousPlayer1Action, getHUOpponentPosition(activeSituation.position!))) {
+                    <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="getChipImageForBet(activeSituation.previousPlayer1Action, getHUOpponentPosition(activeSituation.position!))" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        @if (getBetAmountStr(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)) {
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)}}</span>
                         }
+                    </div>
                     }
 
-                    <!-- Jetons 3W : adversaire de gauche (BU = player1, pas de blind) -->
-                    @if (activeSituation.nbPlayer === 3) {
-                        @let chip1 = getChipImageForBet(activeSituation.previousPlayer1Action, 'bu');
-                        @let bet1 = getBetAmountStr('bu', activeSituation.previousPlayer1Action, activeSituation.stack);
-                        @if (chip1) {
-                        <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                            <img [src]="chip1" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                            @if (bet1) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{bet1}}</span> }
-                        </div>
+                    <!-- Jetons 3W : adversaire de gauche (BU = player1) -->
+                    @if (activeSituation.nbPlayer === 3 && getChipImageForBet(activeSituation.previousPlayer1Action, 'bu')) {
+                    <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="getChipImageForBet(activeSituation.previousPlayer1Action, 'bu')" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        @if (getBetAmountStr('bu', activeSituation.previousPlayer1Action, activeSituation.stack)) {
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr('bu', activeSituation.previousPlayer1Action, activeSituation.stack)}}</span>
                         }
+                    </div>
                     }
 
-                    <!-- Jetons 3W : adversaire de droite (SB = player2, toujours 0.5BB) -->
-                    @if (activeSituation.nbPlayer === 3) {
-                        @let chip2 = getChipImageForBet(activeSituation.previousPlayer2Action, 'sb');
-                        @let bet2 = getBetAmountStr('sb', activeSituation.previousPlayer2Action, activeSituation.stack);
-                        @if (chip2) {
-                        <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                            <img [src]="chip2" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                            @if (bet2) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{bet2}}</span> }
-                        </div>
+                    <!-- Jetons 3W : adversaire de droite (SB = player2) -->
+                    @if (activeSituation.nbPlayer === 3 && getChipImageForBet(activeSituation.previousPlayer2Action, 'sb')) {
+                    <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="getChipImageForBet(activeSituation.previousPlayer2Action, 'sb')" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        @if (getBetAmountStr('sb', activeSituation.previousPlayer2Action, activeSituation.stack)) {
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr('sb', activeSituation.previousPlayer2Action, activeSituation.stack)}}</span>
                         }
+                    </div>
                     }
 
                     <!-- Jetons du joueur (blind selon sa position) -->
-                    @let userChip = getChipImageForBet(undefined, activeSituation.position!);
-                    @let userBet = getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack);
-                    @if (userChip) {
+                    @if (getChipImageForBet(undefined, activeSituation.position!)) {
                     <div class="absolute top-[72%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                        <img [src]="userChip" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
-                        @if (userBet) { <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{userBet}}</span> }
+                        <img [src]="getChipImageForBet(undefined, activeSituation.position!)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        @if (getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack)) {
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack)}}</span>
+                        }
                     </div>
                     }
 

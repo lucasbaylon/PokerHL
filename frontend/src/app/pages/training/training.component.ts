@@ -260,7 +260,8 @@ export class TrainingComponent {
      * Retourne le montant misé en BB selon la position et l'action précédente.
      * utilisé pour le texte affiché sous les jetons sur la table.
      */
-    getBetAmountStr(position: string, action: string | undefined, stack: number): string {
+    getBetAmountStr(position: string, action: string | undefined, stack: number | undefined): string {
+        const stackVal = stack ?? 0;
         const blindBet: Record<string, string> = { 'bb': '1 BB', 'sb': '0.5 BB', 'bu': '' };
         const base = blindBet[position] ?? '';
 
@@ -276,7 +277,7 @@ export class TrainingComponent {
             case 'Raise 4BB': return '4 BB';
             case 'Raise 5BB': return '5 BB';
             case 'Raise 10BB': return '10 BB';
-            case 'All In': return `${stack} BB`;
+            case 'All In': return `${stackVal} BB`;
             default: return base;
         }
     }
@@ -301,8 +302,8 @@ export class TrainingComponent {
      * Retourne le stack restant après une action.
      * All In → 0 BB, sinon stack inchangé.
      */
-    getOpponentRemainingStack(action: string | undefined, stack: number): number {
-        return action === 'All In' ? 0 : stack;
+    getOpponentRemainingStack(action: string | undefined, stack: number | undefined): number {
+        return action === 'All In' ? 0 : (stack ?? 0);
     }
 
     /**
