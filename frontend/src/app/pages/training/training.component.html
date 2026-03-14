@@ -243,12 +243,8 @@
     }
 
     <!-- Div affichée lors d'une mauvaise réponse -->
-    <dialog id="wrong-answer-modal" class="dui-modal">
+    <dialog id="wrong-answer-modal" class="dui-modal" (cancel)="$event.preventDefault()">
         <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-            <form method="dialog">
-                <button
-                    class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
-            </form>
             @if (currentSituation) {
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
