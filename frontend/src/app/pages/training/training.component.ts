@@ -257,29 +257,36 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne le montant misé en BB selon la position et l'action précédente.
-     * utilisé pour le texte affiché sous les jetons sur la table.
+     * Retourne le montant numérique misé en BB.
      */
-    getBetAmountStr(position: string, action: string | undefined, stack: number | undefined): string {
+    getBetAmount(position: string, action: string | undefined, stack: number | undefined): number {
         const stackVal = stack ?? 0;
-        const blindBet: Record<string, string> = { 'bb': '1 BB', 'sb': '0.5 BB', 'bu': '' };
-        const base = blindBet[position] ?? '';
+        const blindValues: Record<string, number> = { 'bb': 1, 'sb': 0.5, 'bu': 0 };
 
-        if (!action || action === 'Aucune' || action === 'Check') return base;
-        if (action === 'Fold') return base; // blind déjà misé avant le fold
+        if (!action || action === 'Aucune' || action === 'Check' || action === 'Fold') {
+            return blindValues[position] ?? 0;
+        }
 
         switch (action) {
-            case 'Limp': return '1 BB';
-            case 'Call': return '1 BB';
-            case 'Raise 2BB': return '2 BB';
-            case 'Raise 2.5BB': return '2.5 BB';
-            case 'Raise 3BB': return '3 BB';
-            case 'Raise 4BB': return '4 BB';
-            case 'Raise 5BB': return '5 BB';
-            case 'Raise 10BB': return '10 BB';
-            case 'All In': return `${stackVal} BB`;
-            default: return base;
+            case 'Limp': return 1;
+            case 'Call': return 1;
+            case 'Raise 2BB': return 2;
+            case 'Raise 2.5BB': return 2.5;
+            case 'Raise 3BB': return 3;
+            case 'Raise 4BB': return 4;
+            case 'Raise 5BB': return 5;
+            case 'Raise 10BB': return 10;
+            case 'All In': return stackVal;
+            default: return blindValues[position] ?? 0;
         }
+    }
+
+    /**
+     * Retourne le montant misé en BB sous forme de texte.
+     */
+    getBetAmountStr(position: string, action: string | undefined, stack: number | undefined): string {
+        const bet = this.getBetAmount(position, action, stack);
+        return bet > 0 ? `${bet} BB` : '';
     }
 
     /**
@@ -299,11 +306,13 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne le stack restant après une action.
-     * All In → 0 BB, sinon stack inchangé.
+     * Retourne le stack restant après avoir déduit la mise.
      */
-    getOpponentRemainingStack(action: string | undefined, stack: number | undefined): number {
-        return action === 'All In' ? 0 : (stack ?? 0);
+    getOpponentRemainingStack(position: string, action: string | undefined, stack: number | undefined): number {
+        const totalStack = stack ?? 0;
+        if (action === 'All In') return 0;
+        const bet = this.getBetAmount(position, action, totalStack);
+        return totalStack - bet;
     }
 
     /**
