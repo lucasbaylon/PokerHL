@@ -53,7 +53,6 @@ export class SituationManagerComponent {
     ];
 
     availablePreviousActions: any[] = [
-        { name: 'Aucune', code: 'Aucune' },
         { name: 'Fold', code: 'Fold' },
         { name: 'Limp', code: 'Limp' },
         { name: 'Call', code: 'Call' },
@@ -99,9 +98,9 @@ export class SituationManagerComponent {
 
     fishPosition?: { name: string, code: string } = this.availableFishPlayerPosition[0];
 
-    previousPlayer1Action: { name: string, code: string } = { name: 'Aucune', code: 'Aucune' };
+    previousPlayer1Action: { name: string, code: string } = { name: 'Fold', code: 'Fold' };
     
-    previousPlayer2Action: { name: string, code: string } = { name: 'Aucune', code: 'Aucune' };
+    previousPlayer2Action: { name: string, code: string } = { name: 'Fold', code: 'Fold' };
 
     constructor(
         private router: Router,
@@ -157,11 +156,11 @@ export class SituationManagerComponent {
         // Previous actions initialization
         this.previousPlayer1Action = this.situation_obj.previousPlayer1Action
             ? this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer1Action)
-            : { name: 'Aucune', code: 'Aucune' };
+            : { name: 'Fold', code: 'Fold' };
 
         this.previousPlayer2Action = this.situation_obj.previousPlayer2Action
             ? this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer2Action)
-            : { name: 'Aucune', code: 'Aucune' };
+            : { name: 'Fold', code: 'Fold' };
 
         // Pour le type de situation (si applicable, à adapter selon votre logique)
         if (this.availableSituationType) {
@@ -622,7 +621,7 @@ export class SituationManagerComponent {
                             (this.nbPlayer.code === 3 && this.position.code === 'bu');
 
         if (!isFirstToAct) {
-            let lastAction = "Aucune";
+            let lastAction = "Fold";
 
             if (this.nbPlayer.code === 2) {
                 // HU BB: Action du SB
@@ -633,8 +632,8 @@ export class SituationManagerComponent {
                     // SB: Action du BU
                     lastAction = this.previousPlayer1Action.code;
                 } else if (this.position.code === 'bb') {
-                    // BB: Action du SB si pas Fold/Aucune, sinon BU
-                    if (this.previousPlayer2Action.code !== 'Fold' && this.previousPlayer2Action.code !== 'Aucune') {
+                    // BB: Action du SB si pas Fold, sinon BU
+                    if (this.previousPlayer2Action.code !== 'Fold') {
                         lastAction = this.previousPlayer2Action.code;
                     } else {
                         lastAction = this.previousPlayer1Action.code;
@@ -642,7 +641,7 @@ export class SituationManagerComponent {
                 }
             }
 
-            if (lastAction !== "Aucune" && lastAction !== "Fold") {
+            if (lastAction !== "Fold") {
                 if (lastAction === "Limp" || lastAction === "Call") {
                     action = "vs limp ";
                 } else if (lastAction.startsWith("Raise")) {
