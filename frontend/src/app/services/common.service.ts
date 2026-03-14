@@ -14,7 +14,10 @@ export class CommonService {
 
     constructor(
         private router: Router
-    ) { }
+    ) {
+        const theme = localStorage.getItem('theme');
+        this.darkMode.set(theme === 'dark');
+    }
 
     public isCollapsed: boolean = false;
     empty_situation_obj: Situation = {
