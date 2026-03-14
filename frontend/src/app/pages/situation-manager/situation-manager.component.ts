@@ -596,4 +596,65 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Génère automatiquement le nom de la situation en fonction des paramètres actuels.
+     */
+    generateAutoSituationName() {
+        let mode = "";
+        let position = this.position.name;
+        let stack = (this.situation_obj.stack || 0) + "d";
+        let action = "";
+        let niveau = this.opponentLevel.name.toUpperCase();
+
+        // 1. Déterminer le MODE
+        if (this.nbPlayer.code === 2) {
+            mode = "HU";
+        } else {
+            if (this.previousPlayer1Action.code === 'Fold') {
+                mode = "BVB";
+            } else {
+                mode = "3w";
+            }
+        }
+
+        // 2. Déterminer l'ACTION
+        const isFirstToAct = (this.nbPlayer.code === 2 && this.position.code === 'sb') || 
+                            (this.nbPlayer.code === 3 && this.position.code === 'bu');
+
+        if (!isFirstToAct) {
+            let lastAction = "Aucune";
+
+            if (this.nbPlayer.code === 2) {
+                // HU BB: Action du SB
+                lastAction = this.previousPlayer1Action.code;
+            } else {
+                // 3way
+                if (this.position.code === 'sb') {
+                    // SB: Action du BU
+                    lastAction = this.previousPlayer1Action.code;
+                } else if (this.position.code === 'bb') {
+                    // BB: Action du SB si pas Fold/Aucune, sinon BU
+                    if (this.previousPlayer2Action.code !== 'Fold' && this.previousPlayer2Action.code !== 'Aucune') {
+                        lastAction = this.previousPlayer2Action.code;
+                    } else {
+                        lastAction = this.previousPlayer1Action.code;
+                    }
+                }
+            }
+
+            if (lastAction !== "Aucune" && lastAction !== "Fold") {
+                if (lastAction === "Limp" || lastAction === "Call") {
+                    action = "vs limp ";
+                } else if (lastAction.startsWith("Raise")) {
+                    action = "vs open ";
+                } else if (lastAction === "All In") {
+                    action = "vs OS ";
+                }
+            }
+        }
+
+        // Assemblage final : "MODE POSITION STACKd vs [ACTION] NIVEAU"
+        this.situation_obj.name = `${mode} ${position} ${stack} ${action}${niveau}`;
+    }
+
 }

@@ -231,8 +231,15 @@
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                 Nom de la situation</div>
-            <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
-                id='situationName' autocomplete="off" pInputText />
+            <div class="flex items-center gap-2">
+                <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
+                    id='situationName' autocomplete="off" pInputText />
+                <div (click)="generateAutoSituationName()" 
+                    class="flex h-10 w-10 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 shadow cursor-pointer transition-colors"
+                    title="Générer automatiquement le nom">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+            </div>
         </div>
         <div class="flex items-center justify-between w-full mt-4">
             <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
