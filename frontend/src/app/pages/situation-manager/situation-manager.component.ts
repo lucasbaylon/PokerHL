@@ -53,6 +53,7 @@ export class SituationManagerComponent {
     ];
 
     availablePreviousActions: any[] = [
+        { name: 'Aucune', code: 'Aucune' },
         { name: 'Fold', code: 'Fold' },
         { name: 'Limp', code: 'Limp' },
         { name: 'Call', code: 'Call' },

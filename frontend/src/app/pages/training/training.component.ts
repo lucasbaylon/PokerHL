@@ -241,7 +241,7 @@ export class TrainingComponent {
     }
 
     getChipImage(action?: string): string {
-        if (!action || action === 'Fold' || action === 'Check') {
+        if (!action || action === 'Fold' || action === 'Check' || action === 'Aucune') {
             return '';
         }
         

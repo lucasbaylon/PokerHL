@@ -57,13 +57,8 @@
                             }
                             <h3 class="m-0">Adversaire</h3>
                             <!-- Active Action or Stack -->
-                            @if (activeSituation.previousPlayer1Action) {
-                            <div class="flex items-center gap-2 mt-1">
-                                <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer1Action}}</h3>
-                                @if (getChipImage(activeSituation.previousPlayer1Action)) {
-                                <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-8 w-auto object-contain drop-shadow-md" alt="chips" />
-                                }
-                            </div>
+                            @if (activeSituation.previousPlayer1Action && activeSituation.previousPlayer1Action !== 'Aucune') {
+                            <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer1Action}}</h3>
                             } @else {
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             }
@@ -82,7 +77,7 @@
                     }
 
                     <!-- Adversaire de droite -->
-                    @if (activeSituation.nbPlayer === 3 || activeSituation.nbPlayer === 2) {
+                    @if (activeSituation.nbPlayer === 3) {
                     <div
                         class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
@@ -100,21 +95,8 @@
                             }
                             <h3 class="m-0">Adversaire</h3>
                             <!-- Active Action or Stack -->
-                            @if (activeSituation.previousPlayer2Action) {
-                            <div class="flex items-center gap-2 mt-1">
-                                <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer2Action}}</h3>
-                                @if (getChipImage(activeSituation.previousPlayer2Action)) {
-                                <img [src]="getChipImage(activeSituation.previousPlayer2Action)" class="h-8 w-auto object-contain drop-shadow-md" alt="chips" />
-                                }
-                            </div>
-                            } @else if (!activeSituation.previousPlayer2Action && activeSituation.previousPlayer1Action && activeSituation.nbPlayer === 2 && activeSituation.position === 'bb') {
-                            <!-- HU BB: Right opponent is SB (Player 1 action) -->
-                            <div class="flex items-center gap-2 mt-1">
-                                <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer1Action}}</h3>
-                                @if (getChipImage(activeSituation.previousPlayer1Action)) {
-                                <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-8 w-auto object-contain drop-shadow-md" alt="chips" />
-                                }
-                            </div>
+                            @if (activeSituation.previousPlayer2Action && activeSituation.previousPlayer2Action !== 'Aucune') {
+                            <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer2Action}}</h3>
                             } @else {
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
                             }
@@ -185,6 +167,33 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- ===== JETONS SUR LA TABLE ===== -->
+
+                    <!-- Jetons HU : adversaire du milieu (top center) -->
+                    @if (activeSituation.nbPlayer === 2 && activeSituation.previousPlayer1Action && activeSituation.previousPlayer1Action !== 'Aucune' && getChipImage(activeSituation.previousPlayer1Action)) {
+                    <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{activeSituation.previousPlayer1Action}}</span>
+                    </div>
+                    }
+
+                    <!-- Jetons 3W : adversaire de gauche (opponent1) -->
+                    @if (activeSituation.nbPlayer === 3 && activeSituation.previousPlayer1Action && activeSituation.previousPlayer1Action !== 'Aucune' && getChipImage(activeSituation.previousPlayer1Action)) {
+                    <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{activeSituation.previousPlayer1Action}}</span>
+                    </div>
+                    }
+
+                    <!-- Jetons 3W : adversaire de droite (opponent2) -->
+                    @if (activeSituation.nbPlayer === 3 && activeSituation.previousPlayer2Action && activeSituation.previousPlayer2Action !== 'Aucune' && getChipImage(activeSituation.previousPlayer2Action)) {
+                    <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <img [src]="getChipImage(activeSituation.previousPlayer2Action)" class="h-10 w-auto object-contain drop-shadow-lg" alt="chips" />
+                        <span class="text-white text-xs font-bold drop-shadow-md bg-black/40 px-1 rounded">{{activeSituation.previousPlayer2Action}}</span>
+                    </div>
+                    }
+
                 </div>
             </div>
 

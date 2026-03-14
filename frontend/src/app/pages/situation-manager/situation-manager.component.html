@@ -107,14 +107,13 @@
 </div>
 
 <!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
-<div [ngClass]="{'h-[500px]': opponentLevel.code === 'fish_shark', 'h-[440px]': opponentLevel.code !== 'fish_shark'}" class="flex items-start justify-center w-full my-16 mx-auto ">
+<div class="flex items-stretch justify-center w-full my-16 mx-auto h-auto">
     <!-- Div SOLUTIONS MULTIPLES -->
     <div
-        class="p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 h-full">
+        class="p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 flex flex-col overflow-hidden">
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Solutions multiples</h4>
-        <div [ngClass]="{'max-h-[75%]': opponentLevel.code === 'fish_shark', 'max-h-[70%]': opponentLevel.code !== 'fish_shark'}"
-        class="overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start mt-4">
+        <div class="flex-1 overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start mt-4">
             @for (solution of filteredSolutionList(situation_obj.solutions, 'mixed'); track $index) {
                 <div class="relative flex items-center my-4 w-full">
                     <!-- Surbrillance de la couleur sélectionnée -->
@@ -226,7 +225,7 @@
 
     <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
     <div
-        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-full">
+        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-auto">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Caractéristiques de la situation</h4>
         <div class="flex items-center justify-between w-full mt-4">
@@ -281,19 +280,8 @@
         }
 
         <!-- Actions des joueurs précédents -->
-        <!-- 3way SB (Joueur 1 = BU) -->
-        @if (nbPlayer.code === 3 && position.code === 'sb') {
-            <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Action précédente (BU)
-                </div>
-                <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
-            </div>
-        }
-
-        <!-- 3way BB (Joueur 1 = BU, Joueur 2 = SB) -->
-        @if (nbPlayer.code === 3 && position.code === 'bb') {
+        <!-- 3way (Joueur 1 = BU, Joueur 2 = SB) -->
+        @if (nbPlayer.code === 3) {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                     Action précédente (BU)
@@ -310,8 +298,8 @@
             </div>
         }
 
-        <!-- HU BB (Joueur 1 = SB) -->
-        @if (nbPlayer.code === 2 && position.code === 'bb') {
+        <!-- HU (Joueur 1 = SB) -->
+        @if (nbPlayer.code === 2) {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                     Action précédente (SB)
