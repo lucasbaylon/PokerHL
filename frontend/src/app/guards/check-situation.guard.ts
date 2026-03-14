@@ -5,6 +5,10 @@ import { map, of, switchMap, take } from 'rxjs';
 import { CommonService } from '../services/common.service';
 import { AuthService } from '../services/auth.service';
 
+/**
+ * Garde de navigation vérifiant si l'utilisateur possède au moins une situation créée.
+ * Affiche un message d'erreur et bloque l'accès si aucune situation n'est trouvée.
+ */
 export const checkSituationGuard: CanActivateFn = (route, state) => {
     const apiSituation = inject(SituationService);
     const commonService = inject(CommonService);

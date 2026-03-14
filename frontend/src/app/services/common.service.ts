@@ -135,10 +135,9 @@ export class CommonService {
     }
 
     /**
-    * Affiche une modal spécifiée par son identifiant.
-    * 
-    * @param {string} id - L'identifiant de l'élément modal à afficher.
-    */
+     * Affiche une modal spécifiée par son identifiant.
+     * @param id L'identifiant de l'élément <dialog>.
+     */
     showModal(id: string) {
         const modal = document.getElementById(id) as HTMLDialogElement;
         if (modal) {
@@ -147,10 +146,9 @@ export class CommonService {
     }
 
     /**
-    * Ferme une modal spécifiée par son identifiant.
-    * 
-    * @param {string} id - L'identifiant de l'élément modal à fermer.
-    */
+     * Ferme une modal spécifiée par son identifiant.
+     * @param id L'identifiant de l'élément <dialog>.
+     */
     closeModal(id: string) {
         const modal = document.getElementById(id) as HTMLDialogElement;
         if (modal) {
@@ -190,6 +188,11 @@ export class CommonService {
         this.darkMode.set(value);
     }
 
+    /**
+     * Détermine le nombre de lignes à afficher par page selon la hauteur de l'écran.
+     * @param height Hauteur de la fenêtre en pixels.
+     * @returns Nombre de lignes recommandé.
+     */
     getNbRowsPerPage(height: number): number {
         if (height > 1080) {
             return 11;

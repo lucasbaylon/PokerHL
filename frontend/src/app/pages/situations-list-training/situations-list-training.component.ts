@@ -55,11 +55,18 @@ export class SituationsListTrainingComponent {
         public commonService: CommonService,
     ) { }
 
+    /**
+     * Gère le redimensionnement de la fenêtre pour ajuster le nombre de lignes par page.
+     * @param event L'événement de redimensionnement.
+     */
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         this.nbRowsPerPage = this.commonService.getNbRowsPerPage(event.target.innerHeight);
     }
 
+    /**
+     * Initialise le composant et récupère la liste des situations.
+     */
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data.sort((a: Situation, b: Situation) => {
@@ -93,10 +100,17 @@ export class SituationsListTrainingComponent {
         this.nbRowsPerPage = this.commonService.getNbRowsPerPage(window.innerHeight);
     }
 
+    /**
+     * Redirige l'utilisateur vers une page spécifiée.
+     * @param page Le chemin de la page.
+     */
     redirectTo(page: string) {
         this.router.navigate([page]);
     }
 
+    /**
+     * Lance l'entraînement avec les situations sélectionnées.
+     */
     onStartTrainingButton() {
         if (this.selectedSituations.length === 0) {
             this.commonService.showSwalToast('Veuillez sélectionner au moins une situation.', 'error');
@@ -106,6 +120,9 @@ export class SituationsListTrainingComponent {
     }
 
     @ViewChild('multiSelect') multiSelect!: MultiSelect;
+    /**
+     * Ouvre le composant MultiSelect.
+     */
     openMultiSelect() {
         this.multiSelect.show();
     }

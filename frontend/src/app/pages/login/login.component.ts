@@ -17,6 +17,9 @@ export class LoginComponent {
     email: string = '';
     password: string = '';
 
+    /**
+     * Initialise le composant.
+     */
     constructor(
         private authService: AuthService,
         protected commonService: CommonService,

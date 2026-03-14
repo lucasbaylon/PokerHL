@@ -53,10 +53,19 @@ export class AuthService {
         });
     }
 
+    /**
+     * Se désabonne des flux à la destruction du service.
+     */
     ngOnDestroy() {
         this.authStateSubscription.unsubscribe();
     }
 
+    /**
+     * Connecte l'utilisateur avec email et mot de passe.
+     * @param email Adresse email.
+     * @param password Mot de passe.
+     * @returns Une promesse de UserCredential.
+     */
     async signIn(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password).then((result) => {
             this.commonService.showSwalToast(`Connexion réussie !`);
@@ -77,12 +86,23 @@ export class AuthService {
         });
     }
 
+    /**
+     * Déconnecte l'utilisateur actuel.
+     * @returns Une promesse de void.
+     */
     async signOut() {
         return signOut(this.auth).then((result) => {
             this.commonService.showSwalToast(`Déconnexion réussie !`);
         });
     }
 
+    /**
+     * Inscrit un nouvel utilisateur.
+     * @param email Adresse email.
+     * @param password Mot de passe.
+     * @param displayName Nom d'affichage.
+     * @returns Une promesse de UserCredential.
+     */
     async signUp(email: string, password: string, displayName: string) {
         return createUserWithEmailAndPassword(this.auth, email, password).then((result) => {
             this.commonService.showSwalToast(`Inscription réussie !`);
@@ -107,26 +127,50 @@ export class AuthService {
         });
     }
 
+    /**
+     * Vérifie si un utilisateur est actuellement connecté.
+     * @returns Vrai si connecté.
+     */
     isLoggedIn(): boolean {
         return this.userSubject.value !== null;
     }
 
+    /**
+     * Retourne l'objet utilisateur Firebase actuel.
+     * @returns L'utilisateur ou null.
+     */
     getUser(): User | null {
         return this.userSubject.value;
     }
 
+    /**
+     * Retourne le nom d'affichage de l'utilisateur.
+     * @returns Le nom ou undefined.
+     */
     getUserDisplayName(): string | null | undefined {
         return this.userSubject.value?.displayName;
     }
 
+    /**
+     * Retourne l'email de l'utilisateur.
+     * @returns L'email ou undefined.
+     */
     getUserEmail(): string | null | undefined {
         return this.userSubject.value?.email;
     }
 
+    /**
+     * Retourne l'URL de l'avatar de l'utilisateur.
+     * @returns L'URL ou undefined.
+     */
     getUserAvatar(): string | null | undefined {
         return this.userSubject.value?.photoURL;
     }
 
+    /**
+     * Met à jour le nom d'affichage de l'utilisateur.
+     * @param displayName Nouveau nom.
+     */
     setUserDisplayName(displayName: string) {
         const user = this.getUser();
         if (user) {
@@ -134,6 +178,10 @@ export class AuthService {
         }
     }
 
+    /**
+     * Met à jour l'URL de l'avatar de l'utilisateur.
+     * @param newAvatar Nouvelle URL d'image.
+     */
     setUserAvatar(newAvatar: string) {
         const user = this.getUser();
         if (user) {
@@ -141,11 +189,19 @@ export class AuthService {
         }
     }
 
+    /**
+     * Supprime un fichier du stockage Firebase.
+     * @param fileName Chemin du fichier.
+     */
     removeAvatar(fileName: string) {
         const storageRef = ref(this.storage, fileName);
         deleteObject(storageRef);
     }
 
+    /**
+     * Télécharge un nouvel avatar et met à jour le profil.
+     * @param file Fichier image.
+     */
     uploadAvatar(file: File) {
         const fileName = `avatar/${this.getUserEmail() as string}`
         try {
@@ -160,10 +216,20 @@ export class AuthService {
         });
     }
 
+    /**
+     * Envoie un email de réinitialisation de mot de passe.
+     * @param email Adresse email.
+     * @returns Une promesse Firebase.
+     */
     sendPasswordResetEmail(email: string) {
         return sendPasswordResetEmail(this.auth, email);
     }
 
+    /**
+     * Ré-authentifie l'utilisateur actuel (nécessaire pour changer le mot de passe).
+     * @param currentPassword Mot de passe actuel.
+     * @returns Une promesse de UserCredential.
+     */
     reauthenticate(currentPassword: string): Promise<UserCredential> {
         const user = this.getUser();
         if (user && user.email) {
@@ -174,6 +240,11 @@ export class AuthService {
         }
     }
 
+    /**
+     * Change le mot de passe de l'utilisateur.
+     * @param newPassword Nouveau mot de passe.
+     * @returns Une promesse de void.
+     */
     async changePassword(newPassword: string): Promise<void> {
         const user = this.getUser();
         if (user) {

@@ -56,16 +56,26 @@ export class SituationsListManagerComponent {
         protected commonService: CommonService
     ) { }
 
+    /**
+     * Gère le redimensionnement de la fenêtre pour ajuster le nombre de lignes par page.
+     * @param event L'événement de redimensionnement.
+     */
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         this.nbRowsPerPage = this.commonService.getNbRowsPerPage(event.target.innerHeight);
     }
 
     @ViewChild('multiSelect') multiSelect!: MultiSelect;
+    /**
+     * Ouvre le composant MultiSelect.
+     */
     openMultiSelect(){
         this.multiSelect.show();
     }
 
+    /**
+     * Initialise le composant et s'abonne à la liste des situations.
+     */
     ngOnInit(): void {
         this.apiSituation.situations.subscribe(data => {
             this.situationList = data.sort((a: Situation, b: Situation) => {
@@ -99,20 +109,36 @@ export class SituationsListManagerComponent {
         this.nbRowsPerPage = this.commonService.getNbRowsPerPage(window.innerHeight);
     }
 
+    /**
+     * Affiche les détails d'une situation dans une modal.
+     * @param situation La situation à afficher.
+     */
     displaySituation(situation: Situation) {
         this.situationToDisplay = situation;
         this.commonService.showModal('displaySituationModal');
     }
 
+    /**
+     * Navigue vers le manager pour éditer une situation.
+     * @param id Identifiant de la situation.
+     */
     editSituation(id: string) {
         this.router.navigate(['situations-manager', { situation_id: id }]);
     }
 
+    /**
+     * Duplique une situation existante via le service API.
+     * @param id Identifiant de la situation à dupliquer.
+     */
     duplicateSituation(id: string) {
         this.apiSituation.duplicateSituation(id);
         this.commonService.showSwalToast(`Situation dupliquée !`);
     }
 
+    /**
+     * Supprime une situation après confirmation de l'utilisateur.
+     * @param id Identifiant de la situation à supprimer.
+     */
     removeSituation(id: string) {
         Swal.fire({
             title: 'Attention !',

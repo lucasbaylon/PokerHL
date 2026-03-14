@@ -6,6 +6,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DealerPipe implements PipeTransform {
 
+    /**
+     * Transforme le code du dealer en nom d'affichage.
+     * @param value Code du dealer ('you', 'opponent1', 'opponent2').
+     * @returns Nom d'affichage ou undefined.
+     */
     transform(value: string): string | undefined {
         if (value === "you") {
             return "Vous"

@@ -44,6 +44,9 @@ export class SettingsComponent {
     cardsStyle: { name: string, code: string } = this.availableCardsStyles[0];
     pokerTableColor: { name: string, code: string } = this.availablePokerTableColors[0];
 
+    /**
+     * Initialise les paramètres utilisateur depuis le localStorage.
+     */
     ngOnInit() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
@@ -89,6 +92,10 @@ export class SettingsComponent {
         localStorage.setItem('userParams', JSON.stringify(userParams));
     }
 
+    /**
+     * Gère le changement d'avatar en téléchargeant le fichier sélectionné.
+     * @param event L'événement d'input file.
+     */
     onChangeAvatar(event: any) {
         const input = event.target as HTMLInputElement;
         if (!input.files) return
@@ -165,6 +172,9 @@ export class SettingsComponent {
         this.commonService.showSwalToast(`Situations exportées !`);
     }
 
+    /**
+     * Change le nom d'affichage de l'utilisateur via le service d'authentification.
+     */
     changeUserName(){
         this.authService.setUserDisplayName(this.newUserName);
         this.commonService.closeModal("change-user-name");

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
@@ -83,8 +83,30 @@ export class AppComponent {
         private config: PrimeNGConfig,
         private translateService: TranslateService,
         private readonly ngParticlesService: NgParticlesService,
-        protected commonService: CommonService) { }
+        protected commonService: CommonService) {
+        
+        effect(() => {
+            const isDark = this.commonService.getDarkMode();
+            const color = isDark ? "#ffffff" : "#303030";
+            
+            // On met à jour les options
+            this.particlesOptions = {
+                ...this.particlesOptions,
+                particles: {
+                    ...this.particlesOptions.particles,
+                    color: { value: color },
+                    links: {
+                        ...this.particlesOptions.particles.links,
+                        color: color
+                    }
+                }
+            };
+        });
+    }
 
+    /**
+     * Initialise la configuration de l'application (langue, thème, particules).
+     */
     ngOnInit() {
         this.translateService.addLangs(['fr']);
         this.translateService.setDefaultLang('fr');
@@ -104,6 +126,10 @@ export class AppComponent {
         });
     }
 
+    /**
+     * Applique la langue choisie et met à jour la configuration PrimeNG.
+     * @param lang Code de la langue (ex: 'fr').
+     */
     translate(lang: string) {
         this.translateService.use(lang);
         this.translateService.get('primeng').subscribe(res => this.config.setTranslation(res));

@@ -26,6 +26,9 @@ export class SelectTrainingModeComponent {
         private commonService: CommonService
     ) { }
 
+    /**
+     * Initialise le composant et récupère la liste des situations depuis les paramètres de route.
+     */
     ngOnInit() {
         if (this.activatedRoute.snapshot.params.hasOwnProperty('situationList')) {
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
@@ -35,6 +38,10 @@ export class SelectTrainingModeComponent {
         }
     }
 
+    /**
+     * Gère la sélection du mode d'entraînement (infini, turbo, challenge).
+     * @param mode Le mode choisi.
+     */
     onSelectMode(mode: string) {
         switch (mode) {
             case 'infinite':
@@ -51,6 +58,9 @@ export class SelectTrainingModeComponent {
         }
     }
 
+    /**
+     * Lance une session d'entraînement en mode Turbo avec le minuteur configuré.
+     */
     startTurboSession() {
         this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'turbo', timer: JSON.stringify({ heure: this.heure, minute: this.minute, seconds: this.seconds }) }]);
     }

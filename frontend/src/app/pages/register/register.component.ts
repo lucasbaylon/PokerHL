@@ -46,6 +46,9 @@ export class RegisterComponent {
     * Cette méthode vérifie si l'email et le mot de passe sont renseignés,
     * puis appelle le service d'authentification pour se connecter avec ces informations.
     */
+    /**
+     * Inscrit un nouvel utilisateur après validation des champs et correspondance des mots de passe.
+     */
     register(): void {
         if (!this.displayName || !this.email || !this.password || !this.passwordConfirmation) {
             this.commonService.showSwalToast('Veuillez remplir tous les champs.', 'error');
