@@ -89,6 +89,14 @@ export class AppComponent {
             const isDark = this.commonService.getDarkMode();
             const color = isDark ? "#e5e5e5" : "#303030";
             
+            // On applique le thème à l'élément racine
+            const htmlElement = document.documentElement;
+            if (isDark) {
+                htmlElement.classList.add('dark');
+            } else {
+                htmlElement.classList.remove('dark');
+            }
+
             // On met à jour les options
             this.particlesOptions = {
                 ...this.particlesOptions,

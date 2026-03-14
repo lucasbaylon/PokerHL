@@ -10,14 +10,11 @@ import { Solution } from '../interfaces/solution';
 export class CommonService {
 
     private showParticules = signal<boolean>(false);
-    private darkMode = signal<boolean>(false);
+    private darkMode = signal<boolean>(localStorage.getItem('theme') === 'dark');
 
     constructor(
         private router: Router
-    ) {
-        const theme = localStorage.getItem('theme');
-        this.darkMode.set(theme === 'dark');
-    }
+    ) { }
 
     public isCollapsed: boolean = false;
     empty_situation_obj: Situation = {
