@@ -279,6 +279,48 @@
                     (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name"></p-dropdown>
             </div>
         }
+
+        <!-- Actions des joueurs précédents -->
+        <!-- 3way SB (Joueur 1 = BU) -->
+        @if (nbPlayer.code === 3 && position.code === 'sb') {
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Action précédente (BU)
+                </div>
+                <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+            </div>
+        }
+
+        <!-- 3way BB (Joueur 1 = BU, Joueur 2 = SB) -->
+        @if (nbPlayer.code === 3 && position.code === 'bb') {
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Action précédente (BU)
+                </div>
+                <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+            </div>
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Action précédente (SB)
+                </div>
+                <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
+                    (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+            </div>
+        }
+
+        <!-- HU BB (Joueur 1 = SB) -->
+        @if (nbPlayer.code === 2 && position.code === 'bb') {
+            <div class="flex items-center justify-between w-full mt-4">
+                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
+                    Action précédente (SB)
+                </div>
+                <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+            </div>
+        }
+
     </div>
 </div>
 

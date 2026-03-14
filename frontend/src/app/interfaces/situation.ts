@@ -18,6 +18,10 @@ export interface Situation {
 
     fishPosition?: string;
 
+    previousPlayer1Action?: string;
+
+    previousPlayer2Action?: string;
+
     solutions: Solution[];
 
     situations: Card[][];

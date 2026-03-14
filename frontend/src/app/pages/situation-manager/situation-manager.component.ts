@@ -52,6 +52,19 @@ export class SituationManagerComponent {
         { name: 'Flop', code: 'flop' }
     ];
 
+    availablePreviousActions: any[] = [
+        { name: 'Fold', code: 'Fold' },
+        { name: 'Limp', code: 'Limp' },
+        { name: 'Call', code: 'Call' },
+        { name: 'Raise 2BB', code: 'Raise 2BB' },
+        { name: 'Raise 2.5BB', code: 'Raise 2.5BB' },
+        { name: 'Raise 3BB', code: 'Raise 3BB' },
+        { name: 'Raise 4BB', code: 'Raise 4BB' },
+        { name: 'Raise 5BB', code: 'Raise 5BB' },
+        { name: 'Raise 10BB', code: 'Raise 10BB' },
+        { name: 'All In', code: 'All In' }
+    ];
+
     availableNbPlayersTable: any[] = [
         { name: '2', code: 2 },
         { name: '3', code: 3 }
@@ -84,6 +97,10 @@ export class SituationManagerComponent {
     autoMultipleSolutionName: boolean = false;
 
     fishPosition?: { name: string, code: string } = this.availableFishPlayerPosition[0];
+
+    previousPlayer1Action?: { name: string, code: string };
+    
+    previousPlayer2Action?: { name: string, code: string };
 
     constructor(
         private router: Router,
@@ -129,6 +146,19 @@ export class SituationManagerComponent {
         // Mettre à jour la liste des positions du fish après avoir défini la position principale
         this.updateAvailableFishPositions();
         this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
+
+        // Previous actions initialization
+        if (this.situation_obj.previousPlayer1Action) {
+            this.previousPlayer1Action = this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer1Action);
+        } else {
+            this.previousPlayer1Action = undefined;
+        }
+
+        if (this.situation_obj.previousPlayer2Action) {
+            this.previousPlayer2Action = this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer2Action);
+        } else {
+            this.previousPlayer2Action = undefined;
+        }
 
         // Pour le type de situation (si applicable, à adapter selon votre logique)
         if (this.availableSituationType) {

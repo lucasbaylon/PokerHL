@@ -141,7 +141,9 @@ export class TrainingComponent {
             result: result,
             stack: situation.stack,
             opponentLevel: situation.opponentLevel,
-            fishPosition: situation.fishPosition
+            fishPosition: situation.fishPosition,
+            previousPlayer1Action: situation.previousPlayer1Action,
+            previousPlayer2Action: situation.previousPlayer2Action
         }
     }
 
@@ -236,6 +238,22 @@ export class TrainingComponent {
         } else {
             return solution.colorList!.map(color => color.color);
         }
+    }
+
+    getChipImage(action?: string): string {
+        if (!action || action === 'Fold' || action === 'Check') {
+            return '';
+        }
+        
+        if (action === 'All In') {
+            return 'assets/images/chip-allin.png';
+        }
+        
+        if (action === 'Limp' || action === 'Call' || action === 'Raise 2BB' || action === 'Raise 2.5BB' || action === 'Raise 3BB') {
+            return 'assets/images/chip-small.png';
+        }
+
+        return 'assets/images/chip-medium.png';
     }
 
     checkResultCase(result: string) {

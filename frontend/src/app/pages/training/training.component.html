@@ -56,7 +56,17 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
+                            <!-- Active Action or Stack -->
+                            @if (activeSituation.previousPlayer1Action) {
+                            <div class="flex items-center gap-2 mt-1">
+                                <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer1Action}}</h3>
+                                @if (getChipImage(activeSituation.previousPlayer1Action)) {
+                                <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-8 w-auto object-contain drop-shadow-md" alt="chips" />
+                                }
+                            </div>
+                            } @else {
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            }
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -69,8 +79,10 @@
                             <app-default-cards></app-default-cards>
                         </div>
                     </div>
+                    }
 
                     <!-- Adversaire de droite -->
+                    @if (activeSituation.nbPlayer === 3 || activeSituation.nbPlayer === 2) {
                     <div
                         class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
@@ -87,7 +99,25 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
+                            <!-- Active Action or Stack -->
+                            @if (activeSituation.previousPlayer2Action) {
+                            <div class="flex items-center gap-2 mt-1">
+                                <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer2Action}}</h3>
+                                @if (getChipImage(activeSituation.previousPlayer2Action)) {
+                                <img [src]="getChipImage(activeSituation.previousPlayer2Action)" class="h-8 w-auto object-contain drop-shadow-md" alt="chips" />
+                                }
+                            </div>
+                            } @else if (!activeSituation.previousPlayer2Action && activeSituation.previousPlayer1Action && activeSituation.nbPlayer === 2 && activeSituation.position === 'bb') {
+                            <!-- HU BB: Right opponent is SB (Player 1 action) -->
+                            <div class="flex items-center gap-2 mt-1">
+                                <h3 class="m-0 text-xl font-bold text-yellow-400 drop-shadow-md">{{activeSituation.previousPlayer1Action}}</h3>
+                                @if (getChipImage(activeSituation.previousPlayer1Action)) {
+                                <img [src]="getChipImage(activeSituation.previousPlayer1Action)" class="h-8 w-auto object-contain drop-shadow-md" alt="chips" />
+                                }
+                            </div>
+                            } @else {
                             <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            }
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'sb') {
                             <div
@@ -120,7 +150,9 @@
                                 } @else {
                                 Vous
                                 }</h3>
-                            <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            <div class="flex items-center gap-2 mt-1">
+                                <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                            </div>
                             <!-- Dealer coin -->
                             @if (activeSituation.nbPlayer === 2) {
                             @if (activeSituation.position == 'sb') {

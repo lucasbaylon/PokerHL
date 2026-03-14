@@ -33,4 +33,8 @@ export interface ActiveSituation {
     opponentLevel?: string;
 
     fishPosition?: string;
+
+    previousPlayer1Action?: string;
+
+    previousPlayer2Action?: string;
 }

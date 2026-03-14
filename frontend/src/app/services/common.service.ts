@@ -26,6 +26,8 @@ export class CommonService {
         position: "sb",
         opponentLevel: "fish",
         fishPosition: undefined,
+        previousPlayer1Action: undefined,
+        previousPlayer2Action: undefined,
         solutions: [
             {
                 id: "unique_solution_0",
