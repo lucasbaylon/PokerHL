@@ -282,6 +282,7 @@
         <!-- Actions des joueurs précédents -->
         <!-- 3way (Joueur 1 = BU, Joueur 2 = SB) -->
         @if (nbPlayer.code === 3) {
+            @if (position.code !== 'bu') {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                     Action précédente (BU)
@@ -289,6 +290,8 @@
                 <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
                     (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name"></p-dropdown>
             </div>
+            }
+            @if (position.code === 'bb') {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                     Action précédente (SB)
@@ -296,10 +299,12 @@
                 <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
                     (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name"></p-dropdown>
             </div>
+            }
         }
 
         <!-- HU (Joueur 1 = SB) -->
         @if (nbPlayer.code === 2) {
+            @if (position.code !== 'sb') {
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                     Action précédente (SB)
@@ -307,6 +312,7 @@
                 <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
                     (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name"></p-dropdown>
             </div>
+            }
         }
 
     </div>

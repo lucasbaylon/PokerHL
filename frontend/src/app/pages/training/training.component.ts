@@ -313,6 +313,46 @@ export class TrainingComponent {
         return userPosition === 'sb' ? 'bb' : 'sb';
     }
 
+    /**
+     * Retourne l'action de l'adversaire selon le slot (gauche ou droite) et la position du joueur.
+     * Uniquement pour le mode 3 joueurs.
+     */
+    getOpponentAction(slot: 'left' | 'right'): string | undefined {
+        if (this.activeSituation.nbPlayer !== 3) return undefined;
+
+        switch (this.activeSituation.position) {
+            case 'bb':
+                // User = BB (3rd acting). Slot Left = BU (1st), Slot Right = SB (2nd).
+                return slot === 'left' ? this.activeSituation.previousPlayer1Action : this.activeSituation.previousPlayer2Action;
+            case 'sb':
+                // User = SB (2nd acting). Slot Right = BU (1st), Slot Left = BB (3rd - no action yet).
+                return slot === 'right' ? this.activeSituation.previousPlayer1Action : undefined;
+            case 'bu':
+                // User = BU (1st acting). Nobody acted before.
+                return undefined;
+            default:
+                return undefined;
+        }
+    }
+
+    /**
+     * Retourne la position (BU, SB, BB) de l'adversaire selon le slot.
+     */
+    getOpponentPosition(slot: 'left' | 'right'): string {
+        if (this.activeSituation.nbPlayer !== 3) return '';
+
+        switch (this.activeSituation.position) {
+            case 'bb':
+                return slot === 'left' ? 'bu' : 'sb';
+            case 'sb':
+                return slot === 'left' ? 'bb' : 'bu';
+            case 'bu':
+                return slot === 'left' ? 'sb' : 'bb';
+            default:
+                return '';
+        }
+    }
+
     checkResultCase(result: string) {
         if (this.countResult) this.totalResponse += 1;
         if (this.activeSituation.result.includes(result)) {
