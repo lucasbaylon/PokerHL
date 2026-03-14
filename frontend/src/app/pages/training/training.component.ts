@@ -315,6 +315,27 @@ export class TrainingComponent {
     }
 
     /**
+     * Retourne la classe CSS de taille pour l'image du jeton selon l'action.
+     * @param action Nom de l'action.
+     * @returns Classes Tailwind (ex: h-10, h-14, h-20).
+     */
+    getChipClass(action?: string): string {
+        if (!action || action === 'Fold' || action === 'Check' || action === 'Aucune') {
+            return 'h-10';
+        }
+
+        if (action === 'All In') {
+            return 'h-20';
+        }
+
+        if (action === 'Limp' || action === 'Call' || action === 'Raise 2BB' || action === 'Raise 2.5BB' || action === 'Raise 3BB') {
+            return 'h-10';
+        }
+
+        return 'h-14';
+    }
+
+    /**
      * Calcule le montant numérique misé en BB.
      * @param position Position du joueur (bb, sb, bu).
      * @param action Action effectuée.
