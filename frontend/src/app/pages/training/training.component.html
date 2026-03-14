@@ -23,7 +23,7 @@
                             <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
+                            <h3 class="m-0 text-2xl">{{getOpponentRemainingStack(activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -62,7 +62,7 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
+                            <h3 class="m-0 text-2xl">{{getOpponentRemainingStack(activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -101,7 +101,7 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.previousPlayer2Action, activeSituation.stack)}} BB</h3>
+                            <h3 class="m-0 text-2xl">{{getOpponentRemainingStack(activeSituation.previousPlayer2Action, activeSituation.stack)}} BB</h3>
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'sb') {
                             <div
@@ -141,7 +141,7 @@
                                 Vous
                                 }</h3>
                             <div class="flex items-center gap-2 mt-1">
-                                <h3 class="m-0 text-xl">{{activeSituation.stack}} BB</h3>
+                                <h3 class="m-0 text-2xl">{{activeSituation.stack}} BB</h3>
                             </div>
                             <!-- Dealer coin -->
                             @if (activeSituation.nbPlayer === 2) {
