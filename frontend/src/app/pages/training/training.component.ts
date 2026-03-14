@@ -52,6 +52,9 @@ export class TrainingComponent {
         protected authService: AuthService,
     ) { }
 
+    /**
+     * Initialise le composant, charge les paramètres utilisateur et lance le mode de jeu.
+     */
     ngOnInit(): void {
         if (this.activatedRoute.snapshot.params.hasOwnProperty('situationList') && this.activatedRoute.snapshot.params.hasOwnProperty('mode')) {
 
@@ -94,10 +97,16 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Nettoie les ressources (timer) lors de la destruction du composant.
+     */
     ngOnDestroy() {
         this.clearCountdown();
     }
 
+    /**
+     * Ajuste le zoom de la table après l'initialisation de la vue selon la hauteur de l'écran.
+     */
     ngAfterViewInit() {
         if (window.innerHeight >= 1080) {
             document.getElementById("poker-table-div")?.classList.add("scale-125");
@@ -106,6 +115,10 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Gère le redimensionnement de la fenêtre pour ajuster le zoom de la table.
+     * @param event L'événement de redimensionnement.
+     */
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         const div = document.getElementById("poker-table-div")!;
@@ -116,15 +129,29 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Filtre et inverse la liste des solutions par type.
+     * @param solutionLst Liste des solutions à filtrer.
+     * @param type Type de solution ('unique' ou 'color').
+     * @returns Liste filtrée.
+     */
     filteredSolutionLst(solutionLst: Solution[], type: string) {
         return solutionLst.filter(solution => solution.type === type).reverse();;
     }
 
+    /**
+     * Sélectionne une situation au hasard dans une liste.
+     * @param situationLst Liste des situations disponibles.
+     * @returns La situation choisie.
+     */
     getRandomSituation(situationLst: Situation[]): Situation {
         const randomIndex = Math.floor(Math.random() * situationLst.length);
         return situationLst[randomIndex];
     }
 
+    /**
+     * Génère une nouvelle situation d'entraînement active.
+     */
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
         this.currentSituation = situation;
@@ -147,6 +174,12 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Détermine la position relative du joueur "fish" sur la table.
+     * @param mainPlayerPosition Position de l'utilisateur.
+     * @param fishPlayerPosition Position réelle du poisson.
+     * @returns Identifiant du slot (opponent1 ou opponent2).
+     */
     getFishPosition(mainPlayerPosition: string, fishPlayerPosition: string): string {
         if (mainPlayerPosition === "bu") {
             if (fishPlayerPosition === "sb") {
@@ -169,6 +202,11 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Sélectionne une main (Case) au hasard dans les combinaisons d'une situation.
+     * @param array Tableau des combinaisons de cartes.
+     * @returns La main choisie.
+     */
     getRandomCase(array: Card[][]): Card {
         const outerArrayIndex = Math.floor(Math.random() * array.length);
         const innerArray = array[outerArrayIndex];
@@ -176,6 +214,11 @@ export class TrainingComponent {
         return innerArray[innerArrayIndex];
     }
 
+    /**
+     * Génère une liste de couleurs aléatoires et distinctes.
+     * @param num Nombre de couleurs à générer.
+     * @returns Liste d'objets couleur.
+     */
     getRandomColors(num: number): TableColorCardObj[] {
         // Vérifiez que le numéro de couleurs est valide (supérieur à 0)
         if (num <= 0) {
@@ -199,6 +242,11 @@ export class TrainingComponent {
         return randomColors;
     }
 
+    /**
+     * Prépare les objets cartes (valeur et couleur) pour l'affichage.
+     * @param situationCase La main à générer.
+     * @returns Objet contenant les deux cartes.
+     */
     generateCards(situationCase: Card): TableCard {
         const card = situationCase.card;
         const card_split = card.split('');
@@ -231,6 +279,11 @@ export class TrainingComponent {
         };
     }
 
+    /**
+     * Récupère la liste des identifiants ou couleurs valides pour une main.
+     * @param good_solution Identifiant de la solution attendue.
+     * @returns Liste des valeurs/couleurs gagnantes.
+     */
     getResultCase(good_solution: string): string[] {
         let solution = this.currentSituation.solutions.filter(solution => solution.id === good_solution)[0];
         if (solution.type === "unique") {
@@ -240,6 +293,11 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Retourne le chemin de l'image du jeton selon l'action.
+     * @param action Nom de l'action (Raise, Call, etc.).
+     * @returns Chemin de l'asset image.
+     */
     getChipImage(action?: string): string {
         if (!action || action === 'Fold' || action === 'Check' || action === 'Aucune') {
             return '';
@@ -257,7 +315,11 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne le montant numérique misé en BB.
+     * Calcule le montant numérique misé en BB.
+     * @param position Position du joueur (bb, sb, bu).
+     * @param action Action effectuée.
+     * @param stack Stack actuel pour le All-in.
+     * @returns Montant en BB.
      */
     getBetAmount(position: string, action: string | undefined, stack: number | undefined): number {
         const stackVal = stack ?? 0;
@@ -282,7 +344,11 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne le montant misé en BB sous forme de texte.
+     * Retourne le montant misé formaté en texte (ex: "1 BB").
+     * @param position Position du joueur.
+     * @param action Action effectuée.
+     * @param stack Stack actuel.
+     * @returns Chaîne de caractères formatée.
      */
     getBetAmountStr(position: string, action: string | undefined, stack: number | undefined): string {
         const bet = this.getBetAmount(position, action, stack);
@@ -290,8 +356,10 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne l'image de jeton pour une position/action donnée,
-     * y compris pour les blindes (BB/SB même sans action).
+     * Retourne l'image de jeton appropriée pour une mise ou une blinde.
+     * @param action Action effectuée.
+     * @param position Position pour les blindes automatiques.
+     * @returns Chemin de l'image.
      */
     getChipImageForBet(action: string | undefined, position: string): string {
         if (!action || action === 'Aucune' || action === 'Check') {
@@ -306,7 +374,11 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne le stack restant après avoir déduit la mise.
+     * Calcule le stack restant après déduction de la mise actuelle.
+     * @param position Position du joueur.
+     * @param action Action effectuée.
+     * @param stack Stack de départ.
+     * @returns Stack restant calculé.
      */
     getOpponentRemainingStack(position: string, action: string | undefined, stack: number | undefined): number {
         const totalStack = stack ?? 0;
@@ -316,15 +388,18 @@ export class TrainingComponent {
     }
 
     /**
-     * En HU, retourne la position de l'adversaire à partir de la position du joueur.
+     * Identifie la position de l'adversaire en duel (Heads-up).
+     * @param userPosition Position du joueur utilisateur.
+     * @returns Position de l'adversaire (bb ou sb).
      */
     getHUOpponentPosition(userPosition: string): string {
         return userPosition === 'sb' ? 'bb' : 'sb';
     }
 
     /**
-     * Retourne l'action de l'adversaire selon le slot (gauche ou droite) et la position du joueur.
-     * Uniquement pour le mode 3 joueurs.
+     * Récupère l'action de l'adversaire selon son emplacement (3-way).
+     * @param slot Côté de la table ('left' ou 'right').
+     * @returns Nom de l'action ou undefined.
      */
     getOpponentAction(slot: 'left' | 'right'): string | undefined {
         if (this.activeSituation.nbPlayer !== 3) return undefined;
@@ -345,7 +420,9 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne la position (BU, SB, BB) de l'adversaire selon le slot.
+     * Récupère la position (BU, SB, BB) de l'adversaire selon son emplacement.
+     * @param slot Côté de la table.
+     * @returns Code de position.
      */
     getOpponentPosition(slot: 'left' | 'right'): string {
         if (this.activeSituation.nbPlayer !== 3) return '';
@@ -362,6 +439,10 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Vérifie la réponse de l'utilisateur et met à jour les scores.
+     * @param result La réponse choisie par l'utilisateur.
+     */
     checkResultCase(result: string) {
         if (this.countResult) this.totalResponse += 1;
         if (this.activeSituation.result.includes(result)) {
@@ -399,19 +480,25 @@ export class TrainingComponent {
         }
     }
 
+    /**
+     * Ferme la modale de mauvaise réponse et passe à la situation suivante.
+     */
     closeSolutionModal() {
         this.commonService.closeModal('wrong-answer-modal');
         this.generateSituation();
     }
 
     /**
-    * Génère un nombre entier aléatoire entre 0 et 100 inclus.
-    * @returns Le nombre entier aléatoire généré.
-    */
+     * Génère un nombre entier aléatoire entre 0 et 100.
+     * @returns Nombre aléatoire.
+     */
     generateRandomNumber(): number {
         return Math.floor(Math.random() * 101);
     }
 
+    /**
+     * Réinitialise les statistiques de la session et relance l'entraînement.
+     */
     resetSession() {
         this.commonService.closeModal('end-session-modal');
         this.goodResponse = 0;
@@ -424,8 +511,8 @@ export class TrainingComponent {
     }
 
     /**
-   * Lance le compte à rebours en décrémentant les heures, minutes et secondes chaque seconde.
-   */
+     * Démarre le minuteur pour le mode Turbo.
+     */
     startCountdown() {
         this.hours = this.initialTimer.heure;
         this.minutes = this.initialTimer.minute;
@@ -448,8 +535,8 @@ export class TrainingComponent {
     }
 
     /**
-   * Arrête le compte à rebours et efface l'intervalle pour éviter les fuites de mémoire.
-   */
+     * Arrête le minuteur actif.
+     */
     clearCountdown() {
         if (this.countdownInterval) {
             clearInterval(this.countdownInterval);

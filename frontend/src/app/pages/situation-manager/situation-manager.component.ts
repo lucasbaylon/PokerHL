@@ -110,6 +110,9 @@ export class SituationManagerComponent {
         private _Activatedroute: ActivatedRoute
     ) { }
 
+    /**
+     * Initialise le composant et s'abonne aux données de la situation.
+     */
     ngOnInit(): void {
         this.situation_obj = cloneDeep(this.commonService.empty_situation_obj);
         this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
@@ -135,6 +138,9 @@ export class SituationManagerComponent {
         this.updateAvailableFishPositions();
     }
 
+    /**
+     * Synchronise les objets primeng-dropdown avec les valeurs de la situation chargée.
+     */
     initializeValues() {
         // Définir nbPlayer en premier pour ajuster les listes
         this.nbPlayer = this.availableNbPlayersTable.find(nbPlayer => nbPlayer.code === this.situation_obj.nbPlayer);
@@ -163,6 +169,9 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Met à jour la liste des positions possibles pour le joueur "fish" (exclut le joueur principal).
+     */
     updateAvailableFishPositions() {
         this.availableFishPlayerPosition = this.allPositions.filter(pos => pos.code !== this.position.code);
         if (this.availableFishPlayerPosition.length > 0) {
@@ -172,10 +181,17 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Se désabonne des flux de données à la destruction du composant.
+     */
     ngOnDestroy() {
         this.situationSubscription.unsubscribe();
     }
 
+    /**
+     * Sélectionne une couleur aléatoire qui n'est pas déjà utilisée.
+     * @returns Code couleur hexadécimal.
+     */
     getRandomColor(): string {
         let colorList = ["#d80c05", "#ff9100", "#7a5a00", "#3f7a89", "#96c582", "#303030", "#1c51ff", "#00aeff", "#8400ff", "#e284ff"];
         const colorSolutionsSituation = this.situation_obj.solutions.map(solution => solution.color);
@@ -187,6 +203,9 @@ export class SituationManagerComponent {
         return filteredColorList[randomIndex];
     }
 
+    /**
+     * Ajoute une nouvelle solution de type "unique" à la situation.
+     */
     addUniqueSolution() {
         let solutionLst = this.situation_obj.solutions.filter(solution => solution.type === "unique");
         if (solutionLst.length < 7) {
@@ -199,6 +218,10 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Commence la sélection de cases dans le tableau des ranges.
+     * @param event L'événement souris.
+     */
     startSelection(event: any) {
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
@@ -212,6 +235,10 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Met à jour les cases survolées pendant une sélection active.
+     * @param event L'événement souris.
+     */
     updateSelection(event: any) {
         let cell_index = event.target.cellIndex;
         let row_index = event.target.parentElement.rowIndex;
@@ -229,12 +256,19 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Arrête le mode de sélection active.
+     * @param event L'événement souris.
+     */
     endSelection(event: any) {
         if (event.button === 0) {
             this.isSelectionActive = false;
         }
     }
 
+    /**
+     * Valide et prépare la sauvegarde de la situation (création ou édition).
+     */
     saveSituation() {
         // On check si il y a bien un nom à la situation
         if (!this.situation_obj.name) {
@@ -300,31 +334,57 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Appelle le service pour ajouter une nouvelle situation.
+     */
     addSituation() {
         this.apiSituation.addSituation(this.situation_obj);
         this.commonService.showSwalToast(`Situation enregistrée !`);
         this.router.navigate(['situations-list-manager']);
     }
 
+    /**
+     * Appelle le service pour modifier la situation actuelle.
+     */
     editSituation() {
         this.apiSituation.editSituation(this.situation_obj);
         this.commonService.showSwalToast(`Situation modifiée !`);
         this.router.navigate(['situations-list-manager']);
     }
 
+    /**
+     * Change la solution active pour l'attribution dans le tableau.
+     * @param solutionId Identifiant de la solution choisie.
+     */
     onChangeSolution(solutionId: string) {
         this.solutionSelected = solutionId;
     }
 
+    /**
+     * Met à jour le nom d'affichage d'une solution.
+     * @param solutionId Identifiant de la solution.
+     * @param e Événement input.
+     */
     onChangeSolutionName(solutionId: string, e: any) {
         const solutionLst = this.situation_obj.solutions.filter(solution => solution.id === solutionId)[0];
         solutionLst.display_name = e.target.value;
     }
 
+    /**
+     * Filtre la liste des solutions par type et validité du nom.
+     * @param solutionLst Liste complète.
+     * @param type Type ('unique' ou 'mixed').
+     * @param filterNoDisplayName Si vrai, ignore les solutions sans nom.
+     * @returns Liste filtrée.
+     */
     filteredSolutionList(solutionLst: Solution[], type: string, filterNoDisplayName: boolean = false) {
         return solutionLst.filter(solution => solution.type === type && (!filterNoDisplayName || (solution.display_name !== undefined && solution.display_name !== '')));
     }
 
+    /**
+     * Ouvre l'interface de choix de couleur pour une solution.
+     * @param solutionId Identifiant de la solution.
+     */
     onColorSolution(solutionId: string) {
         document.getElementById(`color-picker-div_${solutionId}`)?.classList.remove("hidden");
         setTimeout(() => {
@@ -339,6 +399,11 @@ export class SituationManagerComponent {
         }, 0);
     }
 
+    /**
+     * Applique une couleur à une solution.
+     * @param solutionId Identifiant de la solution.
+     * @param color Code couleur choisi.
+     */
     onSelectColor(solutionId: string, color: string) {
         let solutionLst = this.situation_obj.solutions.filter(solution => solution.id === solutionId)[0];
         solutionLst.color = color;
@@ -346,6 +411,9 @@ export class SituationManagerComponent {
         this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
     }
 
+    /**
+     * Gère le basculement entre slider simple et multiple selon le nombre de solutions cochées.
+     */
     onCheckChange() {
         if (this.multipleSolutionCheckBox.length < 3) {
             this.simpleSlider = true;
@@ -356,6 +424,9 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Enregistre une solution mixte (plusieurs actions possibles).
+     */
     saveMultipleSolution() {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         if (this.multipleSolutionCheckBox.length < 2) {
@@ -437,6 +508,9 @@ export class SituationManagerComponent {
         this.resetMultipleSituation();
     }
 
+    /**
+     * Réinitialise le formulaire de création de situation multiple.
+     */
     resetMultipleSituation() {
         this.simpleSlider = true;
         this.multipleSlider = false;
@@ -448,6 +522,10 @@ export class SituationManagerComponent {
         this.commonService.closeModal('add-multiples-solutions');
     }
 
+    /**
+     * Charge une solution multiple existante pour modification.
+     * @param solutionId Identifiant de la solution à édier.
+     */
     editMultipleSolution(solutionId: string) {
         const solution: Solution = this.situation_objSolutionsRef.filter((solution: Solution) => solution.id === solutionId)[0];
         this.multipleSituationId = solution.id;
@@ -471,11 +549,9 @@ export class SituationManagerComponent {
     }
 
     /**
-    * Supprime une solution multiple de la liste des solutions multiples de situation_obj en utilisant son identifiant.
-    * Met également à jour la référence locale situation_objSolutionsRef avec la liste des solutions mise à jour.
-    *
-    * @param {string} multipleSolutionId - L'identifiant de la solution multiple à supprimer.
-    */
+     * Supprime une solution multiple par son identifiant.
+     * @param multipleSolutionId L'identifiant de la solution multiple à supprimer.
+     */
     deleteMultipleSolution(multipleSolutionId: string) {
         const solutions = this.situation_obj.solutions;
         const index = solutions.findIndex(solution => solution.id === multipleSolutionId);
@@ -486,6 +562,9 @@ export class SituationManagerComponent {
         }
     }
 
+    /**
+     * Met à jour les positions et niveaux disponibles lors du changement du nombre de joueurs.
+     */
     onChangeNbPlayersTable() {
         this.situation_obj.nbPlayer = this.nbPlayer.code;
         if (this.nbPlayer.code === 2) {
@@ -505,11 +584,10 @@ export class SituationManagerComponent {
     }
 
     /**
-    * Fonction générique pour gérer les changements de différentes propriétés de situation_obj.
-    * 
-    * @param {string} property - La propriété de situation_obj à mettre à jour.
-    * @param {any} value - La nouvelle valeur à attribuer à la propriété.
-    */
+     * Met à jour une propriété simple de la situation.
+     * @param property Le nom de la propriété.
+     * @param value L'objet contenant la nouvelle valeur (.code).
+     */
     onChangeProperty(property: string, value: any) {
         (this.situation_obj as any)[property] = value.code;
 
