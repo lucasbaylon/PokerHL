@@ -287,14 +287,14 @@
                     Action précédente (BU)
                 </div>
                 <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name"></p-dropdown>
             </div>
             <div class="flex items-center justify-between w-full mt-4">
                 <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
                     Action précédente (SB)
                 </div>
                 <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+                    (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name"></p-dropdown>
             </div>
         }
 
@@ -305,7 +305,7 @@
                     Action précédente (SB)
                 </div>
                 <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" placeholder="Sélectionner" optionLabel="name" [showClear]="true"></p-dropdown>
+                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name"></p-dropdown>
             </div>
         }
 

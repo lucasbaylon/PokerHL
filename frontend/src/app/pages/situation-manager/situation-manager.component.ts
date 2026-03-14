@@ -99,9 +99,9 @@ export class SituationManagerComponent {
 
     fishPosition?: { name: string, code: string } = this.availableFishPlayerPosition[0];
 
-    previousPlayer1Action?: { name: string, code: string };
+    previousPlayer1Action: { name: string, code: string } = { name: 'Aucune', code: 'Aucune' };
     
-    previousPlayer2Action?: { name: string, code: string };
+    previousPlayer2Action: { name: string, code: string } = { name: 'Aucune', code: 'Aucune' };
 
     constructor(
         private router: Router,
@@ -149,17 +149,13 @@ export class SituationManagerComponent {
         this.fishPosition = this.availableFishPlayerPosition.find(position => position.code === this.situation_obj.fishPosition);
 
         // Previous actions initialization
-        if (this.situation_obj.previousPlayer1Action) {
-            this.previousPlayer1Action = this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer1Action);
-        } else {
-            this.previousPlayer1Action = undefined;
-        }
+        this.previousPlayer1Action = this.situation_obj.previousPlayer1Action
+            ? this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer1Action)
+            : { name: 'Aucune', code: 'Aucune' };
 
-        if (this.situation_obj.previousPlayer2Action) {
-            this.previousPlayer2Action = this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer2Action);
-        } else {
-            this.previousPlayer2Action = undefined;
-        }
+        this.previousPlayer2Action = this.situation_obj.previousPlayer2Action
+            ? this.availablePreviousActions.find(act => act.code === this.situation_obj.previousPlayer2Action)
+            : { name: 'Aucune', code: 'Aucune' };
 
         // Pour le type de situation (si applicable, à adapter selon votre logique)
         if (this.availableSituationType) {
