@@ -371,6 +371,17 @@
             </div>
         </div>
     }
+
+    <!-- Compteur Défi -->
+    @if (mode === 'challenge') {
+        <div
+            class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+            <div class="flex flex-col items-center">
+                <span class="text-4xl font-bold">{{totalResponse}} / {{nbSituationsChallenge}}</span>
+                <span class="text-sm uppercase tracking-widest mt-1">Situations</span>
+            </div>
+        </div>
+    }
 </div>
 <dialog id="end-session-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
     <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
@@ -381,6 +392,39 @@
             <span>Le temps est écoulé ! Vous avez terminé la session Turbo.</span>
             <span>Score : {{goodResponse}} / {{totalResponse}}</span>
             <span>Taux de réussite : {{successRatePercentage}}%</span>
+        </div>
+        <div class="flex justify-center items-center space-x-5 mt-8">
+            <div (click)="this.commonService.redirectTo('situations-list-training')"
+                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-arrow-right-from-bracket mr-3 h-4 w-4"></i>
+                Retour
+            </div>
+            <div (click)="resetSession()"
+                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
+                Rejouer
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="end-challenge-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Défi terminé !
+        </h4>
+        <div class="flex flex-col gap-5 justify-center items-center my-4">
+            @if (challengeSuccess) {
+                <span class="text-green-600 font-bold text-xl uppercase text-center">Challenge réussi !</span>
+                <span class="text-center">Félicitations, vous avez répondu correctement à toutes les situations.</span>
+            } @else if (challengeFailed) {
+                <span class="text-red-600 font-bold text-xl uppercase text-center">Défi perdu...</span>
+                <span class="text-center">Vous avez fait une erreur. Entraînez-vous encore pour réussir !</span>
+            }
+            <div class="flex flex-col items-center mt-2">
+                <span>Score : {{goodResponse}} / {{totalResponse}}</span>
+                <span>Taux de réussite : {{successRatePercentage}}%</span>
+            </div>
         </div>
         <div class="flex justify-center items-center space-x-5 mt-8">
             <div (click)="this.commonService.redirectTo('situations-list-training')"

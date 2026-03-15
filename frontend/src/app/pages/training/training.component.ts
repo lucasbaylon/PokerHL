@@ -38,6 +38,9 @@ export class TrainingComponent {
     seconds: number = 0;
     private countdownInterval: any;
     colorList: any[] = [{ name: "heart", color: "red" }, { name: "diamond", color: "red" }, { name: "club", color: "black" }, { name: "spade", color: "black" }];
+    nbSituationsChallenge: number = 0;
+    challengeFailed: boolean = false;
+    challengeSuccess: boolean = false;
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -75,6 +78,12 @@ export class TrainingComponent {
                 case 'infinite':
                     this.generateSituation();
                     break;
+                case 'challenge':
+                    if (this.activatedRoute.snapshot.params.hasOwnProperty('challengeNbSituations')) {
+                        this.nbSituationsChallenge = JSON.parse(this.activatedRoute.snapshot.params['challengeNbSituations']);
+                        this.generateSituation();
+                    }
+                    break;
                 case 'turbo':
                     if (this.activatedRoute.snapshot.params.hasOwnProperty('timer')) {
                         const timer = JSON.parse(this.activatedRoute.snapshot.params['timer']);
@@ -84,7 +93,6 @@ export class TrainingComponent {
                         this.startCountdown();
                     }
                     break;
-                case 'challenge':
                     break;
                 default:
                     break;
@@ -486,7 +494,20 @@ export class TrainingComponent {
             }
             this.countResult = true;
             this.commonService.showSwalToast(`Bonne réponse !`);
-            this.generateSituation();
+            switch (this.mode) {
+                case 'challenge':
+                    if (this.totalResponse >= this.nbSituationsChallenge) {
+                        this.challengeSuccess = true;
+                        this.commonService.showSwalToast(`Challenge réussi !`, 'success');
+                        this.commonService.showModal('end-challenge-modal');
+                    } else {
+                        this.generateSituation();
+                    }
+                    break;
+                default:
+                    this.generateSituation();
+                    break;
+            }
         } else {
             if (this.countResult) {
                 this.badResponse += 1;
@@ -507,6 +528,9 @@ export class TrainingComponent {
                     this.generateSituation();
                     break;
                 case 'challenge':
+                    this.challengeFailed = true;
+                    this.commonService.showSwalToast(`Mauvaise réponse ! Défi perdu.`, 'error');
+                    this.commonService.showModal('end-challenge-modal');
                     break;
                 default:
                     break;
@@ -534,13 +558,21 @@ export class TrainingComponent {
      * Réinitialise les statistiques de la session et relance l'entraînement.
      */
     resetSession() {
-        this.commonService.closeModal('end-session-modal');
+        if (this.mode === 'turbo') {
+            this.commonService.closeModal('end-session-modal');
+        } else if (this.mode === 'challenge') {
+            this.commonService.closeModal('end-challenge-modal');
+        }
         this.goodResponse = 0;
         this.badResponse = 0;
         this.totalResponse = 0;
         this.successRatePercentage = 0;
         this.countResult = true;
-        this.startCountdown();
+        this.challengeFailed = false;
+        this.challengeSuccess = false;
+        if (this.mode === 'turbo') {
+            this.startCountdown();
+        }
         this.generateSituation();
     }
 

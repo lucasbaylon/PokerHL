@@ -19,6 +19,7 @@ export class SelectTrainingModeComponent {
     heure: number = 0;
     minute: number = 0;
     seconds: number = 10;
+    challengeNbSituations: number = 10;
 
     constructor(
         private router: Router,
@@ -51,7 +52,7 @@ export class SelectTrainingModeComponent {
                 this.commonService.showModal('turbo-timer-modal');
                 break;
             case 'challenge':
-                this.commonService.showSwalToast("Bientôt disponible.", "info");
+                this.commonService.showModal('challenge-modal');
                 break;
             default:
                 break;
@@ -63,6 +64,13 @@ export class SelectTrainingModeComponent {
      */
     startTurboSession() {
         this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'turbo', timer: JSON.stringify({ heure: this.heure, minute: this.minute, seconds: this.seconds }) }]);
+    }
+    
+    /**
+     * Lance une session d'entraînement en mode Défi avec le nombre de situations configuré.
+     */
+    startChallengeSession() {
+        this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'challenge', challengeNbSituations: this.challengeNbSituations }]);
     }
 
 }

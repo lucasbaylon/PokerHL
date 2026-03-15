@@ -74,3 +74,29 @@
         </div>
     </div>
 </dialog>
+
+<dialog id="challenge-modal" class="dui-modal">
+    <div class="dui-modal-box w-fit max-w-2xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <form method="dialog">
+            <button
+                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
+        </form>
+        <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Sélection du nombre de situations
+        </h4>
+        <div class="flex flex-row gap-8 justify-center items-center my-10 w-fit">
+            <p-floatLabel class="mx-3">
+                <p-inputNumber inputId="integeronly" showButtons="true" [min]="1" [max]="1000" [(ngModel)]="challengeNbSituations"
+                    inputStyleClass="w-32" />
+                <label class="text-gray-800 dark:text-gray-300 px-10">Situations</label>
+            </p-floatLabel>
+        </div>
+        <div class="flex justify-center mt-8">
+            <div (click)="startChallengeSession()"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
+                Démarrer le défi
+            </div>
+        </div>
+    </div>
+</dialog>
