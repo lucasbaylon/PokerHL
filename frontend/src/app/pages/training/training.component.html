@@ -415,11 +415,11 @@
         </h4>
         <div class="flex flex-col gap-5 justify-center items-center my-4">
             @if (challengeSuccess) {
-                <span class="text-green-600 font-bold text-xl uppercase text-center">Challenge réussi !</span>
+                <span class="text-green-600 font-bold text-xl uppercase text-center">Défi réussi !</span>
                 <span class="text-center">Félicitations, vous avez répondu correctement à toutes les situations.</span>
             } @else if (challengeFailed) {
                 <span class="text-red-600 font-bold text-xl uppercase text-center">Défi perdu...</span>
-                <span class="text-center">Vous avez fait une erreur. Entraînez-vous encore pour réussir !</span>
+                <span class="text-center">Vous avez fait une erreur. Le défi s'arrête donc ici. Entraînez-vous encore pour réussir !</span>
             }
             <div class="flex flex-col items-center mt-2">
                 <span>Score : {{goodResponse}} / {{totalResponse}}</span>

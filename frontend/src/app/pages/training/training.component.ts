@@ -498,7 +498,7 @@ export class TrainingComponent {
                 case 'challenge':
                     if (this.totalResponse >= this.nbSituationsChallenge) {
                         this.challengeSuccess = true;
-                        this.commonService.showSwalToast(`Challenge réussi !`, 'success');
+                        this.commonService.showSwalToast(`Défi réussi !`, 'success');
                         this.commonService.showModal('end-challenge-modal');
                     } else {
                         this.generateSituation();
