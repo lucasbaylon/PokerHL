@@ -23,7 +23,11 @@
                             <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
+                            @if (getOpponentRemainingStack(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack) === 0) {
+                                <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
+                            } @else {
+                                <h3 class="m-0 text-xl">{{getOpponentRemainingStack(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)}} BB</h3>
+                            }
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -62,7 +66,11 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)}} BB</h3>
+                            @if (getOpponentRemainingStack(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack) === 0) {
+                                <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
+                            } @else {
+                                <h3 class="m-0 text-xl">{{getOpponentRemainingStack(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)}} BB</h3>
+                            }
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
@@ -101,7 +109,11 @@
                             }
                             }
                             <h3 class="m-0">Adversaire</h3>
-                            <h3 class="m-0 text-xl">{{getOpponentRemainingStack(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)}} BB</h3>
+                            @if (getOpponentRemainingStack(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack) === 0) {
+                                <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
+                            } @else {
+                                <h3 class="m-0 text-xl">{{getOpponentRemainingStack(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)}} BB</h3>
+                            }
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'sb') {
                             <div
@@ -141,7 +153,11 @@
                                 Vous
                                 }</h3>
                             <div class="flex items-center gap-2 mt-1">
-                                <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.position!, undefined, activeSituation.stack)}} BB</h3>
+                                @if (getOpponentRemainingStack(activeSituation.position!, undefined, activeSituation.stack) === 0) {
+                                    <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
+                                } @else {
+                                    <h3 class="m-0 text-xl">{{getOpponentRemainingStack(activeSituation.position!, undefined, activeSituation.stack)}} BB</h3>
+                                }
                             </div>
                             <!-- Dealer coin -->
                             @if (activeSituation.nbPlayer === 2) {
