@@ -58,10 +58,6 @@ export class SituationManagerComponent {
         { name: 'Call', code: 'Call' },
         { name: 'Raise 2BB', code: 'Raise 2BB' },
         { name: 'Raise 2.5BB', code: 'Raise 2.5BB' },
-        { name: 'Raise 3BB', code: 'Raise 3BB' },
-        { name: 'Raise 4BB', code: 'Raise 4BB' },
-        { name: 'Raise 5BB', code: 'Raise 5BB' },
-        { name: 'Raise 10BB', code: 'Raise 10BB' },
         { name: 'All In', code: 'All In' }
     ];
 

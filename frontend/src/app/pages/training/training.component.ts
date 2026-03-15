@@ -299,7 +299,7 @@ export class TrainingComponent {
      * @returns Chemin de l'asset image.
      */
     getChipImage(action?: string): string {
-        if (!action || action === 'Fold' || action === 'Check' || action === 'Aucune') {
+        if (!action || action === 'Fold') {
             return '';
         }
         
@@ -307,7 +307,7 @@ export class TrainingComponent {
             return 'assets/images/chip-allin.png';
         }
         
-        if (action === 'Limp' || action === 'Call' || action === 'Raise 2BB' || action === 'Raise 2.5BB' || action === 'Raise 3BB') {
+        if (action === 'Limp' || action === 'Call') {
             return 'assets/images/chip-small.png';
         }
 
@@ -320,16 +320,12 @@ export class TrainingComponent {
      * @returns Classes Tailwind (ex: h-10, h-14, h-20).
      */
     getChipClass(action?: string): string {
-        if (!action || action === 'Fold' || action === 'Check' || action === 'Aucune') {
+        if (!action || action === 'Check' || action === 'Limp' || action === 'Call') {
             return 'h-10';
         }
 
         if (action === 'All In') {
             return 'h-20';
-        }
-
-        if (action === 'Limp' || action === 'Call' || action === 'Raise 2BB' || action === 'Raise 2.5BB' || action === 'Raise 3BB') {
-            return 'h-10';
         }
 
         return 'h-14';
@@ -355,10 +351,6 @@ export class TrainingComponent {
             case 'Call': return 1;
             case 'Raise 2BB': return 2;
             case 'Raise 2.5BB': return 2.5;
-            case 'Raise 3BB': return 3;
-            case 'Raise 4BB': return 4;
-            case 'Raise 5BB': return 5;
-            case 'Raise 10BB': return 10;
             case 'All In': return stackVal;
             default: return blindValues[position] ?? 0;
         }
