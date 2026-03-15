@@ -294,38 +294,52 @@ export class TrainingComponent {
     }
 
     /**
-     * Retourne le chemin de l'image du jeton selon l'action.
+     * Retourne le chemin de l'image du jeton selon l'action et le montant de la mise.
      * @param action Nom de l'action (Raise, Call, etc.).
+     * @param bet Montant de la mise en BB.
      * @returns Chemin de l'asset image.
      */
-    getChipImage(action?: string): string {
+    getChipImage(action?: string, bet?: number): string {
         if (!action || action === 'Fold') {
             return '';
         }
         
         if (action === 'All In') {
-            return 'assets/images/chip-allin.png';
-        }
-        
-        if (action === 'Limp' || action === 'Call') {
-            return 'assets/images/chip-small.png';
+            return 'assets/img/chip-allin.png';
         }
 
-        return 'assets/images/chip-medium.png';
+        if (bet === 0.5) {
+            return 'assets/img/chip-1.png';
+        }
+        
+        if (bet === 1) {
+            return 'assets/img/chip-small.png';
+        }
+
+        return 'assets/img/chip-medium.png';
     }
 
     /**
-     * Retourne la classe CSS de taille pour l'image du jeton selon l'action.
+     * Retourne la classe CSS de taille pour l'image du jeton selon l'action et le montant.
      * @param action Nom de l'action.
-     * @returns Classes Tailwind (ex: h-10, h-14, h-20).
+     * @param bet Montant de la mise.
+     * @returns Classes Tailwind (ex: h-10, h-14, h-20, h-8).
      */
-    getChipClass(action?: string): string {
-        if (!action || action === 'Check' || action === 'Limp' || action === 'Call') {
+    getChipClass(action?: string, bet?: number): string {
+        if (!action || action === 'Check' || action === 'Fold') {
             return 'h-10';
         }
 
         if (action === 'All In') {
             return 'h-20';
+        }
+
+        if (bet === 0.5) {
+            return 'h-8';
+        }
+
+        if (bet === 1) {
+            return 'h-10';
         }
 
         return 'h-14';
@@ -375,15 +389,22 @@ export class TrainingComponent {
      * @returns Chemin de l'image.
      */
     getChipImageForBet(action: string | undefined, position: string): string {
+        const bet = this.getBetAmount(position, action, this.activeSituation.stack);
         if (!action || action === 'Aucune' || action === 'Check') {
             // Afficher les jetons de blind pour BB et SB
-            return (position === 'bb' || position === 'sb') ? 'assets/images/chip-small.png' : '';
+            if (position === 'bb' || position === 'sb') {
+                return this.getChipImage('Blind', bet);
+            }
+            return '';
         }
         if (action === 'Fold') {
             // Blind déjà posé avant le fold
-            return (position === 'bb' || position === 'sb') ? 'assets/images/chip-small.png' : '';
+            if (position === 'bb' || position === 'sb') {
+                return this.getChipImage('Blind', bet);
+            }
+            return '';
         }
-        return this.getChipImage(action);
+        return this.getChipImage(action, bet);
     }
 
     /**

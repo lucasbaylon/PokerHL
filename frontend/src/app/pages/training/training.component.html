@@ -198,7 +198,7 @@
                     @if (activeSituation.nbPlayer === 2 && getChipImageForBet(activeSituation.previousPlayer1Action, getHUOpponentPosition(activeSituation.position!))) {
                     <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
                         <img [src]="getChipImageForBet(activeSituation.previousPlayer1Action, getHUOpponentPosition(activeSituation.position!))" 
-                             [class]="getChipClass(activeSituation.previousPlayer1Action) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
+                             [class]="getChipClass(activeSituation.previousPlayer1Action, getBetAmount(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                         @if (getBetAmountStr(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)) {
                         <span class="text-white text-sm font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)}}</span>
                         }
@@ -210,7 +210,7 @@
                     @if (activeSituation.nbPlayer === 3 && getChipImageForBet(getOpponentAction('left'), getOpponentPosition('left'))) {
                         <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
                             <img [src]="getChipImageForBet(getOpponentAction('left'), getOpponentPosition('left'))" 
-                                 [class]="getChipClass(getOpponentAction('left')) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
+                                 [class]="getChipClass(getOpponentAction('left'), getBetAmount(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                             @if (getBetAmountStr(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)) {
                                 <span class="text-white text-sm font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)}}</span>
                             }
@@ -221,7 +221,7 @@
                     @if (activeSituation.nbPlayer === 3 && getChipImageForBet(getOpponentAction('right'), getOpponentPosition('right'))) {
                         <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
                             <img [src]="getChipImageForBet(getOpponentAction('right'), getOpponentPosition('right'))" 
-                                 [class]="getChipClass(getOpponentAction('right')) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
+                                 [class]="getChipClass(getOpponentAction('right'), getBetAmount(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                             @if (getBetAmountStr(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)) {
                                 <span class="text-white text-sm font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)}}</span>
                             }
@@ -232,7 +232,7 @@
                     @if (getChipImageForBet(undefined, activeSituation.position!)) {
                     <div class="absolute top-[72%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
                         <img [src]="getChipImageForBet(undefined, activeSituation.position!)" 
-                             [class]="getChipClass(undefined) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
+                             [class]="getChipClass(undefined, getBetAmount(activeSituation.position!, undefined, activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                         @if (getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack)) {
                         <span class="text-white text-sm font-bold drop-shadow-md bg-black/40 px-1 rounded">{{getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack)}}</span>
                         }
