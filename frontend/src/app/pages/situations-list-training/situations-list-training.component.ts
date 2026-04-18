@@ -1,6 +1,7 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { Situation } from '../../interfaces/situation';
@@ -17,8 +18,9 @@ import { SituationService } from '../../services/situation.service';
     imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, MultiSelectModule, FormsModule],
     templateUrl: './situations-list-training.component.html'
 })
-export class SituationsListTrainingComponent {
+export class SituationsListTrainingComponent implements OnDestroy {
 
+    private situationsSubscription!: Subscription;
     situationList: Situation[] = [];
 
     selectedSituations: Situation[] = [];
@@ -67,8 +69,12 @@ export class SituationsListTrainingComponent {
     /**
      * Initialise le composant et récupère la liste des situations.
      */
+    ngOnDestroy(): void {
+        this.situationsSubscription.unsubscribe();
+    }
+
     ngOnInit(): void {
-        this.apiSituation.situations.subscribe(data => {
+        this.situationsSubscription = this.apiSituation.situations.subscribe(data => {
             this.situationList = data.sort((a: Situation, b: Situation) => {
                 if (a.name && b.name) {
                     // Extraction des parties textuelles et numériques

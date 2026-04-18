@@ -1,9 +1,10 @@
 import { NgStyle } from '@angular/common';
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
+import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Situation } from '../../interfaces/situation';
 import { DealerPipe } from '../../pipes/dealer.pipe';
@@ -20,8 +21,9 @@ import { CommonService } from './../../services/common.service';
     imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle],
     templateUrl: './situations-list-manager.component.html'
 })
-export class SituationsListManagerComponent {
+export class SituationsListManagerComponent implements OnDestroy {
 
+    private situationsSubscription!: Subscription;
     situationList: Situation[] = [];
 
     nbRowsPerPage = 11;
@@ -76,8 +78,12 @@ export class SituationsListManagerComponent {
     /**
      * Initialise le composant et s'abonne à la liste des situations.
      */
+    ngOnDestroy(): void {
+        this.situationsSubscription.unsubscribe();
+    }
+
     ngOnInit(): void {
-        this.apiSituation.situations.subscribe(data => {
+        this.situationsSubscription = this.apiSituation.situations.subscribe(data => {
             this.situationList = data.sort((a: Situation, b: Situation) => {
                 if (a.name && b.name) {
                     // Extraction des parties textuelles et numériques
