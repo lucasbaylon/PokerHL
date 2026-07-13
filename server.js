@@ -297,9 +297,10 @@ protectedRouter.post("/import_zip_situation", upload.single('file'), async funct
                 }
             }
 
-            const connection = await getConnection();
+            let connection;
 
             try {
+                connection = await getConnection();
                 // Démarrez une transaction
                 await connection.beginTransaction();
 
@@ -321,6 +322,10 @@ protectedRouter.post("/import_zip_situation", upload.single('file'), async funct
                 // Log et réponse d'erreur
                 console.error('Erreur lors de l\'insertion des données:', error);
                 res.status(500).json({ success: false, message: 'Erreur lors de l\'insertion des données' });
+            } finally {
+                if (connection) {
+                    connection.release();
+                }
             }
         })
         .catch(err => {
@@ -575,9 +580,10 @@ io.on('connection', (socket) => {
     socket.on('DuplicateSituation', async (data) => {
         const id = data.id;
         const user = data.user;
+        let connection;
 
         try {
-            const connection = await getConnection();
+            connection = await getConnection();
             // Récupérer l'objet situation original
             const [originalRows] = await connection.execute('SELECT json FROM situations WHERE id = ? AND user = ?', [id, user]);
             if (originalRows.length === 0) {
@@ -620,15 +626,21 @@ io.on('connection', (socket) => {
         } catch (error) {
             console.error('An error occurred:', error);
             // socket.emit('Error', 'An error occurred while duplicating the situation.');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
         }
     });
 
     socket.on('RemoveSituation', async (data) => {
         const id = data.id;
         const user = data.user;
+        let connection;
+
         try {
-            const connection = await getConnection();
-            const [deleteResult] = await connection.execute('DELETE FROM situations WHERE id = ?', [id]);
+            connection = await getConnection();
+            const [deleteResult] = await connection.execute('DELETE FROM situations WHERE id = ? AND user = ?', [id, user]);
 
             console.log('Nombre de lignes supprimées :', deleteResult.affectedRows);
 
@@ -643,6 +655,10 @@ io.on('connection', (socket) => {
             console.error('Erreur lors de la suppression ou de la récupération des situations :', error);
             // Gérer l'erreur en informant également le client
             socket.emit('Error', 'An error occurred while removing or fetching situations');  // Vous pouvez ajuster ce message d'erreur selon vos besoins
+        } finally {
+            if (connection) {
+                connection.release();
+            }
         }
     });
 
