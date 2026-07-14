@@ -6,6 +6,7 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { LexiconComponent } from './pages/lexicon/lexicon.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { SelectTrainingModeComponent } from './pages/select-training-mode/select-training-mode.component';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -50,6 +51,11 @@ export const routes: Routes = [
             {
                 path: 'select-training-mode',
                 component: SelectTrainingModeComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'lexique',
+                component: LexiconComponent,
                 canActivate: [authGuard]
             },
             {

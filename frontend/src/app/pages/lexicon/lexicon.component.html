@@ -1,0 +1,60 @@
+<h3
+    class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 transition-colors duration-500 m-0">
+    Lexique</h3>
+<p
+    class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0 transition-colors duration-500">
+    {{ visibleTermsCount }} terme(s)</p>
+
+<div class="mt-8 animate-appear opacity-0 animation-delay-50">
+    <div class="relative w-[48rem] max-w-full">
+        <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400"></i>
+        <input [(ngModel)]="query" (ngModelChange)="restartAnimations()" type="search" placeholder="Rechercher un terme"
+            class="w-full bg-white pl-10 text-gray-800 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300"
+            name="lexiconSearch" id="lexiconSearch" autocomplete="off" pInputText />
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-2">
+        <button type="button" (click)="clearLetter()"
+            class="flex h-9 min-w-9 items-center justify-center rounded-md border-0 px-3 text-sm font-semibold shadow transition-colors duration-500 cursor-pointer"
+            [ngClass]="selectedLetter === '' ? 'bg-gray-800 text-white dark:bg-gray-600 dark:text-gray-100' : 'bg-white text-gray-800 hover:bg-gray-200 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600'">
+            Tous
+        </button>
+        @for (letter of letters; track letter) {
+        <button type="button" (click)="selectLetter(letter)"
+            class="flex h-9 min-w-9 items-center justify-center rounded-md border-0 px-3 text-sm font-semibold shadow transition-colors duration-500 cursor-pointer"
+            [ngClass]="selectedLetter === letter ? 'bg-gray-800 text-white dark:bg-gray-600 dark:text-gray-100' : 'bg-white text-gray-800 hover:bg-gray-200 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600'">
+            {{ letter }}
+        </button>
+        }
+    </div>
+</div>
+
+@if (filteredGroups.length > 0) {
+<div class="mt-10 space-y-8 pb-10">
+    @for (group of filteredGroups; track group.letter) {
+    <section>
+        <h4
+            class="m-0 mb-4 text-left text-2xl font-bold uppercase text-gray-800 transition-colors duration-500 dark:text-gray-300 animate-appear opacity-0"
+            [style.animation-delay]="group.animationDelay" [style.animation-name]="animationName">
+            {{ group.letter }}</h4>
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+            @for (entry of group.entries; track entry.term) {
+            <div
+                class="rounded-md bg-white px-4 py-4 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300 animate-appear opacity-0"
+                [style.animation-delay]="entry.animationDelay" [style.animation-name]="animationName">
+                <h5 class="m-0 text-base font-semibold">{{ entry.term }}</h5>
+                <p class="m-0 mt-2 text-sm leading-relaxed text-gray-600 transition-colors duration-500 dark:text-gray-400">
+                    {{ entry.definition }}
+                </p>
+            </div>
+            }
+        </div>
+    </section>
+    }
+</div>
+} @else {
+<div
+    class="mt-10 rounded-md bg-white p-5 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
+    Aucun terme trouvé.
+</div>
+}
