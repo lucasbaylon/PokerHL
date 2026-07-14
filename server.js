@@ -531,6 +531,28 @@ function validateJsonContent(fileName, jsonContent) {
     }
 }
 
+async function ensureRangePagesTable(connection) {
+    await connection.execute(`
+        CREATE TABLE IF NOT EXISTS range_pages (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            json LONGTEXT NOT NULL,
+            user VARCHAR(255) NOT NULL
+        )
+    `);
+}
+
+function parseRangePageRows(rows) {
+    return rows.map((rangePageObj) => {
+        let parsedRangePageJson = JSON.parse(rangePageObj.json);
+        return { ...parsedRangePageJson, id: rangePageObj.id };
+    });
+}
+
+async function emitRangePages(socket, connection, user) {
+    const [results] = await connection.execute('SELECT * FROM range_pages WHERE user = ?', [user]);
+    socket.emit('RangePages', parseRangePageRows(results));
+}
+
 app.use('/api', protectedRouter);
 
 if (process.env.NODE_ENV !== 'dev') {
@@ -713,6 +735,147 @@ io.on('connection', (socket) => {
             socket.emit('Situation', JSON.stringify(situationObj));
         } catch (error) {
             console.error('Error querying the database:', error);
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
+    });
+
+    socket.on('AddRangePage', async (data) => {
+        const rangePage = data.data;
+        const user = data.user;
+        let connection;
+
+        try {
+            connection = await getConnection();
+            await ensureRangePagesTable(connection);
+            const [insertResult] = await connection.execute('INSERT INTO range_pages (json, user) VALUES (?, ?)', [JSON.stringify(rangePage), user]);
+            socket.emit('RangePage', JSON.stringify({ ...rangePage, id: insertResult.insertId }));
+            await emitRangePages(socket, connection, user);
+        } catch (error) {
+            console.error('An error occurred while adding range page:', error);
+            socket.emit('Error', 'An error occurred while adding range page');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
+    });
+
+    socket.on('EditRangePage', async (data) => {
+        const rangePage = data.data;
+        const rangePageId = rangePage.id;
+        const user = data.user;
+        delete rangePage.id;
+        let connection;
+
+        try {
+            connection = await getConnection();
+            await ensureRangePagesTable(connection);
+            await connection.execute('UPDATE range_pages SET json = ? WHERE id = ? AND user = ?', [JSON.stringify(rangePage), rangePageId, user]);
+            rangePage.id = rangePageId;
+            socket.emit('RangePage', JSON.stringify(rangePage));
+            await emitRangePages(socket, connection, user);
+        } catch (error) {
+            console.error('An error occurred while editing range page:', error);
+            socket.emit('Error', 'An error occurred while editing range page');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
+    });
+
+    socket.on('DuplicateRangePage', async (data) => {
+        const id = data.id;
+        const user = data.user;
+        let connection;
+
+        try {
+            connection = await getConnection();
+            await ensureRangePagesTable(connection);
+            const [originalRows] = await connection.execute('SELECT json FROM range_pages WHERE id = ? AND user = ?', [id, user]);
+            if (originalRows.length === 0) {
+                throw new Error('Original range page not found');
+            }
+
+            const originalRangePage = JSON.parse(originalRows[0].json);
+            const [allRangePages] = await connection.execute('SELECT json FROM range_pages WHERE user = ?', [user]);
+            const allNames = allRangePages.map(rangePage => JSON.parse(rangePage.json).name);
+
+            let newName = `${originalRangePage.name} copy`;
+            let copyNumber = 1;
+            while (allNames.includes(newName)) {
+                copyNumber += 1;
+                newName = `${originalRangePage.name} copy ${copyNumber}`;
+            }
+
+            originalRangePage.name = newName;
+            await connection.execute('INSERT INTO range_pages (json, user) VALUES (?, ?)', [JSON.stringify(originalRangePage), user]);
+            await emitRangePages(socket, connection, user);
+        } catch (error) {
+            console.error('An error occurred while duplicating range page:', error);
+            socket.emit('Error', 'An error occurred while duplicating range page');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
+    });
+
+    socket.on('RemoveRangePage', async (data) => {
+        const id = data.id;
+        const user = data.user;
+        let connection;
+
+        try {
+            connection = await getConnection();
+            await ensureRangePagesTable(connection);
+            await connection.execute('DELETE FROM range_pages WHERE id = ? AND user = ?', [id, user]);
+            await emitRangePages(socket, connection, user);
+        } catch (error) {
+            console.error('An error occurred while removing range page:', error);
+            socket.emit('Error', 'An error occurred while removing range page');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
+    });
+
+    socket.on('GetRangePages', async (user) => {
+        let connection;
+        try {
+            connection = await getConnection();
+            await ensureRangePagesTable(connection);
+            await emitRangePages(socket, connection, user);
+        } catch (error) {
+            console.error('Error querying range pages:', error);
+            socket.emit('Error', 'An error occurred while fetching range pages');
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
+    });
+
+    socket.on('GetRangePage', async (data) => {
+        let connection;
+        try {
+            connection = await getConnection();
+            await ensureRangePagesTable(connection);
+            const [results] = await connection.execute('SELECT * FROM range_pages WHERE id = ? AND user = ?', [data.id, data.user]);
+            if (results.length === 0) {
+                socket.emit('Error', 'Range page not found');
+                return;
+            }
+            let parsedRangePageJson = JSON.parse(results[0].json);
+            const rangePageObj = { id: results[0].id, ...parsedRangePageJson };
+            socket.emit('RangePage', JSON.stringify(rangePageObj));
+        } catch (error) {
+            console.error('Error querying range page:', error);
+            socket.emit('Error', 'An error occurred while fetching range page');
         } finally {
             if (connection) {
                 connection.release();

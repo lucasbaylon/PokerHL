@@ -6,6 +6,8 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RangePageEditorComponent } from './pages/range-page-editor/range-page-editor.component';
+import { RangePagesListComponent } from './pages/range-pages-list/range-pages-list.component';
 import { LexiconComponent } from './pages/lexicon/lexicon.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { SelectTrainingModeComponent } from './pages/select-training-mode/select-training-mode.component';
@@ -33,6 +35,16 @@ export const routes: Routes = [
             {
                 path: 'situations-list-manager',
                 component: SituationsListManagerComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'range-pages',
+                component: RangePagesListComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'range-page-editor',
+                component: RangePageEditorComponent,
                 canActivate: [authGuard]
             },
             {

@@ -19,6 +19,11 @@
                     <i class="fas fa-tasks mr-3 h-4 w-4"></i>
                     Situations
                 </div>
+                <div (click)="commonService.redirectTo('range-pages')"
+                    class="animate-appear animation-delay-125 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+                    <i class="fas fa-table-cells-large mr-3 h-4 w-4"></i>
+                    Ranges
+                </div>
                 <div (click)="commonService.redirectTo('settings')"
                     class="animate-appear animation-delay-150 opacity-0 inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
                     <i class="fas fa-cog mr-3 h-4 w-4"></i>

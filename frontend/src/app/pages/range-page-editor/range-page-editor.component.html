@@ -1,0 +1,337 @@
+<div class="flex items-start justify-between gap-6 mb-6">
+    <div>
+        <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
+            Page de ranges</h3>
+        <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">
+            Editez vos ranges, notes et filtres sur une grille libre desktop.</p>
+    </div>
+    <div class="flex items-center gap-3 animate-appear opacity-0">
+        <div (click)="goBack()"
+            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+            <i class="fa-solid fa-arrow-left mr-3 h-4 w-4"></i>
+            Retour
+        </div>
+        <div (click)="savePage()"
+            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
+            <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
+            Enregistrer
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-[320px_1fr] gap-6 animate-appear opacity-0 animation-delay-100">
+    <aside class="bg-white dark:bg-secondary-dark-bg rounded-md shadow-lg p-4 text-gray-800 dark:text-gray-300 h-fit">
+        <h4 class="m-0 mb-4 text-lg font-semibold uppercase tracking-wider">Page</h4>
+        <div class="mb-4">
+            <label class="block mb-2">Nom</label>
+            <input [(ngModel)]="page.name" name="pageName" type="text"
+                class="w-full h-10 rounded-md border border-gray-300 px-3 dark:bg-main-dark-bg" autocomplete="off" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mb-4">
+            <div>
+                <label class="block mb-2">Cellule</label>
+                <input [(ngModel)]="page.displaySettings.cellSize" name="defaultCellSize" type="number" min="22" max="52"
+                    class="w-full h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+            </div>
+            <label class="flex items-center gap-2 mt-8">
+                <input [(ngModel)]="page.displaySettings.compact" name="defaultCompact" type="checkbox" />
+                Compact
+            </label>
+            <label class="flex items-center gap-2 mt-8">
+                <input [(ngModel)]="page.displaySettings.showLegend" name="defaultLegend" type="checkbox" />
+                Legende
+            </label>
+        </div>
+
+        <h4 class="m-0 my-4 text-lg font-semibold uppercase tracking-wider">Ajouter</h4>
+        <div class="mb-3">
+            <label class="block mb-2">Situation existante</label>
+            <select [(ngModel)]="selectedSituationId" name="selectedSituationId"
+                class="w-full h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                <option [ngValue]="undefined">Selectionner</option>
+                @for (situation of filteredSituations(); track situation.id) {
+                    <option [ngValue]="situation.id">{{ situation.name }}</option>
+                }
+            </select>
+            <div (click)="addRangeBlock('situation')"
+                class="mt-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-4 text-sm font-medium shadow cursor-pointer">
+                <i class="fa-solid fa-table-cells-large mr-3"></i>
+                Ajouter la situation
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+            <div (click)="addRangeBlock('custom')"
+                class="inline-flex h-10 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-3 text-sm font-medium shadow cursor-pointer">
+                <i class="fa-solid fa-palette mr-2"></i>
+                Range
+            </div>
+            <div (click)="addTextBlock()"
+                class="inline-flex h-10 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-3 text-sm font-medium shadow cursor-pointer">
+                <i class="fa-solid fa-note-sticky mr-2"></i>
+                Note
+            </div>
+            <div (click)="addFilterBlock()"
+                class="inline-flex h-10 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-3 text-sm font-medium shadow cursor-pointer col-span-2">
+                <i class="fa-solid fa-filter mr-2"></i>
+                Filtres
+            </div>
+        </div>
+
+        <h4 class="m-0 my-4 text-lg font-semibold uppercase tracking-wider">JSON PokerHL</h4>
+        <textarea [(ngModel)]="clipboard" name="clipboard"
+            class="w-full h-28 rounded-md border border-gray-300 p-2 text-xs dark:bg-main-dark-bg"></textarea>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+            <div (click)="copySelectedBlockJson()"
+                class="inline-flex h-10 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-3 text-sm font-medium shadow cursor-pointer">
+                Copier
+            </div>
+            <div (click)="pasteBlockJson()"
+                class="inline-flex h-10 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-3 text-sm font-medium shadow cursor-pointer">
+                Coller
+            </div>
+        </div>
+
+        @if (selectedBlock(); as block) {
+            <h4 class="m-0 my-4 text-lg font-semibold uppercase tracking-wider">Bloc</h4>
+            <div class="mb-3">
+                <label class="block mb-2">Titre</label>
+                <input [(ngModel)]="block.title" [name]="'blockTitle_' + block.id" type="text"
+                    class="w-full h-10 rounded-md border border-gray-300 px-3 dark:bg-main-dark-bg" autocomplete="off" />
+            </div>
+            @if (block.type === 'range') {
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div>
+                        <label class="block mb-2">Cellule</label>
+                        <input [(ngModel)]="block.cellSize" [name]="'cellSize_' + block.id" type="number" min="22" max="52"
+                            class="w-full h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+                    </div>
+                    <label class="flex items-center gap-2 mt-8">
+                        <input [(ngModel)]="block.compact" [name]="'compact_' + block.id" type="checkbox" />
+                        Compact
+                    </label>
+                    <label class="flex items-center gap-2 mt-8">
+                        <input [(ngModel)]="block.showLegend" [name]="'legend_' + block.id" type="checkbox" />
+                        Legende
+                    </label>
+                </div>
+                @if (block.source === 'custom' && block.customRange) {
+                    <label class="flex items-center gap-2 mb-3">
+                        <input [(ngModel)]="block.trainable" [name]="'trainable_' + block.id" type="checkbox" />
+                        Utilisable en entrainement
+                    </label>
+                    @if (block.trainable) {
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <input [(ngModel)]="block.customRange.name" [name]="'rangeName_' + block.id" placeholder="Nom"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+                            <input [(ngModel)]="block.customRange.stack" [name]="'rangeStack_' + block.id" type="number"
+                                placeholder="Stack"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+                            <select [(ngModel)]="block.customRange.type" [name]="'rangeType_' + block.id"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option value="preflop">Preflop</option>
+                                <option value="flop">Flop</option>
+                            </select>
+                            <select [(ngModel)]="block.customRange.nbPlayer" [name]="'rangePlayers_' + block.id"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option [ngValue]="2">2</option>
+                                <option [ngValue]="3">3</option>
+                            </select>
+                            <select [(ngModel)]="block.customRange.position" [name]="'rangePosition_' + block.id"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option value="sb">SB</option>
+                                <option value="bb">BB</option>
+                                <option value="bu">BU</option>
+                            </select>
+                            <select [(ngModel)]="block.customRange.opponentLevel" [name]="'rangeLevel_' + block.id"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option value="fish">Fish</option>
+                                <option value="shark">Reg</option>
+                                <option value="fish_shark">Mixte</option>
+                            </select>
+                            <select [(ngModel)]="block.customRange.previousPlayer1Action" [name]="'rangeP1_' + block.id"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option [ngValue]="undefined">Action 1</option>
+                                <option value="Fold">Fold</option>
+                                <option value="Limp">Limp</option>
+                                <option value="Call">Call</option>
+                                <option value="Raise 2BB">Raise 2BB</option>
+                                <option value="Raise 2.5BB">Raise 2.5BB</option>
+                                <option value="All In">All In</option>
+                            </select>
+                            <select [(ngModel)]="block.customRange.previousPlayer2Action" [name]="'rangeP2_' + block.id"
+                                class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option [ngValue]="undefined">Action 2</option>
+                                <option value="Fold">Fold</option>
+                                <option value="Limp">Limp</option>
+                                <option value="Call">Call</option>
+                                <option value="Raise 2BB">Raise 2BB</option>
+                                <option value="Raise 2.5BB">Raise 2.5BB</option>
+                                <option value="All In">All In</option>
+                            </select>
+                        </div>
+                        <div (click)="saveCustomRangeAsSituation(block)"
+                            class="mb-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-3 text-sm font-medium shadow cursor-pointer">
+                            Envoyer dans Situations
+                        </div>
+                    }
+                }
+            }
+            <div (click)="removeSelectedBlock()"
+                class="inline-flex h-10 w-full items-center justify-center rounded-md bg-red-700 text-white hover:bg-red-600 px-3 text-sm font-medium shadow cursor-pointer">
+                Supprimer le bloc
+            </div>
+        }
+    </aside>
+
+    <main class="overflow-auto border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-main-dark-bg shadow-inner"
+        [style.height.px]="760">
+        <div class="relative" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"
+            (mousedown)="selectedBlockId = undefined">
+            @for (block of visibleBlocks(); track block.id) {
+                <section class="absolute rounded-md shadow-lg bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-300 overflow-hidden border"
+                    [ngClass]="selectedBlockId === block.id ? 'border-gray-800 dark:border-gray-200' : 'border-transparent'"
+                    [ngStyle]="blockStyle(block)" (mousedown)="selectBlock(block); $event.stopPropagation()">
+                    <div class="h-10 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-300 flex items-center justify-between px-3 cursor-move"
+                        (mousedown)="startDrag($event, block, 'move')">
+                        <span class="font-semibold truncate">{{ block.title || block.type }}</span>
+                        <span class="text-xs uppercase">{{ block.type }}</span>
+                    </div>
+
+                    @if (block.type === 'range') {
+                        @if (rangeForBlock(block); as range) {
+                            <div class="p-3 overflow-auto" [style.height.px]="block.h - 40">
+                                <table class="border-separate border-spacing-1 select-none" oncontextmenu="return false;">
+                                    <tbody>
+                                        @for (row of range.situations; track rowIndex; let rowIndex = $index) {
+                                            <tr>
+                                                @for (item of row; track cellIndex; let cellIndex = $index) {
+                                                    <td class="rounded text-center align-middle font-semibold text-white shadow cursor-pointer"
+                                                        [style.width.px]="cellSize(block)"
+                                                        [style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
+                                                        [style.font-size.px]="block.compact ? 11 : 13"
+                                                        [style.background]="(item.solution! | solutionColor:range.solutions)"
+                                                        (mousedown)="startPainting(block, rowIndex, cellIndex)"
+                                                        (mouseenter)="updatePainting(block, rowIndex, cellIndex)">
+                                                        {{ item.card }}
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                @if (block.showLegend) {
+                                    <div class="flex flex-wrap gap-3 mt-3">
+                                        @for (solution of range.solutions; track solution.id) {
+                                            <div class="flex items-center gap-2">
+                                                <div class="h-5 w-5 rounded shadow"
+                                                    [style.background]="(solution.id | solutionColor:range.solutions)"></div>
+                                                <span class="text-sm">{{ solution.display_name }}</span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+
+                                @if (block.source === 'custom' && block.customRange) {
+                                    <div class="mt-3 border-t border-gray-200 dark:border-gray-700 pt-3">
+                                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                                            @for (solution of block.customRange.solutions; track solution.id) {
+                                                @if (solution.type === 'unique') {
+                                                    <button type="button"
+                                                        class="h-9 rounded-md px-3 text-sm text-white shadow"
+                                                        [style.background]="solution.color"
+                                                        [ngClass]="activeSolutionId === solution.id ? 'outline outline-2 outline-gray-900 dark:outline-white' : ''"
+                                                        (click)="activeSolutionId = solution.id">
+                                                        {{ solution.display_name }}
+                                                    </button>
+                                                }
+                                            }
+                                            <button type="button" class="h-9 rounded-md px-3 text-sm bg-gray-800 text-white"
+                                                (click)="addUniqueSolution(block)">
+                                                +
+                                            </button>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            @for (solution of block.customRange.solutions; track solution.id) {
+                                                @if (solution.type === 'unique') {
+                                                    <div class="flex items-center gap-2">
+                                                        <input [ngModel]="solution.display_name"
+                                                            (ngModelChange)="updateSolutionName(solution, $event)"
+                                                            [name]="'solutionName_' + block.id + '_' + solution.id"
+                                                            class="h-8 min-w-0 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+                                                        <input [ngModel]="solution.color"
+                                                            (ngModelChange)="updateSolutionColor(solution, $event)"
+                                                            [name]="'solutionColor_' + block.id + '_' + solution.id"
+                                                            type="color" class="h-8 w-10" />
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        } @else {
+                            <div class="p-4 text-red-700 dark:text-red-300">Situation introuvable.</div>
+                        }
+                    }
+
+                    @if (block.type === 'text') {
+                        <textarea [(ngModel)]="block.text" [name]="'text_' + block.id"
+                            class="w-full border-none p-3 resize-none outline-none text-gray-800 dark:text-gray-300 dark:bg-secondary-dark-bg"
+                            [style.height.px]="block.h - 40"></textarea>
+                    }
+
+                    @if (block.type === 'filter') {
+                        <div class="p-3">
+                            <select [(ngModel)]="block.filterTarget" [name]="'target_' + block.id"
+                                class="w-full h-9 mb-2 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                <option value="page">Page</option>
+                                <option value="global">Bibliotheque</option>
+                                <option value="both">Les deux</option>
+                            </select>
+                            <input [(ngModel)]="block.filters!.name" [name]="'filterName_' + block.id" placeholder="Nom"
+                                class="w-full h-9 mb-2 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+                            <div class="grid grid-cols-2 gap-2">
+                                <select [(ngModel)]="block.filters!.type" [name]="'filterType_' + block.id"
+                                    class="h-9 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                    @for (item of availableTypes; track item.code) {
+                                        <option [ngValue]="item.code">{{ item.name }}</option>
+                                    }
+                                </select>
+                                <select [(ngModel)]="block.filters!.position" [name]="'filterPosition_' + block.id"
+                                    class="h-9 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                    @for (item of availablePositions; track item.code) {
+                                        <option [ngValue]="item.code">{{ item.name }}</option>
+                                    }
+                                </select>
+                                <select [(ngModel)]="block.filters!.opponentLevel" [name]="'filterLevel_' + block.id"
+                                    class="h-9 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
+                                    @for (item of availableOpponentLevels; track item.code) {
+                                        <option [ngValue]="item.code">{{ item.name }}</option>
+                                    }
+                                </select>
+                                <input [(ngModel)]="block.filters!.stack" [name]="'filterStack_' + block.id" type="number"
+                                    placeholder="Stack"
+                                    class="h-9 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-3">
+                                <div (click)="applyFiltersFromBlock(block)"
+                                    class="inline-flex h-9 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-3 text-sm font-medium shadow cursor-pointer">
+                                    Appliquer
+                                </div>
+                                <div (click)="clearFilters()"
+                                    class="inline-flex h-9 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-3 text-sm font-medium shadow cursor-pointer">
+                                    Effacer
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="absolute right-0 bottom-0 h-5 w-5 cursor-se-resize bg-gray-800 dark:bg-gray-500"
+                        (mousedown)="startDrag($event, block, 'resize')"></div>
+                </section>
+            }
+        </div>
+    </main>
+</div>
