@@ -381,11 +381,13 @@ function validateJsonContent(fileName, jsonContent) {
     try {
         const jsonData = JSON.parse(jsonContent);
 
-        const champsValides = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "solutions", "situations"];
+        const champsObligatoires = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "solutions", "situations"];
+        const champsOptionnels = ["fishPosition", "previousPlayer1Action", "previousPlayer2Action"];
+        const champsValides = [...champsObligatoires, ...champsOptionnels];
 
         // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
         const champsJson = Object.keys(jsonData);
-        const isChampManquant = champsValides.some(champ => !champsJson.includes(champ));
+        const isChampManquant = champsObligatoires.some(champ => !champsJson.includes(champ));
         const isChampInvalide = champsJson.some(champ => !champsValides.includes(champ));
 
         if (isChampManquant) {
@@ -416,6 +418,22 @@ function validateJsonContent(fileName, jsonContent) {
                 return {
                     isValid: false,
                     message: `Le champ '${key}' est invalide dans le fichier ${fileName}.`
+                };
+            }
+        }
+
+        const previousActionsValides = ['Fold', 'Limp', 'Call', 'Raise 2BB', 'Raise 2.5BB', 'All In'];
+        const optionalValidations = {
+            fishPosition: val => typeof val === 'string' && ['sb', 'bb', 'bu'].includes(val),
+            previousPlayer1Action: val => typeof val === 'string' && previousActionsValides.includes(val),
+            previousPlayer2Action: val => typeof val === 'string' && previousActionsValides.includes(val),
+        };
+
+        for (const [key, validator] of Object.entries(optionalValidations)) {
+            if (jsonData[key] !== undefined && !validator(jsonData[key])) {
+                return {
+                    isValid: false,
+                    message: `Le champ optionnel '${key}' est invalide dans le fichier ${fileName}.`
                 };
             }
         }
