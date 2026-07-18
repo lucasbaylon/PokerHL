@@ -202,6 +202,21 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         this.scheduleAutoSave();
     }
 
+    openExistingSituationModal() {
+        this.selectedSituationId = undefined;
+        this.commonService.showModal('add-existing-situation-modal');
+    }
+
+    addExistingSituationBlock() {
+        const blockCount = this.page.blocks.length;
+        this.addRangeBlock('situation');
+
+        if (this.page.blocks.length > blockCount) {
+            this.selectedSituationId = undefined;
+            this.commonService.closeModal('add-existing-situation-modal');
+        }
+    }
+
     addTextBlock() {
         const position = this.nextBlockPosition();
         const block: RangePageBlock = {

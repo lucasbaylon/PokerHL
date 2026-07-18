@@ -20,23 +20,13 @@
         class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
         autocomplete="off" pInputText />
 
-    <select [(ngModel)]="selectedSituationId" name="selectedSituationId"
-        class="h-11 w-72 rounded-md border border-gray-300 bg-white px-3 text-gray-800 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
-        <option [ngValue]="undefined">Sélectionner une situation</option>
-        @for (situation of filteredSituations(); track situation.id) {
-            <option [ngValue]="situation.id">{{ situation.name }}</option>
-        }
-    </select>
-
-    <div (click)="addRangeBlock('situation')"
+    <div (click)="openExistingSituationModal()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-table-cells-large mr-2"></i>
-        Ajouter situation
+        + situation existante
     </div>
     <div (click)="addRangeBlock('custom')"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-palette mr-2"></i>
-        Range vide
+        + situation vierge
     </div>
     <div (click)="addTextBlock()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
@@ -48,12 +38,39 @@
         <i class="fa-solid fa-filter mr-2"></i>
         Filtre
     </div>
-
-    <div class="ml-auto text-sm text-gray-500 dark:text-gray-400">{{ saveStatus }}</div>
 </div>
 
+<dialog id="add-existing-situation-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
+    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+        <form method="dialog">
+            <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">
+                X
+            </button>
+        </form>
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Ajouter une situation existante
+        </h4>
+        <select [(ngModel)]="selectedSituationId" name="modalSelectedSituationId"
+            class="h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-gray-800 transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300">
+            <option [ngValue]="undefined">Sélectionner une situation</option>
+            @for (situation of filteredSituations(); track situation.id) {
+                <option [ngValue]="situation.id">{{ situation.name }}</option>
+            }
+        </select>
+        <div class="mt-5 flex justify-end">
+            <div (click)="addExistingSituationBlock()"
+                class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-sm font-medium shadow transition-colors cursor-pointer">
+                Ajouter
+            </div>
+        </div>
+    </div>
+    <form method="dialog" class="dui-modal-backdrop">
+        <button>Fermer</button>
+    </form>
+</dialog>
+
 <main class="animate-appear opacity-0 animation-delay-100">
-    <div class="overflow-auto rounded-md border border-gray-300 bg-gray-100 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
+    <div class="app-scrollbar overflow-auto rounded-md border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
         [style.height.px]="780">
         <div class="relative" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"
             [ngStyle]="canvasGridStyle()" (mousedown)="selectedBlockId = undefined">
@@ -67,15 +84,15 @@
                         @if (isSelected(block)) {
                             <input [(ngModel)]="block.title" (ngModelChange)="scheduleAutoSave()" [name]="'blockTitle_' + block.id" type="text"
                                 class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
-                                autocomplete="off" (mousedown)="$event.stopPropagation()" />
+                                autocomplete="off" pInputText (mousedown)="$event.stopPropagation()" />
                             <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
                                 (mousedown)="$event.stopPropagation()"
-                                class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-800 shadow transition-colors hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
+                                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-gray-800 shadow transition-colors hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
                                 <i class="fa-solid fa-clone text-xs"></i>
                             </button>
                             <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
                                 (mousedown)="$event.stopPropagation()"
-                                class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-red-700 shadow transition-colors hover:bg-red-50 dark:bg-gray-600 dark:text-red-300 dark:hover:bg-gray-500">
+                                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-red-700 shadow transition-colors hover:bg-red-50 dark:bg-gray-600 dark:text-red-300 dark:hover:bg-gray-500">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         } @else {
