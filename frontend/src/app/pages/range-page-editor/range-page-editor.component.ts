@@ -3,13 +3,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
+import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { RangePage, RangePageBlock, RangePageFilters } from '../../interfaces/range-page';
 import { Situation } from '../../interfaces/situation';
 import { Solution } from '../../interfaces/solution';
-import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
-import { TypePipe } from '../../pipes/type.pipe';
 import { CommonService } from '../../services/common.service';
 import { RangePageService } from '../../services/range-page.service';
 import { SituationService } from '../../services/situation.service';
@@ -19,7 +18,7 @@ type DragMode = 'move' | 'resize';
 @Component({
     selector: 'app-range-page-editor',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, TypePipe, PositionPipe],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule],
     templateUrl: './range-page-editor.component.html'
 })
 export class RangePageEditorComponent implements OnInit, OnDestroy {
@@ -42,14 +41,18 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     selectedBlockId?: string;
     selectedSituationId?: number;
     clipboard = '';
+    showClipboard = false;
     pageFilter: RangePageFilters = {};
     globalFilter: RangePageFilters = {};
     activeSolutionId = 'unique_solution_0';
     isPainting = false;
     mode: 'new' | 'edit' = 'new';
 
-    readonly canvasWidth = 1800;
-    readonly canvasHeight = 1100;
+    readonly gridSize = 24;
+    readonly canvasWidth = 2400;
+    readonly canvasHeight = 1440;
+    readonly minBlockWidth = this.gridSize * 10;
+    readonly minBlockHeight = this.gridSize * 8;
 
     availableTypes = [
         { name: 'Tous', code: '' },
@@ -69,6 +72,15 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         { name: 'Fish', code: 'fish' },
         { name: 'Reg', code: 'shark' },
         { name: 'Mixte', code: 'fish_shark' }
+    ];
+
+    availablePreviousActions = [
+        'Fold',
+        'Limp',
+        'Call',
+        'Raise 2BB',
+        'Raise 2.5BB',
+        'All In'
     ];
 
     constructor(
@@ -123,7 +135,30 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (!this.page.displaySettings) {
             this.page.displaySettings = { cellSize: 34, compact: false, showLegend: true };
         }
-        this.page.blocks = this.page.blocks || [];
+
+        this.page.blocks = (this.page.blocks || []).map(block => this.normalizeBlock(block));
+    }
+
+    normalizeBlock(block: RangePageBlock): RangePageBlock {
+        const normalizedBlock = { ...block };
+
+        normalizedBlock.x = this.snapToGrid(normalizedBlock.x || 0, 0, this.canvasWidth - this.minBlockWidth);
+        normalizedBlock.y = this.snapToGrid(normalizedBlock.y || 0, 0, this.canvasHeight - this.minBlockHeight);
+        normalizedBlock.w = this.snapToGrid(normalizedBlock.w || this.minBlockWidth, this.minBlockWidth, this.canvasWidth - normalizedBlock.x);
+        normalizedBlock.h = this.snapToGrid(normalizedBlock.h || this.minBlockHeight, this.minBlockHeight, this.canvasHeight - normalizedBlock.y);
+        normalizedBlock.zIndex = normalizedBlock.zIndex || this.nextZIndex();
+
+        if (normalizedBlock.type === 'filter' && !normalizedBlock.filters) {
+            normalizedBlock.filters = {};
+        }
+
+        if (normalizedBlock.type === 'range') {
+            normalizedBlock.cellSize = normalizedBlock.cellSize || this.page.displaySettings.cellSize;
+            normalizedBlock.compact = normalizedBlock.compact ?? this.page.displaySettings.compact;
+            normalizedBlock.showLegend = normalizedBlock.showLegend ?? this.page.displaySettings.showLegend;
+        }
+
+        return normalizedBlock;
     }
 
     addRangeBlock(source: 'situation' | 'custom') {
@@ -134,6 +169,8 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         const baseRange = cloneDeep(this.commonService.empty_situation_obj);
         baseRange.name = 'Range personnalisée';
+
+        const position = this.nextBlockPosition();
         const block: RangePageBlock = {
             id: this.createBlockId(),
             type: 'range',
@@ -142,50 +179,54 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             situationId: source === 'situation' ? this.selectedSituationId : undefined,
             customRange: source === 'custom' ? baseRange : undefined,
             trainable: false,
-            x: 40,
-            y: 40,
-            w: 560,
-            h: 520,
+            x: position.x,
+            y: position.y,
+            w: this.gridSize * 24,
+            h: this.gridSize * 24,
             zIndex: this.nextZIndex(),
             cellSize: this.page.displaySettings.cellSize,
             compact: this.page.displaySettings.compact,
             showLegend: this.page.displaySettings.showLegend
         };
 
-        this.page.blocks.push(block);
+        this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
     }
 
     addTextBlock() {
+        const position = this.nextBlockPosition();
         const block: RangePageBlock = {
             id: this.createBlockId(),
             type: 'text',
             title: 'Note',
             text: 'Nouvelle note',
-            x: 80,
-            y: 80,
-            w: 360,
-            h: 220,
+            x: position.x,
+            y: position.y,
+            w: this.gridSize * 16,
+            h: this.gridSize * 10,
             zIndex: this.nextZIndex()
         };
-        this.page.blocks.push(block);
+
+        this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
     }
 
     addFilterBlock() {
+        const position = this.nextBlockPosition();
         const block: RangePageBlock = {
             id: this.createBlockId(),
             type: 'filter',
             title: 'Filtres',
             filterTarget: 'both',
             filters: {},
-            x: 120,
-            y: 120,
-            w: 420,
-            h: 250,
+            x: position.x,
+            y: position.y,
+            w: this.gridSize * 18,
+            h: this.gridSize * 12,
             zIndex: this.nextZIndex()
         };
-        this.page.blocks.push(block);
+
+        this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
     }
 
@@ -195,6 +236,8 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.page.blocks = this.page.blocks.map(block => this.normalizeBlock(block));
+
         if (this.mode === 'edit') {
             this.rangePageService.editRangePage(this.page);
         } else {
@@ -203,24 +246,37 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         this.commonService.showSwalToast('Page enregistrée !');
     }
 
-    removeSelectedBlock() {
-        if (!this.selectedBlockId) return;
-        this.page.blocks = this.page.blocks.filter(block => block.id !== this.selectedBlockId);
-        this.selectedBlockId = undefined;
-    }
-
     selectedBlock(): RangePageBlock | undefined {
         return this.page.blocks.find(block => block.id === this.selectedBlockId);
-    }
-
-    rangeForBlock(block: RangePageBlock): Situation | undefined {
-        if (block.source === 'custom') return block.customRange;
-        return this.situations.find(situation => situation.id === block.situationId);
     }
 
     selectBlock(block: RangePageBlock) {
         this.selectedBlockId = block.id;
         block.zIndex = this.nextZIndex();
+    }
+
+    removeBlock(blockId: string) {
+        this.page.blocks = this.page.blocks.filter(block => block.id !== blockId);
+        if (this.selectedBlockId === blockId) {
+            this.selectedBlockId = undefined;
+        }
+    }
+
+    duplicateBlock(block: RangePageBlock) {
+        const duplicatedBlock = cloneDeep(block);
+        duplicatedBlock.id = this.createBlockId();
+        duplicatedBlock.title = `${block.title || 'Bloc'} copie`;
+        duplicatedBlock.x = this.snapToGrid(block.x + this.gridSize * 2, 0, this.canvasWidth - block.w);
+        duplicatedBlock.y = this.snapToGrid(block.y + this.gridSize * 2, 0, this.canvasHeight - block.h);
+        duplicatedBlock.zIndex = this.nextZIndex();
+
+        this.page.blocks.push(this.normalizeBlock(duplicatedBlock));
+        this.selectedBlockId = duplicatedBlock.id;
+    }
+
+    rangeForBlock(block: RangePageBlock): Situation | undefined {
+        if (block.source === 'custom') return block.customRange;
+        return this.situations.find(situation => situation.id === block.situationId);
     }
 
     startDrag(event: MouseEvent, block: RangePageBlock, mode: DragMode) {
@@ -249,11 +305,11 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         const deltaY = event.clientY - this.dragState.startY;
 
         if (this.dragState.mode === 'move') {
-            block.x = Math.max(0, Math.min(this.canvasWidth - block.w, this.dragState.originalX + deltaX));
-            block.y = Math.max(0, Math.min(this.canvasHeight - block.h, this.dragState.originalY + deltaY));
+            block.x = this.snapToGrid(this.dragState.originalX + deltaX, 0, this.canvasWidth - block.w);
+            block.y = this.snapToGrid(this.dragState.originalY + deltaY, 0, this.canvasHeight - block.h);
         } else {
-            block.w = Math.max(260, Math.min(this.canvasWidth - block.x, this.dragState.originalW + deltaX));
-            block.h = Math.max(180, Math.min(this.canvasHeight - block.y, this.dragState.originalH + deltaY));
+            block.w = this.snapToGrid(this.dragState.originalW + deltaX, this.minBlockWidth, this.canvasWidth - block.x);
+            block.h = this.snapToGrid(this.dragState.originalH + deltaY, this.minBlockHeight, this.canvasHeight - block.y);
         }
     };
 
@@ -336,8 +392,13 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     copySelectedBlockJson() {
         const block = this.selectedBlock();
-        if (!block) return;
+        if (!block) {
+            this.commonService.showSwalToast('Veuillez sélectionner un bloc.', 'error');
+            return;
+        }
+
         this.clipboard = JSON.stringify(block, null, 2);
+        this.showClipboard = true;
         navigator.clipboard?.writeText(this.clipboard);
         this.commonService.showSwalToast('JSON copié !');
     }
@@ -351,10 +412,10 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         try {
             const parsedBlock = JSON.parse(this.clipboard) as RangePageBlock;
             parsedBlock.id = this.createBlockId();
-            parsedBlock.x = Math.max(0, parsedBlock.x + 30);
-            parsedBlock.y = Math.max(0, parsedBlock.y + 30);
+            parsedBlock.x = this.snapToGrid((parsedBlock.x || 0) + this.gridSize * 2, 0, this.canvasWidth - this.minBlockWidth);
+            parsedBlock.y = this.snapToGrid((parsedBlock.y || 0) + this.gridSize * 2, 0, this.canvasHeight - this.minBlockHeight);
             parsedBlock.zIndex = this.nextZIndex();
-            this.page.blocks.push(parsedBlock);
+            this.page.blocks.push(this.normalizeBlock(parsedBlock));
             this.selectedBlockId = parsedBlock.id;
             this.commonService.showSwalToast('Bloc collé !');
         } catch {
@@ -364,6 +425,13 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     saveCustomRangeAsSituation(block: RangePageBlock) {
         if (!block.customRange) return;
+
+        const hasEmptyCell = block.customRange.situations.some(row => row.some(cell => cell.solution === undefined));
+        if (hasEmptyCell) {
+            this.commonService.showSwalToast('Veuillez remplir toute la range avant de l’envoyer dans les situations.', 'error');
+            return;
+        }
+
         this.situationService.addSituation(block.customRange);
         block.trainable = true;
         this.commonService.showSwalToast('Range envoyée dans les situations !');
@@ -383,8 +451,19 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         };
     }
 
+    canvasGridStyle() {
+        return {
+            'background-size': `${this.gridSize}px ${this.gridSize}px`,
+            'background-image': 'linear-gradient(to right, rgba(120,120,120,0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(120,120,120,0.18) 1px, transparent 1px)'
+        };
+    }
+
     cellSize(block: RangePageBlock): number {
         return block.cellSize || this.page.displaySettings.cellSize;
+    }
+
+    isSelected(block: RangePageBlock): boolean {
+        return this.selectedBlockId === block.id;
     }
 
     createBlockId(): string {
@@ -393,6 +472,19 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     nextZIndex(): number {
         return Math.max(0, ...this.page.blocks.map(block => block.zIndex || 0)) + 1;
+    }
+
+    nextBlockPosition() {
+        const offset = this.snapToGrid(this.page.blocks.length * this.gridSize * 2, 0, this.gridSize * 16);
+        return {
+            x: this.gridSize * 2 + offset,
+            y: this.gridSize * 2 + offset
+        };
+    }
+
+    snapToGrid(value: number, min: number, max: number): number {
+        const snappedValue = Math.round(value / this.gridSize) * this.gridSize;
+        return Math.max(min, Math.min(max, snappedValue));
     }
 
     getNextColor(solutions: Solution[]): string {
