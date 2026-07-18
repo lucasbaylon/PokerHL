@@ -5,9 +5,11 @@
 
 <div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto">
     <div class="flex items-center gap-4 mb-8">
-        <input [(ngModel)]="newPageName" type="text" placeholder="Nom de la page" name="newPageName"
-            class="h-12 rounded-md border border-gray-300 px-4 text-gray-800 dark:text-gray-300 dark:bg-secondary-dark-bg"
-            autocomplete="off" />
+        <div class="relative w-96 max-w-full">
+            <input [(ngModel)]="newPageName" type="text" placeholder="Nom de la page" name="newPageName"
+                class="w-full bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+                autocomplete="off" pInputText />
+        </div>
         <div (click)="createPage()"
             class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
             <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>

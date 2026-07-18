@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -10,14 +11,14 @@ import { RangePageService } from '../../services/range-page.service';
 @Component({
     selector: 'app-range-pages-list',
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule, InputTextModule],
     templateUrl: './range-pages-list.component.html'
 })
 export class RangePagesListComponent implements OnInit, OnDestroy {
 
     private rangePagesSubscription!: Subscription;
     rangePages: RangePage[] = [];
-    newPageName = 'Nouvelle page';
+    newPageName = '';
 
     constructor(
         private router: Router,
