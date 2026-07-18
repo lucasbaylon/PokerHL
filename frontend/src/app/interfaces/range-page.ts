@@ -1,16 +1,7 @@
 import { Situation } from './situation';
 
-export type RangeBlockType = 'range' | 'text' | 'filter';
+export type RangeBlockType = 'range' | 'text' | 'positions';
 export type RangeBlockSource = 'situation' | 'custom';
-export type RangeFilterTarget = 'page' | 'global' | 'both';
-
-export interface RangePageFilters {
-    name?: string;
-    type?: string;
-    position?: string;
-    opponentLevel?: string;
-    stack?: number;
-}
 
 export interface RangePageDisplaySettings {
     cellSize: number;
@@ -28,8 +19,7 @@ export interface RangePageBlock {
     zIndex: number;
     title?: string;
     text?: string;
-    filterTarget?: RangeFilterTarget;
-    filters?: RangePageFilters;
+    positions?: string[];
     source?: RangeBlockSource;
     situationId?: number;
     customRange?: Situation;

@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
@@ -13,7 +13,12 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 export class BaseLayoutComponent {
 
     constructor(
-        protected commonService: CommonService
+        protected commonService: CommonService,
+        private router: Router
     ) { }
+
+    get isGridEditor(): boolean {
+        return this.router.url.startsWith('/range-page-editor');
+    }
 
 }

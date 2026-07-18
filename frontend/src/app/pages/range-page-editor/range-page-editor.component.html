@@ -1,26 +1,11 @@
-<div class="mb-5 animate-appear opacity-0">
-    <div class="flex items-start justify-between gap-5">
-        <div>
-            <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 m-0">
-                Grille</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left">
-                Organisez vos ranges, filtres et notes sur une page modulable.</p>
-        </div>
-        <div (click)="goBack()"
-            class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-base font-medium shadow transition-colors cursor-pointer">
-            <i class="fa-solid fa-arrow-left mr-3 h-4 w-4"></i>
-            Retour
-        </div>
-    </div>
-</div>
-
+<div class="flex h-screen flex-col overflow-hidden bg-gray-100 transition-colors duration-500 dark:bg-main-dark-bg">
 <div
-    class="sticky top-0 z-50 mb-4 flex flex-wrap items-center gap-3 rounded-md bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
+    class="z-50 flex flex-wrap items-center gap-3 bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
     <input [(ngModel)]="page.name" (ngModelChange)="scheduleAutoSave()" name="pageName" type="text"
         class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
         autocomplete="off" pInputText />
 
-    <div (click)="openExistingSituationModal()"
+    <div (click)="openExistingSituationPopup()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-plus mr-2"></i>
         Situation existante
@@ -32,33 +17,35 @@
     </div>
     <div (click)="addTextBlock()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-note-sticky mr-2"></i>
-        Texte
+        <i class="fa-solid fa-plus mr-2"></i>
+        Note
     </div>
-    <div (click)="addFilterBlock()"
+    <div (click)="addPositionsBlock()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-filter mr-2"></i>
-        Filtre
+        <i class="fa-solid fa-plus mr-2"></i>
+        Positions
+    </div>
+    <div (click)="goBack()"
+        class="ml-auto inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
+        <i class="fa-solid fa-arrow-left mr-2"></i>
+        Retour
     </div>
 </div>
 
-<dialog id="add-existing-situation-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
-    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-        <form method="dialog">
-            <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">
-                X
-            </button>
-        </form>
+@if (showExistingSituationPopup) {
+    <div class="fixed left-1/2 top-20 z-[100] w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-md border border-gray-200 bg-white p-5 text-gray-800 shadow-xl transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
+        <button type="button" (click)="closeExistingSituationPopup()"
+            class="absolute right-3 top-3 flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-500 outline-none transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Ajouter une situation existante
         </h4>
-        <select [(ngModel)]="selectedSituationId" name="modalSelectedSituationId"
-            class="h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-gray-800 transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300">
-            <option [ngValue]="undefined">Sélectionner une situation</option>
-            @for (situation of filteredSituations(); track situation.id) {
-                <option [ngValue]="situation.id">{{ situation.name }}</option>
-            }
-        </select>
+        <p-autoComplete [(ngModel)]="selectedSituation" name="modalSelectedSituation"
+            [suggestions]="situationSuggestions" (completeMethod)="searchSituations($event)"
+            (onSelect)="selectExistingSituation($event)" field="name" placeholder="Rechercher une situation"
+            [dropdown]="true" [forceSelection]="true" [completeOnFocus]="true" appendTo="body"
+            styleClass="grid-situation-autocomplete" panelStyleClass="grid-situation-autocomplete-panel" />
         <div class="mt-5 flex justify-end">
             <div (click)="addExistingSituationBlock()"
                 class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-sm font-medium shadow transition-colors cursor-pointer">
@@ -66,66 +53,72 @@
             </div>
         </div>
     </div>
-    <form method="dialog" class="dui-modal-backdrop">
-        <button>Fermer</button>
-    </form>
-</dialog>
+}
 
-<main class="animate-appear opacity-0 animation-delay-100">
-    <div class="app-scrollbar overflow-auto rounded-md border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
-        [style.height.px]="780">
+<main class="min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
+    <div class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg">
         <div class="relative" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"
-            [ngStyle]="canvasGridStyle()" (mousedown)="selectedBlockId = undefined">
-            @for (block of visibleBlocks(); track block.id) {
+            [ngStyle]="canvasGridStyle()" (mousedown)="selectedBlockId = undefined; editingBlockId = undefined">
+            @for (block of page.blocks; track block.id) {
                 <section
                     class="absolute overflow-visible rounded-md border bg-white text-gray-800 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
                     [ngClass]="isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700'"
                     [ngStyle]="blockStyle(block)" (mousedown)="selectBlock(block); $event.stopPropagation()">
-                    <div class="flex h-10 items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300 cursor-move"
+                    <div class="flex h-10 cursor-move items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300"
                         (mousedown)="startDrag($event, block, 'move')">
                         @if (isSelected(block)) {
-                            <input [(ngModel)]="block.title" (ngModelChange)="scheduleAutoSave()" [name]="'blockTitle_' + block.id" type="text"
-                                class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
-                                autocomplete="off" pInputText (mousedown)="$event.stopPropagation()" />
-                            <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
-                                (mousedown)="$event.stopPropagation()"
-                                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-gray-800 shadow transition-colors hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
-                                <i class="fa-solid fa-clone text-xs"></i>
-                            </button>
-                            <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
-                                (mousedown)="$event.stopPropagation()"
-                                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-red-700 shadow transition-colors hover:bg-red-50 dark:bg-gray-600 dark:text-red-300 dark:hover:bg-gray-500">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
+                            @if (isEditing(block)) {
+                                <input [(ngModel)]="block.title" (ngModelChange)="scheduleAutoSave()" [name]="'blockTitle_' + block.id" type="text"
+                                    class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
+                                    autocomplete="off" pInputText (mousedown)="$event.stopPropagation()" />
+                            } @else {
+                                <span class="min-w-0 flex-1 truncate text-sm font-semibold">{{ block.title || block.type }}</span>
+                            }
+                            @if (!isEditing(block)) {
+                                <button type="button" title="Modifier" (click)="editBlock(block); $event.stopPropagation()"
+                                    (mousedown)="$event.stopPropagation()"
+                                    class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    <i class="fa-solid fa-pencil text-xs"></i>
+                                </button>
+                                <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
+                                    (mousedown)="$event.stopPropagation()"
+                                    class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    <i class="fa-solid fa-clone text-xs"></i>
+                                </button>
+                                <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
+                                    (mousedown)="$event.stopPropagation()"
+                                    class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-red-200 outline-none transition-all duration-150 hover:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/20">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            }
                         } @else {
                             <span class="min-w-0 flex-1 truncate text-sm font-semibold">{{ block.title || block.type }}</span>
-                            <span class="text-xs uppercase opacity-70">{{ block.type }}</span>
                         }
                     </div>
 
                     <div class="overflow-visible">
                         @if (block.type === 'range') {
                             @if (rangeForBlock(block); as range) {
-                                @if (isSelected(block)) {
+                                @if (isEditing(block)) {
                                     <div class="border-b border-gray-200 p-2 text-xs dark:border-gray-700">
                                         <div class="flex flex-wrap items-center gap-2">
                                             <label class="flex items-center gap-1">
                                                 Cellule
-                                                <input [(ngModel)]="block.cellSize" (ngModelChange)="scheduleAutoSave()" [name]="'cellSize_' + block.id" type="number"
+                                                <input [(ngModel)]="block.cellSize" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'cellSize_' + block.id" type="number"
                                                     min="22" max="52"
                                                     class="h-8 w-16 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
                                             </label>
                                             <label class="flex items-center gap-1">
-                                                <input [(ngModel)]="block.compact" (ngModelChange)="scheduleAutoSave()" [name]="'compact_' + block.id" type="checkbox" />
+                                                <input [(ngModel)]="block.compact" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'compact_' + block.id" type="checkbox" />
                                                 Compact
                                             </label>
                                             <label class="flex items-center gap-1">
-                                                <input [(ngModel)]="block.showLegend" (ngModelChange)="scheduleAutoSave()" [name]="'legend_' + block.id" type="checkbox" />
+                                                <input [(ngModel)]="block.showLegend" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'legend_' + block.id" type="checkbox" />
                                                 Légende
                                             </label>
                                             @if (block.source === 'custom' && block.customRange) {
                                                 <label class="flex items-center gap-1">
-                                                    <input [(ngModel)]="block.trainable" (ngModelChange)="scheduleAutoSave()" [name]="'trainable_' + block.id" type="checkbox" />
+                                                    <input [(ngModel)]="block.trainable" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'trainable_' + block.id" type="checkbox" />
                                                     Entraînable
                                                 </label>
                                                 @if (block.trainable) {
@@ -142,17 +135,21 @@
                                                 @for (solution of block.customRange.solutions; track solution.id) {
                                                     @if (solution.type === 'unique') {
                                                         <button type="button"
-                                                            class="h-8 rounded px-2 text-xs text-white shadow"
+                                                            class="inline-flex h-8 cursor-pointer appearance-none items-center justify-center rounded-md border-0 px-3 text-xs font-medium text-white outline-none shadow-sm transition-all duration-150 hover:brightness-110"
                                                             [style.background]="solution.color"
-                                                            [ngClass]="activeSolutionId === solution.id ? 'outline outline-2 outline-gray-900 dark:outline-white' : ''"
+                                                            [ngClass]="activeSolutionId === solution.id ? 'opacity-100 shadow-md' : 'opacity-75 hover:opacity-100'"
                                                             (click)="activeSolutionId = solution.id">
+                                                            @if (activeSolutionId === solution.id) {
+                                                                <i class="fa-solid fa-check mr-2 text-[0.65rem]"></i>
+                                                            }
                                                             {{ solution.display_name }}
                                                         </button>
                                                     }
                                                 }
-                                                <button type="button" class="h-8 rounded bg-gray-800 px-3 text-xs text-white"
+                                                <button type="button"
+                                                    class="inline-flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-gray-800 p-0 text-xs text-white outline-none shadow-sm transition-colors duration-150 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                                                     (click)="addUniqueSolution(block)">
-                                                    +
+                                                    <i class="fa-solid fa-plus"></i>
                                                 </button>
                                             </div>
                                             <div class="mt-2 grid grid-cols-2 gap-2">
@@ -229,7 +226,7 @@
                                                 <tr>
                                                     @for (item of row; track cellIndex; let cellIndex = $index) {
                                                         <td class="rounded text-center align-middle font-semibold text-white shadow"
-                                                            [ngClass]="block.source === 'custom' ? 'cursor-pointer' : 'cursor-default'"
+                                                            [ngClass]="block.source === 'custom' && isEditing(block) ? 'cursor-pointer' : 'cursor-default'"
                                                             [style.width.px]="cellSize(block)"
                                                             [style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
                                                             [style.font-size.px]="block.compact ? 11 : 13"
@@ -262,59 +259,54 @@
                         }
 
                         @if (block.type === 'text') {
-                            <textarea [(ngModel)]="block.text" (ngModelChange)="scheduleAutoSave()" [name]="'text_' + block.id"
-                                class="min-h-40 w-full resize-none border-none bg-white p-3 text-gray-800 outline-none transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"></textarea>
+                            @if (isEditing(block)) {
+                                <textarea [(ngModel)]="block.text" (ngModelChange)="scheduleAutoSave()" [name]="'text_' + block.id"
+                                    class="min-h-40 w-full resize-none border-none bg-white p-3 text-gray-800 outline-none transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"></textarea>
+                            } @else {
+                                <div class="min-h-10 whitespace-pre-wrap p-3 text-gray-800 transition-colors duration-500 dark:text-gray-300">{{ block.text }}</div>
+                            }
                         }
 
-                        @if (block.type === 'filter') {
+                        @if (block.type === 'positions') {
                             <div class="p-3">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <select [(ngModel)]="block.filterTarget" (ngModelChange)="scheduleAutoSave()" [name]="'target_' + block.id"
-                                        class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                        <option value="page">Page</option>
-                                        <option value="global">Bibliothèque</option>
-                                        <option value="both">Les deux</option>
-                                    </select>
-                                    <input [(ngModel)]="block.filters!.name" (ngModelChange)="scheduleAutoSave()" [name]="'filterName_' + block.id"
-                                        placeholder="Nom"
-                                        class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                    <select [(ngModel)]="block.filters!.type" (ngModelChange)="scheduleAutoSave()" [name]="'filterType_' + block.id"
-                                        class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                        @for (item of availableTypes; track item.code) {
-                                            <option [ngValue]="item.code">{{ item.name }}</option>
-                                        }
-                                    </select>
-                                    <select [(ngModel)]="block.filters!.position" (ngModelChange)="scheduleAutoSave()" [name]="'filterPosition_' + block.id"
-                                        class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                        @for (item of availablePositions; track item.code) {
-                                            <option [ngValue]="item.code">{{ item.name }}</option>
-                                        }
-                                    </select>
-                                    <select [(ngModel)]="block.filters!.opponentLevel" (ngModelChange)="scheduleAutoSave()" [name]="'filterLevel_' + block.id"
-                                        class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                        @for (item of availableOpponentLevels; track item.code) {
-                                            <option [ngValue]="item.code">{{ item.name }}</option>
-                                        }
-                                    </select>
-                                    <input [(ngModel)]="block.filters!.stack" (ngModelChange)="scheduleAutoSave()" [name]="'filterStack_' + block.id"
-                                        type="number" placeholder="Stack"
-                                        class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                </div>
-                                <div class="mt-3 flex gap-2">
-                                    <div (click)="applyFiltersFromBlock(block)"
-                                        class="inline-flex h-9 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-3 text-sm font-medium shadow cursor-pointer">
-                                        Appliquer
-                                    </div>
-                                    <div (click)="clearFilters()"
-                                        class="inline-flex h-9 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-3 text-sm font-medium shadow cursor-pointer">
-                                        Effacer
-                                    </div>
+                                <div class="overflow-visible rounded-sm border border-gray-700 bg-gray-800 shadow dark:border-gray-700 dark:bg-gray-700">
+                                    @for (position of block.positions; track rowIndex; let rowIndex = $index) {
+                                        <div class="flex h-7 items-center border-b border-gray-700 bg-gray-800 text-center text-xs font-semibold text-white last:border-b-0 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                                            (dragover)="allowPositionDrop($event, block)"
+                                            (drop)="dropPosition($event, block, rowIndex)">
+                                            @if (isEditing(block)) {
+                                                <div draggable="true"
+                                                    class="flex h-full w-8 cursor-grab items-center justify-center text-white/60 active:cursor-grabbing"
+                                                    (dragstart)="startPositionDrag($event, block, rowIndex)"
+                                                    (dragend)="endPositionDrag()"
+                                                    (mousedown)="$event.stopPropagation()">
+                                                    <i class="fa-solid fa-grip-lines text-[0.65rem]"></i>
+                                                </div>
+                                                <input [(ngModel)]="block.positions![rowIndex]" (ngModelChange)="scheduleAutoSave()"
+                                                    [name]="'position_' + block.id + '_' + rowIndex"
+                                                    class="h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-center text-xs font-semibold text-white outline-none"
+                                                    autocomplete="off" (mousedown)="$event.stopPropagation()" />
+                                                <button type="button" title="Supprimer" (click)="removePositionItem(block, rowIndex); $event.stopPropagation()"
+                                                    (mousedown)="$event.stopPropagation()"
+                                                    class="flex h-full w-8 cursor-pointer appearance-none items-center justify-center border-0 bg-transparent p-0 text-red-200 outline-none transition-colors hover:bg-red-500/20">
+                                                    <i class="fa-solid fa-trash-can text-[0.65rem]"></i>
+                                                </button>
+                                            } @else {
+                                                <div class="w-full px-2">{{ position }}</div>
+                                            }
+                                        </div>
+                                    }
+                                    <button type="button" (click)="addPositionItem(block)"
+                                        class="flex h-7 w-full cursor-pointer appearance-none items-center justify-center border-0 border-t border-gray-700 bg-gray-800 p-0 text-white outline-none transition-colors hover:bg-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                                        <i class="fa-solid fa-plus text-xs"></i>
+                                    </button>
                                 </div>
                             </div>
                         }
+
                     </div>
 
-                    @if (isSelected(block)) {
+                    @if (isEditing(block)) {
                         <div class="absolute right-0 bottom-0 h-5 w-5 cursor-se-resize bg-gray-800 dark:bg-gray-500"
                             (mousedown)="startDrag($event, block, 'resize')"></div>
                     }
@@ -323,3 +315,4 @@
         </div>
     </div>
 </main>
+</div>

@@ -57,6 +57,35 @@
         @apply bg-gray-100;
     }
 
+    .grid-situation-autocomplete {
+        @apply w-full;
+    }
+
+    .grid-situation-autocomplete .p-autocomplete-input {
+        @apply h-11 w-full border-gray-300 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500;
+    }
+
+    .grid-situation-autocomplete .p-autocomplete-dropdown {
+        @apply border-gray-300 bg-white text-gray-800 transition-colors duration-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300 dark:hover:bg-gray-700;
+    }
+
+    .grid-situation-autocomplete-panel {
+        @apply border border-gray-200 bg-white text-gray-800 shadow-lg dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300;
+    }
+
+    .grid-situation-autocomplete-panel .p-autocomplete-items {
+        @apply p-0;
+    }
+
+    .grid-situation-autocomplete-panel .p-autocomplete-item {
+        @apply text-gray-800 transition-colors duration-150 dark:text-gray-300;
+    }
+
+    .grid-situation-autocomplete-panel .p-autocomplete-item:hover,
+    .grid-situation-autocomplete-panel .p-autocomplete-item.p-highlight {
+        @apply bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300;
+    }
+
     //Slider
     .custom-slider .ngx-slider .ngx-slider-bar {
         @apply bg-gray-200 dark:bg-white;
