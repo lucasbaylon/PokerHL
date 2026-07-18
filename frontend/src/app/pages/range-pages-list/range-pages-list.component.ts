@@ -48,7 +48,7 @@ export class RangePagesListComponent implements OnInit, OnDestroy {
         };
 
         this.rangePageService.addRangePage(page);
-        this.commonService.showSwalToast('Page creee !');
+        this.commonService.showSwalToast('Page créée !');
     }
 
     openPage(id: number | undefined) {
@@ -59,7 +59,7 @@ export class RangePagesListComponent implements OnInit, OnDestroy {
     duplicatePage(id: number | undefined) {
         if (id === undefined) return;
         this.rangePageService.duplicateRangePage(id.toString());
-        this.commonService.showSwalToast('Page dupliquee !');
+        this.commonService.showSwalToast('Page dupliquée !');
     }
 
     removePage(id: number | undefined) {
@@ -77,7 +77,7 @@ export class RangePagesListComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.rangePageService.removeRangePage(id.toString());
-                this.commonService.showSwalToast('Page supprimee !');
+                this.commonService.showSwalToast('Page supprimée !');
             }
         });
     }

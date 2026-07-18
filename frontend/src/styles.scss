@@ -139,6 +139,13 @@
     @apply rounded-b-md rounded-t-none dark:bg-secondary-dark-bg border-none;
 }
 
+html.dark .p-datatable .p-datatable-thead > tr > th,
+html.dark .p-datatable .p-datatable-tbody > tr > td,
+html.dark .p-datatable .p-paginator-top,
+html.dark .p-datatable .p-paginator-bottom {
+    @apply border-gray-700;
+}
+
 .p-paginator .p-ripple {
     @apply text-gray-800 dark:text-gray-300 min-w-10 max-h-10;
 }

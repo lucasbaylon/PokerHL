@@ -53,7 +53,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     availableTypes = [
         { name: 'Tous', code: '' },
-        { name: 'Preflop', code: 'preflop' },
+        { name: 'Préflop', code: 'preflop' },
         { name: 'Flop', code: 'flop' }
     ];
 
@@ -128,16 +128,16 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     addRangeBlock(source: 'situation' | 'custom') {
         if (source === 'situation' && this.selectedSituationId === undefined) {
-            this.commonService.showSwalToast('Veuillez selectionner une situation.', 'error');
+            this.commonService.showSwalToast('Veuillez sélectionner une situation.', 'error');
             return;
         }
 
         const baseRange = cloneDeep(this.commonService.empty_situation_obj);
-        baseRange.name = 'Range personnalisee';
+        baseRange.name = 'Range personnalisée';
         const block: RangePageBlock = {
             id: this.createBlockId(),
             type: 'range',
-            title: source === 'situation' ? 'Situation' : 'Range personnalisee',
+            title: source === 'situation' ? 'Situation' : 'Range personnalisée',
             source,
             situationId: source === 'situation' ? this.selectedSituationId : undefined,
             customRange: source === 'custom' ? baseRange : undefined,
@@ -191,7 +191,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     savePage() {
         if (!this.page.name.trim()) {
-            this.commonService.showSwalToast('Veuillez donner un nom a la page.', 'error');
+            this.commonService.showSwalToast('Veuillez donner un nom à la page.', 'error');
             return;
         }
 
@@ -200,7 +200,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         } else {
             this.rangePageService.addRangePage(this.page);
         }
-        this.commonService.showSwalToast('Page enregistree !');
+        this.commonService.showSwalToast('Page enregistrée !');
     }
 
     removeSelectedBlock() {
@@ -339,12 +339,12 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (!block) return;
         this.clipboard = JSON.stringify(block, null, 2);
         navigator.clipboard?.writeText(this.clipboard);
-        this.commonService.showSwalToast('JSON copie !');
+        this.commonService.showSwalToast('JSON copié !');
     }
 
     pasteBlockJson() {
         if (!this.clipboard.trim()) {
-            this.commonService.showSwalToast('Aucun JSON a coller.', 'error');
+            this.commonService.showSwalToast('Aucun JSON à coller.', 'error');
             return;
         }
 
@@ -356,7 +356,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             parsedBlock.zIndex = this.nextZIndex();
             this.page.blocks.push(parsedBlock);
             this.selectedBlockId = parsedBlock.id;
-            this.commonService.showSwalToast('Bloc colle !');
+            this.commonService.showSwalToast('Bloc collé !');
         } catch {
             this.commonService.showSwalToast('JSON PokerHL invalide.', 'error');
         }
@@ -366,7 +366,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (!block.customRange) return;
         this.situationService.addSituation(block.customRange);
         block.trainable = true;
-        this.commonService.showSwalToast('Range envoyee dans les situations !');
+        this.commonService.showSwalToast('Range envoyée dans les situations !');
     }
 
     goBack() {

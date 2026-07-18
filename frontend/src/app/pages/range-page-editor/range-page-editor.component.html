@@ -3,7 +3,7 @@
         <h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
             Page de ranges</h3>
         <p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0">
-            Editez vos ranges, notes et filtres sur une grille libre desktop.</p>
+            Éditez vos ranges, notes et filtres sur une grille libre desktop.</p>
     </div>
     <div class="flex items-center gap-3 animate-appear opacity-0">
         <div (click)="goBack()"
@@ -40,7 +40,7 @@
             </label>
             <label class="flex items-center gap-2 mt-8">
                 <input [(ngModel)]="page.displaySettings.showLegend" name="defaultLegend" type="checkbox" />
-                Legende
+                Légende
             </label>
         </div>
 
@@ -49,7 +49,7 @@
             <label class="block mb-2">Situation existante</label>
             <select [(ngModel)]="selectedSituationId" name="selectedSituationId"
                 class="w-full h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
-                <option [ngValue]="undefined">Selectionner</option>
+                <option [ngValue]="undefined">Sélectionner</option>
                 @for (situation of filteredSituations(); track situation.id) {
                     <option [ngValue]="situation.id">{{ situation.name }}</option>
                 }
@@ -112,13 +112,13 @@
                     </label>
                     <label class="flex items-center gap-2 mt-8">
                         <input [(ngModel)]="block.showLegend" [name]="'legend_' + block.id" type="checkbox" />
-                        Legende
+                Légende
                     </label>
                 </div>
                 @if (block.source === 'custom' && block.customRange) {
                     <label class="flex items-center gap-2 mb-3">
                         <input [(ngModel)]="block.trainable" [name]="'trainable_' + block.id" type="checkbox" />
-                        Utilisable en entrainement
+                        Utilisable en entraînement
                     </label>
                     @if (block.trainable) {
                         <div class="grid grid-cols-2 gap-2 mb-3">
@@ -129,7 +129,7 @@
                                 class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg" />
                             <select [(ngModel)]="block.customRange.type" [name]="'rangeType_' + block.id"
                                 class="h-10 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
-                                <option value="preflop">Preflop</option>
+                                <option value="preflop">Préflop</option>
                                 <option value="flop">Flop</option>
                             </select>
                             <select [(ngModel)]="block.customRange.nbPlayer" [name]="'rangePlayers_' + block.id"
@@ -287,7 +287,7 @@
                             <select [(ngModel)]="block.filterTarget" [name]="'target_' + block.id"
                                 class="w-full h-9 mb-2 rounded-md border border-gray-300 px-2 dark:bg-main-dark-bg">
                                 <option value="page">Page</option>
-                                <option value="global">Bibliotheque</option>
+                                <option value="global">Bibliothèque</option>
                                 <option value="both">Les deux</option>
                             </select>
                             <input [(ngModel)]="block.filters!.name" [name]="'filterName_' + block.id" placeholder="Nom"
