@@ -16,7 +16,7 @@
 
 <div
     class="sticky top-0 z-50 mb-4 flex flex-wrap items-center gap-3 rounded-md bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
-    <input [(ngModel)]="page.name" name="pageName" type="text"
+    <input [(ngModel)]="page.name" (ngModelChange)="scheduleAutoSave()" name="pageName" type="text"
         class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
         autocomplete="off" pInputText />
 
@@ -49,32 +49,7 @@
         Filtre
     </div>
 
-    <div (click)="copySelectedBlockJson()"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-copy mr-2"></i>
-        Copier JSON
-    </div>
-    <div (click)="showClipboard = !showClipboard"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-code mr-2"></i>
-        Coller JSON
-    </div>
-    <div (click)="savePage()"
-        class="ml-auto inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-floppy-disk mr-2"></i>
-        Enregistrer
-    </div>
-
-    @if (showClipboard) {
-        <div class="basis-full">
-            <textarea [(ngModel)]="clipboard" name="clipboard"
-                class="mt-2 h-24 w-full rounded-md border border-gray-300 bg-white p-2 text-xs text-gray-800 transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300"></textarea>
-            <div (click)="pasteBlockJson()"
-                class="mt-2 inline-flex h-10 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 px-4 text-sm font-medium shadow cursor-pointer">
-                Coller le bloc
-            </div>
-        </div>
-    }
+    <div class="ml-auto text-sm text-gray-500 dark:text-gray-400">{{ saveStatus }}</div>
 </div>
 
 <main class="animate-appear opacity-0 animation-delay-100">
@@ -84,23 +59,23 @@
             [ngStyle]="canvasGridStyle()" (mousedown)="selectedBlockId = undefined">
             @for (block of visibleBlocks(); track block.id) {
                 <section
-                    class="absolute overflow-hidden rounded-md border bg-white text-gray-800 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
+                    class="absolute overflow-visible rounded-md border bg-white text-gray-800 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
                     [ngClass]="isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700'"
                     [ngStyle]="blockStyle(block)" (mousedown)="selectBlock(block); $event.stopPropagation()">
                     <div class="flex h-10 items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300 cursor-move"
                         (mousedown)="startDrag($event, block, 'move')">
                         @if (isSelected(block)) {
-                            <input [(ngModel)]="block.title" [name]="'blockTitle_' + block.id" type="text"
+                            <input [(ngModel)]="block.title" (ngModelChange)="scheduleAutoSave()" [name]="'blockTitle_' + block.id" type="text"
                                 class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
                                 autocomplete="off" (mousedown)="$event.stopPropagation()" />
                             <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
                                 (mousedown)="$event.stopPropagation()"
-                                class="flex h-7 w-7 items-center justify-center rounded bg-gray-700 hover:bg-gray-600">
+                                class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-800 shadow transition-colors hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
                                 <i class="fa-solid fa-clone text-xs"></i>
                             </button>
                             <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
                                 (mousedown)="$event.stopPropagation()"
-                                class="flex h-7 w-7 items-center justify-center rounded bg-red-700 hover:bg-red-600">
+                                class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-red-700 shadow transition-colors hover:bg-red-50 dark:bg-gray-600 dark:text-red-300 dark:hover:bg-gray-500">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         } @else {
@@ -109,7 +84,7 @@
                         }
                     </div>
 
-                    <div class="overflow-auto" [style.height.px]="block.h - 40">
+                    <div class="overflow-visible">
                         @if (block.type === 'range') {
                             @if (rangeForBlock(block); as range) {
                                 @if (isSelected(block)) {
@@ -117,21 +92,21 @@
                                         <div class="flex flex-wrap items-center gap-2">
                                             <label class="flex items-center gap-1">
                                                 Cellule
-                                                <input [(ngModel)]="block.cellSize" [name]="'cellSize_' + block.id" type="number"
+                                                <input [(ngModel)]="block.cellSize" (ngModelChange)="scheduleAutoSave()" [name]="'cellSize_' + block.id" type="number"
                                                     min="22" max="52"
                                                     class="h-8 w-16 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
                                             </label>
                                             <label class="flex items-center gap-1">
-                                                <input [(ngModel)]="block.compact" [name]="'compact_' + block.id" type="checkbox" />
+                                                <input [(ngModel)]="block.compact" (ngModelChange)="scheduleAutoSave()" [name]="'compact_' + block.id" type="checkbox" />
                                                 Compact
                                             </label>
                                             <label class="flex items-center gap-1">
-                                                <input [(ngModel)]="block.showLegend" [name]="'legend_' + block.id" type="checkbox" />
+                                                <input [(ngModel)]="block.showLegend" (ngModelChange)="scheduleAutoSave()" [name]="'legend_' + block.id" type="checkbox" />
                                                 Légende
                                             </label>
                                             @if (block.source === 'custom' && block.customRange) {
                                                 <label class="flex items-center gap-1">
-                                                    <input [(ngModel)]="block.trainable" [name]="'trainable_' + block.id" type="checkbox" />
+                                                    <input [(ngModel)]="block.trainable" (ngModelChange)="scheduleAutoSave()" [name]="'trainable_' + block.id" type="checkbox" />
                                                     Entraînable
                                                 </label>
                                                 @if (block.trainable) {
@@ -180,42 +155,42 @@
 
                                             @if (block.trainable) {
                                                 <div class="mt-2 grid grid-cols-4 gap-2">
-                                                    <input [(ngModel)]="block.customRange.name" [name]="'rangeName_' + block.id"
+                                                    <input [(ngModel)]="block.customRange.name" (ngModelChange)="scheduleAutoSave()" [name]="'rangeName_' + block.id"
                                                         placeholder="Nom"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                                    <input [(ngModel)]="block.customRange.stack" [name]="'rangeStack_' + block.id"
+                                                    <input [(ngModel)]="block.customRange.stack" (ngModelChange)="scheduleAutoSave()" [name]="'rangeStack_' + block.id"
                                                         type="number" placeholder="Stack"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                                    <select [(ngModel)]="block.customRange.type" [name]="'rangeType_' + block.id"
+                                                    <select [(ngModel)]="block.customRange.type" (ngModelChange)="scheduleAutoSave()" [name]="'rangeType_' + block.id"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                                         <option value="preflop">Préflop</option>
                                                         <option value="flop">Flop</option>
                                                     </select>
-                                                    <select [(ngModel)]="block.customRange.nbPlayer" [name]="'rangePlayers_' + block.id"
+                                                    <select [(ngModel)]="block.customRange.nbPlayer" (ngModelChange)="scheduleAutoSave()" [name]="'rangePlayers_' + block.id"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                                         <option [ngValue]="2">2 joueurs</option>
                                                         <option [ngValue]="3">3 joueurs</option>
                                                     </select>
-                                                    <select [(ngModel)]="block.customRange.position" [name]="'rangePosition_' + block.id"
+                                                    <select [(ngModel)]="block.customRange.position" (ngModelChange)="scheduleAutoSave()" [name]="'rangePosition_' + block.id"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                                         <option value="sb">SB</option>
                                                         <option value="bb">BB</option>
                                                         <option value="bu">BU</option>
                                                     </select>
-                                                    <select [(ngModel)]="block.customRange.opponentLevel" [name]="'rangeLevel_' + block.id"
+                                                    <select [(ngModel)]="block.customRange.opponentLevel" (ngModelChange)="scheduleAutoSave()" [name]="'rangeLevel_' + block.id"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                                         <option value="fish">Fish</option>
                                                         <option value="shark">Reg</option>
                                                         <option value="fish_shark">Mixte</option>
                                                     </select>
-                                                    <select [(ngModel)]="block.customRange.previousPlayer1Action" [name]="'rangeP1_' + block.id"
+                                                    <select [(ngModel)]="block.customRange.previousPlayer1Action" (ngModelChange)="scheduleAutoSave()" [name]="'rangeP1_' + block.id"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                                         <option [ngValue]="undefined">Action 1</option>
                                                         @for (action of availablePreviousActions; track action) {
                                                             <option [ngValue]="action">{{ action }}</option>
                                                         }
                                                     </select>
-                                                    <select [(ngModel)]="block.customRange.previousPlayer2Action" [name]="'rangeP2_' + block.id"
+                                                    <select [(ngModel)]="block.customRange.previousPlayer2Action" (ngModelChange)="scheduleAutoSave()" [name]="'rangeP2_' + block.id"
                                                         class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                                         <option [ngValue]="undefined">Action 2</option>
                                                         @for (action of availablePreviousActions; track action) {
@@ -268,41 +243,41 @@
                         }
 
                         @if (block.type === 'text') {
-                            <textarea [(ngModel)]="block.text" [name]="'text_' + block.id"
-                                class="h-full w-full resize-none border-none bg-white p-3 text-gray-800 outline-none transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"></textarea>
+                            <textarea [(ngModel)]="block.text" (ngModelChange)="scheduleAutoSave()" [name]="'text_' + block.id"
+                                class="min-h-40 w-full resize-none border-none bg-white p-3 text-gray-800 outline-none transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"></textarea>
                         }
 
                         @if (block.type === 'filter') {
                             <div class="p-3">
                                 <div class="grid grid-cols-2 gap-2">
-                                    <select [(ngModel)]="block.filterTarget" [name]="'target_' + block.id"
+                                    <select [(ngModel)]="block.filterTarget" (ngModelChange)="scheduleAutoSave()" [name]="'target_' + block.id"
                                         class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                         <option value="page">Page</option>
                                         <option value="global">Bibliothèque</option>
                                         <option value="both">Les deux</option>
                                     </select>
-                                    <input [(ngModel)]="block.filters!.name" [name]="'filterName_' + block.id"
+                                    <input [(ngModel)]="block.filters!.name" (ngModelChange)="scheduleAutoSave()" [name]="'filterName_' + block.id"
                                         placeholder="Nom"
                                         class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                    <select [(ngModel)]="block.filters!.type" [name]="'filterType_' + block.id"
+                                    <select [(ngModel)]="block.filters!.type" (ngModelChange)="scheduleAutoSave()" [name]="'filterType_' + block.id"
                                         class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                         @for (item of availableTypes; track item.code) {
                                             <option [ngValue]="item.code">{{ item.name }}</option>
                                         }
                                     </select>
-                                    <select [(ngModel)]="block.filters!.position" [name]="'filterPosition_' + block.id"
+                                    <select [(ngModel)]="block.filters!.position" (ngModelChange)="scheduleAutoSave()" [name]="'filterPosition_' + block.id"
                                         class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                         @for (item of availablePositions; track item.code) {
                                             <option [ngValue]="item.code">{{ item.name }}</option>
                                         }
                                     </select>
-                                    <select [(ngModel)]="block.filters!.opponentLevel" [name]="'filterLevel_' + block.id"
+                                    <select [(ngModel)]="block.filters!.opponentLevel" (ngModelChange)="scheduleAutoSave()" [name]="'filterLevel_' + block.id"
                                         class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
                                         @for (item of availableOpponentLevels; track item.code) {
                                             <option [ngValue]="item.code">{{ item.name }}</option>
                                         }
                                     </select>
-                                    <input [(ngModel)]="block.filters!.stack" [name]="'filterStack_' + block.id"
+                                    <input [(ngModel)]="block.filters!.stack" (ngModelChange)="scheduleAutoSave()" [name]="'filterStack_' + block.id"
                                         type="number" placeholder="Stack"
                                         class="h-9 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
                                 </div>

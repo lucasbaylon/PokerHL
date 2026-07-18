@@ -25,6 +25,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     private rangePageSubscription!: Subscription;
     private situationsSubscription!: Subscription;
+    private autoSaveTimeout?: ReturnType<typeof setTimeout>;
     private dragState?: {
         blockId: string;
         mode: DragMode;
@@ -40,13 +41,12 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     situations: Situation[] = [];
     selectedBlockId?: string;
     selectedSituationId?: number;
-    clipboard = '';
-    showClipboard = false;
     pageFilter: RangePageFilters = {};
     globalFilter: RangePageFilters = {};
     activeSolutionId = 'unique_solution_0';
     isPainting = false;
     mode: 'new' | 'edit' = 'new';
+    saveStatus = 'Enregistré';
 
     readonly gridSize = 24;
     readonly canvasWidth = 2400;
@@ -113,6 +113,9 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        if (this.autoSaveTimeout) {
+            clearTimeout(this.autoSaveTimeout);
+        }
         this.rangePageSubscription.unsubscribe();
         this.situationsSubscription.unsubscribe();
         window.removeEventListener('mousemove', this.onWindowMouseMove);
@@ -141,11 +144,12 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     normalizeBlock(block: RangePageBlock): RangePageBlock {
         const normalizedBlock = { ...block };
+        const minSize = this.minSizeForBlock(normalizedBlock);
 
-        normalizedBlock.x = this.snapToGrid(normalizedBlock.x || 0, 0, this.canvasWidth - this.minBlockWidth);
-        normalizedBlock.y = this.snapToGrid(normalizedBlock.y || 0, 0, this.canvasHeight - this.minBlockHeight);
-        normalizedBlock.w = this.snapToGrid(normalizedBlock.w || this.minBlockWidth, this.minBlockWidth, this.canvasWidth - normalizedBlock.x);
-        normalizedBlock.h = this.snapToGrid(normalizedBlock.h || this.minBlockHeight, this.minBlockHeight, this.canvasHeight - normalizedBlock.y);
+        normalizedBlock.x = this.snapToGrid(normalizedBlock.x || 0, 0, this.canvasWidth - minSize.width);
+        normalizedBlock.y = this.snapToGrid(normalizedBlock.y || 0, 0, this.canvasHeight - minSize.height);
+        normalizedBlock.w = this.snapToGrid(normalizedBlock.w || minSize.width, minSize.width, this.canvasWidth - normalizedBlock.x);
+        normalizedBlock.h = this.snapToGrid(normalizedBlock.h || minSize.height, minSize.height, this.canvasHeight - normalizedBlock.y);
         normalizedBlock.zIndex = normalizedBlock.zIndex || this.nextZIndex();
 
         if (normalizedBlock.type === 'filter' && !normalizedBlock.filters) {
@@ -156,6 +160,9 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             normalizedBlock.cellSize = normalizedBlock.cellSize || this.page.displaySettings.cellSize;
             normalizedBlock.compact = normalizedBlock.compact ?? this.page.displaySettings.compact;
             normalizedBlock.showLegend = normalizedBlock.showLegend ?? this.page.displaySettings.showLegend;
+            const rangeMinSize = this.minSizeForBlock(normalizedBlock);
+            normalizedBlock.w = Math.max(normalizedBlock.w, rangeMinSize.width);
+            normalizedBlock.h = Math.max(normalizedBlock.h, rangeMinSize.height);
         }
 
         return normalizedBlock;
@@ -169,12 +176,13 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         const baseRange = cloneDeep(this.commonService.empty_situation_obj);
         baseRange.name = 'Range personnalisée';
+        const selectedSituation = this.situations.find(situation => situation.id === this.selectedSituationId);
 
         const position = this.nextBlockPosition();
         const block: RangePageBlock = {
             id: this.createBlockId(),
             type: 'range',
-            title: source === 'situation' ? 'Situation' : 'Range personnalisée',
+            title: source === 'situation' ? selectedSituation?.name : 'Range personnalisée',
             source,
             situationId: source === 'situation' ? this.selectedSituationId : undefined,
             customRange: source === 'custom' ? baseRange : undefined,
@@ -191,6 +199,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
+        this.scheduleAutoSave();
     }
 
     addTextBlock() {
@@ -209,6 +218,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
+        this.scheduleAutoSave();
     }
 
     addFilterBlock() {
@@ -228,11 +238,12 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
+        this.scheduleAutoSave();
     }
 
-    savePage() {
+    autoSavePage() {
         if (!this.page.name.trim()) {
-            this.commonService.showSwalToast('Veuillez donner un nom à la page.', 'error');
+            this.saveStatus = 'Nom requis';
             return;
         }
 
@@ -243,7 +254,18 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         } else {
             this.rangePageService.addRangePage(this.page);
         }
-        this.commonService.showSwalToast('Page enregistrée !');
+        this.saveStatus = 'Enregistré';
+    }
+
+    scheduleAutoSave() {
+        if (this.autoSaveTimeout) {
+            clearTimeout(this.autoSaveTimeout);
+        }
+
+        this.saveStatus = 'Sauvegarde...';
+        this.autoSaveTimeout = setTimeout(() => {
+            this.autoSavePage();
+        }, 600);
     }
 
     selectedBlock(): RangePageBlock | undefined {
@@ -260,6 +282,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (this.selectedBlockId === blockId) {
             this.selectedBlockId = undefined;
         }
+        this.scheduleAutoSave();
     }
 
     duplicateBlock(block: RangePageBlock) {
@@ -272,6 +295,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         this.page.blocks.push(this.normalizeBlock(duplicatedBlock));
         this.selectedBlockId = duplicatedBlock.id;
+        this.scheduleAutoSave();
     }
 
     rangeForBlock(block: RangePageBlock): Situation | undefined {
@@ -308,14 +332,19 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             block.x = this.snapToGrid(this.dragState.originalX + deltaX, 0, this.canvasWidth - block.w);
             block.y = this.snapToGrid(this.dragState.originalY + deltaY, 0, this.canvasHeight - block.h);
         } else {
-            block.w = this.snapToGrid(this.dragState.originalW + deltaX, this.minBlockWidth, this.canvasWidth - block.x);
-            block.h = this.snapToGrid(this.dragState.originalH + deltaY, this.minBlockHeight, this.canvasHeight - block.y);
+            const minSize = this.minSizeForBlock(block);
+            block.w = this.snapToGrid(this.dragState.originalW + deltaX, minSize.width, this.canvasWidth - block.x);
+            block.h = this.snapToGrid(this.dragState.originalH + deltaY, minSize.height, this.canvasHeight - block.y);
         }
     };
 
     onWindowMouseUp = () => {
+        const shouldAutoSave = this.dragState !== undefined || this.isPainting;
         this.dragState = undefined;
         this.isPainting = false;
+        if (shouldAutoSave) {
+            this.scheduleAutoSave();
+        }
     };
 
     applyFiltersFromBlock(block: RangePageBlock) {
@@ -326,11 +355,13 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (block.filterTarget === 'global' || block.filterTarget === 'both') {
             this.globalFilter = { ...block.filters };
         }
+        this.scheduleAutoSave();
     }
 
     clearFilters() {
         this.pageFilter = {};
         this.globalFilter = {};
+        this.scheduleAutoSave();
     }
 
     visibleBlocks(): RangePageBlock[] {
@@ -358,6 +389,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     paintCell(block: RangePageBlock, rowIndex: number, cellIndex: number) {
         if (block.source !== 'custom' || !block.customRange) return;
         block.customRange.situations[rowIndex][cellIndex].solution = this.activeSolutionId;
+        this.scheduleAutoSave();
     }
 
     startPainting(block: RangePageBlock, rowIndex: number, cellIndex: number) {
@@ -380,47 +412,17 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             display_name: 'Action',
             color: this.getNextColor(block.customRange.solutions)
         });
+        this.scheduleAutoSave();
     }
 
     updateSolutionName(solution: Solution, value: string) {
         solution.display_name = value;
+        this.scheduleAutoSave();
     }
 
     updateSolutionColor(solution: Solution, value: string) {
         solution.color = value;
-    }
-
-    copySelectedBlockJson() {
-        const block = this.selectedBlock();
-        if (!block) {
-            this.commonService.showSwalToast('Veuillez sélectionner un bloc.', 'error');
-            return;
-        }
-
-        this.clipboard = JSON.stringify(block, null, 2);
-        this.showClipboard = true;
-        navigator.clipboard?.writeText(this.clipboard);
-        this.commonService.showSwalToast('JSON copié !');
-    }
-
-    pasteBlockJson() {
-        if (!this.clipboard.trim()) {
-            this.commonService.showSwalToast('Aucun JSON à coller.', 'error');
-            return;
-        }
-
-        try {
-            const parsedBlock = JSON.parse(this.clipboard) as RangePageBlock;
-            parsedBlock.id = this.createBlockId();
-            parsedBlock.x = this.snapToGrid((parsedBlock.x || 0) + this.gridSize * 2, 0, this.canvasWidth - this.minBlockWidth);
-            parsedBlock.y = this.snapToGrid((parsedBlock.y || 0) + this.gridSize * 2, 0, this.canvasHeight - this.minBlockHeight);
-            parsedBlock.zIndex = this.nextZIndex();
-            this.page.blocks.push(this.normalizeBlock(parsedBlock));
-            this.selectedBlockId = parsedBlock.id;
-            this.commonService.showSwalToast('Bloc collé !');
-        } catch {
-            this.commonService.showSwalToast('JSON PokerHL invalide.', 'error');
-        }
+        this.scheduleAutoSave();
     }
 
     saveCustomRangeAsSituation(block: RangePageBlock) {
@@ -435,6 +437,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         this.situationService.addSituation(block.customRange);
         block.trainable = true;
         this.commonService.showSwalToast('Range envoyée dans les situations !');
+        this.scheduleAutoSave();
     }
 
     goBack() {
@@ -446,7 +449,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             left: `${block.x}px`,
             top: `${block.y}px`,
             width: `${block.w}px`,
-            height: `${block.h}px`,
+            'min-height': `${block.h}px`,
             'z-index': block.zIndex
         };
     }
@@ -464,6 +467,30 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     isSelected(block: RangePageBlock): boolean {
         return this.selectedBlockId === block.id;
+    }
+
+    minSizeForBlock(block: RangePageBlock) {
+        if (block.type === 'range') {
+            const cellSize = block.cellSize || this.page.displaySettings.cellSize;
+            const gridWidth = Math.ceil((cellSize + 4) * 13 + 32);
+            const gridHeight = Math.ceil(((block.compact ? cellSize - 8 : cellSize) + 4) * 13 + 96 + (block.showLegend ? 44 : 0));
+            return {
+                width: this.snapToGrid(gridWidth, this.minBlockWidth, this.canvasWidth),
+                height: this.snapToGrid(gridHeight, this.minBlockHeight, this.canvasHeight)
+            };
+        }
+
+        if (block.type === 'filter') {
+            return {
+                width: this.gridSize * 18,
+                height: this.gridSize * 10
+            };
+        }
+
+        return {
+            width: this.minBlockWidth,
+            height: this.minBlockHeight
+        };
     }
 
     createBlockId(): string {
