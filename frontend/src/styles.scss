@@ -106,6 +106,14 @@
         margin-left: 16px !important;
     }
 
+    input[type="range"] {
+        accent-color: #232726;
+    }
+
+    html.dark input[type="range"] {
+        accent-color: #4b5563;
+    }
+
     //Input Switch primeNG
     .custom-inputSwitch.p-inputswitch-checked .p-inputswitch-slider {
         @apply bg-secondary-dark-bg dark:bg-gray-600 transition-colors duration-500;
@@ -143,8 +151,82 @@
     @apply dark:text-gray-800 dark:bg-gray-200 bg-gray-200 min-w-10 max-h-10 transition-colors duration-300;
 }
 
-html {
-    scrollbar-gutter: auto !important;
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.app-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #6b7280 transparent;
+}
+
+html.dark .app-scrollbar {
+    scrollbar-color: #9ca3af transparent;
+}
+
+.app-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+}
+
+.app-scrollbar::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+}
+
+.app-scrollbar::-webkit-scrollbar-button:single-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.app-scrollbar::-webkit-scrollbar-button:vertical:start:decrement {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.app-scrollbar::-webkit-scrollbar-button:vertical:end:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.app-scrollbar::-webkit-scrollbar-button:horizontal:start:decrement {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.app-scrollbar::-webkit-scrollbar-button:horizontal:end:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.app-scrollbar::-webkit-scrollbar-track,
+.app-scrollbar::-webkit-scrollbar-track-piece,
+.app-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+.app-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #6b7280;
+    border-radius: 9999px;
+}
+
+html.dark .app-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
 }
 
 @keyframes appear-alt {
