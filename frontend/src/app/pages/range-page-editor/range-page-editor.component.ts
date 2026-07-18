@@ -369,6 +369,66 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         return this.situations.find(situation => situation.id === block.situationId);
     }
 
+    applyPositionToSituations(position: string) {
+        const positionValue = position.trim().match(/\d+/)?.[0];
+        if (!positionValue) return;
+
+        let hasChange = false;
+
+        this.page.blocks
+            .filter(block => block.type === 'range')
+            .forEach(block => {
+                const currentRange = this.rangeForBlock(block);
+                const currentName = currentRange?.name || block.title || '';
+                const targetName = currentName.replace(/\b\d+\s*d\b/i, `${positionValue}d`);
+
+                if (!currentName || targetName === currentName) return;
+
+                const existingSituation = this.situations.find(situation =>
+                    (situation.name || '').trim().toLowerCase() === targetName.trim().toLowerCase()
+                );
+
+                if (existingSituation) {
+                    block.source = 'situation';
+                    block.situationId = existingSituation.id;
+                    block.customRange = undefined;
+                    block.trainable = false;
+                    block.title = existingSituation.name;
+                } else {
+                    block.source = 'custom';
+                    block.situationId = undefined;
+                    block.customRange = this.createBlankSituationFrom(currentRange, targetName);
+                    block.trainable = false;
+                    block.title = targetName;
+                }
+
+                hasChange = true;
+            });
+
+        if (hasChange) {
+            this.scheduleAutoSave();
+        }
+    }
+
+    createBlankSituationFrom(baseRange: Situation | undefined, name: string): Situation {
+        const blankSituation = cloneDeep(this.commonService.empty_situation_obj);
+        blankSituation.name = name;
+
+        if (baseRange) {
+            blankSituation.type = baseRange.type;
+            blankSituation.nbPlayer = baseRange.nbPlayer;
+            blankSituation.stack = baseRange.stack;
+            blankSituation.position = baseRange.position;
+            blankSituation.opponentLevel = baseRange.opponentLevel;
+            blankSituation.fishPosition = baseRange.fishPosition;
+            blankSituation.previousPlayer1Action = baseRange.previousPlayer1Action;
+            blankSituation.previousPlayer2Action = baseRange.previousPlayer2Action;
+            blankSituation.solutions = cloneDeep(baseRange.solutions);
+        }
+
+        return blankSituation;
+    }
+
     startDrag(event: MouseEvent, block: RangePageBlock, mode: DragMode) {
         event.preventDefault();
         event.stopPropagation();
@@ -532,9 +592,13 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     canvasGridStyle() {
+        const shouldShowGrid = this.dragState !== undefined;
+
         return {
             'background-size': `${this.gridSize}px ${this.gridSize}px`,
-            'background-image': 'linear-gradient(to right, rgba(120,120,120,0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(120,120,120,0.18) 1px, transparent 1px)'
+            'background-image': shouldShowGrid
+                ? 'linear-gradient(to right, rgba(120,120,120,0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(120,120,120,0.18) 1px, transparent 1px)'
+                : 'none'
         };
     }
 
@@ -554,10 +618,9 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (block.type === 'range') {
             const cellSize = block.cellSize || this.page.displaySettings.cellSize;
             const gridWidth = Math.ceil((cellSize + 4) * 13 + 32);
-            const gridHeight = Math.ceil(((block.compact ? cellSize - 8 : cellSize) + 4) * 13 + 96 + (block.showLegend ? 44 : 0));
             return {
                 width: this.snapToGrid(gridWidth, this.minBlockWidth, this.canvasWidth),
-                height: this.snapToGrid(gridHeight, this.minBlockHeight, this.canvasHeight)
+                height: this.rangeBlockHeight(block)
             };
         }
 
@@ -614,6 +677,37 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         const rowHeight = 28;
         const contentHeight = headerHeight + paddingHeight + (((block.positions || []).length + 1) * rowHeight);
         return this.snapToGrid(contentHeight, this.gridSize * 8, this.canvasHeight);
+    }
+
+    private rangeBlockHeight(block: RangePageBlock): number {
+        const cellSize = block.cellSize || this.page.displaySettings.cellSize;
+        const renderedCellHeight = block.compact ? cellSize - 8 : cellSize;
+        const titleHeight = 40;
+        const bodyPadding = 24;
+        const tableSpacing = 14 * 4;
+        const tableHeight = (13 * renderedCellHeight) + tableSpacing;
+        const legendHeight = block.showLegend ? 32 : 0;
+        const editPanelHeight = this.isEditing(block) ? this.rangeEditPanelHeight(block) : 0;
+
+        return this.snapToGrid(
+            titleHeight + editPanelHeight + bodyPadding + tableHeight + legendHeight,
+            this.minBlockHeight,
+            this.canvasHeight
+        );
+    }
+
+    private rangeEditPanelHeight(block: RangePageBlock): number {
+        let height = 49;
+
+        if (block.source === 'custom' && block.customRange) {
+            height += 80;
+        }
+
+        if (block.trainable) {
+            height += 88;
+        }
+
+        return height;
     }
 
 }
