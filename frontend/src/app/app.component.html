@@ -1,5 +1,5 @@
 @if (commonService.getShowParticule()) {
-    <ngx-particles [id]="id" [options]="particlesOptions"></ngx-particles>
+    <ngx-particles [id]="id" [options]="particlesOptions" (particlesLoaded)="particlesLoaded($event)"></ngx-particles>
 }
 @if (authService.isLoading | async) {
     <app-loading></app-loading>

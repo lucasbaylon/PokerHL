@@ -4,10 +4,12 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
 import { MoveDirection, OutMode } from '@tsparticles/engine';
+import type { Container } from '@tsparticles/engine';
 import { loadSlim } from '@tsparticles/slim';
 import { PrimeNGConfig } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from './components/loading/loading.component';
+import { ParticleSettings } from './interfaces/user-params';
 import { AuthService } from './services/auth.service';
 import { CommonService } from './services/common.service';
 
@@ -21,62 +23,69 @@ import { CommonService } from './services/common.service';
 export class AppComponent {
 
     id = "tsparticles";
+    private particlesContainer?: Container;
 
     /* or the classic JavaScript object */
-    particlesOptions = {
-        fpsLimit: 120,
-        particles: {
-            color: {
-                value: this.commonService.getDarkMode() ? "#e5e5e5" : "#303030",
-            },
-            links: {
-                color: "#ffffff",
-                distance: 300,
-                enable: true,
-                opacity: 0.4,
-                width: 1,
-            },
-            move: {
-                direction: MoveDirection.none,
-                enable: true,
-                outModes: {
-                    default: OutMode.bounce,
+    particlesOptions = this.createParticlesOptions(this.commonService.getDarkMode(), this.commonService.getParticleSettings());
+
+    private createParticlesOptions(isDark: boolean, particleSettings: ParticleSettings) {
+        const color = isDark ? "#e5e5e5" : "#303030";
+
+        return {
+            fpsLimit: 120,
+            particles: {
+                color: {
+                    value: color,
                 },
-                random: false,
-                speed: 0.4,
-                straight: false,
-                attract: {
+                links: {
+                    color: color,
+                    distance: 300,
+                    enable: particleSettings.particleLinks,
+                    opacity: 0.4,
+                    width: 1,
+                },
+                move: {
+                    direction: MoveDirection.none,
                     enable: true,
-                    rotateX: 600,
-                    rotateY: 1200
+                    outModes: {
+                        default: OutMode.bounce,
+                    },
+                    random: false,
+                    speed: particleSettings.particleSpeed,
+                    straight: false,
+                    attract: {
+                        enable: true,
+                        rotateX: 600,
+                        rotateY: 1200
+                    }
+                },
+                number: {
+                    density: {
+                        enable: false,
+                        area: 600,
+                    },
+                    value: particleSettings.particleCount,
+                },
+                opacity: {
+                    value: 0.5,
+                },
+                shape: {
+                    type: "circle",
+                    stroke: {
+                        color: "#000000",
+                        width: 0
+                    },
+                    polygon: {
+                        nb_sides: 5
+                    }
+                },
+                size: {
+                    value: particleSettings.particleSize
                 }
             },
-            number: {
-                density: {
-                    enable: false,
-                    area: 600,
-                },
-                value: 30,
-            },
-            opacity: {
-                value: 0.5,
-            },
-            shape: {
-                type: "circle",
-                stroke: {
-                    color: "#000000",
-                    width: 0
-                },
-                polygon: {
-                    nb_sides: 5
-                }
-            },
-            size: {
-                value: 4
-            },
-        },
-        detectRetina: true,
-    };
+            detectRetina: true,
+        };
+    }
 
     constructor(
         public authService: AuthService,
@@ -87,7 +96,7 @@ export class AppComponent {
         
         effect(() => {
             const isDark = this.commonService.getDarkMode();
-            const color = isDark ? "#e5e5e5" : "#303030";
+            const particleSettings = this.commonService.getParticleSettings();
             
             // On applique le thème à l'élément racine
             const htmlElement = document.documentElement;
@@ -98,17 +107,8 @@ export class AppComponent {
             }
 
             // On met à jour les options
-            this.particlesOptions = {
-                ...this.particlesOptions,
-                particles: {
-                    ...this.particlesOptions.particles,
-                    color: { value: color },
-                    links: {
-                        ...this.particlesOptions.particles.links,
-                        color: color
-                    }
-                }
-            };
+            this.particlesOptions = this.createParticlesOptions(isDark, particleSettings);
+            void this.particlesContainer?.reset(this.particlesOptions);
         });
     }
 
@@ -132,5 +132,9 @@ export class AppComponent {
     translate(lang: string) {
         this.translateService.use(lang);
         this.translateService.get('primeng').subscribe(res => this.config.setTranslation(res));
+    }
+
+    particlesLoaded(container: Container): void {
+        this.particlesContainer = container;
     }
 }

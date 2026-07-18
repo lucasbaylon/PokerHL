@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
-import { UserParams } from '../../interfaces/user-params';
+import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings, UserParams } from '../../interfaces/user-params';
 import { AuthService } from '../../services/auth.service';
 import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
@@ -24,6 +24,10 @@ export class SettingsComponent {
 
     darkMode: boolean = false;
     showParticules: boolean = false;
+    particleCount: number = DEFAULT_PARTICLE_SETTINGS.particleCount;
+    particleSize: number = DEFAULT_PARTICLE_SETTINGS.particleSize;
+    particleSpeed: number = DEFAULT_PARTICLE_SETTINGS.particleSpeed;
+    particleLinks: boolean = DEFAULT_PARTICLE_SETTINGS.particleLinks;
     displaySolutionOnError: boolean = true;
     highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
@@ -54,6 +58,11 @@ export class SettingsComponent {
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
         userParams.autoMultipleSolutionName ? this.autoMultipleSolutionName = userParams.autoMultipleSolutionName : this.autoMultipleSolutionName = false;
         userParams.showParticules ? this.showParticules = userParams.showParticules : this.showParticules = false;
+        this.particleCount = userParams.particleCount ?? DEFAULT_PARTICLE_SETTINGS.particleCount;
+        this.particleSize = userParams.particleSize ?? DEFAULT_PARTICLE_SETTINGS.particleSize;
+        this.particleSpeed = userParams.particleSpeed ?? DEFAULT_PARTICLE_SETTINGS.particleSpeed;
+        this.particleLinks = userParams.particleLinks ?? DEFAULT_PARTICLE_SETTINGS.particleLinks;
+        this.commonService.setParticleSettings(this.getParticleSettings());
         localStorage.getItem('theme') === 'light' ? this.darkMode = false : this.darkMode = true;
     }
 
@@ -76,7 +85,37 @@ export class SettingsComponent {
     */
     toggleShowParticules(): void {
         this.commonService.setShowParticule(this.showParticules);
+        this.commonService.setParticleSettings(this.getParticleSettings());
         this.updateUserParam('showParticules', this.showParticules);
+    }
+
+    updateParticleSettings(): void {
+        const particleSettings = this.getParticleSettings();
+        this.particleCount = particleSettings.particleCount;
+        this.particleSize = particleSettings.particleSize;
+        this.particleSpeed = particleSettings.particleSpeed;
+        this.particleLinks = particleSettings.particleLinks;
+        this.commonService.setParticleSettings(particleSettings);
+
+        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        localStorage.setItem('userParams', JSON.stringify({ ...userParams, ...particleSettings }));
+    }
+
+    resetParticleSettings(): void {
+        this.particleCount = DEFAULT_PARTICLE_SETTINGS.particleCount;
+        this.particleSize = DEFAULT_PARTICLE_SETTINGS.particleSize;
+        this.particleSpeed = DEFAULT_PARTICLE_SETTINGS.particleSpeed;
+        this.particleLinks = DEFAULT_PARTICLE_SETTINGS.particleLinks;
+        this.updateParticleSettings();
+    }
+
+    private getParticleSettings(): ParticleSettings {
+        return {
+            particleCount: Number(this.particleCount),
+            particleSize: Number(this.particleSize),
+            particleSpeed: Number(this.particleSpeed),
+            particleLinks: this.particleLinks,
+        };
     }
 
     /**

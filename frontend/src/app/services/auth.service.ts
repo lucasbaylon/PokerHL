@@ -3,7 +3,7 @@ import { Auth, authState, createUserWithEmailAndPassword, EmailAuthProvider, rea
 import { deleteObject, getDownloadURL, ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { UserParams } from '../interfaces/user-params';
+import { DEFAULT_PARTICLE_SETTINGS, UserParams } from '../interfaces/user-params';
 import { CommonService } from './../services/common.service';
 
 
@@ -34,7 +34,7 @@ export class AuthService {
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',
-                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false, showParticules: false })
+                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false, showParticules: false, ...DEFAULT_PARTICLE_SETTINGS })
                     );
                 }
                 if (!localStorage.getItem('theme')) {
@@ -47,6 +47,12 @@ export class AuthService {
                 }
                 const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
                 this.commonService.setShowParticule(userParams.showParticules);
+                this.commonService.setParticleSettings({
+                    particleCount: userParams.particleCount ?? DEFAULT_PARTICLE_SETTINGS.particleCount,
+                    particleSize: userParams.particleSize ?? DEFAULT_PARTICLE_SETTINGS.particleSize,
+                    particleSpeed: userParams.particleSpeed ?? DEFAULT_PARTICLE_SETTINGS.particleSpeed,
+                    particleLinks: userParams.particleLinks ?? DEFAULT_PARTICLE_SETTINGS.particleLinks,
+                });
             } else {
                 this.router.navigate(['login']);
             }

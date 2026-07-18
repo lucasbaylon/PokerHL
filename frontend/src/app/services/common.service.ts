@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Situation } from '../interfaces/situation';
 import { Solution } from '../interfaces/solution';
+import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings } from '../interfaces/user-params';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,7 @@ export class CommonService {
 
     private showParticules = signal<boolean>(false);
     private darkMode = signal<boolean>(localStorage.getItem('theme') === 'dark');
+    private particleSettings = signal<ParticleSettings>(DEFAULT_PARTICLE_SETTINGS);
 
     constructor(
         private router: Router
@@ -170,6 +172,14 @@ export class CommonService {
      */
     setShowParticule(value: boolean) {
         this.showParticules.set(value);
+    }
+
+    getParticleSettings() {
+        return this.particleSettings();
+    }
+
+    setParticleSettings(value: ParticleSettings) {
+        this.particleSettings.set(value);
     }
     
     /**
