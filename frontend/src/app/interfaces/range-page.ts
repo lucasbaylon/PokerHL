@@ -1,7 +1,7 @@
 import { Situation } from './situation';
 
 export type RangeBlockType = 'range' | 'text' | 'positions';
-export type RangeBlockSource = 'situation' | 'custom';
+export type RangeBlockSource = 'situation';
 
 export interface RangePageDisplaySettings {
     cellSize: number;
@@ -20,10 +20,12 @@ export interface RangePageBlock {
     title?: string;
     text?: string;
     positions?: string[];
+    selectedPosition?: string;
+    linkedRangeBlockId?: string;
+    positionSituationId?: number;
+    positionReference?: Situation;
     source?: RangeBlockSource;
     situationId?: number;
-    customRange?: Situation;
-    trainable?: boolean;
     cellSize?: number;
     compact?: boolean;
     showLegend?: boolean;

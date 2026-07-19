@@ -5,49 +5,91 @@
         class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
         autocomplete="off" pInputText />
 
-    <div (click)="openExistingSituationPopup()"
+    <div (click)="openPositionSituationPopup()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-plus mr-2"></i>
-        Situation existante
-    </div>
-    <div (click)="addRangeBlock('custom')"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-plus mr-2"></i>
-        Situation vierge
+        Positions
     </div>
     <div (click)="addTextBlock()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-plus mr-2"></i>
         Note
     </div>
-    <div (click)="addPositionsBlock()"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-plus mr-2"></i>
-        Positions
+    @if (!isDefaultView()) {
+        <div (click)="resetView()"
+            class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
+            <i class="fa-solid fa-compress mr-2"></i>
+            Reinitialiser vue
+        </div>
+    }
+    <div (click)="showGridHelpPopup = true"
+        class="ml-auto inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
+        <i class="fa-solid fa-circle-question mr-2"></i>
+        Aide
     </div>
     <div (click)="goBack()"
-        class="ml-auto inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
+        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-arrow-left mr-2"></i>
         Retour
     </div>
 </div>
 
-@if (showExistingSituationPopup) {
-    <div class="fixed left-1/2 top-20 z-[100] w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-md border border-gray-200 bg-white p-5 text-gray-800 shadow-xl transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
-        <button type="button" (click)="closeExistingSituationPopup()"
+@if (showGridHelpPopup) {
+    <div class="fixed inset-0 z-[99] bg-gray-900/25 dark:bg-black/35"></div>
+    <div class="fixed left-1/2 top-1/2 z-[100] w-[520px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-md border border-gray-200 bg-white p-5 text-gray-800 shadow-xl transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
+        <button type="button" (click)="showGridHelpPopup = false"
             class="absolute right-3 top-3 flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-500 outline-none transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Ajouter une situation existante
+            Aide grille
         </h4>
-        <p-autoComplete [(ngModel)]="selectedSituation" name="modalSelectedSituation"
-            [suggestions]="situationSuggestions" (completeMethod)="searchSituations($event)"
-            (onSelect)="selectExistingSituation($event)" field="name" placeholder="Rechercher une situation"
+        <div class="space-y-4 text-sm leading-6 text-gray-700 dark:text-gray-300">
+            <div>
+                Cette page sert a regrouper plusieurs informations de travail sur une meme grille personnalisable : situations, positions et notes.
+            </div>
+
+            <div>
+                <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Fonctionnalites</div>
+                <ul class="m-0 list-disc space-y-1 pl-5">
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Deplacer un bloc selectionne</span> : deplace toute la selection.</li>
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Modifier</span> : permet de changer le titre, le contenu et de redimensionner le bloc.</li>
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Bloc Positions</span> : un clic sur un rectangle affiche la situation correspondante au deep choisi.</li>
+                </ul>
+            </div>
+
+            <div class="h-px bg-gray-200 dark:bg-gray-700"></div>
+
+            <div>
+                <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Raccourcis</div>
+                <ul class="m-0 list-disc space-y-1 pl-5">
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Molette</span> : defilement vertical.</li>
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Maj + molette</span> : defilement horizontal.</li>
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Ctrl + molette</span> : zoom / dezoom de la grille.</li>
+                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Clic gauche maintenu sur le fond</span> : selection multiple de blocs.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showPositionSituationPopup) {
+    <div class="fixed inset-0 z-[99] bg-gray-900/25 dark:bg-black/35"></div>
+    <div class="fixed left-1/2 top-1/2 z-[100] w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-md border border-gray-200 bg-white p-5 text-gray-800 shadow-xl transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
+        <button type="button" (click)="closePositionSituationPopup()"
+            class="absolute right-3 top-3 flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-500 outline-none transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+            Créer un bloc positions
+        </h4>
+        <p-autoComplete [(ngModel)]="selectedPositionSituation" name="modalSelectedPositionSituation"
+            [suggestions]="positionSituationSuggestions" (completeMethod)="searchPositionSituations($event)"
+            (onSelect)="selectPositionSituation($event)" field="name" placeholder="Rechercher un type de situation"
             [dropdown]="true" [forceSelection]="true" [completeOnFocus]="true" appendTo="body"
             styleClass="grid-situation-autocomplete" panelStyleClass="grid-situation-autocomplete-panel" />
         <div class="mt-5 flex justify-end">
-            <div (click)="addExistingSituationBlock()"
+            <div (click)="addPositionsBlock()"
                 class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-sm font-medium shadow transition-colors cursor-pointer">
                 Ajouter
             </div>
@@ -56,13 +98,16 @@
 }
 
 <main class="min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
-    <div class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg">
+    <div class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
+        (wheel)="onGridWheel($event)">
+        <div class="relative" [style.width.px]="scaledCanvasWidth()" [style.height.px]="scaledCanvasHeight()">
         <div class="relative" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"
-            [ngStyle]="canvasGridStyle()" (mousedown)="selectedBlockId = undefined; editingBlockId = undefined">
+            [ngStyle]="canvasStyle()"
+            (mousedown)="startSelection($event)">
             @for (block of page.blocks; track block.id) {
                 <section
-                    class="absolute overflow-visible rounded-md border bg-white text-gray-800 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
-                    [ngClass]="isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700'"
+                    class="absolute overflow-visible border bg-white text-gray-800 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
+                    [ngClass]="[isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700', isSelected(block) || isMovingBlock(block) ? 'rounded-none' : 'rounded-md']"
                     [ngStyle]="blockStyle(block)" (mousedown)="selectBlock(block); $event.stopPropagation()">
                     <div class="flex h-10 cursor-move items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300"
                         (mousedown)="startDrag($event, block, 'move')">
@@ -116,106 +161,8 @@
                                                 <input [(ngModel)]="block.showLegend" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'legend_' + block.id" type="checkbox" />
                                                 Légende
                                             </label>
-                                            @if (block.source === 'custom' && block.customRange) {
-                                                <label class="flex items-center gap-1">
-                                                    <input [(ngModel)]="block.trainable" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'trainable_' + block.id" type="checkbox" />
-                                                    Entraînable
-                                                </label>
-                                                @if (block.trainable) {
-                                                    <div (click)="saveCustomRangeAsSituation(block)"
-                                                        class="inline-flex h-8 items-center justify-center rounded bg-gray-800 px-3 text-white hover:bg-gray-700 cursor-pointer">
-                                                        Envoyer
-                                                    </div>
-                                                }
-                                            }
                                         </div>
 
-                                        @if (block.source === 'custom' && block.customRange) {
-                                            <div class="mt-2 flex flex-wrap items-center gap-2">
-                                                @for (solution of block.customRange.solutions; track solution.id) {
-                                                    @if (solution.type === 'unique') {
-                                                        <button type="button"
-                                                            class="inline-flex h-8 cursor-pointer appearance-none items-center justify-center rounded-md border-0 px-3 text-xs font-medium text-white outline-none shadow-sm transition-all duration-150 hover:brightness-110"
-                                                            [style.background]="solution.color"
-                                                            [ngClass]="activeSolutionId === solution.id ? 'opacity-100 shadow-md' : 'opacity-75 hover:opacity-100'"
-                                                            (click)="activeSolutionId = solution.id">
-                                                            @if (activeSolutionId === solution.id) {
-                                                                <i class="fa-solid fa-check mr-2 text-[0.65rem]"></i>
-                                                            }
-                                                            {{ solution.display_name }}
-                                                        </button>
-                                                    }
-                                                }
-                                                <button type="button"
-                                                    class="inline-flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-gray-800 p-0 text-xs text-white outline-none shadow-sm transition-colors duration-150 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                                                    (click)="addUniqueSolution(block)">
-                                                    <i class="fa-solid fa-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="mt-2 grid grid-cols-2 gap-2">
-                                                @for (solution of block.customRange.solutions; track solution.id) {
-                                                    @if (solution.type === 'unique') {
-                                                        <div class="flex items-center gap-2">
-                                                            <input [ngModel]="solution.display_name"
-                                                                (ngModelChange)="updateSolutionName(solution, $event)"
-                                                                [name]="'solutionName_' + block.id + '_' + solution.id"
-                                                                class="h-8 min-w-0 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                                            <input [ngModel]="solution.color"
-                                                                (ngModelChange)="updateSolutionColor(solution, $event)"
-                                                                [name]="'solutionColor_' + block.id + '_' + solution.id"
-                                                                type="color" class="h-8 w-10" />
-                                                        </div>
-                                                    }
-                                                }
-                                            </div>
-
-                                            @if (block.trainable) {
-                                                <div class="mt-2 grid grid-cols-4 gap-2">
-                                                    <input [(ngModel)]="block.customRange.name" (ngModelChange)="scheduleAutoSave()" [name]="'rangeName_' + block.id"
-                                                        placeholder="Nom"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                                    <input [(ngModel)]="block.customRange.stack" (ngModelChange)="scheduleAutoSave()" [name]="'rangeStack_' + block.id"
-                                                        type="number" placeholder="Stack"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                                    <select [(ngModel)]="block.customRange.type" (ngModelChange)="scheduleAutoSave()" [name]="'rangeType_' + block.id"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                                        <option value="preflop">Préflop</option>
-                                                        <option value="flop">Flop</option>
-                                                    </select>
-                                                    <select [(ngModel)]="block.customRange.nbPlayer" (ngModelChange)="scheduleAutoSave()" [name]="'rangePlayers_' + block.id"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                                        <option [ngValue]="2">2 joueurs</option>
-                                                        <option [ngValue]="3">3 joueurs</option>
-                                                    </select>
-                                                    <select [(ngModel)]="block.customRange.position" (ngModelChange)="scheduleAutoSave()" [name]="'rangePosition_' + block.id"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                                        <option value="sb">SB</option>
-                                                        <option value="bb">BB</option>
-                                                        <option value="bu">BU</option>
-                                                    </select>
-                                                    <select [(ngModel)]="block.customRange.opponentLevel" (ngModelChange)="scheduleAutoSave()" [name]="'rangeLevel_' + block.id"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                                        <option value="fish">Fish</option>
-                                                        <option value="shark">Reg</option>
-                                                        <option value="fish_shark">Mixte</option>
-                                                    </select>
-                                                    <select [(ngModel)]="block.customRange.previousPlayer1Action" (ngModelChange)="scheduleAutoSave()" [name]="'rangeP1_' + block.id"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                                        <option [ngValue]="undefined">Action 1</option>
-                                                        @for (action of availablePreviousActions; track action) {
-                                                            <option [ngValue]="action">{{ action }}</option>
-                                                        }
-                                                    </select>
-                                                    <select [(ngModel)]="block.customRange.previousPlayer2Action" (ngModelChange)="scheduleAutoSave()" [name]="'rangeP2_' + block.id"
-                                                        class="h-8 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg">
-                                                        <option [ngValue]="undefined">Action 2</option>
-                                                        @for (action of availablePreviousActions; track action) {
-                                                            <option [ngValue]="action">{{ action }}</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                            }
-                                        }
                                     </div>
                                 }
 
@@ -225,14 +172,11 @@
                                             @for (row of range.situations; track rowIndex; let rowIndex = $index) {
                                                 <tr>
                                                     @for (item of row; track cellIndex; let cellIndex = $index) {
-                                                        <td class="rounded text-center align-middle font-semibold text-white shadow"
-                                                            [ngClass]="block.source === 'custom' && isEditing(block) ? 'cursor-pointer' : 'cursor-default'"
+                                                        <td class="cursor-default rounded text-center align-middle font-semibold text-white shadow"
                                                             [style.width.px]="cellSize(block)"
                                                             [style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
                                                             [style.font-size.px]="block.compact ? 11 : 13"
-                                                            [style.background]="(item.solution! | solutionColor:range.solutions)"
-                                                            (mousedown)="startPainting(block, rowIndex, cellIndex)"
-                                                            (mouseenter)="updatePainting(block, rowIndex, cellIndex)">
+                                                            [style.background]="(item.solution! | solutionColor:range.solutions)">
                                                             {{ item.card }}
                                                         </td>
                                                     }
@@ -271,8 +215,9 @@
                             <div class="p-3">
                                 <div class="overflow-visible rounded-sm border border-gray-700 bg-gray-800 shadow dark:border-gray-700 dark:bg-gray-700">
                                     @for (position of block.positions; track rowIndex; let rowIndex = $index) {
-                                        <div class="flex h-7 cursor-pointer items-center border border-gray-600 bg-gray-800 text-center text-xs font-semibold text-white transition-colors hover:bg-gray-700 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                                            (click)="applyPositionToSituations(position); $event.stopPropagation()"
+                                        <div class="flex h-7 cursor-pointer items-center border bg-gray-800 text-center text-xs font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                            [ngClass]="block.selectedPosition === position ? 'border-gray-200 shadow-[inset_0_0_0_1px_rgba(229,231,235,0.95)] dark:border-gray-100 dark:shadow-[inset_0_0_0_1px_rgba(243,244,246,0.95)]' : 'border-gray-600 dark:border-gray-500'"
+                                            (click)="applyPositionToSituations(position, block); $event.stopPropagation()"
                                             (dragover)="allowPositionDrop($event, block)"
                                             (drop)="dropPosition($event, block, rowIndex)">
                                             @if (isEditing(block)) {
@@ -313,6 +258,11 @@
                     }
                 </section>
             }
+            @if (isSelectingBlocks()) {
+                <div class="pointer-events-none absolute border border-gray-200 bg-gray-300/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)] dark:border-gray-400 dark:bg-gray-100/10"
+                    [ngStyle]="selectionBoxStyle()"></div>
+            }
+        </div>
         </div>
     </div>
 </main>

@@ -9,13 +9,17 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { RangePage, RangePageBlock } from '../../interfaces/range-page';
 import { Situation } from '../../interfaces/situation';
-import { Solution } from '../../interfaces/solution';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
 import { RangePageService } from '../../services/range-page.service';
 import { SituationService } from '../../services/situation.service';
 
 type DragMode = 'move' | 'resize';
+
+interface PositionSituationTypeOption {
+    name: string;
+    situation: Situation;
+}
 
 @Component({
     selector: 'app-range-page-editor',
@@ -37,6 +41,15 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         originalY: number;
         originalW: number;
         originalH: number;
+        groupOriginalPositions?: Array<{ id: string; x: number; y: number; w: number; h: number; }>;
+    };
+    private selectionState?: {
+        startX: number;
+        startY: number;
+        currentX: number;
+        currentY: number;
+        canvasLeft: number;
+        canvasTop: number;
     };
     private draggedPosition?: {
         blockId: string;
@@ -45,31 +58,26 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     page: RangePage = this.createEmptyPage();
     situations: Situation[] = [];
-    situationSuggestions: Situation[] = [];
+    positionSituationSuggestions: PositionSituationTypeOption[] = [];
     selectedBlockId?: string;
+    selectedBlockIds: string[] = [];
     editingBlockId?: string;
-    selectedSituationId?: number;
-    selectedSituation?: Situation;
-    showExistingSituationPopup = false;
-    activeSolutionId = 'unique_solution_0';
-    isPainting = false;
+    selectedPositionSituation?: PositionSituationTypeOption;
+    showPositionSituationPopup = false;
+    showGridHelpPopup = false;
     mode: 'new' | 'edit' = 'new';
     saveStatus = 'Enregistré';
+
+    zoomLevel = 1;
 
     readonly gridSize = 12;
     readonly canvasWidth = 2400;
     readonly canvasHeight = 1440;
     readonly minBlockWidth = this.gridSize * 10;
     readonly minBlockHeight = this.gridSize * 8;
-
-    availablePreviousActions = [
-        'Fold',
-        'Limp',
-        'Call',
-        'Raise 2BB',
-        'Raise 2.5BB',
-        'All In'
-    ];
+    readonly minZoomLevel = 0.35;
+    readonly maxZoomLevel = 2;
+    readonly zoomStep = 0.1;
 
     constructor(
         private route: ActivatedRoute,
@@ -82,6 +90,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.situationsSubscription = this.situationService.situations.subscribe((data: Situation[]) => {
             this.situations = data.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            this.refreshPositionBlocks();
         });
         this.situationService.getSituations();
 
@@ -155,83 +164,15 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             normalizedBlock.positions = [];
         }
 
+        if (normalizedBlock.type === 'positions' && this.situations.length > 0) {
+            this.refreshPositionBlock(normalizedBlock);
+        }
+
         if (normalizedBlock.type === 'positions') {
             normalizedBlock.h = this.positionBlockHeight(normalizedBlock);
         }
 
         return normalizedBlock;
-    }
-
-    addRangeBlock(source: 'situation' | 'custom') {
-        if (source === 'situation' && this.selectedSituationId === undefined) {
-            this.commonService.showSwalToast('Veuillez sélectionner une situation.', 'error');
-            return;
-        }
-
-        const baseRange = cloneDeep(this.commonService.empty_situation_obj);
-        baseRange.name = 'Situation vierge';
-        const selectedSituation = this.situations.find(situation => situation.id === this.selectedSituationId);
-
-        const position = this.nextBlockPosition();
-        const block: RangePageBlock = {
-            id: this.createBlockId(),
-            type: 'range',
-            title: source === 'situation' ? selectedSituation?.name : 'Situation vierge',
-            source,
-            situationId: source === 'situation' ? this.selectedSituationId : undefined,
-            customRange: source === 'custom' ? baseRange : undefined,
-            trainable: false,
-            x: position.x,
-            y: position.y,
-            w: this.gridSize * 24,
-            h: this.gridSize * 24,
-            zIndex: this.nextZIndex(),
-            cellSize: this.page.displaySettings.cellSize,
-            compact: this.page.displaySettings.compact,
-            showLegend: this.page.displaySettings.showLegend
-        };
-
-        this.page.blocks.push(this.normalizeBlock(block));
-        this.selectedBlockId = block.id;
-        this.editingBlockId = undefined;
-        this.scheduleAutoSave();
-    }
-
-    openExistingSituationPopup() {
-        this.selectedSituationId = undefined;
-        this.selectedSituation = undefined;
-        this.situationSuggestions = this.situations;
-        this.showExistingSituationPopup = true;
-    }
-
-    addExistingSituationBlock() {
-        this.selectedSituationId = this.selectedSituation?.id;
-        const blockCount = this.page.blocks.length;
-        this.addRangeBlock('situation');
-
-        if (this.page.blocks.length > blockCount) {
-            this.selectedSituationId = undefined;
-            this.selectedSituation = undefined;
-            this.showExistingSituationPopup = false;
-        }
-    }
-
-    closeExistingSituationPopup() {
-        this.showExistingSituationPopup = false;
-        this.selectedSituationId = undefined;
-        this.selectedSituation = undefined;
-    }
-
-    searchSituations(event: { query: string }) {
-        const query = event.query.toLowerCase().trim();
-        this.situationSuggestions = this.situations.filter(situation =>
-            (situation.name || '').toLowerCase().includes(query)
-        );
-    }
-
-    selectExistingSituation(event: { value: Situation }) {
-        this.selectedSituation = event.value;
-        this.selectedSituationId = event.value.id;
     }
 
     addTextBlock() {
@@ -250,17 +191,132 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         this.page.blocks.push(this.normalizeBlock(block));
         this.selectedBlockId = block.id;
+        this.selectedBlockIds = [block.id];
         this.editingBlockId = undefined;
         this.scheduleAutoSave();
     }
 
+    positionSituationTypeOptions(): PositionSituationTypeOption[] {
+        const optionsByKey = new Map<string, PositionSituationTypeOption>();
+
+        this.situations.forEach(situation => {
+            const key = this.situationTypeKey(situation);
+            if (optionsByKey.has(key)) return;
+
+            optionsByKey.set(key, {
+                name: this.situationTypeDisplayName(situation),
+                situation
+            });
+        });
+
+        return [...optionsByKey.values()].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    situationTypeDisplayName(situation: Situation): string {
+        const nameWithoutDeep = this.removeDeepFromSituationName(situation.name);
+        if (nameWithoutDeep) return nameWithoutDeep;
+
+        return this.generateSituationTypeName(situation);
+    }
+
+    removeDeepFromSituationName(name: string | undefined): string {
+        return (name || '')
+            .replace(/\s+\d+\s*d\b/i, '')
+            .replace(/\s{2,}/g, ' ')
+            .trim();
+    }
+
+    generateSituationTypeName(situation: Situation): string {
+        const mode = situation.nbPlayer === 2
+            ? 'HU'
+            : situation.previousPlayer1Action === 'Fold' ? 'BVB' : '3w';
+        const position = this.positionName(situation.position);
+        const action = this.situationActionLabel(situation);
+        const level = this.opponentLevelName(situation.opponentLevel).toUpperCase();
+
+        return `${mode} ${position} ${action}${level}`.replace(/\s{2,}/g, ' ').trim();
+    }
+
+    situationActionLabel(situation: Situation): string {
+        const isFirstToAct = (situation.nbPlayer === 2 && situation.position === 'sb')
+            || (situation.nbPlayer === 3 && situation.position === 'bu');
+        if (isFirstToAct) return '';
+
+        let lastAction = 'Fold';
+        if (situation.nbPlayer === 2) {
+            lastAction = situation.previousPlayer1Action || 'Fold';
+        } else if (situation.position === 'sb') {
+            lastAction = situation.previousPlayer1Action || 'Fold';
+        } else if (situation.position === 'bb') {
+            lastAction = situation.previousPlayer2Action !== 'Fold'
+                ? situation.previousPlayer2Action || 'Fold'
+                : situation.previousPlayer1Action || 'Fold';
+        }
+
+        if (lastAction === 'Limp' || lastAction === 'Call') return 'vs limp ';
+        if (lastAction.startsWith('Raise')) return 'vs open ';
+        if (lastAction === 'All In') return 'vs OS ';
+        return '';
+    }
+
+    positionName(position: string | undefined): string {
+        return ({ sb: 'SB', bb: 'BB', bu: 'BU' } as Record<string, string>)[position || ''] || '';
+    }
+
+    opponentLevelName(level: string | undefined): string {
+        return ({ fish: 'Fish', shark: 'Reg', fish_shark: 'Mixte' } as Record<string, string>)[level || ''] || '';
+    }
+
+    situationTypeKey(situation: Situation): string {
+        return [
+            situation.type,
+            situation.nbPlayer,
+            situation.position,
+            situation.opponentLevel,
+            situation.fishPosition,
+            situation.previousPlayer1Action,
+            situation.previousPlayer2Action
+        ].join('|');
+    }
+
+    openPositionSituationPopup() {
+        this.selectedPositionSituation = undefined;
+        this.positionSituationSuggestions = this.positionSituationTypeOptions();
+        this.showPositionSituationPopup = true;
+    }
+
+    closePositionSituationPopup() {
+        this.selectedPositionSituation = undefined;
+        this.showPositionSituationPopup = false;
+    }
+
+    searchPositionSituations(event: { query: string }) {
+        const query = event.query.toLowerCase().trim();
+        this.positionSituationSuggestions = this.positionSituationTypeOptions().filter(option =>
+            option.name.toLowerCase().includes(query)
+        );
+    }
+
+    selectPositionSituation(event: { value: PositionSituationTypeOption }) {
+        this.selectedPositionSituation = event.value;
+    }
+
     addPositionsBlock() {
+        if (!this.selectedPositionSituation?.situation.id) {
+            this.commonService.showSwalToast('Veuillez sélectionner une situation.', 'error');
+            return;
+        }
+
+        const positionTypeName = this.selectedPositionSituation.name;
+        const referenceSituation = this.selectedPositionSituation.situation;
         const position = this.nextBlockPosition();
         const block: RangePageBlock = {
             id: this.createBlockId(),
             type: 'positions',
-            title: 'Positions',
+            title: positionTypeName,
             positions: [],
+            positionSituationId: referenceSituation.id,
+            positionReference: cloneDeep(referenceSituation),
             x: position.x,
             y: position.y,
             w: this.gridSize * 14,
@@ -268,10 +324,45 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             zIndex: this.nextZIndex()
         };
 
-        this.page.blocks.push(this.normalizeBlock(block));
-        this.selectedBlockId = block.id;
+        this.refreshPositionBlock(block);
+        const normalizedBlock = this.normalizeBlock(block);
+        this.page.blocks.push(normalizedBlock);
+        this.addSituationBlockForPositionType(referenceSituation, normalizedBlock);
+        this.selectedBlockId = normalizedBlock.id;
+        this.selectedBlockIds = [normalizedBlock.id];
         this.editingBlockId = undefined;
+        this.selectedPositionSituation = undefined;
+        this.showPositionSituationPopup = false;
         this.scheduleAutoSave();
+    }
+
+    addSituationBlockForPositionType(referenceSituation: Situation, positionsBlock: RangePageBlock) {
+        const existingRangeBlock = this.page.blocks.find(block => block.type === 'range');
+
+        if (existingRangeBlock) {
+            positionsBlock.linkedRangeBlockId = existingRangeBlock.id;
+            return;
+        }
+
+        const block: RangePageBlock = {
+            id: this.createBlockId(),
+            type: 'range',
+            title: referenceSituation.name,
+            source: 'situation',
+            situationId: referenceSituation.id,
+            x: this.snapToGrid(positionsBlock.x + positionsBlock.w + this.gridSize * 2, 0, this.canvasWidth - this.gridSize * 24),
+            y: positionsBlock.y,
+            w: this.gridSize * 24,
+            h: this.gridSize * 24,
+            zIndex: this.nextZIndex(),
+            cellSize: this.page.displaySettings.cellSize,
+            compact: this.page.displaySettings.compact,
+            showLegend: this.page.displaySettings.showLegend
+        };
+
+        const normalizedBlock = this.normalizeBlock(block);
+        this.page.blocks.push(normalizedBlock);
+        positionsBlock.linkedRangeBlockId = normalizedBlock.id;
     }
 
     autoSavePage() {
@@ -312,12 +403,21 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         return this.page.blocks.find(block => block.id === this.selectedBlockId);
     }
 
-    selectBlock(block: RangePageBlock) {
+    selectBlock(block: RangePageBlock, keepMultiSelection = false) {
         if (this.selectedBlockId !== block.id) {
             this.editingBlockId = undefined;
         }
         this.selectedBlockId = block.id;
+        if (!keepMultiSelection || !this.selectedBlockIds.includes(block.id)) {
+            this.selectedBlockIds = [block.id];
+        }
         block.zIndex = this.nextZIndex();
+    }
+
+    clearBlockSelection() {
+        this.selectedBlockId = undefined;
+        this.selectedBlockIds = [];
+        this.editingBlockId = undefined;
     }
 
     editBlock(block: RangePageBlock) {
@@ -338,6 +438,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.page.blocks = this.page.blocks.filter(block => block.id !== blockId);
+                this.selectedBlockIds = this.selectedBlockIds.filter(id => id !== blockId);
                 if (this.selectedBlockId === blockId) {
                     this.selectedBlockId = undefined;
                 }
@@ -360,80 +461,61 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         this.page.blocks.push(this.normalizeBlock(duplicatedBlock));
         this.selectedBlockId = duplicatedBlock.id;
+        this.selectedBlockIds = [duplicatedBlock.id];
         this.editingBlockId = undefined;
         this.scheduleAutoSave();
     }
 
     rangeForBlock(block: RangePageBlock): Situation | undefined {
-        if (block.source === 'custom') return block.customRange;
         return this.situations.find(situation => situation.id === block.situationId);
     }
 
-    applyPositionToSituations(position: string) {
-        const positionValue = position.trim().match(/\d+/)?.[0];
-        if (!positionValue) return;
+    applyPositionToSituations(position: string, positionBlock?: RangePageBlock) {
+        const stack = Number(position.trim().match(/\d+/)?.[0]);
+        if (!stack) return;
 
-        let hasChange = false;
+        if (positionBlock) {
+            positionBlock.selectedPosition = position;
+        }
 
-        this.page.blocks
-            .filter(block => block.type === 'range')
-            .forEach(block => {
-                const currentRange = this.rangeForBlock(block);
-                const currentName = currentRange?.name || block.title || '';
-                const targetName = currentName.replace(/\b\d+\s*d\b/i, `${positionValue}d`);
+        const reference = positionBlock ? this.positionReferenceForBlock(positionBlock) : undefined;
+        const existingSituation = reference ? this.findSimilarSituationWithStack(reference, stack) : undefined;
+        if (!existingSituation) {
+            this.scheduleAutoSave();
+            this.commonService.showSwalToast('Aucune situation existante trouvee pour ce deep.', 'error');
+            return;
+        }
 
-                if (!currentName || targetName === currentName) return;
+        const targetBlocks = this.targetRangeBlocksForPositionBlock(positionBlock);
+        targetBlocks.forEach(block => {
+            block.source = 'situation';
+            block.situationId = existingSituation.id;
+            block.title = existingSituation.name;
+        });
 
-                const existingSituation = this.situations.find(situation =>
-                    (situation.name || '').trim().toLowerCase() === targetName.trim().toLowerCase()
-                );
-
-                if (existingSituation) {
-                    block.source = 'situation';
-                    block.situationId = existingSituation.id;
-                    block.customRange = undefined;
-                    block.trainable = false;
-                    block.title = existingSituation.name;
-                } else {
-                    block.source = 'custom';
-                    block.situationId = undefined;
-                    block.customRange = this.createBlankSituationFrom(currentRange, targetName);
-                    block.trainable = false;
-                    block.title = targetName;
-                }
-
-                hasChange = true;
-            });
-
-        if (hasChange) {
+        if (targetBlocks.length > 0) {
             this.scheduleAutoSave();
         }
     }
 
-    createBlankSituationFrom(baseRange: Situation | undefined, name: string): Situation {
-        const blankSituation = cloneDeep(this.commonService.empty_situation_obj);
-        blankSituation.name = name;
-
-        if (baseRange) {
-            blankSituation.type = baseRange.type;
-            blankSituation.nbPlayer = baseRange.nbPlayer;
-            blankSituation.stack = baseRange.stack;
-            blankSituation.position = baseRange.position;
-            blankSituation.opponentLevel = baseRange.opponentLevel;
-            blankSituation.fishPosition = baseRange.fishPosition;
-            blankSituation.previousPlayer1Action = baseRange.previousPlayer1Action;
-            blankSituation.previousPlayer2Action = baseRange.previousPlayer2Action;
-            blankSituation.solutions = cloneDeep(baseRange.solutions);
+    targetRangeBlocksForPositionBlock(positionBlock?: RangePageBlock): RangePageBlock[] {
+        if (positionBlock?.linkedRangeBlockId) {
+            const linkedBlock = this.page.blocks.find(block => block.id === positionBlock.linkedRangeBlockId && block.type === 'range');
+            if (linkedBlock) return [linkedBlock];
         }
 
-        return blankSituation;
+        const firstRangeBlock = this.page.blocks.find(block => block.type === 'range');
+        return firstRangeBlock ? [firstRangeBlock] : [];
     }
 
     startDrag(event: MouseEvent, block: RangePageBlock, mode: DragMode) {
         event.preventDefault();
         event.stopPropagation();
-        this.selectBlock(block);
+        this.selectBlock(block, mode === 'move');
         if (mode === 'resize' && !this.isEditing(block)) return;
+        const groupBlocks = mode === 'move'
+            ? this.page.blocks.filter(item => this.selectedBlockIds.includes(item.id))
+            : [];
         this.dragState = {
             blockId: block.id,
             mode,
@@ -442,11 +524,20 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             originalX: block.x,
             originalY: block.y,
             originalW: block.w,
-            originalH: block.h
+            originalH: block.h,
+            groupOriginalPositions: groupBlocks.map(item => ({ id: item.id, x: item.x, y: item.y, w: item.w, h: item.h }))
         };
     }
 
     onWindowMouseMove = (event: MouseEvent) => {
+        if (this.selectionState) {
+            const point = this.canvasPointFromMouseEvent(event);
+            this.selectionState.currentX = point.x;
+            this.selectionState.currentY = point.y;
+            this.updateSelectionFromBox();
+            return;
+        }
+
         if (!this.dragState) return;
 
         const block = this.page.blocks.find(item => item.id === this.dragState?.blockId);
@@ -456,12 +547,11 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const deltaX = event.clientX - this.dragState.startX;
-        const deltaY = event.clientY - this.dragState.startY;
+        const deltaX = (event.clientX - this.dragState.startX) / this.zoomLevel;
+        const deltaY = (event.clientY - this.dragState.startY) / this.zoomLevel;
 
         if (this.dragState.mode === 'move') {
-            block.x = this.snapToGrid(this.dragState.originalX + deltaX, 0, this.canvasWidth - block.w);
-            block.y = this.snapToGrid(this.dragState.originalY + deltaY, 0, this.canvasHeight - block.h);
+            this.moveSelectedBlocks(deltaX, deltaY);
         } else {
             const minSize = this.minSizeForBlock(block);
             block.w = this.snapToGrid(this.dragState.originalW + deltaX, minSize.width, this.canvasWidth - block.x);
@@ -470,52 +560,103 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     };
 
     onWindowMouseUp = () => {
-        const shouldAutoSave = this.dragState !== undefined || this.isPainting;
+        const shouldAutoSave = this.dragState !== undefined;
         this.dragState = undefined;
-        this.isPainting = false;
+        this.selectionState = undefined;
         if (shouldAutoSave) {
             this.scheduleAutoSave();
         }
     };
 
-    paintCell(block: RangePageBlock, rowIndex: number, cellIndex: number) {
-        if (!this.isEditing(block) || block.source !== 'custom' || !block.customRange) return;
-        block.customRange.situations[rowIndex][cellIndex].solution = this.activeSolutionId;
-        this.scheduleAutoSave();
-    }
+    moveSelectedBlocks(deltaX: number, deltaY: number) {
+        const group = this.dragState?.groupOriginalPositions || [];
+        if (group.length === 0) return;
 
-    startPainting(block: RangePageBlock, rowIndex: number, cellIndex: number) {
-        if (!this.isEditing(block)) return;
-        this.isPainting = true;
-        this.paintCell(block, rowIndex, cellIndex);
-    }
+        const snappedDeltaX = this.snapToGrid(deltaX, -this.canvasWidth, this.canvasWidth);
+        const snappedDeltaY = this.snapToGrid(deltaY, -this.canvasHeight, this.canvasHeight);
+        const minDeltaX = Math.max(...group.map(block => -block.x));
+        const maxDeltaX = Math.min(...group.map(block => this.canvasWidth - block.w - block.x));
+        const minDeltaY = Math.max(...group.map(block => -block.y));
+        const maxDeltaY = Math.min(...group.map(block => this.canvasHeight - block.h - block.y));
+        const clampedDeltaX = Math.max(minDeltaX, Math.min(maxDeltaX, snappedDeltaX));
+        const clampedDeltaY = Math.max(minDeltaY, Math.min(maxDeltaY, snappedDeltaY));
 
-    updatePainting(block: RangePageBlock, rowIndex: number, cellIndex: number) {
-        if (!this.isPainting) return;
-        this.paintCell(block, rowIndex, cellIndex);
-    }
-
-    addUniqueSolution(block: RangePageBlock) {
-        if (!block.customRange) return;
-        const solutionCount = block.customRange.solutions.filter(solution => solution.type === 'unique').length;
-        if (solutionCount >= 7) return;
-        block.customRange.solutions.push({
-            id: `unique_solution_${solutionCount}`,
-            type: 'unique',
-            display_name: 'Action',
-            color: this.getNextColor(block.customRange.solutions)
+        group.forEach(originalBlock => {
+            const block = this.page.blocks.find(item => item.id === originalBlock.id);
+            if (!block) return;
+            block.x = originalBlock.x + clampedDeltaX;
+            block.y = originalBlock.y + clampedDeltaY;
         });
-        this.scheduleAutoSave();
     }
 
-    updateSolutionName(solution: Solution, value: string) {
-        solution.display_name = value;
-        this.scheduleAutoSave();
+    startSelection(event: MouseEvent) {
+        if (event.button !== 0) return;
+        event.preventDefault();
+
+        const canvas = event.currentTarget as HTMLElement;
+        const rect = canvas.getBoundingClientRect();
+        const startX = (event.clientX - rect.left) / this.zoomLevel;
+        const startY = (event.clientY - rect.top) / this.zoomLevel;
+
+        this.editingBlockId = undefined;
+        this.selectedBlockId = undefined;
+        this.selectedBlockIds = [];
+        this.selectionState = {
+            startX,
+            startY,
+            currentX: startX,
+            currentY: startY,
+            canvasLeft: rect.left,
+            canvasTop: rect.top
+        };
     }
 
-    updateSolutionColor(solution: Solution, value: string) {
-        solution.color = value;
-        this.scheduleAutoSave();
+    canvasPointFromMouseEvent(event: MouseEvent) {
+        return {
+            x: (event.clientX - this.selectionState!.canvasLeft) / this.zoomLevel,
+            y: (event.clientY - this.selectionState!.canvasTop) / this.zoomLevel
+        };
+    }
+
+    updateSelectionFromBox() {
+        const box = this.selectionBox();
+        this.selectedBlockIds = this.page.blocks
+            .filter(block => this.blocksIntersect(box, block))
+            .map(block => block.id);
+        this.selectedBlockId = this.selectedBlockIds[0];
+    }
+
+    blocksIntersect(box: { x: number; y: number; w: number; h: number }, block: RangePageBlock): boolean {
+        return block.x < box.x + box.w
+            && block.x + block.w > box.x
+            && block.y < box.y + box.h
+            && block.y + block.h > box.y;
+    }
+
+    selectionBox() {
+        const state = this.selectionState;
+        if (!state) return { x: 0, y: 0, w: 0, h: 0 };
+
+        const x = Math.min(state.startX, state.currentX);
+        const y = Math.min(state.startY, state.currentY);
+        const w = Math.abs(state.currentX - state.startX);
+        const h = Math.abs(state.currentY - state.startY);
+
+        return { x, y, w, h };
+    }
+
+    selectionBoxStyle() {
+        const box = this.selectionBox();
+        return {
+            left: `${box.x}px`,
+            top: `${box.y}px`,
+            width: `${box.w}px`,
+            height: `${box.h}px`
+        };
+    }
+
+    isSelectingBlocks(): boolean {
+        return this.selectionState !== undefined;
     }
 
     addPositionItem(block: RangePageBlock) {
@@ -562,19 +703,59 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         this.draggedPosition = undefined;
     }
 
-    saveCustomRangeAsSituation(block: RangePageBlock) {
-        if (!block.customRange) return;
+    refreshPositionBlocks() {
+        let hasChange = false;
+        this.page.blocks
+            .filter(block => block.type === 'positions')
+            .forEach(block => {
+                const previousPositions = JSON.stringify(block.positions || []);
+                this.refreshPositionBlock(block);
+                if (previousPositions !== JSON.stringify(block.positions || [])) {
+                    hasChange = true;
+                }
+            });
 
-        const hasEmptyCell = block.customRange.situations.some(row => row.some(cell => cell.solution === undefined));
-        if (hasEmptyCell) {
-            this.commonService.showSwalToast('Veuillez remplir toute la range avant de l’envoyer dans les situations.', 'error');
-            return;
+        if (hasChange) {
+            this.page.blocks = this.page.blocks.map(block => this.normalizeBlock(block));
         }
+    }
 
-        this.situationService.addSituation(block.customRange);
-        block.trainable = true;
-        this.commonService.showSwalToast('Range envoyée dans les situations !');
-        this.scheduleAutoSave();
+    refreshPositionBlock(block: RangePageBlock) {
+        const reference = this.positionReferenceForBlock(block);
+        if (!reference) return;
+
+        block.positionReference = cloneDeep(reference);
+        block.positions = this.similarSituations(reference)
+            .map(situation => situation.stack)
+            .filter((stack): stack is number => stack !== undefined && stack !== null)
+            .filter((stack, index, stacks) => stacks.indexOf(stack) === index)
+            .sort((a, b) => b - a)
+            .map(stack => stack.toString());
+        block.h = this.positionBlockHeight(block);
+    }
+
+    positionReferenceForBlock(block: RangePageBlock): Situation | undefined {
+        return this.situations.find(situation => situation.id === block.positionSituationId) || block.positionReference;
+    }
+
+    similarSituations(reference: Situation): Situation[] {
+        return this.situations.filter(situation => this.sameSituationParametersExceptStack(situation, reference));
+    }
+
+    findSimilarSituationWithStack(reference: Situation, stack: number): Situation | undefined {
+        return this.situations.find(situation =>
+            this.sameSituationParametersExceptStack(situation, reference) && Number(situation.stack) === stack
+        );
+    }
+
+    sameSituationParametersExceptStack(a: Situation, b: Situation): boolean {
+        return a.type === b.type
+            && a.nbPlayer === b.nbPlayer
+            && a.position === b.position
+            && a.opponentLevel === b.opponentLevel
+            && a.fishPosition === b.fishPosition
+            && a.previousPlayer1Action === b.previousPlayer1Action
+            && a.previousPlayer2Action === b.previousPlayer2Action;
     }
 
     goBack() {
@@ -591,8 +772,74 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         };
     }
 
+    scaledCanvasWidth(): number {
+        return this.canvasWidth * this.zoomLevel;
+    }
+
+    scaledCanvasHeight(): number {
+        return this.canvasHeight * this.zoomLevel;
+    }
+
+    canvasTransformStyle() {
+        return {
+            transform: `scale(${this.zoomLevel})`,
+            'transform-origin': 'top left'
+        };
+    }
+
+    canvasStyle() {
+        return {
+            ...this.canvasGridStyle(),
+            ...this.canvasTransformStyle()
+        };
+    }
+
+    isDefaultView(): boolean {
+        return this.zoomLevel === 1;
+    }
+
+    resetView() {
+        this.zoomLevel = 1;
+    }
+
+    onGridWheel(event: WheelEvent) {
+        const container = event.currentTarget as HTMLElement;
+
+        if (event.shiftKey && !event.ctrlKey) {
+            event.preventDefault();
+            event.stopPropagation();
+            container.scrollLeft += event.deltaY;
+            return;
+        }
+
+        if (!event.ctrlKey) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const previousZoom = this.zoomLevel;
+        const direction = event.deltaY > 0 ? -1 : 1;
+        const nextZoom = this.clampZoom(previousZoom + (direction * this.zoomStep));
+
+        if (nextZoom === previousZoom) return;
+
+        const rect = container.getBoundingClientRect();
+        const pointerX = event.clientX - rect.left + container.scrollLeft;
+        const pointerY = event.clientY - rect.top + container.scrollTop;
+        const ratio = nextZoom / previousZoom;
+
+        this.zoomLevel = nextZoom;
+        container.scrollLeft = (pointerX * ratio) - (event.clientX - rect.left);
+        container.scrollTop = (pointerY * ratio) - (event.clientY - rect.top);
+    }
+
+    clampZoom(value: number): number {
+        const roundedValue = Math.round(value * 100) / 100;
+        return Math.max(this.minZoomLevel, Math.min(this.maxZoomLevel, roundedValue));
+    }
+
     canvasGridStyle() {
-        const shouldShowGrid = this.dragState !== undefined;
+        const shouldShowGrid = this.dragState !== undefined || this.selectionState !== undefined;
 
         return {
             'background-size': `${this.gridSize}px ${this.gridSize}px`,
@@ -607,11 +854,15 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     isSelected(block: RangePageBlock): boolean {
-        return this.selectedBlockId === block.id;
+        return this.selectedBlockIds.includes(block.id);
     }
 
     isEditing(block: RangePageBlock): boolean {
         return this.editingBlockId === block.id;
+    }
+
+    isMovingBlock(block: RangePageBlock): boolean {
+        return this.dragState?.mode === 'move' && this.selectedBlockIds.includes(block.id);
     }
 
     minSizeForBlock(block: RangePageBlock) {
@@ -665,12 +916,6 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         return Math.max(min, Math.min(max, snappedValue));
     }
 
-    getNextColor(solutions: Solution[]): string {
-        const colors = ['#d80c05', '#ff9100', '#7a5a00', '#3f7a89', '#96c582', '#303030', '#1c51ff', '#00aeff', '#8350ff', '#e284ff'];
-        const usedColors = solutions.map(solution => solution.color);
-        return colors.find(color => !usedColors.includes(color)) || '#303030';
-    }
-
     private positionBlockHeight(block: RangePageBlock): number {
         const headerHeight = 40;
         const paddingHeight = 24;
@@ -696,18 +941,8 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         );
     }
 
-    private rangeEditPanelHeight(block: RangePageBlock): number {
-        let height = 49;
-
-        if (block.source === 'custom' && block.customRange) {
-            height += 80;
-        }
-
-        if (block.trainable) {
-            height += 88;
-        }
-
-        return height;
+    private rangeEditPanelHeight(_block: RangePageBlock): number {
+        return 49;
     }
 
 }

@@ -58,15 +58,24 @@
     }
 
     .grid-situation-autocomplete {
-        @apply w-full;
+        @apply flex w-full items-stretch;
     }
 
     .grid-situation-autocomplete .p-autocomplete-input {
-        @apply h-11 w-full border-gray-300 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500;
+        @apply h-11 min-w-0 flex-1 rounded-r-none border-gray-300 bg-white text-gray-800 placeholder:text-gray-400 shadow-none outline-none transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500;
     }
 
     .grid-situation-autocomplete .p-autocomplete-dropdown {
-        @apply border-gray-300 bg-white text-gray-800 transition-colors duration-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300 dark:hover:bg-gray-700;
+        @apply h-11 w-11 shrink-0 rounded-l-none border-gray-300 bg-white text-gray-800 shadow-none outline-none transition-colors duration-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-main-dark-bg dark:text-gray-300 dark:hover:bg-gray-700;
+    }
+
+    .grid-situation-autocomplete.p-focus,
+    .grid-situation-autocomplete .p-focus,
+    .grid-situation-autocomplete .p-inputtext:enabled:focus,
+    .grid-situation-autocomplete .p-autocomplete-dropdown:focus,
+    .grid-situation-autocomplete .p-autocomplete-dropdown:focus-visible {
+        box-shadow: none !important;
+        outline: none !important;
     }
 
     .grid-situation-autocomplete-panel {
