@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 import { authGuard } from './guards/auth.guard';
 import { checkSituationGuard } from './guards/check-situation.guard';
-import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -100,6 +99,7 @@ export const routes: Routes = [
     }, 
     {
         path: 'change-password',
-        component: ChangePasswordComponent
+        redirectTo: 'settings',
+        pathMatch: 'full'
     }
 ];

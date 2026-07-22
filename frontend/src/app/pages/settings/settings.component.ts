@@ -33,6 +33,14 @@ export class SettingsComponent {
     autoMultipleSolutionName: boolean = false;
 
     newUserName: string = '';
+    oldPassword: string = '';
+    newPassword: string = '';
+    newPasswordConfirmation: string = '';
+    passwordFieldTypeOld: 'password' | 'text' = 'password';
+    passwordFieldTypeNew: 'password' | 'text' = 'password';
+    passwordFieldTypeConfirm: 'password' | 'text' = 'password';
+    isChangingPassword: boolean = false;
+    showPasswordModal: boolean = false;
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
@@ -217,5 +225,65 @@ export class SettingsComponent {
     changeUserName(){
         this.authService.setUserDisplayName(this.newUserName);
         this.commonService.closeModal("change-user-name");
+    }
+
+    openPasswordModal(): void {
+        this.resetPasswordForm();
+        this.showPasswordModal = true;
+    }
+
+    closePasswordModal(): void {
+        if (this.isChangingPassword) return;
+        this.showPasswordModal = false;
+        this.resetPasswordForm();
+    }
+
+    togglePasswordVisibility(field: 'old' | 'new' | 'confirm'): void {
+        const fields = {
+            old: 'passwordFieldTypeOld',
+            new: 'passwordFieldTypeNew',
+            confirm: 'passwordFieldTypeConfirm'
+        } as const;
+        const fieldType = fields[field];
+        this[fieldType] = this[fieldType] === 'password' ? 'text' : 'password';
+    }
+
+    changePassword(): void {
+        if (this.isChangingPassword) return;
+
+        if (!this.oldPassword || !this.newPassword || !this.newPasswordConfirmation) {
+            this.commonService.showSwalToast('Veuillez remplir tous les champs.', 'error');
+            return;
+        }
+
+        if (this.newPassword !== this.newPasswordConfirmation) {
+            this.commonService.showSwalToast('Les nouveaux mots de passe ne correspondent pas.', 'error');
+            return;
+        }
+
+        this.isChangingPassword = true;
+        this.authService.reauthenticate(this.oldPassword)
+            .then(() => this.authService.changePassword(this.newPassword))
+            .then(() => {
+                this.showPasswordModal = false;
+                this.resetPasswordForm();
+                this.commonService.showSwalToast('Mot de passe modifié avec succès !');
+            })
+            .catch(error => {
+                const errorMessage = this.commonService.getErrorMessage(error.code);
+                this.commonService.showSwalToast(`Erreur : ${errorMessage}`, 'error');
+            })
+            .finally(() => {
+                this.isChangingPassword = false;
+            });
+    }
+
+    private resetPasswordForm(): void {
+        this.oldPassword = '';
+        this.newPassword = '';
+        this.newPasswordConfirmation = '';
+        this.passwordFieldTypeOld = 'password';
+        this.passwordFieldTypeNew = 'password';
+        this.passwordFieldTypeConfirm = 'password';
     }
 }

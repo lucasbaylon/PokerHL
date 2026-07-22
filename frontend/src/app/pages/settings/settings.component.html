@@ -133,7 +133,7 @@
                         <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Mot de passe</p>
                         <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Modifiez votre mot de passe de connexion.</p>
                     </div>
-                    <button type="button" (click)="commonService.redirectTo('change-password')"
+                    <button type="button" (click)="openPasswordModal()"
                         class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
                         <i class="fa-solid fa-key mr-2" aria-hidden="true"></i>
                         Modifier
@@ -226,6 +226,101 @@
         </section>
     </div>
 </div>
+
+@if (showPasswordModal) {
+<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-fadeIn" role="dialog"
+    aria-modal="true" aria-labelledby="change-password-title">
+    <button type="button" (click)="closePasswordModal()" class="absolute inset-0 border-0 bg-black/60 p-0 cursor-default"
+        aria-label="Fermer la fenêtre de changement de mot de passe"></button>
+    <form (ngSubmit)="changePassword()"
+        class="relative z-10 box-border w-full max-w-xl rounded-xl bg-white p-7 text-gray-800 shadow-2xl dark:bg-secondary-dark-bg dark:text-gray-300">
+        <button type="button" (click)="closePasswordModal()" [disabled]="isChangingPassword"
+            class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 outline-none transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+            aria-label="Fermer">✕</button>
+
+        <h4 id="change-password-title" class="m-0 mb-2 text-lg font-semibold text-gray-800 dark:text-gray-300">Modifier le mot de passe</h4>
+        <p class="m-0 mb-6 text-sm text-gray-500 dark:text-gray-400">
+            Confirmez votre mot de passe actuel avant d'en choisir un nouveau.
+        </p>
+
+        <div class="space-y-5">
+            <div>
+                <label for="current-password" class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">
+                    Mot de passe actuel
+                </label>
+                <div class="relative flex items-center">
+                    <input id="current-password" name="currentPassword" [(ngModel)]="oldPassword"
+                        [type]="passwordFieldTypeOld" autocomplete="current-password"
+                        placeholder="Votre mot de passe actuel"
+                        class="box-border w-full border-gray-300 bg-white pr-12 text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-600 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+                        pInputText />
+                    <button type="button" (click)="togglePasswordVisibility('old')"
+                        class="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+                        [attr.aria-label]="passwordFieldTypeOld === 'password' ? 'Afficher le mot de passe actuel' : 'Masquer le mot de passe actuel'">
+                        <i class="fa-solid" [class.fa-eye]="passwordFieldTypeOld === 'password'"
+                            [class.fa-eye-slash]="passwordFieldTypeOld === 'text'" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label for="new-password" class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">
+                    Nouveau mot de passe
+                </label>
+                <div class="relative flex items-center">
+                    <input id="new-password" name="newPassword" [(ngModel)]="newPassword"
+                        [type]="passwordFieldTypeNew" autocomplete="new-password"
+                        placeholder="Votre nouveau mot de passe"
+                        class="box-border w-full border-gray-300 bg-white pr-12 text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-600 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+                        pInputText />
+                    <button type="button" (click)="togglePasswordVisibility('new')"
+                        class="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+                        [attr.aria-label]="passwordFieldTypeNew === 'password' ? 'Afficher le nouveau mot de passe' : 'Masquer le nouveau mot de passe'">
+                        <i class="fa-solid" [class.fa-eye]="passwordFieldTypeNew === 'password'"
+                            [class.fa-eye-slash]="passwordFieldTypeNew === 'text'" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label for="confirm-password" class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">
+                    Confirmer le nouveau mot de passe
+                </label>
+                <div class="relative flex items-center">
+                    <input id="confirm-password" name="newPasswordConfirmation" [(ngModel)]="newPasswordConfirmation"
+                        [type]="passwordFieldTypeConfirm" autocomplete="new-password"
+                        placeholder="Confirmez le nouveau mot de passe"
+                        class="box-border w-full border-gray-300 bg-white pr-12 text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-600 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+                        pInputText />
+                    <button type="button" (click)="togglePasswordVisibility('confirm')"
+                        class="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+                        [attr.aria-label]="passwordFieldTypeConfirm === 'password' ? 'Afficher la confirmation' : 'Masquer la confirmation'">
+                        <i class="fa-solid" [class.fa-eye]="passwordFieldTypeConfirm === 'password'"
+                            [class.fa-eye-slash]="passwordFieldTypeConfirm === 'text'" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <button type="button" (click)="closePasswordModal()" [disabled]="isChangingPassword"
+                class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors duration-500 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Annuler
+            </button>
+            <button type="submit" [disabled]="isChangingPassword"
+                class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                @if (isChangingPassword) {
+                <i class="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true"></i>
+                Modification…
+                } @else {
+                <i class="fa-solid fa-key mr-2" aria-hidden="true"></i>
+                Modifier le mot de passe
+                }
+            </button>
+        </div>
+    </form>
+</div>
+}
 
 <dialog id="change-user-name" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
     <div class="dui-modal-box bg-white text-gray-800 dark:bg-secondary-dark-bg dark:text-gray-300">
