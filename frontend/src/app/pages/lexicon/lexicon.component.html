@@ -1,11 +1,11 @@
 <h3
-    class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 transition-colors duration-500 m-0">
+    class="text-3xl font-bold md:text-4xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 transition-colors duration-500 m-0">
     Lexique</h3>
 <p
-    class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-0 text-left animate-appear opacity-0 transition-colors duration-500">
+    class="text-gray-500 dark:text-gray-400 text-lg mt-2 mb-0 text-left animate-appear opacity-0 transition-colors duration-500">
     {{ visibleTermsCount }} terme(s)</p>
 
-<div class="mt-8 animate-appear opacity-0 animation-delay-50">
+<div class="mt-6 animate-appear opacity-0 animation-delay-50">
     <div class="relative w-[48rem] max-w-full">
         <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400"></i>
         <input [(ngModel)]="query" (ngModelChange)="restartAnimations()" type="search" placeholder="Rechercher un terme"
