@@ -335,7 +335,7 @@ export class SituationManagerComponent {
     addSituation() {
         this.apiSituation.addSituation(this.situation_obj);
         this.commonService.showSwalToast(`Situation enregistrée !`);
-        this.router.navigate(['situations-list-manager']);
+        this.router.navigate(['situations']);
     }
 
     /**
@@ -344,7 +344,7 @@ export class SituationManagerComponent {
     editSituation() {
         this.apiSituation.editSituation(this.situation_obj);
         this.commonService.showSwalToast(`Situation modifiée !`);
-        this.router.navigate(['situations-list-manager']);
+        this.router.navigate(['situations']);
     }
 
     /**

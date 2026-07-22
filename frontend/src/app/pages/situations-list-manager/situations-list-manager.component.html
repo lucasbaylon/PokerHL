@@ -1,12 +1,58 @@
-<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
-    Gestion des situations</h3>
-<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">Supprimez, modifiez ou
-    créez des situations.</p>
-<div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto shadow-lg">
-    <p-table [value]="situationList" dataKey="id" [paginator]="true" [rows]="nbRowsPerPage">
+<header class="animate-appear opacity-0 flex flex-col gap-5 mb-10 md:flex-row md:items-end md:justify-between">
+    <div>
+        <h3 class="m-0 text-4xl font-bold text-gray-800 dark:text-gray-300 md:text-5xl">Situations</h3>
+        <p class="m-0 mt-2 max-w-2xl text-xl text-gray-500 dark:text-gray-400">
+            Entraînez-vous ou gérez vos situations.
+        </p>
+    </div>
+    <button type="button" (click)="commonService.redirectTo('situations-manager')"
+        class="inline-flex h-12 shrink-0 items-center justify-center self-start rounded-md border-0 bg-gray-800 px-5 text-base font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 md:self-auto cursor-pointer">
+        <i class="fa-solid fa-plus mr-3" aria-hidden="true"></i>
+        Nouvelle situation
+    </button>
+</header>
+
+<section class="animate-appear opacity-0 animation-delay-50 mb-6 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+    aria-label="Préparation de l'entraînement">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-3">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-800 text-white dark:bg-gray-700 dark:text-gray-300">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+            </div>
+            <div>
+                <p class="m-0 font-semibold text-gray-800 dark:text-gray-100">
+                    {{ selectedSituations.length }} situation{{ selectedSituations.length > 1 ? 's' : '' }} sélectionnée{{ selectedSituations.length > 1 ? 's' : '' }}
+                </p>
+                <p class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    Cochez une ou plusieurs lignes, puis choisissez votre mode d'entraînement.
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 sm:shrink-0">
+            @if (selectedSituations.length > 0) {
+            <button type="button" (click)="clearSelection()"
+                class="h-11 rounded-md border border-gray-300 bg-white px-4 font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Effacer
+            </button>
+            }
+            <button type="button" (click)="startTraining()" [disabled]="selectedSituations.length === 0"
+                class="h-11 rounded-md border-0 bg-gray-800 px-5 font-medium text-white shadow transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Choisir le mode
+                <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<div class="animate-appear opacity-0 animation-delay-100 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
+    <p-table [value]="situationList" dataKey="id" [paginator]="situationList.length > nbRowsPerPage"
+        [rows]="nbRowsPerPage" [(selection)]="selectedSituations" styleClass="min-w-[900px]">
         <ng-template pTemplate="header">
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
-                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tl-md dark:border-gray-700">
+                <th class="w-14 bg-white dark:bg-secondary-dark-bg dark:border-gray-700">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Nom
                         <p-columnFilter type="text" field="name" display="menu" class="ml-2"></p-columnFilter>
@@ -21,11 +67,6 @@
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
                                 <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type"
                                     (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
-                                    <ng-template let-option pTemplate="item">
-                                        <div class="inline-block vertical-align-middle">
-                                            <span class="ml-1 mt-1">{{ option.name }}</span>
-                                        </div>
-                                    </ng-template>
                                 </p-multiSelect>
                             </ng-template>
                         </p-columnFilter>
@@ -33,25 +74,19 @@
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
-                        Stack effectif
+                        Stack
                         <p-columnFilter type="numeric" field="stack" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
-                        Nb joueurs
+                        Joueurs
                         <p-columnFilter (onShow)="openMultiSelect()" field="nbPlayer" matchMode="in" display="menu"
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="nbPlayerLst"
-                                    placeholder="Nombre de joueur" (onChange)="filter($event.value)" optionLabel="name"
-                                    optionValue="value">
-                                    <ng-template let-option pTemplate="item">
-                                        <div class="inline-block vertical-align-middle">
-                                            <span class="ml-1 mt-1">{{ option.name }}</span>
-                                        </div>
-                                    </ng-template>
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="nbPlayerLst" placeholder="Joueurs"
+                                    (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
                         </p-columnFilter>
@@ -64,14 +99,8 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="positionLst"
-                                    placeholder="Position" (onChange)="filter($event.value)" optionLabel="name"
-                                    optionValue="value">
-                                    <ng-template let-option pTemplate="item">
-                                        <div class="inline-block vertical-align-middle">
-                                            <span class="ml-1 mt-1">{{ option.name }}</span>
-                                        </div>
-                                    </ng-template>
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="positionLst" placeholder="Position"
+                                    (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
                         </p-columnFilter>
@@ -84,98 +113,86 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="opponentLevelLst"
-                                    placeholder="Niveau" (onChange)="filter($event.value)" optionLabel="name"
-                                    optionValue="value">
-                                    <ng-template let-option pTemplate="item">
-                                        <div class="inline-block vertical-align-middle">
-                                            <span class="ml-1 mt-1">{{ option.name }}</span>
-                                        </div>
-                                    </ng-template>
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="opponentLevelLst" placeholder="Niveau"
+                                    (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
                         </p-columnFilter>
                     </div>
                 </th>
-                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
-                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
-                <th class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700"></th>
-                <th
-                    class="w-16 bg-white dark:text-gray-300 dark:bg-secondary-dark-bg rounded-tr-md dark:border-gray-700">
+                <th class="w-44 bg-white text-right dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                    Actions
                 </th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-situation let-i="rowIndex">
+        <ng-template pTemplate="body" let-situation>
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
+                <td class="dark:border-gray-700"><p-tableCheckbox [value]="situation"></p-tableCheckbox></td>
                 <td class="dark:border-gray-700">
-                    {{ situation.name }}
+                    <button type="button" (click)="displaySituation(situation)"
+                        class="border-0 bg-transparent p-0 text-left font-semibold text-gray-800 hover:text-gray-600 hover:underline dark:text-gray-300 dark:hover:text-white cursor-pointer">
+                        {{ situation.name }}
+                    </button>
                 </td>
+                <td class="dark:border-gray-700">{{ situation.type | type }}</td>
+                <td class="dark:border-gray-700">{{ situation.stack }} BB</td>
+                <td class="dark:border-gray-700">{{ situation.nbPlayer }}</td>
+                <td class="dark:border-gray-700">{{ situation.position | position }}</td>
+                <td class="dark:border-gray-700">{{ situation.opponentLevel! | opponentLevel }}</td>
                 <td class="dark:border-gray-700">
-                    {{ situation.type | type }}
-                </td>
-                <td class="dark:border-gray-700">
-                    {{ situation.stack }}
-                </td>
-                <td class="dark:border-gray-700">
-                    {{ situation.nbPlayer }}
-                </td>
-                <td class="dark:border-gray-700">
-                    {{ situation.position | position }}
-                </td>
-                <td class="dark:border-gray-700">
-                    {{ situation.opponentLevel! | opponentLevel }}
-                </td>
-                <td class="dark:border-gray-700">
-                    <i class="fa-solid fa-eye cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
-                        (click)="displaySituation(situation)"></i>
-                </td>
-                <td class="dark:border-gray-700">
-                    <i class="fa-solid fa-clone cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
-                        (click)="duplicateSituation(situation.id)"></i>
-                </td>
-                <td class="dark:border-gray-700">
-                    <i class="fa-solid fa-pencil cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
-                        (click)="editSituation(situation.id)"></i>
-                </td>
-                <td class="dark:border-gray-700">
-                    <i class="fa-solid fa-trash-can cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
-                        (click)="removeSituation(situation.id)"></i>
+                    <div class="flex justify-end gap-1">
+                        <button type="button" title="Aperçu" [attr.aria-label]="'Voir ' + situation.name"
+                            (click)="displaySituation(situation)" class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square">
+                            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" title="Dupliquer" [attr.aria-label]="'Dupliquer ' + situation.name"
+                            (click)="duplicateSituation(situation.id)" class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square">
+                            <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" title="Modifier" [attr.aria-label]="'Modifier ' + situation.name"
+                            (click)="editSituation(situation.id)" class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square">
+                            <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" title="Supprimer" [attr.aria-label]="'Supprimer ' + situation.name"
+                            (click)="removeSituation(situation.id)"
+                            class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
-                <td colspan="10">Aucune situation trouvée.</td>
+                <td colspan="8" class="py-12 text-center">
+                    <i class="fa-regular fa-folder-open mb-3 text-3xl text-gray-400" aria-hidden="true"></i>
+                    <p class="m-0 font-semibold">Aucune situation trouvée</p>
+                    <p class="m-0 mt-1 text-sm text-gray-500">Créez votre première situation pour commencer à vous entraîner.</p>
+                </td>
             </tr>
         </ng-template>
     </p-table>
 </div>
-<div class="flex justify-center mt-10 animate-appear opacity-0 animation-delay-150">
-    <div (click)="commonService.redirectTo('situations-manager')"
-        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>
-        Créer une nouvelle situation
-    </div>
-</div>
 
-<!-- Div affichée lors d'un click sur icon "oeil" pour voir la situation -->
 <dialog id="displaySituationModal" class="dui-modal">
     <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
         @if (situationToDisplay) {
-        <h4
-            class="m-0 mb-4 text-center text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            {{situationToDisplay.name}}
+        <form method="dialog">
+            <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none" aria-label="Fermer">✕</button>
+        </form>
+        <h4 class="m-0 mb-4 text-center text-lg font-semibold uppercase tracking-wider">
+            {{ situationToDisplay.name }}
         </h4>
-        <div class="flex justify-center items-center mb-3">
-            <div class="mx-auto table-fixed border-separate border-spacing-1 ml-5">
-                <table>
+        <div class="flex flex-col justify-center gap-5 md:flex-row md:items-center">
+            <div class="overflow-x-auto">
+                <table class="mx-auto border-separate border-spacing-1">
                     <tbody>
                         @for (row of situationToDisplay.situations; track $index) {
-                        <tr class="table-row">
+                        <tr>
                             @for (item of row; track $index) {
-                            <td class="rounded select-none font-semibold text-center align-middle p-2 py-3 text-white shadow-xl"
+                            <td class="rounded select-none font-semibold text-center p-2 py-3 text-white shadow-xl"
                                 [style.background]="(item.solution! | solutionColor:situationToDisplay.solutions)">
-                                {{item.card}}
+                                {{ item.card }}
                             </td>
                             }
                         </tr>
@@ -183,17 +200,13 @@
                     </tbody>
                 </table>
             </div>
-            <div class="ml-6 mr-5">
-                <h4
-                    class="m-0 mb-2 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                    Solutions
-                </h4>
+            <div class="min-w-40">
+                <h4 class="m-0 mb-2 text-lg font-semibold uppercase tracking-wider">Solutions</h4>
                 @for (solution of situationToDisplay.solutions; track i; let i = $index) {
                 @if (solution.display_name) {
-                <div
-                    class="grid grid-cols-[80%_20%] items-center text-lg my-3 text-gray-800 tracking-wider dark:text-gray-300">
-                    {{solution.display_name}}
-                    <div class="h-7 w-7 ml-2 rounded shadow-md"
+                <div class="grid grid-cols-[1fr_auto] items-center gap-3 text-lg my-3">
+                    {{ solution.display_name }}
+                    <div class="h-7 w-7 rounded shadow-md"
                         [ngStyle]="{'background': (solution.id | solutionColor:situationToDisplay.solutions)}"></div>
                 </div>
                 }
@@ -202,7 +215,5 @@
         </div>
         }
     </div>
-    <form method="dialog" class="dui-modal-backdrop">
-        <button class="outline-none border-none bg-transparent"></button>
-    </form>
+    <form method="dialog" class="dui-modal-backdrop"><button aria-label="Fermer"></button></form>
 </dialog>

@@ -25,6 +25,7 @@ export class SituationsListManagerComponent implements OnDestroy {
 
     private situationsSubscription!: Subscription;
     situationList: Situation[] = [];
+    selectedSituations: Situation[] = [];
 
     nbRowsPerPage = 11;
 
@@ -108,6 +109,10 @@ export class SituationsListManagerComponent implements OnDestroy {
                 }
                 return 0; // Si l'un des noms est undefined, ils restent dans leur position actuelle
             });
+
+            // Une suppression ou un rafraîchissement ne doit pas conserver de sélection fantôme.
+            const availableIds = new Set(this.situationList.map(situation => situation.id));
+            this.selectedSituations = this.selectedSituations.filter(situation => availableIds.has(situation.id));
         });
 
         this.apiSituation.getSituations();
@@ -130,6 +135,23 @@ export class SituationsListManagerComponent implements OnDestroy {
      */
     editSituation(id: string) {
         this.router.navigate(['situations-manager', { situation_id: id }]);
+    }
+
+    /** Ouvre le choix du mode avec les situations sélectionnées. */
+    startTraining() {
+        if (this.selectedSituations.length === 0) {
+            this.commonService.showSwalToast('Sélectionnez au moins une situation.', 'error');
+            return;
+        }
+
+        this.router.navigate(['select-training-mode', {
+            situationList: JSON.stringify(this.selectedSituations)
+        }]);
+    }
+
+    /** Retire toute la sélection sans modifier les situations. */
+    clearSelection() {
+        this.selectedSituations = [];
     }
 
     /**

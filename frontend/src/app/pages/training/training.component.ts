@@ -101,7 +101,7 @@ export class TrainingComponent {
             const baseUrl = currentUrl.split(';')[0];
             this.router.navigateByUrl(baseUrl);
         } else {
-            this.router.navigate(['situations-list-training']);
+            this.router.navigate(['situations']);
         }
     }
 

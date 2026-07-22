@@ -14,7 +14,6 @@ import { SelectTrainingModeComponent } from './pages/select-training-mode/select
 import { SettingsComponent } from './pages/settings/settings.component';
 import { SituationManagerComponent } from './pages/situation-manager/situation-manager.component';
 import { SituationsListManagerComponent } from './pages/situations-list-manager/situations-list-manager.component';
-import { SituationsListTrainingComponent } from './pages/situations-list-training/situations-list-training.component';
 import { TrainingComponent } from './pages/training/training.component';
 
 export const routes: Routes = [
@@ -33,9 +32,14 @@ export const routes: Routes = [
                 canActivate: [authGuard]
             },
             {
-                path: 'situations-list-manager',
+                path: 'situations',
                 component: SituationsListManagerComponent,
                 canActivate: [authGuard]
+            },
+            {
+                path: 'situations-list-manager',
+                redirectTo: 'situations',
+                pathMatch: 'full'
             },
             {
                 path: 'range-pages',
@@ -49,11 +53,8 @@ export const routes: Routes = [
             },
             {
                 path: 'situations-list-training',
-                component: SituationsListTrainingComponent,
-                canActivate: [
-                    authGuard,
-                    checkSituationGuard
-                ]
+                redirectTo: 'situations',
+                pathMatch: 'full'
             },
             {
                 path: 'settings',
