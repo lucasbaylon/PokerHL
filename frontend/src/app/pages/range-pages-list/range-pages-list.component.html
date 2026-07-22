@@ -1,57 +1,65 @@
-<h3 class="text-4xl font-bold md:text-5xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
-    Grille</h3>
-<p class="text-gray-500 dark:text-gray-400 text-xl mt-2 mb-10 text-left animate-appear opacity-0">
-    Créez et organisez vos pages personnalisées.</p>
-
-<div class="animate-appear opacity-0 animation-delay-100 w-11/12 min-w-[525px] mx-auto">
-    <div class="flex items-center gap-4 mb-8">
-        <div class="relative w-96 max-w-full">
-            <input [(ngModel)]="newPageName" type="text" placeholder="Nom de la page" name="newPageName"
-                class="w-full bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
-                autocomplete="off" pInputText />
-        </div>
-        <div (click)="createPage()"
-            class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-            <i class="fa-solid fa-plus mr-3 h-4 w-4"></i>
-            Créer
-        </div>
+<header class="animate-appear opacity-0 flex flex-col gap-5 mb-10 md:flex-row md:items-end md:justify-between">
+    <div>
+        <h3 class="m-0 text-4xl font-bold text-gray-800 dark:text-gray-300 md:text-5xl">Grille</h3>
+        <p class="m-0 mt-2 text-xl text-gray-500 dark:text-gray-400">
+            Créez et organisez vos pages personnalisées.
+        </p>
     </div>
+    <button type="button" (click)="createPage()"
+        class="inline-flex h-12 shrink-0 items-center justify-center self-start rounded-md border-0 bg-gray-800 px-5 text-base font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 md:self-auto cursor-pointer">
+        <i class="fa-solid fa-plus mr-3" aria-hidden="true"></i>
+        Nouvelle grille
+    </button>
+</header>
 
-    <div class="bg-white dark:bg-secondary-dark-bg shadow-lg rounded-md overflow-hidden">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr class="text-left text-gray-800 dark:text-gray-300">
-                    <th class="p-4">Nom</th>
-                    <th class="p-4">Blocs</th>
-                    <th class="p-4 w-16"></th>
-                    <th class="p-4 w-16"></th>
-                    <th class="p-4 w-16"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (page of rangePages; track page.id) {
-                    <tr class="border-t border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-300">
-                        <td class="p-4">{{ page.name }}</td>
-                        <td class="p-4">{{ page.blocks.length }}</td>
-                        <td class="p-4">
-                            <i class="fa-solid fa-pencil cursor-pointer p-[0.69rem] dui-btn-ghost rounded-full transition-all duration-150"
-                                (click)="openPage(page.id)"></i>
-                        </td>
-                        <td class="p-4">
-                            <i class="fa-solid fa-clone cursor-pointer p-3 dui-btn-ghost rounded-full"
-                                (click)="duplicatePage(page.id)"></i>
-                        </td>
-                        <td class="p-4">
-                            <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full"
-                                (click)="removePage(page.id)"></i>
-                        </td>
-                    </tr>
-                } @empty {
-                    <tr class="border-t border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-300">
-                        <td colspan="5" class="p-4">Aucune page trouvée.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+<div class="animate-appear opacity-0 animation-delay-50 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
+    <table class="w-full min-w-[600px] border-collapse">
+        <thead>
+            <tr class="text-left text-gray-800 dark:text-gray-300">
+                <th class="p-4">Nom</th>
+                <th class="p-4">Contenu</th>
+                <th class="w-44 p-4 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (page of rangePages; track page.id) {
+            <tr class="border-0 border-t border-solid border-gray-200 text-gray-800 dark:border-gray-700 dark:text-gray-300">
+                <td class="p-4">
+                    <button type="button" (click)="openPage(page.id)"
+                        class="border-0 bg-transparent p-0 text-left font-semibold text-gray-800 hover:text-gray-600 hover:underline dark:text-gray-300 dark:hover:text-white cursor-pointer">
+                        {{ page.name }}
+                    </button>
+                </td>
+                <td class="p-4 text-gray-500 dark:text-gray-400">
+                    {{ page.blocks.length }} bloc{{ page.blocks.length > 1 ? 's' : '' }}
+                </td>
+                <td class="p-4">
+                    <div class="flex justify-end gap-1">
+                        <button type="button" title="Ouvrir" [attr.aria-label]="'Ouvrir ' + page.name"
+                            (click)="openPage(page.id)" class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square">
+                            <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" title="Dupliquer" [attr.aria-label]="'Dupliquer ' + page.name"
+                            (click)="duplicatePage(page.id)" class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square">
+                            <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" title="Supprimer" [attr.aria-label]="'Supprimer ' + page.name"
+                            (click)="removePage(page.id)"
+                            class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            } @empty {
+            <tr class="border-0 border-t border-solid border-gray-200 text-gray-800 dark:border-gray-700 dark:text-gray-300">
+                <td colspan="3" class="py-12 text-center">
+                    <i class="fa-solid fa-table-cells-large mb-3 text-3xl text-gray-400" aria-hidden="true"></i>
+                    <p class="m-0 font-semibold">Aucune page créée</p>
+                    <p class="m-0 mt-1 text-sm text-gray-500">Créez une page pour organiser vos premières ranges.</p>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
 </div>

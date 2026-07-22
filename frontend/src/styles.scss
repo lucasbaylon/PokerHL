@@ -274,6 +274,62 @@ html.dark .app-scrollbar::-webkit-scrollbar-thumb {
     background-color: #9ca3af;
 }
 
+// Synchronise tous les changements de couleurs de la page Paramètres.
+// La règle reste ciblée pour ne pas ralentir les interactions du reste de l'application.
+app-settings :is(
+    section,
+    h3,
+    h4,
+    p,
+    label,
+    span,
+    button,
+    input,
+    [class*="dark:bg-"],
+    [class*="dark:text-"],
+    [class*="dark:border-"],
+    .p-dropdown,
+    .p-dropdown-label,
+    .p-dropdown-trigger,
+    .p-inputswitch-slider
+) {
+    transition-property: color, background-color, border-color, box-shadow !important;
+    transition-duration: 500ms !important;
+    transition-timing-function: ease !important;
+}
+
+html.dark app-settings .p-dropdown {
+    background-color: #232726;
+    border-color: #374151;
+}
+
+html.dark app-settings .p-dropdown .p-dropdown-label,
+html.dark app-settings .p-dropdown .p-dropdown-trigger {
+    color: #d1d5db;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    app-settings :is(
+        section,
+        h3,
+        h4,
+        p,
+        label,
+        span,
+        button,
+        input,
+        [class*="dark:bg-"],
+        [class*="dark:text-"],
+        [class*="dark:border-"],
+        .p-dropdown,
+        .p-dropdown-label,
+        .p-dropdown-trigger,
+        .p-inputswitch-slider
+    ) {
+        transition-duration: 0ms !important;
+    }
+}
+
 @keyframes appear-alt {
     0% {
         transform: translateY(-50px);
