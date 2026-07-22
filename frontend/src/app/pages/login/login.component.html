@@ -1,42 +1,83 @@
-<section class="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-main-dark-bg">
-    <div class="max-w-lg mx-6 space-y-8 rounded-lg p-10 shadow-xl bg-white dark:bg-secondary-dark-bg animate-appear opacity-0">
-        <div class="space-y-2 text-center">
-            <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-300 m-0">Connexion</h1>
-            <p class="text-lg text-gray-500 dark:text-gray-300">Entrez vos identifiants de connexion afin d'accéder à votre compte.</p>
+<main class="h-screen overflow-y-auto bg-gray-100 transition-colors duration-500 dark:bg-main-dark-bg">
+    <div class="flex min-h-full items-center justify-center p-5 sm:p-8">
+    <div class="w-full max-w-md shrink-0 animate-appear opacity-0">
+        <div class="mb-6 flex items-center justify-center gap-3 text-gray-800 dark:text-gray-300">
+            <img src="../../../assets/img/logo.png" alt="Logo Poker HL" class="h-11 w-11">
+            <span class="text-xl font-bold">Poker HL</span>
         </div>
-        <div class="space-y-6">
-            <div class="space-y-2">
-                <label class="text-base font-medium leading-none flex items-center gap-2 text-gray-800 dark:text-gray-300" for="email">
-                    <i class="fa-solid fa-envelope text-gray-800 dark:text-gray-300"></i>
-                    Email
-                </label>
-                <input [(ngModel)]="email" type="email" placeholder="Entrez votre adresse email" class="w-full" name="email" id="email" autocomplete="off" pInputText (keydown.enter)="login()" />
-            </div>
-            <div class="space-y-2">
-                <label class="text-base font-medium leading-none flex items-center gap-2 text-gray-800 dark:text-gray-300" for="password">
-                    <i class="fa-solid fa-lock text-gray-800 dark:text-gray-300"></i>
-                    Mot de passe
-                </label>
-                <div class="relative flex items-center">
-                    <input [(ngModel)]="password" type="text" placeholder="Entrez votre mot de passe" class="w-full" name="password" id="password" [type]="passwordFieldType" autocomplete="off" pInputText (keydown.enter)="login()" />
-                    <div class="absolute right-3 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 cursor-pointer" (click)="togglePasswordVisibility()">
-                        <i [ngClass]="passwordFieldType === 'password' ? 'fa-eye' : 'fa-eye-slash'" class="fa-solid text-lg text-gray-800 dark:text-gray-800"></i>
+
+        <section class="rounded-md bg-white p-6 shadow-xl transition-colors duration-500 dark:bg-secondary-dark-bg sm:p-8"
+            aria-labelledby="login-title">
+            <header class="mb-7">
+                <h1 id="login-title" class="m-0 text-3xl font-bold text-gray-800 transition-colors duration-500 dark:text-gray-300">
+                    Connexion
+                </h1>
+                <p class="m-0 mt-1 text-sm text-gray-500 transition-colors duration-500 dark:text-gray-400">
+                    Retrouvez vos situations et reprenez votre entraînement.
+                </p>
+            </header>
+
+            <form (ngSubmit)="login()" class="space-y-5">
+                <div>
+                    <label for="login-email" class="mb-2 block text-sm font-medium text-gray-800 transition-colors duration-500 dark:text-gray-300">
+                        Adresse email
+                    </label>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-envelope pointer-events-none absolute left-4 text-sm text-gray-400" aria-hidden="true"></i>
+                        <input id="login-email" name="email" [(ngModel)]="email" type="email"
+                            placeholder="vous@exemple.fr" autocomplete="email"
+                            class="box-border w-full border-gray-300 bg-white pl-11 text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-600 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+                            pInputText />
                     </div>
                 </div>
-            </div>
-            <div class="space-y-4 text-center">
-                <div class="cursor-pointer inline-flex text-base items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 h-12 px-4 py-2 mt-2 w-full" (click)="login()">
+
+                <div>
+                    <div class="mb-2 flex items-center justify-between gap-4">
+                        <label for="login-password" class="text-sm font-medium text-gray-800 transition-colors duration-500 dark:text-gray-300">
+                            Mot de passe
+                        </label>
+                        <button type="button" (click)="commonService.redirectTo('forgot-password')"
+                            class="border-0 bg-transparent p-0 text-sm font-medium text-gray-600 transition-colors duration-500 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer">
+                            Mot de passe oublié ?
+                        </button>
+                    </div>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-lock pointer-events-none absolute left-4 text-sm text-gray-400" aria-hidden="true"></i>
+                        <input id="login-password" name="password" [(ngModel)]="password"
+                            [type]="passwordFieldType" placeholder="Votre mot de passe" autocomplete="current-password"
+                            class="box-border w-full border-gray-300 bg-white pl-11 pr-12 text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-600 dark:bg-main-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+                            pInputText />
+                        <button type="button" (click)="togglePasswordVisibility()"
+                            class="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+                            [attr.aria-label]="passwordFieldType === 'password' ? 'Afficher le mot de passe' : 'Masquer le mot de passe'">
+                            <i class="fa-solid" [class.fa-eye]="passwordFieldType === 'password'"
+                                [class.fa-eye-slash]="passwordFieldType === 'text'" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" [disabled]="isSubmitting"
+                    class="inline-flex h-12 w-full items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-base font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                    @if (isSubmitting) {
+                    <i class="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true"></i>
+                    Connexion…
+                    } @else {
                     Se connecter
-                </div>
+                    }
+                </button>
+            </form>
+
+            <div class="my-6 flex items-center gap-3" aria-hidden="true">
+                <div class="h-px flex-1 bg-gray-200 transition-colors duration-500 dark:bg-gray-700"></div>
+                <span class="text-xs uppercase tracking-wider text-gray-400">ou</span>
+                <div class="h-px flex-1 bg-gray-200 transition-colors duration-500 dark:bg-gray-700"></div>
             </div>
-            <div class="flex justify-between">
-                <div (click)="commonService.redirectTo('register')" class="text-base w-fit text-gray-800 hover:underline dark:text-gray-300 cursor-pointer">
-                    S'inscrire
-                </div>
-                <div (click)="commonService.redirectTo('forgot-password')" class="text-base w-fit text-gray-800 hover:underline dark:text-gray-300 cursor-pointer">
-                    Mot de passe oublié
-                </div>
-            </div>
-        </div>
+
+            <button type="button" (click)="commonService.redirectTo('register')"
+                class="inline-flex h-11 w-full items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors duration-500 hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Créer un compte
+            </button>
+        </section>
     </div>
-</section>
+    </div>
+</main>

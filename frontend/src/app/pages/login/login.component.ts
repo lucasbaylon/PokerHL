@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,14 +7,15 @@ import { CommonService } from '../../services/common.service';
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [FormsModule, InputTextModule, NgClass],
+    imports: [FormsModule, InputTextModule],
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
 
-    passwordFieldType: string = 'password';
+    passwordFieldType: 'password' | 'text' = 'password';
     email: string = '';
     password: string = '';
+    isSubmitting: boolean = false;
 
     /**
      * Initialise le composant.
@@ -38,6 +38,14 @@ export class LoginComponent {
     * puis appelle le service d'authentification pour se connecter avec ces informations.
     */
     login(): void {
-        if (this.email && this.password) this.authService.signIn(this.email, this.password);
+        if (!this.email || !this.password) {
+            this.commonService.showSwalToast('Veuillez renseigner votre email et votre mot de passe.', 'error');
+            return;
+        }
+
+        if (this.isSubmitting) return;
+        this.isSubmitting = true;
+        this.authService.signIn(this.email, this.password)
+            .finally(() => this.isSubmitting = false);
     }
 }

@@ -14,6 +14,7 @@ import { CommonService } from '../../services/common.service';
 export class ForgotPasswordComponent {
 
     email: string = "";
+    isSending: boolean = false;
 
     constructor(
         private authService: AuthService,
@@ -25,6 +26,13 @@ export class ForgotPasswordComponent {
     * Affiche un message de succès ou d'erreur selon le résultat de l'opération.
     */
     resetPassword(): void {
+        if (!this.email) {
+            this.commonService.showSwalToast('Veuillez renseigner votre adresse email.', 'error');
+            return;
+        }
+
+        if (this.isSending) return;
+        this.isSending = true;
         this.authService.sendPasswordResetEmail(this.email)
             .then(() => {
                 this.commonService.showSwalToast('Email de réinitialisation envoyé !', 'success');
@@ -33,6 +41,7 @@ export class ForgotPasswordComponent {
             .catch(error => {
                 const errorMessage = this.commonService.getErrorMessage(error.code);
                 this.commonService.showSwalToast(`Échec de l'envoi de l'email : ${errorMessage}`, 'error');
-            });
+            })
+            .finally(() => this.isSending = false);
     }
 }
