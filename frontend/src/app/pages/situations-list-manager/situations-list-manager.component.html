@@ -29,12 +29,6 @@
             </div>
         </div>
         <div class="flex items-center gap-2 sm:shrink-0">
-            @if (selectedSituations.length > 0) {
-            <button type="button" (click)="clearSelection()"
-                class="h-11 rounded-md border border-gray-300 bg-white px-4 font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                Effacer
-            </button>
-            }
             <button type="button" (click)="startTraining()" [disabled]="selectedSituations.length === 0"
                 class="h-11 rounded-md border-0 bg-gray-800 px-5 font-medium text-white shadow transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
                 Choisir le mode
