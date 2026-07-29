@@ -169,40 +169,64 @@
 </div>
 
 <app-modal [open]="showSituationModal" (closed)="closeSituationModal()" ariaLabelledBy="display-situation-title"
-    panelClass="w-fit max-w-5xl">
+    panelClass="w-fit max-w-[94vw]">
     @if (situationToDisplay) {
-        <h4 id="display-situation-title" class="m-0 mb-4 text-center text-lg font-semibold uppercase tracking-wider">
-            {{ situationToDisplay.name }}
-        </h4>
-        <div class="flex flex-col justify-center gap-5 md:flex-row md:items-center">
+        <div class="border-b border-gray-200 pb-3 pr-10 dark:border-gray-700">
+            <h4 id="display-situation-title" class="m-0 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                {{ situationToDisplay.name }}
+            </h4>
+            <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-layer-group text-gray-500" aria-hidden="true"></i>
+                    {{ situationToDisplay.type | type }}
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-coins text-gray-500" aria-hidden="true"></i>
+                    {{ situationToDisplay.stack }} BB
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-users text-gray-500" aria-hidden="true"></i>
+                    {{ situationToDisplay.nbPlayer }} joueurs
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-simple text-gray-500" aria-hidden="true"></i>
+                    {{ situationToDisplay.opponentLevel! | opponentLevel }}
+                </span>
+            </div>
+        </div>
+
+        <div class="mt-4 flex flex-col justify-center gap-4 lg:flex-row lg:items-start">
             <div class="overflow-x-auto">
                 <table class="mx-auto border-separate border-spacing-1">
                     <tbody>
                         @for (row of situationToDisplay.situations; track $index) {
-                        <tr>
-                            @for (item of row; track $index) {
-                            <td class="rounded select-none font-semibold text-center p-2 py-3 text-white shadow-xl"
-                                [style.background]="(item.solution! | solutionColor:situationToDisplay.solutions)">
-                                {{ item.card }}
-                            </td>
-                            }
-                        </tr>
+                            <tr>
+                                @for (item of row; track $index) {
+                                    <td class="h-10 w-10 select-none rounded text-center align-middle text-sm font-semibold text-white shadow-sm"
+                                        [style.background]="(item.solution! | solutionColor:situationToDisplay.solutions)">
+                                        {{ item.card }}
+                                    </td>
+                                }
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            <div class="min-w-40">
-                <h4 class="m-0 mb-2 text-lg font-semibold uppercase tracking-wider">Solutions</h4>
+
+            <aside class="min-w-36">
+                <h5 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Solutions</h5>
                 @for (solution of situationToDisplay.solutions; track i; let i = $index) {
-                @if (solution.display_name) {
-                <div class="grid grid-cols-[1fr_auto] items-center gap-3 text-lg my-3">
-                    {{ solution.display_name }}
-                    <div class="h-7 w-7 rounded shadow-md"
-                        [ngStyle]="{'background': (solution.id | solutionColor:situationToDisplay.solutions)}"></div>
-                </div>
+                    @if (solution.display_name) {
+                        <div class="mb-2 grid grid-cols-[auto_1fr] items-center gap-2 last:mb-0">
+                            <div class="h-5 w-5 rounded shadow-sm"
+                                [ngStyle]="{'background': (solution.id | solutionColor:situationToDisplay.solutions)}"></div>
+                            <span class="min-w-0 truncate text-base text-gray-800 dark:text-gray-200">
+                                {{ solution.display_name }}
+                            </span>
+                        </div>
+                    }
                 }
-                }
-            </div>
+            </aside>
         </div>
     }
 </app-modal>

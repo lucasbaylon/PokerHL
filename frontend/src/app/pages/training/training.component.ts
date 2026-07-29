@@ -9,14 +9,17 @@ import { Card } from '../../interfaces/card';
 import { Situation } from '../../interfaces/situation';
 import { Solution } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
+import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
+import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
+import { TypePipe } from '../../pipes/type.pipe';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from './../../services/common.service';
 
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent],
+    imports: [NgStyle, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe],
     templateUrl: './training.component.html'
 })
 export class TrainingComponent {
