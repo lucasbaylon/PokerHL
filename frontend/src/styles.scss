@@ -206,6 +206,62 @@ html.dark .p-multiselect-filter:enabled:focus {
     box-shadow: 0 0 0 1px #ffffff !important;
 }
 
+html.dark .p-dropdown {
+    @apply border border-solid border-gray-700 bg-secondary-dark-bg text-gray-300 transition-colors duration-500;
+}
+
+html.dark .p-dropdown:not(.p-disabled):hover {
+    @apply border-gray-600;
+}
+
+html.dark .p-dropdown:not(.p-disabled).p-focus {
+    @apply border-white;
+    box-shadow: 0 0 0 1px #ffffff !important;
+}
+
+html.dark .p-dropdown .p-dropdown-label,
+html.dark .p-dropdown .p-dropdown-trigger {
+    @apply text-gray-300;
+}
+
+html.dark .p-dropdown .p-dropdown-trigger {
+    @apply border-0 border-l border-solid border-gray-700;
+}
+
+html.dark .p-dropdown-panel {
+    @apply border border-solid border-gray-700 bg-secondary-dark-bg text-gray-300 shadow-lg;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-items {
+    @apply bg-secondary-dark-bg p-0;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-item {
+    @apply border-0 border-b border-solid border-gray-700 bg-secondary-dark-bg text-gray-300 transition-colors duration-150;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-item:last-child {
+    @apply border-b-0;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-item:hover,
+html.dark .p-dropdown-panel .p-dropdown-item.p-highlight,
+html.dark .p-dropdown-panel .p-dropdown-item.p-focus {
+    @apply bg-gray-700 text-gray-100;
+}
+
+p-inputnumber:has(#situationStack),
+p-inputnumber:has(#situationStack) .p-inputnumber,
+#situationStack {
+    width: 100% !important;
+}
+
+#situationStack {
+    box-sizing: border-box;
+    height: 42px;
+    padding-right: 3.5rem !important;
+}
+
 html.dark .p-float-label label,
 html.dark p-floatlabel label {
     @apply text-gray-300;

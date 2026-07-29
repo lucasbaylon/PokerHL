@@ -40,6 +40,7 @@ export class SituationManagerComponent {
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
     showMultipleSolutionModal: boolean = false;
+    showHelpModal: boolean = false;
     editSituationName?: string;
     multipleSolutionCheckBox: string[] = [];
     listener: any;
@@ -376,6 +377,13 @@ export class SituationManagerComponent {
      */
     filteredSolutionList(solutionLst: Solution[], type: string, filterNoDisplayName: boolean = false) {
         return solutionLst.filter(solution => solution.type === type && (!filterNoDisplayName || (solution.display_name !== undefined && solution.display_name !== '')));
+    }
+
+    /**
+     * Retourne le nombre de solutions d'un type donné.
+     */
+    solutionCount(type: string): number {
+        return this.filteredSolutionList(this.situation_obj.solutions, type).length;
     }
 
     /**

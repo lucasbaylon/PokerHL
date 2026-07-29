@@ -11,6 +11,88 @@
     situations existante en renseignant ses nouvelles ranges et caractéristiques.</p>
 }
 
+<div class="fixed right-8 top-8 z-10 animate-appear opacity-0 animation-delay-50">
+    <button type="button" (click)="showHelpModal = true"
+        class="inline-flex h-12 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-base font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer"
+        title="Aide">
+        <i class="fa-solid fa-circle-question mr-2 text-lg" aria-hidden="true"></i>
+        Aide
+    </button>
+</div>
+
+<app-modal [open]="showHelpModal" (closed)="showHelpModal = false" panelClass="w-full max-w-2xl">
+    <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        Aide - création de situation
+    </h4>
+
+    <div class="mt-5 space-y-5 text-left text-gray-700 dark:text-gray-300">
+        <section>
+            <h5 class="m-0 text-base font-semibold text-gray-900 dark:text-gray-100">À quoi sert cet écran ?</h5>
+            <p class="m-0 mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
+                Cet écran permet de créer ou modifier une situation d'entraînement en définissant les actions attendues
+                sur chaque main du tableau, puis en configurant le contexte de jeu.
+            </p>
+        </section>
+
+        <section>
+            <h5 class="m-0 text-base font-semibold text-gray-900 dark:text-gray-100">Commandes du tableau</h5>
+            <div class="mt-3 grid gap-3">
+                <div class="grid grid-cols-[auto_1fr] items-start gap-3 rounded-md border border-solid border-gray-200 p-3 dark:border-gray-700">
+                    <div class="relative flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+                        <svg class="h-7 w-7" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                            <rect x="10" y="4" width="20" height="32" rx="10" stroke="currentColor" stroke-width="2.5" />
+                            <path d="M20 5V17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M11 17H29" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M11 17C11 9.8 14.8 5 20 5V17H11Z" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="m-0 font-medium text-gray-900 dark:text-gray-100">Clic gauche</p>
+                        <p class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            Applique la solution sélectionnée sur la case cliquée.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-[auto_1fr] items-start gap-3 rounded-md border border-solid border-gray-200 p-3 dark:border-gray-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+                        <i class="fa-solid fa-hand-pointer" aria-hidden="true"></i>
+                        <i class="fa-solid fa-arrow-right ml-1 text-xs" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="m-0 font-medium text-gray-900 dark:text-gray-100">Clic gauche maintenu + glisser</p>
+                        <p class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            Applique la solution sélectionnée sur toutes les cases survolées.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-[auto_1fr] items-start gap-3 rounded-md border border-solid border-gray-200 p-3 dark:border-gray-700">
+                    <div class="relative flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+                        <svg class="h-7 w-7" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                            <rect x="10" y="4" width="20" height="32" rx="10" stroke="currentColor" stroke-width="2.5" />
+                            <path d="M20 5V17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M11 17H29" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M20 5C25.2 5 29 9.8 29 17H20V5Z" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="m-0 font-medium text-gray-900 dark:text-gray-100">Clic droit</p>
+                        <p class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            Remplit la ligne avec la solution sélectionnée depuis la case cliquée jusqu'à la fin de la ligne.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="mt-6 flex justify-end">
+        <button type="button" (click)="showHelpModal = false"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Compris
+        </button>
+    </div>
+</app-modal>
+
 <!-- Div container tableau + solutions -->
 <div class="flex items-center justify-center w-10/12 my-16 mx-auto">
 
@@ -113,211 +195,221 @@
 <div class="flex items-stretch justify-center w-full my-16 mx-auto h-auto">
     <!-- Div SOLUTIONS MULTIPLES -->
     <div
-        class="p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 flex flex-col overflow-hidden">
-        <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Solutions multiples</h4>
-        <div class="flex-1 overflow-y-auto overflow-x-hidden flex flex-col items-center justify-start mt-4">
-            @for (solution of filteredSolutionList(situation_obj.solutions, 'mixed'); track $index) {
-                <div class="relative flex items-center my-4 w-full">
-                    <!-- Surbrillance de la couleur sélectionnée -->
-                    <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': solutionSelected === solution.id}"
-                        class="absolute inset-0 -inset-y-2 rounded z-0"></div>
+        class="p-5 rounded-md shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 flex flex-col overflow-visible transition-colors duration-500">
+        <div class="mb-5 flex items-center justify-between gap-4">
+            <div>
+                <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    Solutions multiples</h4>
+                <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Combinez plusieurs actions simples avec des fréquences.
+                </p>
+            </div>
+            <button type="button" (click)="showMultipleSolutionModal = true"
+                class="inline-flex h-10 shrink-0 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
+                Ajouter
+            </button>
+        </div>
 
-                    <!-- Ligne solution multiple -->
-                    <div class="flex w-full items-center justify-evenly gap-4 px-3 relative z-10">
-                        <div
-                            class="w-5/12 text-lg border-none text-center text-gray-800 dark:text-gray-300 overflow-x-auto">
-                            {{solution.display_name}}
-                        </div>
-                        <div class="flex items-center justify-center px-2">
-                            <div class="h-8 w-8 rounded shadow flex items-center justify-center"
+        @if (solutionCount('mixed') === 0) {
+            <div class="flex min-h-64 flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 p-6 text-center transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg">
+                <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow dark:bg-secondary-dark-bg dark:text-gray-400">
+                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                </div>
+                <p class="m-0 font-semibold text-gray-800 dark:text-gray-300">Aucune solution multiple</p>
+                <p class="m-0 mt-1 max-w-sm text-sm text-gray-500 dark:text-gray-400">
+                    Ajoutez-en une pour représenter une stratégie mixte avec plusieurs actions possibles.
+                </p>
+                <button type="button" (click)="showMultipleSolutionModal = true"
+                    class="mt-5 inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                    <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
+                    Ajouter une solution
+                </button>
+            </div>
+        } @else {
+            <div class="flex flex-col gap-3">
+                @for (solution of filteredSolutionList(situation_obj.solutions, 'mixed'); track $index) {
+                    <div class="rounded-md border border-solid p-3 transition-all duration-300"
+                        [ngClass]="solutionSelected === solution.id ? 'border-gray-800 bg-gray-100 shadow-md dark:border-gray-300 dark:bg-gray-700' : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-secondary-dark-bg dark:hover:bg-gray-700'">
+                        <div class="grid grid-cols-[minmax(0,1fr)_auto_auto_auto_auto] items-center gap-3">
+                            <div class="min-w-0">
+                                <p class="m-0 truncate text-base font-semibold text-gray-800 dark:text-gray-300">
+                                    {{solution.display_name}}
+                                </p>
+                            </div>
+                            <div class="h-10 w-10 rounded-md shadow"
                                 [ngStyle]="{'background': commonService.cellBackground(solution, situation_objSolutionsRef)}">
                             </div>
-                        </div>
-                        <div class="w-fit flex items-center justify-center">
-                            <i class="fa-solid fa-pencil cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-300 text-gray-800"
-                                (click)="editMultipleSolution(solution.id)"></i>
-                        </div>
-                        <div class="w-fit flex items-center justify-center">
-                            <i class="fa-solid fa-trash-can cursor-pointer p-3 dui-btn-ghost rounded-full transition-all duration-150 dark:text-gray-300 text-gray-800"
-                                (click)="deleteMultipleSolution(solution.id)"></i>
-                        </div>
-                        <div (click)="onChangeSolution(solution.id)" id="add-solution-button" [id]="'button_' + solution.id"
-                            [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': solutionSelected !== solution.id}"
-                            class="flex h-12 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 text-base font-medium shadow transition-colors w-48">
-                            @if (solutionSelected !== solution.id) {
-                            <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
-                            }
-                            @if (solutionSelected === solution.id) {
-                            <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
-                            }
-                            {{solutionSelected === solution.id ? 'Choisi' : 'Sélectionner'}}
+                            <button type="button" title="Modifier" [attr.aria-label]="'Modifier ' + solution.display_name"
+                                (click)="editMultipleSolution(solution.id)"
+                                class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+                                <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" title="Supprimer" [attr.aria-label]="'Supprimer ' + solution.display_name"
+                                (click)="deleteMultipleSolution(solution.id)"
+                                class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                                <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" (click)="onChangeSolution(solution.id)" [id]="'button_' + solution.id"
+                                class="inline-flex h-10 min-w-24 items-center justify-center rounded-md border-0 bg-gray-800 px-3 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                                @if (solutionSelected === solution.id) {
+                                    <i class="fa-solid fa-check" aria-hidden="true"></i>
+                                } @else {
+                                    Choisir
+                                }
+                            </button>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
-
-        <div class="flex justify-center items-center mt-5">
-            <div (click)="showMultipleSolutionModal = true"
-                class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
-                Ajouter
+                }
             </div>
-        </div>
+        }
     </div>
 
     <!-- Div AJOUTER SOLUTIONS MULTIPLES-->
     <app-modal [open]="showMultipleSolutionModal" (closed)="resetMultipleSituation()" panelClass="w-full max-w-2xl">
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                Ajout d'une Solution multiple
+                {{ multipleSituationId ? 'Modifier une solution multiple' : 'Ajouter une solution multiple' }}
             </h4>
             @if (!autoMultipleSolutionName) {
-                <div class="flex items-center justify-between w-full my-7">
-                    <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                        Nom de la solution
-                    </div>
+                <div class="my-7">
+                    <label for="multipleSolution" class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Nom de la solution</label>
                     <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
-                        name="multipleSolutionName" id='multipleSolution' autocomplete="off" pInputText />
+                        name="multipleSolutionName" id='multipleSolution' autocomplete="off" class="box-border w-full" pInputText />
                 </div>
             }
 
+            <div class="space-y-3">
             @for (solution of filteredSolutionList(situation_obj.solutions, 'unique', true); track $index;) {
-                <div class="flex justify-center items-center w-full my-4">
-                    <div class="grid grid-cols-3 w-1/2 items-center gap-4 px-3 mb-2">
-                        <div class="flex justify-center items-center">
-                            {{solution.display_name}}
-                        </div>
-                        <div class="flex justify-center items-center">
-                            <div class="h-8 w-8 rounded shadow cursor-pointer m-0" [style]="'background: ' + solution.color">
-                            </div>
-                        </div>
-                        <div class="flex justify-center items-center">
-                            <p-checkbox [(ngModel)]="multipleSolutionCheckBox"
-                                name="multipleSolutionCheckBox" [value]="solution.id" (onChange)="onCheckChange()" />
-                        </div>
+                <div class="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-md border border-solid border-gray-200 p-3 dark:border-gray-700">
+                    <span class="min-w-0 truncate text-gray-800 dark:text-gray-300">{{solution.display_name}}</span>
+                    <div class="h-8 w-8 rounded shadow" [style]="'background: ' + solution.color"></div>
+                    <p-checkbox [(ngModel)]="multipleSolutionCheckBox"
+                        name="multipleSolutionCheckBox" [value]="solution.id" (onChange)="onCheckChange()" />
+                </div>
+            }
+            </div>
+            <div class="mt-6">
+                @if (simpleSlider) {
+                    <div class="custom-slider">
+                        <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
                     </div>
-                </div>
-            }
-            @if (simpleSlider) {
-                <div class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
-                </div>
-            }
-            @if (multipleSlider) {
-                <div class="custom-slider">
-                    <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                        [options]="options"></ngx-slider>
-                </div>
-            }
-            <div class="flex justify-center mt-10">
-                <div (click)="saveMultipleSolution()"
-                    class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
-                    Enregistrer la solution
-                </div>
+                }
+                @if (multipleSlider) {
+                    <div class="custom-slider">
+                        <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                            [options]="options"></ngx-slider>
+                    </div>
+                }
+            </div>
+            <div class="flex justify-end gap-3 mt-8">
+                <button type="button" (click)="resetMultipleSituation()"
+                    class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                    Annuler
+                </button>
+                <button type="button" (click)="saveMultipleSolution()"
+                    class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk mr-2" aria-hidden="true"></i>
+                    Enregistrer
+                </button>
             </div>
     </app-modal>
 
     <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
     <div
-        class="mx-auto p-5 ml-14 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-auto">
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Caractéristiques de la situation</h4>
-        <div class="flex items-center justify-between w-full mt-4">
-            <div class="flex items-center gap-3">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Nom de la situation</div>
-                <div (click)="generateAutoSituationName()"
-                    class="flex h-8 w-8 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 shadow cursor-pointer transition-colors"
-                    title="Générer automatiquement le nom">
-                    <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                </div>
-            </div>
-            <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
-                id='situationName' autocomplete="off" pInputText />
+        class="mx-auto p-5 ml-14 rounded-md shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-auto transition-colors duration-500">
+        <div class="mb-5">
+            <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                Caractéristiques</h4>
+            <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Configurez le contexte utilisé pendant l'entraînement.
+            </p>
         </div>
-        <div class="flex items-center justify-between w-full mt-4">
-            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Type de situation</div>
-            <div class="flex items-center justify-end w-1/3">
-                <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
-                    [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
-                    optionLabel="name"></p-dropdown>
-            </div>
-        </div>
-        <div class="flex items-center justify-between w-full mt-4">
-            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Stack effectif</div>
-            <p-inputNumber inputId="integeronly" [size]="5" [min]="0" [max]="999"
-                [(ngModel)]="situation_obj.stack"></p-inputNumber>
-        </div>
-        <div class="flex items-center justify-between w-full mt-4">
-            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Nombre de joueurs sur la table</div>
-            <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
-                optionLabel="name"></p-dropdown>
-        </div>
-        <div class="flex items-center justify-between w-full mt-4">
-            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Votre position
-            </div>
-            <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
-                optionLabel="name"></p-dropdown>
-        </div>
-        <div class="flex items-center justify-between w-full mt-4">
-            <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                Niveau des adversaires
-            </div>
-            <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
-                (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name"></p-dropdown>
-        </div>
-        @if (opponentLevel.code === "fish_shark") {
-            <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Position du fish
-                </div>
-                <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
-                    (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name"></p-dropdown>
-            </div>
-        }
 
-        <!-- Actions des joueurs précédents -->
-        <!-- 3way (Joueur 1 = BU, Joueur 2 = SB) -->
-        @if (nbPlayer.code === 3) {
-            @if (position.code !== 'bu') {
-            <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Action précédente (BU)
+        <div class="space-y-4">
+            <div>
+                <div class="mb-2 flex items-center justify-start gap-2">
+                    <label for="situationName" class="text-sm font-medium text-gray-800 dark:text-gray-300">Nom de la situation</label>
+                    <button type="button" (click)="generateAutoSituationName()"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border-0 bg-gray-800 text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+                        title="Générer automatiquement le nom">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name"></p-dropdown>
+                <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
+                    id='situationName' autocomplete="off" class="box-border w-full" pInputText />
             </div>
-            }
-            @if (position.code === 'bb') {
-            <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Action précédente (SB)
-                </div>
-                <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name"></p-dropdown>
-            </div>
-            }
-        }
 
-        <!-- HU (Joueur 1 = SB) -->
-        @if (nbPlayer.code === 2) {
-            @if (position.code !== 'sb') {
-            <div class="flex items-center justify-between w-full mt-4">
-                <div class="text-left text-gray-800 dark:text-gray-300 text-lg tracking-wider">
-                    Action précédente (SB)
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Type</label>
+                    <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
+                        [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
+                        optionLabel="name" styleClass="w-full"></p-dropdown>
                 </div>
-                <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                    (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name"></p-dropdown>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Stack effectif</label>
+                    <div class="relative">
+                        <p-inputNumber inputId="situationStack" [min]="0" [max]="999"
+                            [(ngModel)]="situation_obj.stack" styleClass="situation-stack-input"
+                            inputStyleClass="situation-stack-input-field"></p-inputNumber>
+                        <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
+                            <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                            <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Joueurs</label>
+                    <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
+                        optionLabel="name" styleClass="w-full"></p-dropdown>
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Votre position</label>
+                    <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
+                        optionLabel="name" styleClass="w-full"></p-dropdown>
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Niveau adversaire</label>
+                    <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
+                        (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                </div>
+                @if (opponentLevel.code === "fish_shark") {
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Position du fish</label>
+                    <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
+                        (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                </div>
+                }
+
+                @if (nbPlayer.code === 3) {
+                    @if (position.code !== 'bu') {
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (BU)</label>
+                        <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                    </div>
+                    }
+                    @if (position.code === 'bb') {
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (SB)</label>
+                        <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
+                            (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                    </div>
+                    }
+                }
+
+                @if (nbPlayer.code === 2) {
+                    @if (position.code !== 'sb') {
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (SB)</label>
+                        <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                    </div>
+                    }
+                }
             </div>
-            }
-        }
+        </div>
 
     </div>
 </div>
