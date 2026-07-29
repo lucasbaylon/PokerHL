@@ -410,14 +410,20 @@
         <div
             class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
             <div class="flex flex-col items-center">
-                <div class="flex gap-2 text-3xl">
+                <div class="flex gap-0">
                     @for (life of survivalLifeSlots; track life) {
-                        <i class="fa-solid fa-heart" [class.text-red-600]="life <= survivalLives"
-                            [class.text-gray-300]="life > survivalLives" [class.dark:text-gray-600]="life > survivalLives"
-                            aria-hidden="true"></i>
+                        <span class="flex h-12 w-12 items-center justify-center transition-colors duration-300"
+                            [class.text-red-600]="life <= survivalLives"
+                            [class.dark:text-red-400]="life <= survivalLives"
+                            [class.text-gray-300]="life > survivalLives"
+                            [class.dark:text-gray-600]="life > survivalLives">
+                            <i class="text-2xl" [class.fa-solid]="life <= survivalLives"
+                                [class.fa-regular]="life > survivalLives" [class.fa-heart]="true"
+                                aria-hidden="true"></i>
+                        </span>
                     }
                 </div>
-                <span class="text-sm uppercase tracking-widest mt-2">Vies</span>
+                <span class="text-sm font-bold uppercase tracking-widest mt-2">Vies</span>
             </div>
         </div>
     }
