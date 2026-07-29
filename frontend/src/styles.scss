@@ -179,9 +179,14 @@
 
 html.dark .p-datatable .p-datatable-thead > tr > th,
 html.dark .p-datatable .p-datatable-tbody > tr > td,
+html.dark .p-datatable .p-datatable-wrapper,
 html.dark .p-datatable .p-paginator-top,
 html.dark .p-datatable .p-paginator-bottom {
     @apply border-gray-700;
+}
+
+html.dark .range-pages-table .p-datatable-tbody > tr:last-child > td {
+    border-bottom-width: 0 !important;
 }
 
 .p-paginator .p-ripple {

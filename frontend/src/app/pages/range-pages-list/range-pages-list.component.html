@@ -14,7 +14,7 @@
 
 <div #tableContainer class="animate-appear opacity-0 animation-delay-50 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
     <p-table [value]="rangePages" dataKey="id" [paginator]="rangePages.length > nbRowsPerPage"
-        [rows]="nbRowsPerPage" styleClass="min-w-[600px]">
+        [rows]="nbRowsPerPage" styleClass="range-pages-table min-w-[600px]">
         <ng-template pTemplate="header">
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">Nom</th>
