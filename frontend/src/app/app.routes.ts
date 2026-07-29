@@ -3,7 +3,6 @@ import { BaseLayoutComponent } from './components/base-layout/base-layout.compon
 import { authGuard } from './guards/auth.guard';
 import { checkSituationGuard } from './guards/check-situation.guard';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RangePageEditorComponent } from './pages/range-page-editor/range-page-editor.component';
 import { RangePagesListComponent } from './pages/range-pages-list/range-pages-list.component';
@@ -18,7 +17,7 @@ import { TrainingComponent } from './pages/training/training.component';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'situations',
         pathMatch: 'full'
     },
     {
@@ -82,8 +81,8 @@ export const routes: Routes = [
     },
     {
         path: 'home',
-        component: HomeComponent,
-        canActivate: [authGuard]
+        redirectTo: 'situations',
+        pathMatch: 'full'
     },
     {
         path: 'register',

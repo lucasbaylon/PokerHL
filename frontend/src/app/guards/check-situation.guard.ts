@@ -31,7 +31,7 @@ export const checkSituationGuard: CanActivateFn = (route, state) => {
                                 message = "Veuillez d'abord créer une situation dans le menu 'Situations'.";
                             }
                             commonService.showSwalToast(message, 'error');
-                            if (!previousUrl) router.navigate(['/home']);
+                            if (!previousUrl) router.navigate(['/situations']);
                             return false;
                         }
                     })

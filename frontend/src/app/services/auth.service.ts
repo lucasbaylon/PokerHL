@@ -41,9 +41,9 @@ export class AuthService {
                     localStorage.setItem('theme', 'light');
                 }
                 if (currentUrl.startsWith('/login')) {
-                    this.router.navigate(['home']);
+                    this.router.navigate(['situations']);
                 } else if (!localStorage.getItem('userParams')) {
-                    this.router.navigate(['home']);
+                    this.router.navigate(['situations']);
                 }
                 const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
                 this.commonService.setShowParticule(userParams.showParticules);
@@ -112,7 +112,7 @@ export class AuthService {
     async signUp(email: string, password: string, displayName: string) {
         return createUserWithEmailAndPassword(this.auth, email, password).then((result) => {
             this.commonService.showSwalToast(`Inscription réussie !`);
-            this.router.navigate(['home']);
+            this.router.navigate(['situations']);
             setTimeout(() => {
                 this.setUserDisplayName(displayName);
             }, 500);
