@@ -52,6 +52,8 @@ export class TrainingComponent {
     showEndSessionModal: boolean = false;
     showEndChallengeModal: boolean = false;
     showEndSurvivalModal: boolean = false;
+    private showEndChallengeAfterSolution: boolean = false;
+    private showEndSurvivalAfterSolution: boolean = false;
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -528,30 +530,41 @@ export class TrainingComponent {
                 this.badResponse += 1;
                 this.successRatePercentage = Math.round((this.goodResponse / this.totalResponse) * 100);
             }
+            const shouldDisplaySolution = this.shouldDisplaySolutionOnError();
             switch (this.mode) {
                 case 'infinite':
-                    const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
-                    if (userParams.displaySolution) {
-                        this.showWrongAnswerModal = true;
+                    if (shouldDisplaySolution) {
+                        this.openWrongAnswerModal();
                     } else {
                         this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
                         this.countResult = false;
                     }
                     break;
                 case 'turbo':
-                    this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
-                    this.generateSituation();
+                    this.openWrongAnswerModal();
                     break;
                 case 'challenge':
                     this.challengeFailed = true;
-                    this.commonService.showSwalToast(`Mauvaise réponse ! Défi perdu.`, 'error');
-                    this.showEndChallengeModal = true;
+                    if (shouldDisplaySolution) {
+                        this.showEndChallengeAfterSolution = true;
+                        this.openWrongAnswerModal();
+                    } else {
+                        this.commonService.showSwalToast(`Mauvaise réponse ! Défi perdu.`, 'error');
+                        this.showEndChallengeModal = true;
+                    }
                     break;
                 case 'survival':
                     this.survivalLives = Math.max(0, this.survivalMaxLives - this.badResponse);
                     if (this.survivalLives === 0) {
-                        this.commonService.showSwalToast(`Mauvaise réponse ! Survie terminée.`, 'error');
-                        this.showEndSurvivalModal = true;
+                        if (shouldDisplaySolution) {
+                            this.showEndSurvivalAfterSolution = true;
+                            this.openWrongAnswerModal();
+                        } else {
+                            this.commonService.showSwalToast(`Mauvaise réponse ! Survie terminée.`, 'error');
+                            this.showEndSurvivalModal = true;
+                        }
+                    } else if (shouldDisplaySolution) {
+                        this.openWrongAnswerModal();
                     } else {
                         this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
                         this.generateSituation();
@@ -563,12 +576,37 @@ export class TrainingComponent {
         }
     }
 
+    private shouldDisplaySolutionOnError(): boolean {
+        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        return userParams.displaySolution;
+    }
+
+    private openWrongAnswerModal() {
+        if (this.mode === 'turbo') {
+            this.clearCountdown();
+        }
+        this.showWrongAnswerModal = true;
+    }
+
     /**
      * Ferme la modale de mauvaise réponse et passe à la situation suivante.
      */
     closeSolutionModal() {
         this.showWrongAnswerModal = false;
+        if (this.showEndChallengeAfterSolution) {
+            this.showEndChallengeAfterSolution = false;
+            this.showEndChallengeModal = true;
+            return;
+        }
+        if (this.showEndSurvivalAfterSolution) {
+            this.showEndSurvivalAfterSolution = false;
+            this.showEndSurvivalModal = true;
+            return;
+        }
         this.generateSituation();
+        if (this.mode === 'turbo') {
+            this.startCountdown(false);
+        }
     }
 
     /**
@@ -598,6 +636,8 @@ export class TrainingComponent {
         this.challengeFailed = false;
         this.challengeSuccess = false;
         this.survivalLives = this.survivalMaxLives;
+        this.showEndChallengeAfterSolution = false;
+        this.showEndSurvivalAfterSolution = false;
         if (this.mode === 'turbo') {
             this.startCountdown();
         }
@@ -607,10 +647,13 @@ export class TrainingComponent {
     /**
      * Démarre le minuteur pour le mode Turbo.
      */
-    startCountdown() {
-        this.hours = this.initialTimer.heure;
-        this.minutes = this.initialTimer.minute;
-        this.seconds = this.initialTimer.seconds;
+    startCountdown(resetTimer: boolean = true) {
+        this.clearCountdown();
+        if (resetTimer) {
+            this.hours = this.initialTimer.heure;
+            this.minutes = this.initialTimer.minute;
+            this.seconds = this.initialTimer.seconds;
+        }
         this.countdownInterval = setInterval(() => {
             if (this.seconds > 0) {
                 this.seconds--;
@@ -634,6 +677,7 @@ export class TrainingComponent {
     clearCountdown() {
         if (this.countdownInterval) {
             clearInterval(this.countdownInterval);
+            this.countdownInterval = undefined;
         }
     }
 
