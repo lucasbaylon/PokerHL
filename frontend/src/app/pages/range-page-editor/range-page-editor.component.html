@@ -34,14 +34,9 @@
     </div>
 </div>
 
-@if (showGridHelpPopup) {
-    <div class="fixed inset-0 z-[99] bg-gray-900/25 dark:bg-black/35"></div>
-    <div class="fixed left-1/2 top-1/2 z-[100] w-[520px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-md border border-gray-200 bg-white p-5 text-gray-800 shadow-xl transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
-        <button type="button" (click)="showGridHelpPopup = false"
-            class="absolute right-3 top-3 flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-500 outline-none transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+<app-modal [open]="showGridHelpPopup" (closed)="showGridHelpPopup = false" ariaLabelledBy="grid-help-title"
+    panelClass="w-[520px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
+        <h4 id="grid-help-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Aide grille
         </h4>
         <div class="space-y-4 text-sm leading-6 text-gray-700 dark:text-gray-300">
@@ -70,17 +65,11 @@
                 </ul>
             </div>
         </div>
-    </div>
-}
+</app-modal>
 
-@if (showPositionSituationPopup) {
-    <div class="fixed inset-0 z-[99] bg-gray-900/25 dark:bg-black/35"></div>
-    <div class="fixed left-1/2 top-1/2 z-[100] w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-md border border-gray-200 bg-white p-5 text-gray-800 shadow-xl transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300">
-        <button type="button" (click)="closePositionSituationPopup()"
-            class="absolute right-3 top-3 flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-500 outline-none transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+<app-modal [open]="showPositionSituationPopup" (closed)="closePositionSituationPopup()" ariaLabelledBy="position-situation-title"
+    panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
+        <h4 id="position-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Créer un bloc positions
         </h4>
         <p-autoComplete [(ngModel)]="selectedPositionSituation" name="modalSelectedPositionSituation"
@@ -94,8 +83,25 @@
                 Ajouter
             </div>
         </div>
+</app-modal>
+
+<app-modal [open]="showRemoveBlockModal" (closed)="closeRemoveBlockModal()" ariaLabelledBy="remove-block-title"
+    panelClass="w-full max-w-lg">
+    <h4 id="remove-block-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        Attention !
+    </h4>
+    <p class="m-0 text-gray-600 dark:text-gray-300">Voulez-vous vraiment supprimer ce bloc ?</p>
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="closeRemoveBlockModal()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-200 px-5 text-sm font-medium text-gray-800 shadow transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="confirmRemoveBlock()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-red-600 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-red-700 cursor-pointer">
+            Supprimer
+        </button>
     </div>
-}
+</app-modal>
 
 <main class="min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
     <div class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"

@@ -1,0 +1,16 @@
+@if (open) {
+<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-fadeIn" role="dialog"
+    aria-modal="true" [attr.aria-labelledby]="ariaLabelledBy">
+    <button type="button" (click)="closeFromBackdrop()" class="absolute inset-0 border-0 bg-black/60 p-0 cursor-default"
+        aria-label="Fermer"></button>
+    <div class="app-modal-panel relative z-10 rounded-xl bg-white p-6 text-gray-800 shadow-2xl dark:bg-secondary-dark-bg dark:text-gray-300"
+        [ngClass]="panelClass">
+        @if (showClose) {
+        <button type="button" (click)="close()" class="app-modal-close" aria-label="Fermer">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        }
+        <ng-content></ng-content>
+    </div>
+</div>
+}

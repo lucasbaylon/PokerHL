@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings, UserParams } from '../../interfaces/user-params';
 import { AuthService } from '../../services/auth.service';
 import { SituationService } from '../../services/situation.service';
@@ -11,7 +12,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [DropdownModule, InputSwitchModule, FormsModule, InputTextModule],
+    imports: [DropdownModule, InputSwitchModule, FormsModule, InputTextModule, AppModalComponent],
     templateUrl: './settings.component.html'
 })
 export class SettingsComponent {
@@ -41,6 +42,7 @@ export class SettingsComponent {
     passwordFieldTypeConfirm: 'password' | 'text' = 'password';
     isChangingPassword: boolean = false;
     showPasswordModal: boolean = false;
+    showUserNameModal: boolean = false;
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
@@ -224,7 +226,16 @@ export class SettingsComponent {
      */
     changeUserName(){
         this.authService.setUserDisplayName(this.newUserName);
-        this.commonService.closeModal("change-user-name");
+        this.closeUserNameModal();
+    }
+
+    openUserNameModal(): void {
+        this.newUserName = this.authService.getUserDisplayName() || '';
+        this.showUserNameModal = true;
+    }
+
+    closeUserNameModal(): void {
+        this.showUserNameModal = false;
     }
 
     openPasswordModal(): void {

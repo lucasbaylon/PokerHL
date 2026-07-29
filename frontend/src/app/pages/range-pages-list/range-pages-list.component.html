@@ -63,3 +63,21 @@
         </ng-template>
     </p-table>
 </div>
+
+<app-modal [open]="showRemovePageModal" (closed)="closeRemovePageModal()" ariaLabelledBy="remove-page-title"
+    panelClass="w-full max-w-lg">
+    <h4 id="remove-page-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        Attention !
+    </h4>
+    <p class="m-0 text-gray-600 dark:text-gray-300">Voulez-vous vraiment supprimer cette page ?</p>
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="closeRemovePageModal()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-200 px-5 text-sm font-medium text-gray-800 shadow transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="confirmRemovePage()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-red-600 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-red-700 cursor-pointer">
+            Supprimer
+        </button>
+    </div>
+</app-modal>

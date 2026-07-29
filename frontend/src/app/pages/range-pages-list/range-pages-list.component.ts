@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, 
 import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { RangePage } from '../../interfaces/range-page';
 import { CommonService } from '../../services/common.service';
 import { RangePageService } from '../../services/range-page.service';
@@ -10,7 +10,7 @@ import { RangePageService } from '../../services/range-page.service';
 @Component({
     selector: 'app-range-pages-list',
     standalone: true,
-    imports: [TableModule],
+    imports: [TableModule, AppModalComponent],
     templateUrl: './range-pages-list.component.html'
 })
 export class RangePagesListComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -24,6 +24,8 @@ export class RangePagesListComponent implements AfterViewInit, OnInit, OnDestroy
     private readonly pageBottomSpacing = 24;
     rangePages: RangePage[] = [];
     nbRowsPerPage = 11;
+    showRemovePageModal = false;
+    pageIdToRemove?: number;
 
     @ViewChild('tableContainer') tableContainer!: ElementRef<HTMLElement>;
 
@@ -121,21 +123,19 @@ export class RangePagesListComponent implements AfterViewInit, OnInit, OnDestroy
 
     removePage(id: number | undefined) {
         if (id === undefined) return;
+        this.pageIdToRemove = id;
+        this.showRemovePageModal = true;
+    }
 
-        Swal.fire({
-            title: 'Attention !',
-            text: 'Voulez vous vraiment supprimer cette page ?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#303030',
-            cancelButtonColor: '#d74c4c',
-            confirmButtonText: 'Oui, supprimer !',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.rangePageService.removeRangePage(id.toString());
-                this.commonService.showSwalToast('Page supprimée !');
-            }
-        });
+    closeRemovePageModal() {
+        this.showRemovePageModal = false;
+        this.pageIdToRemove = undefined;
+    }
+
+    confirmRemovePage() {
+        if (this.pageIdToRemove === undefined) return;
+        this.rangePageService.removeRangePage(this.pageIdToRemove.toString());
+        this.commonService.showSwalToast('Page supprimée !');
+        this.closeRemovePageModal();
     }
 }

@@ -39,12 +39,7 @@
     </div>
 </div>
 
-<dialog id="turbo-timer-modal" class="dui-modal">
-    <div class="dui-modal-box w-fit max-w-2xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-        <form method="dialog">
-            <button
-                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
-        </form>
+<app-modal [open]="showTurboTimerModal" (closed)="closeTurboTimerModal()" panelClass="w-fit max-w-2xl">
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Sélection du temps d'entraînement
         </h4>
@@ -72,15 +67,9 @@
                 Démarrer la session
             </div>
         </div>
-    </div>
-</dialog>
+</app-modal>
 
-<dialog id="challenge-modal" class="dui-modal">
-    <div class="dui-modal-box w-fit max-w-2xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-        <form method="dialog">
-            <button
-                class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none">✕</button>
-        </form>
+<app-modal [open]="showChallengeModal" (closed)="closeChallengeModal()" panelClass="w-fit max-w-2xl">
         <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Sélection du nombre de situations
         </h4>
@@ -98,5 +87,4 @@
                 Démarrer le défi
             </div>
         </div>
-    </div>
-</dialog>
+</app-modal>

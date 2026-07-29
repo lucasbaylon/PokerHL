@@ -9,6 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { Situation } from '../../interfaces/situation';
 import { Solution } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
@@ -19,7 +20,7 @@ import { SituationService } from '../../services/situation.service';
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule, AppModalComponent],
     templateUrl: './situation-manager.component.html'
 })
 export class SituationManagerComponent {
@@ -38,6 +39,7 @@ export class SituationManagerComponent {
     multipleSlider: boolean = false;
     countMultipleSolution: number = 0;
     multipleSituationId?: string;
+    showMultipleSolutionModal: boolean = false;
     editSituationName?: string;
     multipleSolutionCheckBox: string[] = [];
     listener: any;
@@ -514,7 +516,7 @@ export class SituationManagerComponent {
         this.multipleSolutionCheckBox = [];
         this.multipleSolutionName = "";
         this.multipleSituationId = undefined;
-        this.commonService.closeModal('add-multiples-solutions');
+        this.showMultipleSolutionModal = false;
     }
 
     /**
@@ -540,7 +542,7 @@ export class SituationManagerComponent {
             this.simpleSlider = false;
             this.multipleSlider = true;
         }
-        this.commonService.showModal('add-multiples-solutions');
+        this.showMultipleSolutionModal = true;
     }
 
     /**

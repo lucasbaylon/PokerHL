@@ -1,6 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { CardComponent } from '../../components/card/card.component';
 import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
 import { ActiveSituation, TableCard, TableColorCard, TableColorCardObj } from '../../interfaces/active-situation';
@@ -15,7 +16,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, SolutionColorPipe, DefaultCardsComponent, CardComponent],
+    imports: [NgStyle, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent],
     templateUrl: './training.component.html'
 })
 export class TrainingComponent {
@@ -41,6 +42,9 @@ export class TrainingComponent {
     nbSituationsChallenge: number = 0;
     challengeFailed: boolean = false;
     challengeSuccess: boolean = false;
+    showWrongAnswerModal: boolean = false;
+    showEndSessionModal: boolean = false;
+    showEndChallengeModal: boolean = false;
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -499,7 +503,7 @@ export class TrainingComponent {
                     if (this.totalResponse >= this.nbSituationsChallenge) {
                         this.challengeSuccess = true;
                         this.commonService.showSwalToast(`Défi réussi !`, 'success');
-                        this.commonService.showModal('end-challenge-modal');
+                        this.showEndChallengeModal = true;
                     } else {
                         this.generateSituation();
                     }
@@ -517,7 +521,7 @@ export class TrainingComponent {
                 case 'infinite':
                     const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
                     if (userParams.displaySolution) {
-                        this.commonService.showModal('wrong-answer-modal');
+                        this.showWrongAnswerModal = true;
                     } else {
                         this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
                         this.countResult = false;
@@ -530,7 +534,7 @@ export class TrainingComponent {
                 case 'challenge':
                     this.challengeFailed = true;
                     this.commonService.showSwalToast(`Mauvaise réponse ! Défi perdu.`, 'error');
-                    this.commonService.showModal('end-challenge-modal');
+                    this.showEndChallengeModal = true;
                     break;
                 default:
                     break;
@@ -542,7 +546,7 @@ export class TrainingComponent {
      * Ferme la modale de mauvaise réponse et passe à la situation suivante.
      */
     closeSolutionModal() {
-        this.commonService.closeModal('wrong-answer-modal');
+        this.showWrongAnswerModal = false;
         this.generateSituation();
     }
 
@@ -559,9 +563,9 @@ export class TrainingComponent {
      */
     resetSession() {
         if (this.mode === 'turbo') {
-            this.commonService.closeModal('end-session-modal');
+            this.showEndSessionModal = false;
         } else if (this.mode === 'challenge') {
-            this.commonService.closeModal('end-challenge-modal');
+            this.showEndChallengeModal = false;
         }
         this.goodResponse = 0;
         this.badResponse = 0;
@@ -595,7 +599,7 @@ export class TrainingComponent {
                 this.seconds = 59;
             } else {
                 this.clearCountdown();
-                this.commonService.showModal('end-session-modal');
+                this.showEndSessionModal = true;
             }
         }, 1000);
     }

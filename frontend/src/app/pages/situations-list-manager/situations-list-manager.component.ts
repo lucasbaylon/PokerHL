@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { Situation } from '../../interfaces/situation';
 import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
@@ -18,7 +18,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle],
+    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle, AppModalComponent],
     templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent implements AfterViewInit, OnDestroy {
@@ -59,6 +59,8 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
 
     situationToDisplay!: Situation;
     showSituationModal = false;
+    showRemoveSituationModal = false;
+    situationIdToRemove?: string;
 
     constructor(
         private router: Router,
@@ -213,21 +215,20 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
      * @param id Identifiant de la situation à supprimer.
      */
     removeSituation(id: string) {
-        Swal.fire({
-            title: 'Attention !',
-            text: 'Voulez vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#303030',
-            cancelButtonColor: '#d74c4c',
-            confirmButtonText: 'Oui, supprimer !',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.apiSituation.removeSituation(id);
-                this.commonService.showSwalToast(`Situation supprimée !`);
-            }
-        });
+        this.situationIdToRemove = id;
+        this.showRemoveSituationModal = true;
+    }
+
+    closeRemoveSituationModal() {
+        this.showRemoveSituationModal = false;
+        this.situationIdToRemove = undefined;
+    }
+
+    confirmRemoveSituation() {
+        if (!this.situationIdToRemove) return;
+        this.apiSituation.removeSituation(this.situationIdToRemove);
+        this.commonService.showSwalToast(`Situation supprimée !`);
+        this.closeRemoveSituationModal();
     }
 
 }

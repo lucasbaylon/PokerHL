@@ -6,13 +6,13 @@ import { cloneDeep } from 'lodash';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
 import { RangePage, RangePageBlock } from '../../interfaces/range-page';
 import { Situation } from '../../interfaces/situation';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
 import { RangePageService } from '../../services/range-page.service';
 import { SituationService } from '../../services/situation.service';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 
 type DragMode = 'move' | 'resize';
 
@@ -24,7 +24,7 @@ interface PositionSituationTypeOption {
 @Component({
     selector: 'app-range-page-editor',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, AppModalComponent],
     templateUrl: './range-page-editor.component.html'
 })
 export class RangePageEditorComponent implements OnInit, OnDestroy {
@@ -65,6 +65,8 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     selectedPositionSituation?: PositionSituationTypeOption;
     showPositionSituationPopup = false;
     showGridHelpPopup = false;
+    showRemoveBlockModal = false;
+    blockIdToRemove?: string;
     mode: 'new' | 'edit' = 'new';
     saveStatus = 'Enregistré';
 
@@ -426,29 +428,29 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     removeBlock(blockId: string) {
-        Swal.fire({
-            title: 'Attention !',
-            text: 'Voulez-vous vraiment supprimer ce bloc ?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#303030',
-            cancelButtonColor: '#d74c4c',
-            confirmButtonText: 'Oui, supprimer !',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.page.blocks = this.page.blocks.filter(block => block.id !== blockId);
-                this.selectedBlockIds = this.selectedBlockIds.filter(id => id !== blockId);
-                if (this.selectedBlockId === blockId) {
-                    this.selectedBlockId = undefined;
-                }
-                if (this.editingBlockId === blockId) {
-                    this.editingBlockId = undefined;
-                }
-                this.scheduleAutoSave();
-                this.commonService.showSwalToast('Bloc supprimé !');
-            }
-        });
+        this.blockIdToRemove = blockId;
+        this.showRemoveBlockModal = true;
+    }
+
+    closeRemoveBlockModal() {
+        this.showRemoveBlockModal = false;
+        this.blockIdToRemove = undefined;
+    }
+
+    confirmRemoveBlock() {
+        if (!this.blockIdToRemove) return;
+        const blockId = this.blockIdToRemove;
+        this.page.blocks = this.page.blocks.filter(block => block.id !== blockId);
+        this.selectedBlockIds = this.selectedBlockIds.filter(id => id !== blockId);
+        if (this.selectedBlockId === blockId) {
+            this.selectedBlockId = undefined;
+        }
+        if (this.editingBlockId === blockId) {
+            this.editingBlockId = undefined;
+        }
+        this.scheduleAutoSave();
+        this.commonService.showSwalToast('Bloc supprimé !');
+        this.closeRemoveBlockModal();
     }
 
     duplicateBlock(block: RangePageBlock) {

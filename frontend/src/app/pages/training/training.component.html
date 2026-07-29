@@ -259,9 +259,8 @@
     }
 
     <!-- Div affichée lors d'une mauvaise réponse -->
-    <dialog id="wrong-answer-modal" class="dui-modal" (cancel)="$event.preventDefault()">
-        <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
-            @if (currentSituation) {
+    <app-modal [open]="showWrongAnswerModal" (closed)="closeSolutionModal()" panelClass="w-fit max-w-5xl">
+        @if (currentSituation) {
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
                 Mauvaise réponse...
@@ -329,9 +328,8 @@
                     Compris !
                 </div>
             </div>
-            }
-        </div>
-    </dialog>
+        }
+    </app-modal>
 
     <!-- Div des infos -->
     <div
@@ -383,8 +381,7 @@
         </div>
     }
 </div>
-<dialog id="end-session-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
-    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+<app-modal [open]="showEndSessionModal" [showClose]="false" [closeOnBackdrop]="false" panelClass="w-full max-w-lg">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Session terminée !
         </h4>
@@ -405,11 +402,9 @@
                 Rejouer
             </div>
         </div>
-    </div>
-</dialog>
+</app-modal>
 
-<dialog id="end-challenge-modal" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
-    <div class="dui-modal-box text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+<app-modal [open]="showEndChallengeModal" [showClose]="false" [closeOnBackdrop]="false" panelClass="w-full max-w-lg">
         <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
             Défi terminé !
         </h4>
@@ -438,5 +433,4 @@
                 Rejouer
             </div>
         </div>
-    </div>
-</dialog>
+</app-modal>

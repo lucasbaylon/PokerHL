@@ -168,16 +168,9 @@
     </p-table>
 </div>
 
-@if (showSituationModal) {
-<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-fadeIn" role="dialog"
-    aria-modal="true" aria-labelledby="display-situation-title">
-    <button type="button" (click)="closeSituationModal()" class="absolute inset-0 border-0 bg-black/60 p-0 cursor-default"
-        aria-label="Fermer l'aperçu de la situation"></button>
-    <div class="relative z-10 w-fit max-w-5xl rounded-xl bg-white p-6 text-gray-800 shadow-2xl dark:bg-secondary-dark-bg dark:text-gray-300">
-        @if (situationToDisplay) {
-        <button type="button" (click)="closeSituationModal()"
-            class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 outline-none transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
-            aria-label="Fermer">X</button>
+<app-modal [open]="showSituationModal" (closed)="closeSituationModal()" ariaLabelledBy="display-situation-title"
+    panelClass="w-fit max-w-5xl">
+    @if (situationToDisplay) {
         <h4 id="display-situation-title" class="m-0 mb-4 text-center text-lg font-semibold uppercase tracking-wider">
             {{ situationToDisplay.name }}
         </h4>
@@ -211,7 +204,25 @@
                 }
             </div>
         </div>
-        }
+    }
+</app-modal>
+
+<app-modal [open]="showRemoveSituationModal" (closed)="closeRemoveSituationModal()" ariaLabelledBy="remove-situation-title"
+    panelClass="w-full max-w-lg">
+    <h4 id="remove-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        Attention !
+    </h4>
+    <p class="m-0 text-gray-600 dark:text-gray-300">
+        Voulez-vous vraiment supprimer cette situation ? Vous ne pourrez pas revenir en arrière.
+    </p>
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="closeRemoveSituationModal()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-200 px-5 text-sm font-medium text-gray-800 shadow transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="confirmRemoveSituation()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-red-600 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-red-700 cursor-pointer">
+            Supprimer
+        </button>
     </div>
-</div>
-}
+</app-modal>

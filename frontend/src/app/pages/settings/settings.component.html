@@ -120,7 +120,7 @@
                         <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Cliquez sur l'avatar pour le modifier.</p>
                     </div>
                 </div>
-                <button type="button" (click)="commonService.showModal('change-user-name')"
+                <button type="button" (click)="openUserNameModal()"
                     class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
                     <i class="fa-solid fa-pencil mr-2" aria-hidden="true"></i>
                     Modifier le nom
@@ -227,17 +227,9 @@
     </div>
 </div>
 
-@if (showPasswordModal) {
-<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-fadeIn" role="dialog"
-    aria-modal="true" aria-labelledby="change-password-title">
-    <button type="button" (click)="closePasswordModal()" class="absolute inset-0 border-0 bg-black/60 p-0 cursor-default"
-        aria-label="Fermer la fenêtre de changement de mot de passe"></button>
-    <form (ngSubmit)="changePassword()"
-        class="relative z-10 box-border w-full max-w-xl rounded-xl bg-white p-7 text-gray-800 shadow-2xl dark:bg-secondary-dark-bg dark:text-gray-300">
-        <button type="button" (click)="closePasswordModal()" [disabled]="isChangingPassword"
-            class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 outline-none transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
-            aria-label="Fermer">✕</button>
-
+<app-modal [open]="showPasswordModal" (closed)="closePasswordModal()" ariaLabelledBy="change-password-title"
+    panelClass="box-border w-full max-w-xl p-7">
+    <form (ngSubmit)="changePassword()">
         <h4 id="change-password-title" class="m-0 mb-2 text-lg font-semibold text-gray-800 dark:text-gray-300">Modifier le mot de passe</h4>
         <p class="m-0 mb-6 text-sm text-gray-500 dark:text-gray-400">
             Confirmez votre mot de passe actuel avant d'en choisir un nouveau.
@@ -319,27 +311,21 @@
             </button>
         </div>
     </form>
-</div>
-}
+</app-modal>
 
-<dialog id="change-user-name" class="dui-modal dui-modal-bottom sm:dui-modal-middle">
-    <div class="dui-modal-box bg-white text-gray-800 dark:bg-secondary-dark-bg dark:text-gray-300">
-        <form method="dialog">
-            <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none transition-colors duration-500"
-                aria-label="Fermer">✕</button>
-        </form>
-        <h4 class="m-0 mb-2 text-lg font-semibold text-gray-800 dark:text-gray-300">Modifier le nom</h4>
-        <p class="m-0 mb-5 text-sm text-gray-500 dark:text-gray-400">Choisissez le nom affiché dans l'application.</p>
-        <label for="newUserName" class="mb-2 block text-sm font-medium">Nouveau nom</label>
-        <input class="box-border w-full" type="text" placeholder="Votre nom d'utilisateur" name="newUserName"
-            id="newUserName" autocomplete="off" pInputText [(ngModel)]="newUserName" [maxlength]="16"
-            (keyup.enter)="changeUserName()" />
-        <div class="mt-5 flex justify-end">
-            <button type="button" (click)="changeUserName()"
-                class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                <i class="fa-solid fa-save mr-2" aria-hidden="true"></i>
-                Enregistrer
-            </button>
-        </div>
+<app-modal [open]="showUserNameModal" (closed)="closeUserNameModal()" ariaLabelledBy="change-user-name-title"
+    panelClass="w-full max-w-lg overflow-visible">
+    <h4 id="change-user-name-title" class="m-0 mb-2 text-lg font-semibold text-gray-800 dark:text-gray-300">Modifier le nom</h4>
+    <p class="m-0 mb-5 text-sm text-gray-500 dark:text-gray-400">Choisissez le nom affiché dans l'application.</p>
+    <label for="newUserName" class="mb-2 block text-sm font-medium">Nouveau nom</label>
+    <input class="box-border w-full" type="text" placeholder="Votre nom d'utilisateur" name="newUserName"
+        id="newUserName" autocomplete="off" pInputText [(ngModel)]="newUserName" [maxlength]="16"
+        (keyup.enter)="changeUserName()" />
+    <div class="mt-5 flex justify-end">
+        <button type="button" (click)="changeUserName()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-save mr-2" aria-hidden="true"></i>
+            Enregistrer
+        </button>
     </div>
-</dialog>
+</app-modal>

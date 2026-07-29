@@ -137,28 +137,6 @@ export class CommonService {
     }
 
     /**
-     * Affiche une modal spécifiée par son identifiant.
-     * @param id L'identifiant de l'élément <dialog>.
-     */
-    showModal(id: string) {
-        const modal = document.getElementById(id) as HTMLDialogElement;
-        if (modal) {
-            modal.showModal();
-        }
-    }
-
-    /**
-     * Ferme une modal spécifiée par son identifiant.
-     * @param id L'identifiant de l'élément <dialog>.
-     */
-    closeModal(id: string) {
-        const modal = document.getElementById(id) as HTMLDialogElement;
-        if (modal) {
-            modal.close();
-        }
-    }
-
-    /**
      * Renvoie l'état actuel de l'activation des particules.
      * @returns {boolean} L'état actuel de l'activation des particules.
      */

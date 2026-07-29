@@ -3,13 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { Situation } from '../../interfaces/situation';
-import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-select-training-mode',
     standalone: true,
-    imports: [FormsModule, InputNumberModule, FloatLabelModule],
+    imports: [FormsModule, InputNumberModule, FloatLabelModule, AppModalComponent],
     templateUrl: './select-training-mode.component.html'
 })
 export class SelectTrainingModeComponent {
@@ -20,11 +20,12 @@ export class SelectTrainingModeComponent {
     minute: number = 0;
     seconds: number = 10;
     challengeNbSituations: number = 10;
+    showTurboTimerModal = false;
+    showChallengeModal = false;
 
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private commonService: CommonService
+        private activatedRoute: ActivatedRoute
     ) { }
 
     /**
@@ -49,10 +50,10 @@ export class SelectTrainingModeComponent {
                 this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'infinite' }]);
                 break;
             case 'turbo':
-                this.commonService.showModal('turbo-timer-modal');
+                this.showTurboTimerModal = true;
                 break;
             case 'challenge':
-                this.commonService.showModal('challenge-modal');
+                this.showChallengeModal = true;
                 break;
             default:
                 break;
@@ -65,12 +66,20 @@ export class SelectTrainingModeComponent {
     startTurboSession() {
         this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'turbo', timer: JSON.stringify({ heure: this.heure, minute: this.minute, seconds: this.seconds }) }]);
     }
+
+    closeTurboTimerModal() {
+        this.showTurboTimerModal = false;
+    }
     
     /**
      * Lance une session d'entraînement en mode Défi avec le nombre de situations configuré.
      */
     startChallengeSession() {
         this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'challenge', challengeNbSituations: this.challengeNbSituations }]);
+    }
+
+    closeChallengeModal() {
+        this.showChallengeModal = false;
     }
 
 }
