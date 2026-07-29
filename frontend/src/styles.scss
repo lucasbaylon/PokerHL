@@ -144,6 +144,30 @@
         margin-left: 16px !important;
     }
 
+    .mixed-color-slider {
+        position: relative;
+    }
+
+    .mixed-color-slider .mixed-slider-gradient {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 35px;
+        z-index: 2;
+        height: 5px;
+        border-radius: 9999px;
+        pointer-events: none;
+    }
+
+    .mixed-color-slider .ngx-slider .ngx-slider-bar,
+    .mixed-color-slider .ngx-slider .ngx-slider-selection {
+        background: transparent !important;
+    }
+
+    .mixed-color-slider .ngx-slider .ngx-slider-pointer {
+        margin-top: 7px;
+    }
+
     input[type="range"] {
         accent-color: #232726;
     }

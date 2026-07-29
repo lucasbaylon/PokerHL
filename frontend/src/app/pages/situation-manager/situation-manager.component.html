@@ -291,12 +291,14 @@
             </div>
             <div class="mt-6">
                 @if (simpleSlider) {
-                    <div class="custom-slider">
+                    <div class="custom-slider mixed-color-slider">
+                        <div class="mixed-slider-gradient" [style.background]="mixedSliderGradient()"></div>
                         <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
                     </div>
                 }
                 @if (multipleSlider) {
-                    <div class="custom-slider">
+                    <div class="custom-slider mixed-color-slider">
+                        <div class="mixed-slider-gradient" [style.background]="mixedSliderGradient()"></div>
                         <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
                             [options]="options"></ngx-slider>
                     </div>

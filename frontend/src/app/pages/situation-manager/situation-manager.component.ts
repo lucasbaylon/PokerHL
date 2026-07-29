@@ -430,6 +430,28 @@ export class SituationManagerComponent {
     }
 
     /**
+     * Construit la piste colorée du slider selon les solutions cochées.
+     */
+    mixedSliderGradient(): string {
+        const selectedColors = this.multipleSolutionCheckBox
+            .map(solutionId => this.situation_obj.solutions.find(solution => solution.id === solutionId)?.color)
+            .filter((color): color is string => !!color);
+
+        if (selectedColors.length < 2) {
+            return 'linear-gradient(to right, #e5e7eb 0%, #e5e7eb 100%)';
+        }
+
+        if (selectedColors.length === 2) {
+            const split = this.mixedSolutionSliderMinValue;
+            return `linear-gradient(to right, ${selectedColors[0]} 0%, ${selectedColors[0]} ${split}%, ${selectedColors[1]} ${split}%, ${selectedColors[1]} 100%)`;
+        }
+
+        const firstSplit = this.mixedSolutionSliderMinValue;
+        const secondSplit = this.mixedSolutionSliderMaxValue;
+        return `linear-gradient(to right, ${selectedColors[0]} 0%, ${selectedColors[0]} ${firstSplit}%, ${selectedColors[1]} ${firstSplit}%, ${selectedColors[1]} ${secondSplit}%, ${selectedColors[2]} ${secondSplit}%, ${selectedColors[2]} 100%)`;
+    }
+
+    /**
      * Enregistre une solution mixte (plusieurs actions possibles).
      */
     saveMultipleSolution() {
