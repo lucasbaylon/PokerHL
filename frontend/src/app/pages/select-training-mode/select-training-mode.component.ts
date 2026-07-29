@@ -41,7 +41,7 @@ export class SelectTrainingModeComponent {
     }
 
     /**
-     * Gère la sélection du mode d'entraînement (infini, turbo, challenge).
+     * Gère la sélection du mode d'entraînement (infini, turbo, challenge, survie).
      * @param mode Le mode choisi.
      */
     onSelectMode(mode: string) {
@@ -54,6 +54,9 @@ export class SelectTrainingModeComponent {
                 break;
             case 'challenge':
                 this.showChallengeModal = true;
+                break;
+            case 'survival':
+                this.router.navigate(['/training', { situationList: JSON.stringify(this.situationList), mode: 'survival' }]);
                 break;
             default:
                 break;
@@ -80,6 +83,13 @@ export class SelectTrainingModeComponent {
 
     closeChallengeModal() {
         this.showChallengeModal = false;
+    }
+
+    /** Retourne à la liste en conservant les situations sélectionnées. */
+    backToSituations() {
+        this.router.navigate(['/situations', {
+            selectedSituationList: JSON.stringify(this.situationList)
+        }]);
     }
 
 }

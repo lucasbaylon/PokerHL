@@ -43,11 +43,15 @@ export class TrainingComponent {
     private countdownInterval: any;
     colorList: any[] = [{ name: "heart", color: "red" }, { name: "diamond", color: "red" }, { name: "club", color: "black" }, { name: "spade", color: "black" }];
     nbSituationsChallenge: number = 0;
+    readonly survivalMaxLives: number = 3;
+    survivalLives: number = 3;
+    survivalLifeSlots: number[] = [1, 2, 3];
     challengeFailed: boolean = false;
     challengeSuccess: boolean = false;
     showWrongAnswerModal: boolean = false;
     showEndSessionModal: boolean = false;
     showEndChallengeModal: boolean = false;
+    showEndSurvivalModal: boolean = false;
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -90,6 +94,10 @@ export class TrainingComponent {
                         this.nbSituationsChallenge = JSON.parse(this.activatedRoute.snapshot.params['challengeNbSituations']);
                         this.generateSituation();
                     }
+                    break;
+                case 'survival':
+                    this.survivalLives = this.survivalMaxLives;
+                    this.generateSituation();
                     break;
                 case 'turbo':
                     if (this.activatedRoute.snapshot.params.hasOwnProperty('timer')) {
@@ -539,6 +547,16 @@ export class TrainingComponent {
                     this.commonService.showSwalToast(`Mauvaise réponse ! Défi perdu.`, 'error');
                     this.showEndChallengeModal = true;
                     break;
+                case 'survival':
+                    this.survivalLives = Math.max(0, this.survivalMaxLives - this.badResponse);
+                    if (this.survivalLives === 0) {
+                        this.commonService.showSwalToast(`Mauvaise réponse ! Survie terminée.`, 'error');
+                        this.showEndSurvivalModal = true;
+                    } else {
+                        this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
+                        this.generateSituation();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -569,6 +587,8 @@ export class TrainingComponent {
             this.showEndSessionModal = false;
         } else if (this.mode === 'challenge') {
             this.showEndChallengeModal = false;
+        } else if (this.mode === 'survival') {
+            this.showEndSurvivalModal = false;
         }
         this.goodResponse = 0;
         this.badResponse = 0;
@@ -577,6 +597,7 @@ export class TrainingComponent {
         this.countResult = true;
         this.challengeFailed = false;
         this.challengeSuccess = false;
+        this.survivalLives = this.survivalMaxLives;
         if (this.mode === 'turbo') {
             this.startCountdown();
         }

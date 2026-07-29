@@ -1,7 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
@@ -30,6 +30,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     private readonly defaultRowHeight = 65;
     private readonly minRowsPerPage = 4;
     private readonly pageBottomSpacing = 24;
+    private selectedSituationIdsToRestore = new Set<number>();
     situationList: Situation[] = [];
     selectedSituations: Situation[] = [];
 
@@ -64,6 +65,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
 
     constructor(
         private router: Router,
+        private activatedRoute: ActivatedRoute,
         private apiSituation: SituationService,
         protected commonService: CommonService
     ) { }
@@ -91,6 +93,18 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     }
 
     ngOnInit(): void {
+        if (this.activatedRoute.snapshot.params.hasOwnProperty('selectedSituationList')) {
+            const selectedSituations = JSON.parse(this.activatedRoute.snapshot.params['selectedSituationList']) as Situation[];
+            this.selectedSituationIdsToRestore = new Set(
+                selectedSituations
+                    .map(situation => situation.id)
+                    .filter((id): id is number => id !== undefined)
+            );
+            const currentUrl = this.router.url;
+            const baseUrl = currentUrl.split(';')[0];
+            this.router.navigateByUrl(baseUrl);
+        }
+
         this.situationsSubscription = this.apiSituation.situations.subscribe(data => {
             this.situationList = data.sort((a: Situation, b: Situation) => {
                 if (a.name && b.name) {
@@ -120,6 +134,12 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
             // Une suppression ou un rafraîchissement ne doit pas conserver de sélection fantôme.
             const availableIds = new Set(this.situationList.map(situation => situation.id));
             this.selectedSituations = this.selectedSituations.filter(situation => availableIds.has(situation.id));
+            if (this.selectedSituationIdsToRestore.size > 0) {
+                this.selectedSituations = this.situationList.filter(situation =>
+                    situation.id !== undefined && this.selectedSituationIdsToRestore.has(situation.id)
+                );
+                this.selectedSituationIdsToRestore.clear();
+            }
             this.scheduleRowsPerPageUpdate();
         });
 

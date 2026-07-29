@@ -1,90 +1,149 @@
-<h3 class="text-3xl font-bold md:text-4xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
-    Sélection du mode d'entraînement
-</h3>
-<p class="text-gray-500 dark:text-gray-400 text-lg mt-2 mb-8 text-left animate-appear opacity-0">
-    Choisissez le mode d'entraînement auquel vous souhaitez jouer.
-</p>
-<div class="flex mt-20 justify-around items-center">
-    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200 animate-appear opacity-0 animation-delay-100"
-        (click)="onSelectMode('infinite')">
-        <figure class="dark:bg-main-dark-bg w-full m-0">
-            <img src="../../../assets/img/infinite.jpg" alt="infinite" class="w-full" />
-        </figure>
-        <div class="dui-card-body dark:text-gray-300 dark:bg-secondary-dark-bg rounded-b-xl flex justify-center">
-            <h2 class="dui-card-title m-0">Infini</h2>
-            <p>Répondez aux situations qui se présentent à vous de manière infinie, et stoppez quand vous le souhaitez.
-            </p>
+<header class="animate-appear opacity-0 flex flex-col gap-5 mb-8 md:flex-row md:items-end md:justify-between">
+    <div>
+        <h3 class="m-0 text-3xl font-bold text-gray-800 dark:text-gray-300 md:text-4xl">Mode d'entraînement</h3>
+        <p class="m-0 mt-2 max-w-2xl text-lg text-gray-500 dark:text-gray-400">
+            Choisissez le format adapté à votre session.
+        </p>
+    </div>
+    <div class="flex flex-col gap-3 self-start sm:flex-row md:self-auto">
+        <button type="button" (click)="backToSituations()"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-arrow-left mr-2" aria-hidden="true"></i>
+            Retour
+        </button>
+        <div class="inline-flex h-11 shrink-0 items-center rounded-md bg-white px-4 text-sm font-medium text-gray-700 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
+            <i class="fa-solid fa-layer-group mr-2 text-gray-500" aria-hidden="true"></i>
+            {{ situationList.length }} situation{{ situationList.length > 1 ? 's' : '' }}
         </div>
     </div>
-    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200 animate-appear opacity-0 animation-delay-150"
-        (click)="onSelectMode('turbo')">
-        <figure class="dark:bg-main-dark-bg w-full m-0">
-            <img src="../../../assets/img/turbo.jpg" alt="turbo" class="w-full" />
-        </figure>
-        <div class="dui-card-body dark:text-gray-300 dark:bg-secondary-dark-bg rounded-b-xl">
-            <h2 class="dui-card-title m-0">Turbo</h2>
-            <p>Un mode basé sur la rapidité. Répondez à un maximum de situations dans le temps imparti.</p>
-        </div>
-    </div>
-    <div class="dui-card w-96 shadow-xl cursor-pointer bg-white dark:bg-main-dark-bg hover:scale-105 transition-all duration-200 animate-appear opacity-0 animation-delay-200"
-        (click)="onSelectMode('challenge')">
-        <figure class="dark:bg-main-dark-bg w-full m-0" class="w-full m-0">
-            <img src="../../../assets/img/defi.jpg" alt="defi" class="w-full" />
-        </figure>
-        <div class="dui-card-body dark:text-gray-300 dark:bg-secondary-dark-bg rounded-b-xl">
-            <h2 class="dui-card-title m-0">Défi</h2>
-            <p>Répondez à un nombre prédéfini de situations pour compléter l'entraînement. A la première erreur, c'est
-                perdu.</p>
-        </div>
-    </div>
-</div>
+</header>
 
-<app-modal [open]="showTurboTimerModal" (closed)="closeTurboTimerModal()" panelClass="w-fit max-w-2xl">
-        <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Sélection du temps d'entraînement
-        </h4>
-        <div class="flex flex-row gap-8 justify-center items-center my-10 w-fit">
-            <p-floatLabel class="ml-3">
-                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="23" [(ngModel)]="heure"
-                    inputStyleClass="w-24" />
-                <label class="text-gray-800 dark:text-gray-300">Heures</label>
-            </p-floatLabel>
-            <p-floatLabel>
-                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="59" [(ngModel)]="minute"
-                    inputStyleClass="w-24" />
-                <label class="text-gray-800 dark:text-gray-300">Minutes</label>
-            </p-floatLabel>
-            <p-floatLabel class="mr-3">
-                <p-inputNumber inputId="integeronly" showButtons="true" [min]="0" [max]="59" [(ngModel)]="seconds"
-                    inputStyleClass="w-24" />
-                <label class="text-gray-800 dark:text-gray-300 px-10">Secondes</label>
-            </p-floatLabel>
+<section class="grid grid-cols-1 gap-6 lg:grid-cols-3" aria-label="Modes d'entraînement disponibles">
+    <button type="button" (click)="onSelectMode('infinite')"
+        class="group animate-appear opacity-0 animation-delay-50 flex min-h-[300px] flex-col rounded-md border-0 bg-white p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-secondary-dark-bg cursor-pointer">
+        <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-800 transition-colors group-hover:bg-gray-800 group-hover:text-white dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+            <i class="fa-solid fa-infinity" aria-hidden="true"></i>
         </div>
-        <div class="flex justify-center mt-8">
-            <div (click)="startTurboSession()"
-                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
-                Démarrer la session
-            </div>
+        <div class="flex flex-1 flex-col">
+            <h4 class="m-0 text-xl font-semibold text-gray-800 dark:text-gray-100">Infini</h4>
+            <p class="m-0 mt-2 flex-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+                Enchaînez les situations sans limite et arrêtez la session quand vous le souhaitez.
+            </p>
+            <span class="mt-6 inline-flex h-11 items-center justify-center self-start rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors group-hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+                Démarrer
+                <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+            </span>
         </div>
+    </button>
+
+    <button type="button" (click)="onSelectMode('turbo')"
+        class="group animate-appear opacity-0 animation-delay-100 flex min-h-[300px] flex-col rounded-md border-0 bg-white p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-secondary-dark-bg cursor-pointer">
+        <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-800 transition-colors group-hover:bg-gray-800 group-hover:text-white dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+            <i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-1 flex-col">
+            <h4 class="m-0 text-xl font-semibold text-gray-800 dark:text-gray-100">Turbo</h4>
+            <p class="m-0 mt-2 flex-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+                Travaillez votre rapidité en répondant à un maximum de situations dans le temps imparti.
+            </p>
+            <span class="mt-6 inline-flex h-11 items-center justify-center self-start rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors group-hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+                Configurer
+                <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+            </span>
+        </div>
+    </button>
+
+    <button type="button" (click)="onSelectMode('survival')"
+        class="group animate-appear opacity-0 animation-delay-150 flex min-h-[300px] flex-col rounded-md border-0 bg-white p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-secondary-dark-bg cursor-pointer">
+        <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-800 transition-colors group-hover:bg-gray-800 group-hover:text-white dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+            <i class="fa-solid fa-heart" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-1 flex-col">
+            <h4 class="m-0 text-xl font-semibold text-gray-800 dark:text-gray-100">Survie</h4>
+            <p class="m-0 mt-2 flex-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+                Vous commencez avec 3 vies. La session s'arrête à la troisième mauvaise réponse.
+            </p>
+            <span class="mt-6 inline-flex h-11 items-center justify-center self-start rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors group-hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+                Démarrer
+                <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+            </span>
+        </div>
+    </button>
+
+    <button type="button" (click)="onSelectMode('challenge')"
+        class="group animate-appear opacity-0 animation-delay-200 flex min-h-[300px] flex-col rounded-md border-0 bg-white p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-secondary-dark-bg cursor-pointer">
+        <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-800 transition-colors group-hover:bg-gray-800 group-hover:text-white dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+            <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-1 flex-col">
+            <h4 class="m-0 text-xl font-semibold text-gray-800 dark:text-gray-100">Défi</h4>
+            <p class="m-0 mt-2 flex-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+                Terminez un nombre défini de situations. La première erreur met fin au défi.
+            </p>
+            <span class="mt-6 inline-flex h-11 items-center justify-center self-start rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors group-hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-600">
+                Configurer
+                <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+            </span>
+        </div>
+    </button>
+</section>
+
+<app-modal [open]="showTurboTimerModal" (closed)="closeTurboTimerModal()" ariaLabelledBy="turbo-timer-title"
+    panelClass="w-full max-w-2xl">
+    <h4 id="turbo-timer-title" class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        Temps d'entraînement
+    </h4>
+    <div class="my-10 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <p-floatLabel>
+            <p-inputNumber inputId="training-hours" showButtons="true" [min]="0" [max]="23" [(ngModel)]="heure"
+                inputStyleClass="w-full" styleClass="w-full" />
+            <label class="text-gray-800 dark:text-gray-300">Heures</label>
+        </p-floatLabel>
+        <p-floatLabel>
+            <p-inputNumber inputId="training-minutes" showButtons="true" [min]="0" [max]="59" [(ngModel)]="minute"
+                inputStyleClass="w-full" styleClass="w-full" />
+            <label class="text-gray-800 dark:text-gray-300">Minutes</label>
+        </p-floatLabel>
+        <p-floatLabel>
+            <p-inputNumber inputId="training-seconds" showButtons="true" [min]="0" [max]="59" [(ngModel)]="seconds"
+                inputStyleClass="w-full" styleClass="w-full" />
+            <label class="text-gray-800 dark:text-gray-300">Secondes</label>
+        </p-floatLabel>
+    </div>
+    <div class="flex justify-end gap-3">
+        <button type="button" (click)="closeTurboTimerModal()"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="startTurboSession()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-play mr-2" aria-hidden="true"></i>
+            Démarrer
+        </button>
+    </div>
 </app-modal>
 
-<app-modal [open]="showChallengeModal" (closed)="closeChallengeModal()" panelClass="w-fit max-w-2xl">
-        <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Sélection du nombre de situations
-        </h4>
-        <div class="flex flex-row gap-8 justify-center items-center my-10 w-fit">
-            <p-floatLabel class="mx-3 justify-center items-center">
-                <p-inputNumber inputId="integeronly" showButtons="true" [min]="1" [max]="1000" [(ngModel)]="challengeNbSituations"
-                    inputStyleClass="w-32" />
-                <label class="text-gray-800 dark:text-gray-300 px-10">Situations</label>
-            </p-floatLabel>
-        </div>
-        <div class="flex justify-center mt-8">
-            <div (click)="startChallengeSession()"
-                class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
-                Démarrer le défi
-            </div>
-        </div>
+<app-modal [open]="showChallengeModal" (closed)="closeChallengeModal()" ariaLabelledBy="challenge-title"
+    panelClass="w-full max-w-lg">
+    <h4 id="challenge-title" class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        Nombre de situations
+    </h4>
+    <div class="my-10">
+        <p-floatLabel>
+            <p-inputNumber inputId="challenge-count" showButtons="true" [min]="1" [max]="1000"
+                [(ngModel)]="challengeNbSituations" inputStyleClass="w-full" styleClass="w-full" />
+            <label class="text-gray-800 dark:text-gray-300">Situations</label>
+        </p-floatLabel>
+    </div>
+    <div class="flex justify-end gap-3">
+        <button type="button" (click)="closeChallengeModal()"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="startChallengeSession()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-play mr-2" aria-hidden="true"></i>
+            Démarrer
+        </button>
+    </div>
 </app-modal>
