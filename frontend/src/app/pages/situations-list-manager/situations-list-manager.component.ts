@@ -149,11 +149,6 @@ export class SituationsListManagerComponent implements OnDestroy {
         }]);
     }
 
-    /** Retire toute la sélection sans modifier les situations. */
-    clearSelection() {
-        this.selectedSituations = [];
-    }
-
     /**
      * Duplique une situation existante via le service API.
      * @param id Identifiant de la situation à dupliquer.
