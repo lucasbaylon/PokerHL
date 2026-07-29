@@ -172,6 +172,45 @@
     }
 }
 
+// Champs texte PrimeNG alignés sur le champ de recherche du Lexique.
+.p-inputtext,
+.p-inputnumber-input,
+.p-password-input,
+.p-autocomplete-input,
+.p-multiselect-filter {
+    @apply border-gray-300 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500;
+}
+
+.p-inputtext:hover,
+.p-inputnumber-input:hover,
+.p-password-input:hover,
+.p-autocomplete-input:hover,
+.p-multiselect-filter:hover {
+    @apply border-gray-400;
+}
+
+html.dark .p-inputtext,
+html.dark .p-inputnumber-input,
+html.dark .p-password-input,
+html.dark .p-autocomplete-input,
+html.dark .p-multiselect-filter {
+    @apply border-gray-700 bg-secondary-dark-bg text-gray-300 placeholder:text-gray-500;
+}
+
+html.dark .p-inputtext:enabled:focus,
+html.dark .p-inputnumber-input:enabled:focus,
+html.dark .p-password-input:enabled:focus,
+html.dark .p-autocomplete-input:enabled:focus,
+html.dark .p-multiselect-filter:enabled:focus {
+    @apply border-white;
+    box-shadow: 0 0 0 1px #ffffff !important;
+}
+
+html.dark .p-float-label label,
+html.dark p-floatlabel label {
+    @apply text-gray-300;
+}
+
 //Paginator primeNG
 .p-paginator {
     @apply rounded-b-md rounded-t-none dark:bg-secondary-dark-bg border-none;
