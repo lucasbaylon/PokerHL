@@ -36,72 +36,75 @@
 
     <!-- Div solutions -->
     <div
-        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-110 rounded-lg py-5 px-7 shadow-lg mx-auto flex flex-col items-center mb-2 animate-appear opacity-0 animation-delay-100">
-        <div class="text-left w-full">
-            <h4 class="mb-4 text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider m-0">
-                Solutions
-            </h4>
-        </div>
-        @for (solution of filteredSolutionList(situation_obj.solutions, 'unique'); track i; let i = $index) {
-            <div class="relative flex items-center mb-5">
-                <!-- Surbrillance de la couleur sélectionnée -->
-                <div [ngClass]="{'bg-gray-200 dark:bg-gray-600 rounded animate-fadeIn': solutionSelected === solution.id}"
-                    class="absolute -inset-2 -inset-x-5 z-0"></div>
-
-                <!-- Ligne solution -->
-                <div class="relative z-10 flex items-center">
-                    <input type="input"
-                        [ngClass]="{'bg-gray-200 dark:bg-gray-600 transition-all duration-300': solutionSelected === solution.id, 'bg-white dark:bg-secondary-dark-bg transition-none': solutionSelected !== solution.id}"
-                        class="  text-lg my-3 border-none w-20 text-center text-gray-800 dark:text-gray-300"
-                        value="{{solution.display_name}}" [id]="'input_' + solution.id"
-                        (input)="onChangeSolutionName(solution.id, $event)" placeholder="-" autocomplete="off" />
-                    <div class="h-8 w-8 rounded shadow cursor-pointer ml-4 mr-8"
-                        [ngStyle]="{'background': commonService.cellBackground(solution, situation_objSolutionsRef)}"
-                        (click)="onColorSolution(solution.id)"></div>
-                    <div (click)="onChangeSolution(solution.id)" id="add-solution-button" [id]="'button_' + solution.id"
-                        [ngClass]="{'hover:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer transition-colors': solutionSelected !== solution.id}"
-                        class="flex h-12 items-center w-40 justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 px-5 text-base font-medium shadow transition-none">
-                        @if (solutionSelected !== solution.id) {
-                        <i class="fa-solid fa-palette mr-4 h-4 w-4"></i>
-                        }
-                        @if (solutionSelected === solution.id) {
-                        <i class="fa-solid fa-check mr-4 h-4 w-4"></i>
-                        }
-                        {{solutionSelected === solution.id ? 'Choisi' : 'Sélectionner'}}
-                    </div>
-                </div>
-                <!-- Div qui apparait lorsqu'on clique sur un carré color picker -->
-                <div class="bg-white dark:bg-gray-700 p-4 mt-40 rounded shadow-lg absolute z-50 w-fit animate-appear opacity-0 duration-100 hidden"
-                    [id]="'color-picker-div_' + solution.id">
-                    <div class="grid grid-cols-5 gap-2">
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #d80c05"
-                            (click)="onSelectColor(solution.id, '#d80c05')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #ff9100"
-                            (click)="onSelectColor(solution.id, '#ff9100')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #7a5a00"
-                            (click)="onSelectColor(solution.id, '#7a5a00')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #3f7a89"
-                            (click)="onSelectColor(solution.id, '#3f7a89')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #96c582"
-                            (click)="onSelectColor(solution.id, '#96c582')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #303030"
-                            (click)="onSelectColor(solution.id, '#303030')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #1c51ff"
-                            (click)="onSelectColor(solution.id, '#1c51ff')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #00aeff"
-                            (click)="onSelectColor(solution.id, '#00aeff')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #8350ff"
-                            (click)="onSelectColor(solution.id, '#8350ff')"></div>
-                        <div class="h-8 w-8 rounded shadow cursor-pointer" style="background: #e284ff"
-                            (click)="onSelectColor(solution.id, '#e284ff')"></div>
-                    </div>
-                </div>
+        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-110 rounded-md py-5 px-5 shadow-lg mx-auto flex flex-col mb-2 animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
+        <div class="mb-4 flex items-center justify-between gap-3">
+            <div>
+                <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+                    Solutions
+                </h4>
+                <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Choisissez l'action à appliquer.</p>
             </div>
-        }
-        <div (click)="addUniqueSolution()" id="add-solution-button"
-            class="flex h-12 items-center w-fit justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-7 text-base font-medium shadow transition-colors cursor-pointer">
-            <i class="fa-solid fa-plus mr-4 h-4 w-5"></i>
-            Ajouter
+            <button type="button" (click)="addUniqueSolution()" id="add-solution-button"
+                class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
+                Ajouter
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-3 overflow-visible">
+            @for (solution of filteredSolutionList(situation_obj.solutions, 'unique'); track i; let i = $index) {
+                <div class="relative rounded-md border border-solid p-3 transition-all duration-300"
+                    [ngClass]="solutionSelected === solution.id ? 'border-gray-800 bg-gray-100 shadow-md dark:border-gray-300 dark:bg-gray-700' : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-secondary-dark-bg dark:hover:bg-gray-700'">
+                    <div class="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3">
+                        <input type="text"
+                            class="box-border h-10 w-full text-base font-medium"
+                            [ngClass]="solutionSelected === solution.id ? 'bg-gray-100 dark:bg-gray-700' : 'bg-white dark:bg-secondary-dark-bg'"
+                            [value]="solution.display_name" [id]="'input_' + solution.id"
+                            (input)="onChangeSolutionName(solution.id, $event)" placeholder="Nom" autocomplete="off"
+                            pInputText />
+                        <button type="button" class="h-10 w-10 rounded-md border border-solid border-gray-200 p-0 shadow transition-transform hover:scale-105 dark:border-gray-600 cursor-pointer"
+                            [ngStyle]="{'background': commonService.cellBackground(solution, situation_objSolutionsRef)}"
+                            (click)="onColorSolution(solution.id)" [attr.aria-label]="'Changer la couleur'">
+                        </button>
+                        <button type="button" (click)="onChangeSolution(solution.id)" [id]="'button_' + solution.id"
+                            class="inline-flex h-10 min-w-24 items-center justify-center rounded-md border-0 bg-gray-800 px-3 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+                            [attr.aria-label]="solutionSelected === solution.id ? 'Solution sélectionnée' : 'Sélectionner la solution'">
+                            @if (solutionSelected === solution.id) {
+                                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                            } @else {
+                                Choisir
+                            }
+                        </button>
+                    </div>
+
+                    <!-- Div qui apparait lorsqu'on clique sur un carré color picker -->
+                    <div class="bg-white dark:bg-gray-700 p-4 top-16 right-14 rounded-md shadow-lg absolute z-50 w-fit animate-appear opacity-0 duration-100 hidden"
+                        [id]="'color-picker-div_' + solution.id">
+                        <div class="grid grid-cols-5 gap-2">
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #d80c05"
+                                (click)="onSelectColor(solution.id, '#d80c05')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #ff9100"
+                                (click)="onSelectColor(solution.id, '#ff9100')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #7a5a00"
+                                (click)="onSelectColor(solution.id, '#7a5a00')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #3f7a89"
+                                (click)="onSelectColor(solution.id, '#3f7a89')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #96c582"
+                                (click)="onSelectColor(solution.id, '#96c582')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #303030"
+                                (click)="onSelectColor(solution.id, '#303030')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #1c51ff"
+                                (click)="onSelectColor(solution.id, '#1c51ff')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #00aeff"
+                                (click)="onSelectColor(solution.id, '#00aeff')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #8350ff"
+                                (click)="onSelectColor(solution.id, '#8350ff')"></button>
+                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #e284ff"
+                                (click)="onSelectColor(solution.id, '#e284ff')"></button>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
