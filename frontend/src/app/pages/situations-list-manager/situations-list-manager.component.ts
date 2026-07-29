@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
@@ -21,9 +21,15 @@ import { CommonService } from './../../services/common.service';
     imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle],
     templateUrl: './situations-list-manager.component.html'
 })
-export class SituationsListManagerComponent implements OnDestroy {
+export class SituationsListManagerComponent implements AfterViewInit, OnDestroy {
 
     private situationsSubscription!: Subscription;
+    private resizeFrameId?: number;
+    private readonly defaultHeaderHeight = 64;
+    private readonly defaultPaginatorHeight = 56;
+    private readonly defaultRowHeight = 65;
+    private readonly minRowsPerPage = 4;
+    private readonly pageBottomSpacing = 24;
     situationList: Situation[] = [];
     selectedSituations: Situation[] = [];
 
@@ -59,16 +65,14 @@ export class SituationsListManagerComponent implements OnDestroy {
         protected commonService: CommonService
     ) { }
 
-    /**
-     * Gère le redimensionnement de la fenêtre pour ajuster le nombre de lignes par page.
-     * @param event L'événement de redimensionnement.
-     */
-    @HostListener('window:resize', ['$event'])
-    onResize(event: any) {
-        this.nbRowsPerPage = this.commonService.getNbRowsPerPage(event.target.innerHeight);
+    /** Ajuste le nombre de lignes au redimensionnement de la fenêtre. */
+    @HostListener('window:resize')
+    onResize() {
+        this.scheduleRowsPerPageUpdate();
     }
 
     @ViewChild('multiSelect') multiSelect!: MultiSelect;
+    @ViewChild('tableContainer') tableContainer!: ElementRef<HTMLElement>;
     /**
      * Ouvre le composant MultiSelect.
      */
@@ -79,8 +83,8 @@ export class SituationsListManagerComponent implements OnDestroy {
     /**
      * Initialise le composant et s'abonne à la liste des situations.
      */
-    ngOnDestroy(): void {
-        this.situationsSubscription.unsubscribe();
+    ngAfterViewInit(): void {
+        this.scheduleRowsPerPageUpdate();
     }
 
     ngOnInit(): void {
@@ -113,11 +117,52 @@ export class SituationsListManagerComponent implements OnDestroy {
             // Une suppression ou un rafraîchissement ne doit pas conserver de sélection fantôme.
             const availableIds = new Set(this.situationList.map(situation => situation.id));
             this.selectedSituations = this.selectedSituations.filter(situation => availableIds.has(situation.id));
+            this.scheduleRowsPerPageUpdate();
         });
 
         this.apiSituation.getSituations();
+    }
 
-        this.nbRowsPerPage = this.commonService.getNbRowsPerPage(window.innerHeight);
+    ngOnDestroy(): void {
+        this.situationsSubscription.unsubscribe();
+
+        if (this.resizeFrameId !== undefined) {
+            cancelAnimationFrame(this.resizeFrameId);
+        }
+    }
+
+    private scheduleRowsPerPageUpdate() {
+        if (this.resizeFrameId !== undefined) {
+            cancelAnimationFrame(this.resizeFrameId);
+        }
+
+        this.resizeFrameId = requestAnimationFrame(() => {
+            this.resizeFrameId = undefined;
+            this.updateRowsPerPage();
+        });
+    }
+
+    private updateRowsPerPage() {
+        const tableElement = this.tableContainer?.nativeElement;
+
+        if (!tableElement) {
+            return;
+        }
+
+        const availableHeight = window.innerHeight - tableElement.getBoundingClientRect().top - this.pageBottomSpacing;
+        const headerHeight = tableElement.querySelector('thead')?.getBoundingClientRect().height || this.defaultHeaderHeight;
+        const rowHeight = tableElement.querySelector('tbody tr')?.getBoundingClientRect().height || this.defaultRowHeight;
+        const rowsWithoutPaginator = Math.floor((availableHeight - headerHeight) / rowHeight);
+        const needsPaginator = this.situationList.length > rowsWithoutPaginator;
+        const paginatorHeight = needsPaginator
+            ? tableElement.querySelector('.p-paginator')?.getBoundingClientRect().height || this.defaultPaginatorHeight
+            : 0;
+        const rowsPerPage = Math.max(
+            this.minRowsPerPage,
+            Math.floor((availableHeight - headerHeight - paginatorHeight) / rowHeight)
+        );
+
+        this.nbRowsPerPage = rowsPerPage;
     }
 
     /**

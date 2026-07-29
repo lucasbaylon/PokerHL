@@ -12,28 +12,28 @@
     </button>
 </header>
 
-<div class="animate-appear opacity-0 animation-delay-50 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
-    <table class="w-full min-w-[600px] border-collapse">
-        <thead>
-            <tr class="text-left text-gray-800 dark:text-gray-300">
-                <th class="p-4">Nom</th>
-                <th class="p-4">Contenu</th>
-                <th class="w-44 p-4 text-right">Actions</th>
+<div #tableContainer class="animate-appear opacity-0 animation-delay-50 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
+    <p-table [value]="rangePages" dataKey="id" [paginator]="rangePages.length > nbRowsPerPage"
+        [rows]="nbRowsPerPage" styleClass="min-w-[600px]">
+        <ng-template pTemplate="header">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">Nom</th>
+                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">Contenu</th>
+                <th class="w-44 bg-white text-right dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            @for (page of rangePages; track page.id) {
-            <tr class="border-0 border-t border-solid border-gray-200 text-gray-800 dark:border-gray-700 dark:text-gray-300">
-                <td class="p-4">
+        </ng-template>
+        <ng-template pTemplate="body" let-page>
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
+                <td class="dark:border-gray-700">
                     <button type="button" (click)="openPage(page.id)"
                         class="border-0 bg-transparent p-0 text-left font-normal text-gray-800 hover:text-gray-600 hover:underline dark:text-gray-300 dark:hover:text-white cursor-pointer">
                         {{ page.name }}
                     </button>
                 </td>
-                <td class="p-4 text-gray-500 dark:text-gray-400">
+                <td class="text-gray-500 dark:text-gray-400 dark:border-gray-700">
                     {{ page.blocks.length }} bloc{{ page.blocks.length > 1 ? 's' : '' }}
                 </td>
-                <td class="p-4">
+                <td class="dark:border-gray-700">
                     <div class="flex justify-end gap-2">
                         <button type="button" title="Ouvrir" [attr.aria-label]="'Ouvrir ' + page.name"
                             (click)="openPage(page.id)" class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square">
@@ -51,15 +51,15 @@
                     </div>
                 </td>
             </tr>
-            } @empty {
-            <tr class="border-0 border-t border-solid border-gray-200 text-gray-800 dark:border-gray-700 dark:text-gray-300">
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                 <td colspan="3" class="py-12 text-center">
                     <i class="fa-solid fa-table-cells-large mb-3 text-3xl text-gray-400" aria-hidden="true"></i>
                     <p class="m-0 font-semibold">Aucune page créée</p>
                     <p class="m-0 mt-1 text-sm text-gray-500">Créez une page pour organiser vos premières ranges.</p>
                 </td>
             </tr>
-            }
-        </tbody>
-    </table>
+        </ng-template>
+    </p-table>
 </div>

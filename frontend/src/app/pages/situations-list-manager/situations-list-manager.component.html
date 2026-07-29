@@ -38,7 +38,7 @@
     </div>
 </section>
 
-<div class="animate-appear opacity-0 animation-delay-100 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
+<div #tableContainer class="animate-appear opacity-0 animation-delay-100 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
     <p-table [value]="situationList" dataKey="id" [paginator]="situationList.length > nbRowsPerPage"
         [rows]="nbRowsPerPage" [(selection)]="selectedSituations" styleClass="min-w-[900px]">
         <ng-template pTemplate="header">

@@ -198,18 +198,4 @@ export class CommonService {
         this.darkMode.set(value);
     }
 
-    /**
-     * Détermine le nombre de lignes à afficher par page selon la hauteur de l'écran.
-     * @param height Hauteur de la fenêtre en pixels.
-     * @returns Nombre de lignes recommandé.
-     */
-    getNbRowsPerPage(height: number): number {
-        if (height > 1080) {
-            return 11;
-        } else if (height <= 750) {
-            return 4;
-        } else {
-            return 7;
-        }
-    }
 }

@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { RangePage } from '../../interfaces/range-page';
@@ -9,13 +10,22 @@ import { RangePageService } from '../../services/range-page.service';
 @Component({
     selector: 'app-range-pages-list',
     standalone: true,
-    imports: [],
+    imports: [TableModule],
     templateUrl: './range-pages-list.component.html'
 })
-export class RangePagesListComponent implements OnInit, OnDestroy {
+export class RangePagesListComponent implements AfterViewInit, OnInit, OnDestroy {
 
     private rangePagesSubscription!: Subscription;
+    private resizeFrameId?: number;
+    private readonly defaultHeaderHeight = 56;
+    private readonly defaultPaginatorHeight = 56;
+    private readonly defaultRowHeight = 65;
+    private readonly minRowsPerPage = 4;
+    private readonly pageBottomSpacing = 24;
     rangePages: RangePage[] = [];
+    nbRowsPerPage = 11;
+
+    @ViewChild('tableContainer') tableContainer!: ElementRef<HTMLElement>;
 
     constructor(
         private router: Router,
@@ -23,15 +33,64 @@ export class RangePagesListComponent implements OnInit, OnDestroy {
         protected commonService: CommonService
     ) { }
 
+    /** Ajuste le nombre de lignes au redimensionnement de la fenêtre. */
+    @HostListener('window:resize')
+    onResize() {
+        this.scheduleRowsPerPageUpdate();
+    }
+
+    ngAfterViewInit(): void {
+        this.scheduleRowsPerPageUpdate();
+    }
+
     ngOnInit(): void {
         this.rangePagesSubscription = this.rangePageService.rangePages.subscribe((data: RangePage[]) => {
             this.rangePages = data.sort((a, b) => a.name.localeCompare(b.name));
+            this.scheduleRowsPerPageUpdate();
         });
         this.rangePageService.getRangePages();
     }
 
     ngOnDestroy(): void {
         this.rangePagesSubscription.unsubscribe();
+
+        if (this.resizeFrameId !== undefined) {
+            cancelAnimationFrame(this.resizeFrameId);
+        }
+    }
+
+    private scheduleRowsPerPageUpdate() {
+        if (this.resizeFrameId !== undefined) {
+            cancelAnimationFrame(this.resizeFrameId);
+        }
+
+        this.resizeFrameId = requestAnimationFrame(() => {
+            this.resizeFrameId = undefined;
+            this.updateRowsPerPage();
+        });
+    }
+
+    private updateRowsPerPage() {
+        const tableElement = this.tableContainer?.nativeElement;
+
+        if (!tableElement) {
+            return;
+        }
+
+        const availableHeight = window.innerHeight - tableElement.getBoundingClientRect().top - this.pageBottomSpacing;
+        const headerHeight = tableElement.querySelector('thead')?.getBoundingClientRect().height || this.defaultHeaderHeight;
+        const rowHeight = tableElement.querySelector('tbody tr')?.getBoundingClientRect().height || this.defaultRowHeight;
+        const rowsWithoutPaginator = Math.floor((availableHeight - headerHeight) / rowHeight);
+        const needsPaginator = this.rangePages.length > rowsWithoutPaginator;
+        const paginatorHeight = needsPaginator
+            ? tableElement.querySelector('.p-paginator')?.getBoundingClientRect().height || this.defaultPaginatorHeight
+            : 0;
+        const rowsPerPage = Math.max(
+            this.minRowsPerPage,
+            Math.floor((availableHeight - headerHeight - paginatorHeight) / rowHeight)
+        );
+
+        this.nbRowsPerPage = rowsPerPage;
     }
 
     createPage() {
