@@ -168,13 +168,17 @@
     </p-table>
 </div>
 
-<dialog id="displaySituationModal" class="dui-modal">
-    <div class="dui-modal-box w-fit max-w-5xl text-gray-800 dark:text-gray-300 bg-white dark:bg-secondary-dark-bg">
+@if (showSituationModal) {
+<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-fadeIn" role="dialog"
+    aria-modal="true" aria-labelledby="display-situation-title">
+    <button type="button" (click)="closeSituationModal()" class="absolute inset-0 border-0 bg-black/60 p-0 cursor-default"
+        aria-label="Fermer l'aperçu de la situation"></button>
+    <div class="relative z-10 w-fit max-w-5xl rounded-xl bg-white p-6 text-gray-800 shadow-2xl dark:bg-secondary-dark-bg dark:text-gray-300">
         @if (situationToDisplay) {
-        <form method="dialog">
-            <button class="dui-btn dui-btn-sm dui-btn-circle dui-btn-ghost absolute right-2 top-2 outline-none" aria-label="Fermer">✕</button>
-        </form>
-        <h4 class="m-0 mb-4 text-center text-lg font-semibold uppercase tracking-wider">
+        <button type="button" (click)="closeSituationModal()"
+            class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-gray-500 outline-none transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+            aria-label="Fermer">X</button>
+        <h4 id="display-situation-title" class="m-0 mb-4 text-center text-lg font-semibold uppercase tracking-wider">
             {{ situationToDisplay.name }}
         </h4>
         <div class="flex flex-col justify-center gap-5 md:flex-row md:items-center">
@@ -209,5 +213,5 @@
         </div>
         }
     </div>
-    <form method="dialog" class="dui-modal-backdrop"><button aria-label="Fermer"></button></form>
-</dialog>
+</div>
+}

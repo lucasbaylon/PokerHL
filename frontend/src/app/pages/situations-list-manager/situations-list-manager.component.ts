@@ -58,6 +58,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     ];
 
     situationToDisplay!: Situation;
+    showSituationModal = false;
 
     constructor(
         private router: Router,
@@ -171,7 +172,11 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
      */
     displaySituation(situation: Situation) {
         this.situationToDisplay = situation;
-        this.commonService.showModal('displaySituationModal');
+        this.showSituationModal = true;
+    }
+
+    closeSituationModal() {
+        this.showSituationModal = false;
     }
 
     /**
