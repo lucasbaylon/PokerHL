@@ -200,6 +200,14 @@ html,
 body {
     height: 100%;
     overflow: hidden;
+    font-family: var(--font-family);
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
 }
 
 .app-scrollbar {
