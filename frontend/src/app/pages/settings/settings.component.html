@@ -169,8 +169,8 @@
 
             <div class="flex items-center justify-between gap-4 py-3">
                 <div>
-                    <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Nom automatique</p>
-                    <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Nomme automatiquement les solutions multiples.</p>
+                    <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Nom automatique solutions multiples</p>
+                    <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Attribue un nom aux solutions multiples lors de leur création.</p>
                 </div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="autoMultipleSolutionName"
                     (onChange)="updateUserParam('autoMultipleSolutionName', autoMultipleSolutionName)"></p-inputSwitch>
@@ -206,7 +206,7 @@
             <div class="flex items-center justify-between gap-4 py-3">
                 <div>
                     <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Afficher la solution en cas d'erreur</p>
-                    <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Montre immédiatement la bonne réponse.</p>
+                    <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Affiche la bonne réponse dès qu'une erreur est faite.</p>
                 </div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySolutionOnError"
                     (onChange)="updateUserParam('displaySolution', displaySolutionOnError)"></p-inputSwitch>
