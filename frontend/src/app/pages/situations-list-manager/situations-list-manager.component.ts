@@ -7,7 +7,6 @@ import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { Situation } from '../../interfaces/situation';
-import { DealerPipe } from '../../pipes/dealer.pipe';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
@@ -18,7 +17,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, DealerPipe, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle, AppModalComponent],
+    imports: [TableModule, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle, AppModalComponent],
     templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent implements AfterViewInit, OnDestroy {

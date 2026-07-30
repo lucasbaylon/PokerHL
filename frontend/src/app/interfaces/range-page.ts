@@ -1,9 +1,9 @@
 import { Situation } from './situation';
 
-export type RangeBlockType = 'range' | 'text' | 'positions';
-export type RangeBlockSource = 'situation';
+type RangeBlockType = 'range' | 'text' | 'positions';
+type RangeBlockSource = 'situation';
 
-export interface RangePageDisplaySettings {
+interface RangePageDisplaySettings {
     cellSize: number;
     compact: boolean;
     showLegend: boolean;

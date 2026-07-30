@@ -30,7 +30,6 @@ export class SettingsComponent {
     particleSpeed: number = DEFAULT_PARTICLE_SETTINGS.particleSpeed;
     particleLinks: boolean = DEFAULT_PARTICLE_SETTINGS.particleLinks;
     displaySolutionOnError: boolean = true;
-    highContrastCards: boolean = false;
     autoMultipleSolutionName: boolean = false;
 
     newUserName: string = '';

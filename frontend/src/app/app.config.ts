@@ -15,7 +15,7 @@ import { appInterceptor } from './interceptors/app.interceptor';
 
 const config: SocketIoConfig = { url: environment.socketUrl, options: {} };
 
-export function HttpLoaderFactory(http: HttpClient) {
+function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
