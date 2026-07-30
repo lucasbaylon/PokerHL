@@ -507,7 +507,7 @@ export class SituationManagerComponent {
             });
         } else {
             if (this.multipleSolutionName === "") {
-                this.commonService.showSwalToast(`Veuillez donner un nom à la solution multiple.`, 'error');
+                this.commonService.showSwalToast(`Veuillez donner un nom à la solution mixte.`, 'error');
                 return;
             }
         }
@@ -550,7 +550,7 @@ export class SituationManagerComponent {
     }
 
     /**
-     * Charge une solution multiple existante pour modification.
+     * Charge une solution mixte existante pour modification.
      * @param solutionId Identifiant de la solution à édier.
      */
     editMultipleSolution(solutionId: string) {
@@ -576,8 +576,8 @@ export class SituationManagerComponent {
     }
 
     /**
-     * Supprime une solution multiple par son identifiant.
-     * @param multipleSolutionId L'identifiant de la solution multiple à supprimer.
+     * Supprime une solution mixte par son identifiant.
+     * @param multipleSolutionId L'identifiant de la solution mixte à supprimer.
      */
     deleteMultipleSolution(multipleSolutionId: string) {
         const solutions = this.situation_obj.solutions;

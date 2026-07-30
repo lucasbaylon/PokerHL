@@ -191,15 +191,15 @@
     </div>
 </div>
 
-<!-- Div conteneur SOLUTIONS MULTIPLES et CARACTÉRISTIQUES DE LA SITUATION -->
+<!-- Div conteneur SOLUTIONS MIXTES et CARACTÉRISTIQUES DE LA SITUATION -->
 <div class="flex items-stretch justify-center w-full my-16 mx-auto h-auto">
-    <!-- Div SOLUTIONS MULTIPLES -->
+    <!-- Div SOLUTIONS MIXTES -->
     <div
         class="p-5 rounded-md shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 flex flex-col overflow-visible transition-colors duration-500">
         <div class="mb-5 flex items-center justify-between gap-4">
             <div>
                 <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                    Solutions multiples</h4>
+                    Solutions mixtes</h4>
                 <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">
                     Combinez plusieurs actions simples avec des fréquences.
                 </p>
@@ -216,7 +216,7 @@
                 <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow dark:bg-secondary-dark-bg dark:text-gray-400">
                     <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
                 </div>
-                <p class="m-0 font-semibold text-gray-800 dark:text-gray-300">Aucune solution multiple</p>
+                <p class="m-0 font-semibold text-gray-800 dark:text-gray-300">Aucune solution mixte</p>
                 <p class="m-0 mt-1 max-w-sm text-sm text-gray-500 dark:text-gray-400">
                     Ajoutez-en une pour représenter une stratégie mixte avec plusieurs actions possibles.
                 </p>
@@ -265,11 +265,11 @@
         }
     </div>
 
-    <!-- Div AJOUTER SOLUTIONS MULTIPLES-->
+    <!-- Div AJOUTER SOLUTIONS MIXTES-->
     <app-modal [open]="showMultipleSolutionModal" (closed)="resetMultipleSituation()" panelClass="w-full max-w-2xl">
             <h4
                 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                {{ multipleSituationId ? 'Modifier une solution multiple' : 'Ajouter une solution multiple' }}
+                {{ multipleSituationId ? 'Modifier une solution mixte' : 'Ajouter une solution mixte' }}
             </h4>
             @if (!autoMultipleSolutionName) {
                 <div class="my-7">
