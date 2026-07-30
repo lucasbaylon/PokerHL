@@ -59,7 +59,7 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type"
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" [filter]="false"
                                     (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
@@ -79,7 +79,7 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="nbPlayerLst" placeholder="Joueurs"
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="nbPlayerLst" placeholder="Joueurs" [filter]="false"
                                     (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
@@ -93,7 +93,7 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="positionLst" placeholder="Position"
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="positionLst" placeholder="Position" [filter]="false"
                                     (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
@@ -107,7 +107,7 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="opponentLevelLst" placeholder="Niveau"
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="opponentLevelLst" placeholder="Niveau" [filter]="false"
                                     (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>

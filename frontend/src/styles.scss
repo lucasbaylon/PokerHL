@@ -274,6 +274,104 @@ html.dark .p-dropdown-panel .p-dropdown-item.p-focus {
     @apply bg-gray-700 text-gray-100;
 }
 
+html.dark .p-column-filter-menu-button {
+    @apply text-gray-300;
+}
+
+html.dark .p-column-filter-menu-button:hover,
+html.dark .p-column-filter-menu-button.p-column-filter-menu-button-open,
+html.dark .p-column-filter-menu-button.p-column-filter-menu-button-open:hover {
+    @apply bg-gray-700 text-gray-100;
+}
+
+html.dark .p-column-filter-menu-button.p-column-filter-menu-button-active,
+html.dark .p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
+    @apply bg-gray-600 text-white;
+}
+
+html.dark .p-column-filter-overlay {
+    @apply border border-solid border-gray-700 bg-secondary-dark-bg text-gray-300 shadow-lg;
+}
+
+html.dark .p-column-filter-overlay-menu .p-column-filter-operator,
+html.dark .p-column-filter-overlay-menu .p-column-filter-constraint {
+    @apply border-gray-700 bg-secondary-dark-bg text-gray-300;
+}
+
+html.dark .p-column-filter-overlay-menu .p-column-filter-buttonbar,
+html.dark .p-column-filter-overlay-menu .p-column-filter-add-rule {
+    @apply bg-secondary-dark-bg;
+}
+
+html.dark .p-column-filter-overlay .p-button {
+    @apply border-gray-700 bg-main-dark-bg text-gray-300;
+}
+
+html.dark .p-column-filter-overlay .p-button:hover {
+    @apply border-gray-600 bg-gray-700 text-gray-100;
+}
+
+html.dark .p-column-filter-overlay .p-button.p-button-text {
+    @apply border border-solid border-gray-700 bg-transparent text-gray-300;
+}
+
+html.dark .p-column-filter-overlay .p-button.p-button-text:hover {
+    @apply bg-gray-700 text-gray-100;
+}
+
+html.dark .p-column-filter-overlay .p-checkbox .p-checkbox-box {
+    @apply border-gray-600 bg-main-dark-bg;
+}
+
+html.dark .p-column-filter-overlay .p-checkbox .p-checkbox-box.p-highlight {
+    @apply border-gray-500 bg-gray-600;
+}
+
+html.dark .p-column-filter-overlay .p-multiselect {
+    @apply border-gray-700 bg-main-dark-bg text-gray-300;
+}
+
+html.dark .p-column-filter-overlay .p-multiselect:not(.p-disabled):hover {
+    @apply border-gray-600;
+}
+
+html.dark .p-column-filter-overlay .p-multiselect-label,
+html.dark .p-column-filter-overlay .p-multiselect-trigger {
+    @apply text-gray-300;
+}
+
+html.dark .p-multiselect-panel {
+    @apply border border-solid border-gray-700 bg-secondary-dark-bg text-gray-300 shadow-lg;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-header {
+    @apply border-gray-700 bg-secondary-dark-bg text-gray-300;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-close {
+    @apply text-gray-300;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-close:enabled:hover {
+    @apply bg-gray-700 text-gray-100;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-items {
+    @apply bg-secondary-dark-bg p-0;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-item,
+html.dark .p-multiselect-panel .p-multiselect-empty-message {
+    @apply bg-secondary-dark-bg text-gray-300;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-item.p-highlight,
+html.dark .p-multiselect-panel .p-multiselect-item.p-highlight.p-focus,
+html.dark .p-multiselect-panel .p-multiselect-item:not(.p-highlight):not(.p-disabled).p-focus,
+html.dark .p-multiselect-panel .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+    @apply bg-gray-700 text-gray-100;
+}
+
 p-inputnumber:has(#situationStack),
 p-inputnumber:has(#situationStack) .p-inputnumber,
 #situationStack {
