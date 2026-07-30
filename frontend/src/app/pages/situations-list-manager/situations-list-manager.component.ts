@@ -61,7 +61,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     situationToDisplay!: Situation;
     showSituationModal = false;
     showRemoveSituationModal = false;
-    situationIdToRemove?: string;
+    situationIdsToRemove: number[] = [];
 
     constructor(
         private router: Router,
@@ -234,20 +234,38 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
      * Supprime une situation après confirmation de l'utilisateur.
      * @param id Identifiant de la situation à supprimer.
      */
-    removeSituation(id: string) {
-        this.situationIdToRemove = id;
+    removeSituation(id?: number) {
+        if (id === undefined) return;
+        this.situationIdsToRemove = [id];
+        this.showRemoveSituationModal = true;
+    }
+
+    removeSelectedSituations() {
+        const selectedIds = this.selectedSituations
+            .map(situation => situation.id)
+            .filter((id): id is number => id !== undefined);
+
+        if (selectedIds.length === 0) {
+            this.commonService.showSwalToast('Sélectionnez au moins une situation.', 'error');
+            return;
+        }
+
+        this.situationIdsToRemove = selectedIds;
         this.showRemoveSituationModal = true;
     }
 
     closeRemoveSituationModal() {
         this.showRemoveSituationModal = false;
-        this.situationIdToRemove = undefined;
+        this.situationIdsToRemove = [];
     }
 
     confirmRemoveSituation() {
-        if (!this.situationIdToRemove) return;
-        this.apiSituation.removeSituation(this.situationIdToRemove);
-        this.commonService.showSwalToast(`Situation supprimée !`);
+        if (this.situationIdsToRemove.length === 0) return;
+        this.situationIdsToRemove.forEach(id => this.apiSituation.removeSituation(id.toString()));
+        this.selectedSituations = [];
+        this.commonService.showSwalToast(
+            this.situationIdsToRemove.length > 1 ? 'Situations supprimées !' : 'Situation supprimée !'
+        );
         this.closeRemoveSituationModal();
     }
 
