@@ -347,7 +347,7 @@
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Type</label>
                     <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
                         [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
-                        optionLabel="name" styleClass="w-full"></p-dropdown>
+                        optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Stack effectif</label>
@@ -364,23 +364,23 @@
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Joueurs</label>
                     <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
-                        optionLabel="name" styleClass="w-full"></p-dropdown>
+                        optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Votre position</label>
                     <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
-                        optionLabel="name" styleClass="w-full"></p-dropdown>
+                        optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Niveau adversaire</label>
                     <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
-                        (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                        (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                 </div>
                 @if (opponentLevel.code === "fish_shark") {
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Position du fish</label>
                     <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
-                        (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                        (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                 </div>
                 }
 
@@ -389,14 +389,14 @@
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (BU)</label>
                         <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                     </div>
                     }
                     @if (position.code === 'bb') {
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (SB)</label>
                         <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
-                            (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                            (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                     </div>
                     }
                 }
@@ -406,7 +406,7 @@
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (SB)</label>
                         <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full"></p-dropdown>
+                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                     </div>
                     }
                 }
