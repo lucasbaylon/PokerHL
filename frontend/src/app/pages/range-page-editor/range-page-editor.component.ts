@@ -473,7 +473,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     applyPositionToSituations(position: string, positionBlock?: RangePageBlock) {
-        const stack = Number(position.trim().match(/\d+/)?.[0]);
+        const stack = Number(position.trim().match(/[\d.]+/)?.[0]);
         if (!stack) return;
 
         if (positionBlock) {

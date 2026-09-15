@@ -353,6 +353,7 @@
                     <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Stack effectif</label>
                     <div class="relative">
                         <p-inputNumber inputId="situationStack" [min]="0" [max]="999"
+                            [minFractionDigits]="0" [maxFractionDigits]="2"
                             [(ngModel)]="situation_obj.stack" styleClass="situation-stack-input"
                             inputStyleClass="situation-stack-input-field"></p-inputNumber>
                         <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">

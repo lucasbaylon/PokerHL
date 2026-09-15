@@ -283,7 +283,7 @@ export class SituationManagerComponent {
                 this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau des ranges.`, 'error');
             } else {
                 // On check si il y a bien un nombre de jetons
-                if (!this.situation_obj.stack) {
+                if (this.situation_obj.stack == null) {
                     this.commonService.showSwalToast(`Veuillez remplir le champ "Stack effectif".`, 'error');
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
