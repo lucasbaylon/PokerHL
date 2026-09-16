@@ -15,6 +15,7 @@ import { SituationService } from '../../services/situation.service';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 
 type DragMode = 'move' | 'resize';
+type ResizeDirection = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
 
 interface PositionSituationTypeOption {
     name: string;
@@ -41,6 +42,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         originalY: number;
         originalW: number;
         originalH: number;
+        resizeDirection?: ResizeDirection;
         groupOriginalPositions?: Array<{ id: string; x: number; y: number; w: number; h: number; }>;
     };
     private selectionState?: {
@@ -55,6 +57,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         blockId: string;
         index: number;
     };
+    private autoExpandedBlocks = new Map<string, { width: number; originalX: number; expandedX: number; }>();
 
     page: RangePage = this.createEmptyPage();
     situations: Situation[] = [];
@@ -62,6 +65,9 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     selectedBlockId?: string;
     selectedBlockIds: string[] = [];
     editingBlockId?: string;
+    actionsMenuBlockId?: string;
+    headerActionsBlockId?: string;
+    actionsMenuPlacement: 'above' | 'below' = 'above';
     selectedPositionSituation?: PositionSituationTypeOption;
     showPositionSituationPopup = false;
     showGridHelpPopup = false;
@@ -407,7 +413,10 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     selectBlock(block: RangePageBlock, keepMultiSelection = false) {
         if (this.selectedBlockId !== block.id) {
+            this.restoreAutoExpandedBlock(this.selectedBlockId);
             this.editingBlockId = undefined;
+            this.actionsMenuBlockId = undefined;
+            this.headerActionsBlockId = undefined;
         }
         this.selectedBlockId = block.id;
         if (!keepMultiSelection || !this.selectedBlockIds.includes(block.id)) {
@@ -417,13 +426,33 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     clearBlockSelection() {
+        this.restoreAutoExpandedBlock(this.selectedBlockId);
         this.selectedBlockId = undefined;
         this.selectedBlockIds = [];
         this.editingBlockId = undefined;
+        this.actionsMenuBlockId = undefined;
+        this.headerActionsBlockId = undefined;
+    }
+
+    toggleBlockActions(block: RangePageBlock, event: MouseEvent) {
+        const button = event.currentTarget as HTMLElement;
+        const buttonRect = button.getBoundingClientRect();
+        const viewportTop = button.closest('.app-scrollbar')?.getBoundingClientRect().top || 0;
+        this.actionsMenuPlacement = buttonRect.top - 44 < viewportTop ? 'below' : 'above';
+        this.actionsMenuBlockId = this.actionsMenuBlockId === block.id ? undefined : block.id;
+    }
+
+    isBlockActionsOpen(block: RangePageBlock): boolean {
+        return this.actionsMenuBlockId === block.id;
+    }
+
+    isHeaderActionsVisible(block: RangePageBlock): boolean {
+        return this.headerActionsBlockId === block.id;
     }
 
     editBlock(block: RangePageBlock) {
         this.selectBlock(block);
+        this.actionsMenuBlockId = undefined;
         this.editingBlockId = block.id;
     }
 
@@ -510,11 +539,20 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         return firstRangeBlock ? [firstRangeBlock] : [];
     }
 
-    startDrag(event: MouseEvent, block: RangePageBlock, mode: DragMode) {
+    startDrag(event: MouseEvent, block: RangePageBlock, mode: DragMode, resizeDirection?: ResizeDirection) {
         event.preventDefault();
         event.stopPropagation();
+        if (mode === 'move') {
+            this.ensureHeaderActionsFit(event, block);
+        } else {
+            this.autoExpandedBlocks.delete(block.id);
+            this.actionsMenuBlockId = undefined;
+            this.headerActionsBlockId = undefined;
+        }
         this.selectBlock(block, mode === 'move');
-        if (mode === 'resize' && !this.isEditing(block)) return;
+        if (mode === 'move') {
+            this.headerActionsBlockId = block.id;
+        }
         const groupBlocks = mode === 'move'
             ? this.page.blocks.filter(item => this.selectedBlockIds.includes(item.id))
             : [];
@@ -527,8 +565,43 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             originalY: block.y,
             originalW: block.w,
             originalH: block.h,
+            resizeDirection,
             groupOriginalPositions: groupBlocks.map(item => ({ id: item.id, x: item.x, y: item.y, w: item.w, h: item.h }))
         };
+    }
+
+    private ensureHeaderActionsFit(event: MouseEvent, block: RangePageBlock) {
+        const header = event.currentTarget as HTMLElement | null;
+        const title = header?.querySelector('span') as HTMLElement | null;
+        if (!title) return;
+
+        const range = document.createRange();
+        range.selectNodeContents(title);
+        const titleWidth = Math.ceil(range.getBoundingClientRect().width);
+        range.detach();
+
+        const requiredWidth = this.snapToGrid(titleWidth + 72, this.minBlockWidth, this.canvasWidth);
+        if (block.w >= requiredWidth) return;
+
+        const originalWidth = block.w;
+        const originalX = block.x;
+        block.w = requiredWidth;
+        block.x = this.snapToGrid(Math.min(block.x, this.canvasWidth - block.w), 0, this.canvasWidth - block.w);
+        if (!this.autoExpandedBlocks.has(block.id)) {
+            this.autoExpandedBlocks.set(block.id, { width: originalWidth, originalX, expandedX: block.x });
+        }
+    }
+
+    private restoreAutoExpandedBlock(blockId?: string) {
+        if (!blockId) return;
+        const initialSize = this.autoExpandedBlocks.get(blockId);
+        const block = this.page.blocks.find(item => item.id === blockId);
+        if (!initialSize || !block) return;
+
+        const movedBy = block.x - initialSize.expandedX;
+        block.w = initialSize.width;
+        block.x = this.snapToGrid(initialSize.originalX + movedBy, 0, this.canvasWidth - block.w);
+        this.autoExpandedBlocks.delete(blockId);
     }
 
     onWindowMouseMove = (event: MouseEvent) => {
@@ -544,11 +617,6 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         const block = this.page.blocks.find(item => item.id === this.dragState?.blockId);
         if (!block) return;
-        if (this.dragState.mode === 'resize' && !this.isEditing(block)) {
-            this.dragState = undefined;
-            return;
-        }
-
         const deltaX = (event.clientX - this.dragState.startX) / this.zoomLevel;
         const deltaY = (event.clientY - this.dragState.startY) / this.zoomLevel;
 
@@ -556,8 +624,24 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             this.moveSelectedBlocks(deltaX, deltaY);
         } else {
             const minSize = this.minSizeForBlock(block);
-            block.w = this.snapToGrid(this.dragState.originalW + deltaX, minSize.width, this.canvasWidth - block.x);
-            block.h = this.snapToGrid(this.dragState.originalH + deltaY, minSize.height, this.canvasHeight - block.y);
+            const direction = this.dragState.resizeDirection || 'se';
+
+            if (direction.includes('e')) {
+                block.w = this.snapToGrid(this.dragState.originalW + deltaX, minSize.width, this.canvasWidth - block.x);
+            }
+            if (direction.includes('s')) {
+                block.h = this.snapToGrid(this.dragState.originalH + deltaY, minSize.height, this.canvasHeight - block.y);
+            }
+            if (direction.includes('w')) {
+                const maxX = this.dragState.originalX + this.dragState.originalW - minSize.width;
+                block.x = this.snapToGrid(this.dragState.originalX + deltaX, 0, maxX);
+                block.w = this.dragState.originalW + (this.dragState.originalX - block.x);
+            }
+            if (direction.includes('n')) {
+                const maxY = this.dragState.originalY + this.dragState.originalH - minSize.height;
+                block.y = this.snapToGrid(this.dragState.originalY + deltaY, 0, maxY);
+                block.h = this.dragState.originalH + (this.dragState.originalY - block.y);
+            }
         }
     };
 
@@ -600,7 +684,9 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         const startX = (event.clientX - rect.left) / this.zoomLevel;
         const startY = (event.clientY - rect.top) / this.zoomLevel;
 
+        this.restoreAutoExpandedBlock(this.selectedBlockId);
         this.editingBlockId = undefined;
+        this.headerActionsBlockId = undefined;
         this.selectedBlockId = undefined;
         this.selectedBlockIds = [];
         this.selectionState = {
@@ -770,7 +856,8 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             top: `${block.y}px`,
             width: `${block.w}px`,
             'min-height': `${block.h}px`,
-            'z-index': block.zIndex
+            'z-index': block.zIndex,
+            transition: this.isResizing(block) ? 'none' : undefined
         };
     }
 
@@ -865,6 +952,10 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     isMovingBlock(block: RangePageBlock): boolean {
         return this.dragState?.mode === 'move' && this.selectedBlockIds.includes(block.id);
+    }
+
+    isResizing(block: RangePageBlock): boolean {
+        return this.dragState?.mode === 'resize' && this.dragState.blockId === block.id;
     }
 
     minSizeForBlock(block: RangePageBlock) {

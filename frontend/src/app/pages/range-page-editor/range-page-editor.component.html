@@ -112,10 +112,10 @@
             (mousedown)="startSelection($event)">
             @for (block of page.blocks; track block.id) {
                 <section
-                    class="absolute overflow-visible border bg-white text-gray-800 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
+                    class="absolute overflow-visible border bg-white text-gray-800 shadow-lg transition-[width,background-color,border-color,color] duration-300 ease-out dark:bg-secondary-dark-bg dark:text-gray-300"
                     [ngClass]="[isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700', isSelected(block) || isMovingBlock(block) ? 'rounded-none' : 'rounded-md']"
-                    [ngStyle]="blockStyle(block)" (mousedown)="selectBlock(block); $event.stopPropagation()">
-                    <div class="flex h-10 cursor-move items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300"
+                    [ngStyle]="blockStyle(block)">
+                    <div class="relative flex h-10 cursor-move items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300"
                         (mousedown)="startDrag($event, block, 'move')">
                         @if (isSelected(block)) {
                             @if (isEditing(block)) {
@@ -123,24 +123,36 @@
                                     class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
                                     autocomplete="off" pInputText (mousedown)="$event.stopPropagation()" />
                             } @else {
-                                <span class="min-w-0 flex-1 truncate text-sm font-semibold">{{ block.title || block.type }}</span>
+                                <span class="min-w-0 flex-1 truncate pr-1 text-sm font-semibold">{{ block.title || block.type }}</span>
                             }
                             @if (!isEditing(block)) {
-                                <button type="button" title="Modifier" (click)="editBlock(block); $event.stopPropagation()"
+                              @if (isHeaderActionsVisible(block)) {
+                                <button type="button" title="Actions" aria-label="Afficher les actions du bloc"
+                                    [attr.aria-expanded]="isBlockActionsOpen(block)"
+                                    (click)="toggleBlockActions(block, $event); $event.stopPropagation()"
                                     (mousedown)="$event.stopPropagation()"
-                                    class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
-                                    <i class="fa-solid fa-pencil text-xs"></i>
+                                    class="flex h-8 w-8 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    <i class="fa-solid fa-gear text-sm"></i>
                                 </button>
-                                <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
-                                    (mousedown)="$event.stopPropagation()"
-                                    class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
-                                    <i class="fa-solid fa-clone text-xs"></i>
-                                </button>
-                                <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
-                                    (mousedown)="$event.stopPropagation()"
-                                    class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-red-200 outline-none transition-all duration-150 hover:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/20">
-                                    <i class="fa-solid fa-trash-can text-xs"></i>
-                                </button>
+                                @if (isBlockActionsOpen(block)) {
+                                    <div class="absolute right-2 z-[9999] flex items-center gap-1 rounded-md border border-gray-600 bg-gray-800 p-1 shadow-lg dark:bg-gray-700"
+                                        [ngClass]="actionsMenuPlacement === 'above' ? 'bottom-9' : 'top-9'"
+                                        (mousedown)="$event.stopPropagation()">
+                                        <button type="button" title="Modifier" (click)="editBlock(block); $event.stopPropagation()"
+                                            class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
+                                            <i class="fa-solid fa-pencil text-xs"></i>
+                                        </button>
+                                        <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
+                                            class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
+                                            <i class="fa-solid fa-clone text-xs"></i>
+                                        </button>
+                                        <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
+                                            class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-red-200 outline-none transition-all duration-150 hover:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/20">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                        </button>
+                                    </div>
+                                }
+                              }
                             }
                         } @else {
                             <span class="min-w-0 flex-1 truncate text-sm font-semibold">{{ block.title || block.type }}</span>
@@ -258,10 +270,22 @@
 
                     </div>
 
-                    @if (isEditing(block)) {
-                        <div class="absolute right-0 bottom-0 h-5 w-5 cursor-se-resize bg-gray-800 dark:bg-gray-500"
-                            (mousedown)="startDrag($event, block, 'resize')"></div>
-                    }
+                    <div class="absolute -top-1 left-2 right-2 z-40 h-2 cursor-n-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'n')"></div>
+                    <div class="absolute -right-1 top-2 bottom-2 z-40 w-2 cursor-e-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'e')"></div>
+                    <div class="absolute -bottom-1 left-2 right-2 z-40 h-2 cursor-s-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 's')"></div>
+                    <div class="absolute -left-1 top-2 bottom-2 z-40 w-2 cursor-w-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'w')"></div>
+                    <div class="absolute -right-1 -top-1 z-50 h-3 w-3 cursor-ne-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'ne')"></div>
+                    <div class="absolute -right-1 -bottom-1 z-50 h-3 w-3 cursor-se-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'se')"></div>
+                    <div class="absolute -left-1 -bottom-1 z-50 h-3 w-3 cursor-sw-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'sw')"></div>
+                    <div class="absolute -left-1 -top-1 z-50 h-3 w-3 cursor-nw-resize"
+                        (mousedown)="startDrag($event, block, 'resize', 'nw')"></div>
                 </section>
             }
             @if (isSelectingBlocks()) {
