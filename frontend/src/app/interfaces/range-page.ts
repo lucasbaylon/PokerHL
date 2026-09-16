@@ -21,6 +21,8 @@ export interface RangePageBlock {
     text?: string;
     positions?: string[];
     selectedPosition?: string;
+    activePositionBlockId?: string;
+    activePosition?: string;
     linkedRangeBlockId?: string;
     linkedRangeBlockIds?: string[];
     positionSituationId?: number;

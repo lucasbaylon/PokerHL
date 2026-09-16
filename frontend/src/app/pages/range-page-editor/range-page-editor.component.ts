@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { RangePage, RangePageBlock } from '../../interfaces/range-page';
 import { Situation } from '../../interfaces/situation';
+import { Solution } from '../../interfaces/solution';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
 import { RangePageService } from '../../services/range-page.service';
@@ -89,6 +90,9 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         point: { x: number; y: number; };
         moved: boolean;
     };
+    private rangeAnimationTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+    private previousRangesByBlockId = new Map<string, Situation>();
+    private rangeAnimationProgress = new Map<string, number>();
 
     page: RangePage = this.createEmptyPage();
     situations: Situation[] = [];
@@ -160,6 +164,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         if (this.autoSaveTimeout) {
             clearTimeout(this.autoSaveTimeout);
         }
+        this.rangeAnimationTimeouts.forEach(timeout => clearTimeout(timeout));
         this.rangePageSubscription.unsubscribe();
         this.situationsSubscription.unsubscribe();
         window.removeEventListener('mousemove', this.onWindowMouseMove);
@@ -870,14 +875,113 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         const targetBlocks = this.targetRangeBlocksForPositionBlock(positionBlock);
         targetBlocks.forEach(block => {
+            this.animateRangeBlock(block.id, this.rangeForBlock(block));
             block.source = 'situation';
             block.situationId = existingSituation.id;
             block.title = existingSituation.name;
+            block.activePositionBlockId = positionBlock?.id;
+            block.activePosition = position;
         });
 
         if (targetBlocks.length > 0) {
             this.scheduleAutoSave();
         }
+    }
+
+    isPositionDisplayed(positionBlock: RangePageBlock, position: string): boolean {
+        return this.targetRangeBlocksForPositionBlock(positionBlock).some(rangeBlock => {
+            if (rangeBlock.activePositionBlockId) {
+                return rangeBlock.activePositionBlockId === positionBlock.id
+                    && rangeBlock.activePosition === position;
+            }
+
+            const displayedSituation = this.rangeForBlock(rangeBlock);
+            const reference = this.positionReferenceForBlock(positionBlock);
+            const stack = Number(position.trim().match(/[\d.]+/)?.[0]);
+            return !!displayedSituation && !!reference && !!stack
+                && displayedSituation.stack === stack
+                && this.sameSituationParametersExceptStack(displayedSituation, reference);
+        });
+    }
+
+    private animateRangeBlock(blockId: string, previousRange?: Situation) {
+        if (!previousRange) return;
+        const previousTimeout = this.rangeAnimationTimeouts.get(blockId);
+        if (previousTimeout) clearTimeout(previousTimeout);
+        this.previousRangesByBlockId.set(blockId, previousRange);
+        this.rangeAnimationProgress.set(blockId, 0);
+        const startedAt = performance.now();
+        const tick = () => {
+            const progress = Math.min(1, (performance.now() - startedAt) / 300);
+            this.rangeAnimationProgress.set(blockId, progress);
+            if (progress < 1) {
+                this.rangeAnimationTimeouts.set(blockId, setTimeout(tick, 16));
+            } else {
+                this.previousRangesByBlockId.delete(blockId);
+                this.rangeAnimationProgress.delete(blockId);
+                this.rangeAnimationTimeouts.delete(blockId);
+            }
+        };
+        this.rangeAnimationTimeouts.set(blockId, setTimeout(tick, 16));
+    }
+
+    animatedCellBackground(block: RangePageBlock, rowIndex: number, cellIndex: number, currentRange: Situation): string {
+        const currentSolutionId = currentRange.situations[rowIndex]?.[cellIndex]?.solution;
+        const currentSolution = currentRange.solutions.find(item => item.id === currentSolutionId);
+        if (!currentSolution) return '';
+
+        const previousRange = this.previousRangesByBlockId.get(block.id);
+        const progress = this.rangeAnimationProgress.get(block.id);
+        if (!previousRange || progress === undefined) {
+            return this.commonService.cellBackground(currentSolution, currentRange.solutions);
+        }
+
+        const previousSolutionId = previousRange.situations[rowIndex]?.[cellIndex]?.solution;
+        const previousSolution = previousRange.solutions.find(item => item.id === previousSolutionId);
+        if (!previousSolution) return this.commonService.cellBackground(currentSolution, currentRange.solutions);
+
+        const boundaries = [...new Set([
+            0,
+            100,
+            ...this.solutionBoundaries(previousSolution),
+            ...this.solutionBoundaries(currentSolution)
+        ])].sort((a, b) => a - b);
+        const stops: string[] = [];
+        for (let index = 0; index < boundaries.length - 1; index++) {
+            const from = boundaries[index];
+            const to = boundaries[index + 1];
+            const position = (from + to) / 2;
+            const oldColor = this.solutionColorAt(previousSolution, previousRange.solutions, position);
+            const newColor = this.solutionColorAt(currentSolution, currentRange.solutions, position);
+            const color = this.interpolateColor(oldColor, newColor, progress);
+            stops.push(`${color} ${from}%`, `${color} ${to}%`);
+        }
+        return `linear-gradient(to right, ${stops.join(', ')})`;
+    }
+
+    private solutionBoundaries(solution: Solution): number[] {
+        if (solution.type !== 'mixed') return [];
+        let total = 0;
+        return (solution.colorList || []).map(item => total += item.percent || 0);
+    }
+
+    private solutionColorAt(solution: Solution, solutions: Solution[], position: number): string {
+        if (solution.type !== 'mixed') return solution.color || '#000000';
+        let total = 0;
+        for (const item of solution.colorList || []) {
+            total += item.percent || 0;
+            if (position <= total) {
+                return solutions.find(candidate => candidate.id === item.color)?.color || '#000000';
+            }
+        }
+        const last = solution.colorList?.at(-1);
+        return solutions.find(candidate => candidate.id === last?.color)?.color || '#000000';
+    }
+
+    private interpolateColor(from: string, to: string, progress: number): string {
+        const oldWeight = Math.round((1 - progress) * 1000) / 10;
+        const newWeight = Math.round(progress * 1000) / 10;
+        return `color-mix(in oklab, ${from} ${oldWeight}%, ${to} ${newWeight}%)`;
     }
 
     targetRangeBlocksForPositionBlock(positionBlock?: RangePageBlock): RangePageBlock[] {

@@ -275,12 +275,12 @@
                                             @for (row of range.situations; track rowIndex; let rowIndex = $index) {
                                                 <tr>
                                                     @for (item of row; track cellIndex; let cellIndex = $index) {
-                                                        <td class="cursor-default rounded text-center align-middle font-semibold text-white shadow"
+                                                        <td class="relative cursor-default overflow-hidden rounded text-center align-middle font-semibold text-white shadow"
                                                             [style.width.px]="cellSize(block)"
                                                             [style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
                                                             [style.font-size.px]="block.compact ? 11 : 13"
-                                                            [style.background]="(item.solution! | solutionColor:range.solutions)">
-                                                            {{ item.card }}
+                                                            [style.background]="animatedCellBackground(block, rowIndex, cellIndex, range)">
+                                                            <span class="relative z-10">{{ item.card }}</span>
                                                         </td>
                                                     }
                                                 </tr>
@@ -319,8 +319,9 @@
                                 <div class="overflow-visible rounded-sm border border-gray-700 bg-gray-800 shadow dark:border-gray-700 dark:bg-gray-700">
                                     @for (position of block.positions; track rowIndex; let rowIndex = $index) {
                                         <div class="flex h-7 cursor-pointer items-center border bg-gray-800 text-center text-xs font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                                            [ngClass]="block.selectedPosition === position ? 'border-gray-200 shadow-[inset_0_0_0_1px_rgba(229,231,235,0.95)] dark:border-gray-100 dark:shadow-[inset_0_0_0_1px_rgba(243,244,246,0.95)]' : 'border-gray-600 dark:border-gray-500'"
+                                            [ngClass]="isPositionDisplayed(block, position) ? 'border-gray-200 shadow-[inset_0_0_0_1px_rgba(229,231,235,0.95)] dark:border-gray-100 dark:shadow-[inset_0_0_0_1px_rgba(243,244,246,0.95)]' : 'border-gray-600 dark:border-gray-500'"
                                             (click)="applyPositionToSituations(position, block); $event.stopPropagation()"
+                                            (mousedown)="$event.stopPropagation()"
                                             (dragover)="allowPositionDrop($event, block)"
                                             (drop)="dropPosition($event, block, rowIndex)">
                                             @if (isEditing(block)) {
