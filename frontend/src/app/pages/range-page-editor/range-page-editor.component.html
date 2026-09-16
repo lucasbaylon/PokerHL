@@ -10,6 +10,11 @@
         <i class="fa-solid fa-plus mr-2"></i>
         Positions
     </div>
+    <div (click)="openRangeSituationPopup()"
+        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+        <i class="fa-solid fa-plus mr-2"></i>
+        Range
+    </div>
     <div (click)="addTextBlock()"
         class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-plus mr-2"></i>
@@ -22,8 +27,16 @@
             Reinitialiser vue
         </div>
     }
+    @if (linkMode) {
+        <button type="button" (click)="exitLinkMode()"
+            class="ml-auto inline-flex h-11 cursor-pointer items-center justify-center rounded-md border-0 bg-gray-700 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-600 dark:text-gray-300">
+            <i class="fa-solid fa-xmark mr-2"></i>
+            Quitter l'édition des liens
+        </button>
+    }
     <div (click)="showGridHelpPopup = true"
-        class="ml-auto inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
+        [ngClass]="linkMode ? '' : 'ml-auto'"
+        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
         <i class="fa-solid fa-circle-question mr-2"></i>
         Aide
     </div>
@@ -67,6 +80,29 @@
         </div>
 </app-modal>
 
+<app-modal [open]="showRangeSituationPopup" (closed)="closeRangeSituationPopup()" ariaLabelledBy="range-situation-title"
+    panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
+    <h4 id="range-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase tracking-wider text-gray-800 dark:text-gray-300">
+        Créer un bloc de range
+    </h4>
+    <label for="rangePositionBlock" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Bloc de positions
+    </label>
+    <select id="rangePositionBlock" [(ngModel)]="selectedRangePositionBlockId" name="selectedRangePositionBlockId"
+        class="h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none focus:border-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
+        <option [ngValue]="undefined" disabled>Sélectionner un bloc</option>
+        @for (positionBlock of positionBlocks(); track positionBlock.id) {
+            <option [value]="positionBlock.id">{{ positionBlock.title || 'Positions' }}</option>
+        }
+    </select>
+    <div class="mt-5 flex justify-end">
+        <div (click)="addRangeBlock()"
+            class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+            Ajouter
+        </div>
+    </div>
+</app-modal>
+
 <app-modal [open]="showPositionSituationPopup" (closed)="closePositionSituationPopup()" ariaLabelledBy="position-situation-title"
     panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
         <h4 id="position-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
@@ -108,10 +144,52 @@
         (wheel)="onGridWheel($event)">
         <div class="relative" [style.width.px]="scaledCanvasWidth()" [style.height.px]="scaledCanvasHeight()">
         <div class="relative" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"
+            data-range-canvas
             [ngStyle]="canvasStyle()"
             (mousedown)="startSelection($event)">
+            @if (linkMode) {
+                <svg class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible">
+                    @for (line of connectionLines(); track line.id) {
+                        <g>
+                            @if (selectedConnectionId === line.id) {
+                                <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2"
+                                    stroke="#9ca3af" stroke-width="10" opacity="0.2" />
+                            }
+                            <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2"
+                                stroke="#6b7280" stroke-width="2" />
+                            <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2"
+                                stroke="transparent" stroke-width="18" class="cursor-pointer"
+                                style="pointer-events: stroke" (mousedown)="selectConnection(line, $event)" />
+                            @if (selectedConnectionId === line.id) {
+                                <circle [attr.cx]="line.x1" [attr.cy]="line.y1" r="6" fill="#374151" stroke="#d1d5db" stroke-width="2"
+                                    class="cursor-crosshair" style="pointer-events: all"
+                                    (mousedown)="startConnectionReconnect(line, 'positions', $event)">
+                                    <title>Déplacer l’extrémité</title>
+                                </circle>
+                                <circle [attr.cx]="line.x2" [attr.cy]="line.y2" r="6" fill="#374151" stroke="#d1d5db" stroke-width="2"
+                                    class="cursor-crosshair" style="pointer-events: all"
+                                    (mousedown)="startConnectionReconnect(line, 'range', $event)">
+                                    <title>Déplacer l’extrémité</title>
+                                </circle>
+                                <circle [attr.cx]="(line.x1 + line.x2) / 2" [attr.cy]="(line.y1 + line.y2) / 2" r="11"
+                                    fill="#374151" stroke="#9ca3af" stroke-width="1" class="cursor-pointer"
+                                    style="pointer-events: all" (mousedown)="removeConnection(line, $event)">
+                                    <title>Supprimer le lien</title>
+                                </circle>
+                                <text [attr.x]="(line.x1 + line.x2) / 2" [attr.y]="(line.y1 + line.y2) / 2 + 4"
+                                    text-anchor="middle" fill="#f3f4f6" font-size="14" class="pointer-events-none">×</text>
+                            }
+                        </g>
+                    }
+                    @if (connectionPreview(); as preview) {
+                        <line [attr.x1]="preview.x1" [attr.y1]="preview.y1" [attr.x2]="preview.x2" [attr.y2]="preview.y2"
+                            stroke="#6b7280" stroke-width="2" stroke-dasharray="6 5" />
+                    }
+                </svg>
+            }
             @for (block of page.blocks; track block.id) {
                 <section
+                    [attr.data-block-id]="block.id"
                     class="absolute overflow-visible border bg-white text-gray-800 shadow-lg transition-[width,background-color,border-color,color] duration-300 ease-out dark:bg-secondary-dark-bg dark:text-gray-300"
                     [ngClass]="[isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700', isSelected(block) || isMovingBlock(block) ? 'rounded-none' : 'rounded-md']"
                     [ngStyle]="blockStyle(block)">
@@ -146,6 +224,13 @@
                                             class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
                                             <i class="fa-solid fa-clone text-xs"></i>
                                         </button>
+                                        @if (block.type === 'positions' || block.type === 'range') {
+                                            <button type="button" title="Relier les blocs" (click)="toggleLinkMode(block); $event.stopPropagation()"
+                                                [ngClass]="linkMode && linkModeRootBlockId === block.id ? 'bg-gray-500/40 text-gray-100' : 'bg-transparent text-gray-100'"
+                                                class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 p-0 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
+                                                <i class="fa-solid fa-diagram-project text-xs"></i>
+                                            </button>
+                                        }
                                         <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
                                             class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-red-200 outline-none transition-all duration-150 hover:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/20">
                                             <i class="fa-solid fa-trash-can text-xs"></i>
@@ -286,6 +371,36 @@
                         (mousedown)="startDrag($event, block, 'resize', 'sw')"></div>
                     <div class="absolute -left-1 -top-1 z-50 h-3 w-3 cursor-nw-resize"
                         (mousedown)="startDrag($event, block, 'resize', 'nw')"></div>
+                    @if (isBlockInLinkScope(block)) {
+                        <button type="button" title="Relier ce bloc"
+                            [attr.data-link-anchor-block-id]="block.id"
+                            class="group absolute -top-px left-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+                            (mousedown)="startLinkDrag($event, block, 'top')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
+                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
+                        </button>
+                        <button type="button" title="Relier ce bloc"
+                            [attr.data-link-anchor-block-id]="block.id"
+                            class="group absolute -right-px top-1/2 z-[60] grid h-6 w-6 translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+                            (mousedown)="startLinkDrag($event, block, 'right')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
+                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
+                        </button>
+                        <button type="button" title="Relier ce bloc"
+                            [attr.data-link-anchor-block-id]="block.id"
+                            class="group absolute -bottom-px left-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+                            (mousedown)="startLinkDrag($event, block, 'bottom')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
+                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
+                        </button>
+                        <button type="button" title="Relier ce bloc"
+                            [attr.data-link-anchor-block-id]="block.id"
+                            class="group absolute -left-px top-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+                            (mousedown)="startLinkDrag($event, block, 'left')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
+                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
+                        </button>
+                    }
                 </section>
             }
             @if (isSelectingBlocks()) {
