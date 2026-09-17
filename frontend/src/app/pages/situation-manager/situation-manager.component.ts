@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { Situation } from '../../interfaces/situation';
-import { Solution } from '../../interfaces/solution';
+import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
@@ -121,6 +121,7 @@ export class SituationManagerComponent {
         this.situationSubscription = this.apiSituation.situation.subscribe(situation_str => {
             this.mode = "edit";
             this.situation_obj = JSON.parse(situation_str);
+            this.commonService.migrateSolutions(this.situation_obj.solutions);
             this.editSituationName = this.situation_obj.name;
             this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
 
@@ -208,7 +209,7 @@ export class SituationManagerComponent {
         let solutionLst = this.situation_obj.solutions.filter(solution => solution.type === "unique");
         if (solutionLst.length < 7) {
             let color = this.getRandomColor();
-            this.situation_obj.solutions.push({ id: `unique_solution_${solutionLst.length}`, type: "unique", display_name: undefined, color: color });
+            this.situation_obj.solutions.push({ id: `unique_solution_${solutionLst.length}`, type: "unique", display_name: undefined, action: undefined, color: color });
             this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
             if (solutionLst.length === 6) {
                 document.getElementById("add-solution-button")!.style.display = "none";
@@ -288,17 +289,17 @@ export class SituationManagerComponent {
                 } else {
                     const flatArray = this.situation_obj.situations.flat();
                     const uniqueSolutions = Array.from(new Set(flatArray.map(item => item.solution)));
-                    let emptySolutionInput: boolean = false;
+                    let invalidSolution = false;
 
                     uniqueSolutions.forEach(solution => {
-                        let input = document.getElementById(`input_${solution}`) as HTMLInputElement;
-                        if (input && input.value === "") {
-                            emptySolutionInput = true;
+                        const selectedSolution = this.situation_obj.solutions.find(item => item.id === solution);
+                        if (selectedSolution?.type === 'unique' && (!selectedSolution.action || (selectedSolution.action === 'raise' && !(selectedSolution.raiseAmount! > 0)))) {
+                            invalidSolution = true;
                         }
                     });
                     // On check si toutes les solutions simple ont bien un nom
-                    if (emptySolutionInput) {
-                        this.commonService.showSwalToast(`Veuillez donner un nom aux solutions utilisées dans le tableau.`, 'error');
+                    if (invalidSolution) {
+                        this.commonService.showSwalToast(`Veuillez sélectionner une action et un montant valide pour chaque relance utilisée.`, 'error');
                     } else {
                         this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => uniqueSolutions.includes(solution.id));
                         if (this.mode === "new") {
@@ -366,6 +367,17 @@ export class SituationManagerComponent {
     onChangeSolutionName(solutionId: string, e: any) {
         const solutionLst = this.situation_obj.solutions.filter(solution => solution.id === solutionId)[0];
         solutionLst.display_name = e.target.value;
+    }
+
+    onChangeSolutionAction(solution: Solution, action: SolutionAction) {
+        solution.action = action;
+        if (action !== 'raise') solution.raiseAmount = undefined;
+        solution.display_name = this.commonService.solutionActionLabel(solution);
+    }
+
+    onChangeRaiseAmount(solution: Solution, amount: number | null) {
+        solution.raiseAmount = amount ?? undefined;
+        solution.display_name = this.commonService.solutionActionLabel(solution);
     }
 
     /**

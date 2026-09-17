@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Situation } from '../interfaces/situation';
-import { Solution } from '../interfaces/solution';
+import { Solution, SolutionAction } from '../interfaces/solution';
 import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings } from '../interfaces/user-params';
 
 @Injectable({
@@ -35,18 +35,21 @@ export class CommonService {
                 id: "unique_solution_0",
                 type: "unique",
                 display_name: "All In",
+                action: "all-in",
                 color: "#d80c05"
             },
             {
                 id: "unique_solution_1",
                 type: "unique",
                 display_name: "Call",
+                action: "call",
                 color: "#00aeff"
             },
             {
                 id: "unique_solution_2",
                 type: "unique",
                 display_name: "Check",
+                action: "check",
                 color: "#96c582"
             }
         ],
@@ -65,6 +68,39 @@ export class CommonService {
             [{ card: "A3o", solution: undefined }, { card: "K3o", solution: undefined }, { card: "Q3o", solution: undefined }, { card: "J3o", solution: undefined }, { card: "T3o", solution: undefined }, { card: "93o", solution: undefined }, { card: "83o", solution: undefined }, { card: "73o", solution: undefined }, { card: "63o", solution: undefined }, { card: "53o", solution: undefined }, { card: "43o", solution: undefined }, { card: "33", solution: undefined }, { card: "32s", solution: undefined }],
             [{ card: "A2o", solution: undefined }, { card: "K2o", solution: undefined }, { card: "Q2o", solution: undefined }, { card: "J2o", solution: undefined }, { card: "T2o", solution: undefined }, { card: "92o", solution: undefined }, { card: "82o", solution: undefined }, { card: "72o", solution: undefined }, { card: "62o", solution: undefined }, { card: "52o", solution: undefined }, { card: "42o", solution: undefined }, { card: "32o", solution: undefined }, { card: "22", solution: undefined }]
         ]
+    }
+
+    readonly solutionActions: { name: string, code: SolutionAction }[] = [
+        { name: 'Fold', code: 'fold' },
+        { name: 'Check', code: 'check' },
+        { name: 'Call', code: 'call' },
+        { name: 'Limp', code: 'limp' },
+        { name: 'Raise', code: 'raise' },
+        { name: 'All-in', code: 'all-in' }
+    ];
+
+    migrateSolutions(solutions: Solution[]): Solution[] {
+        for (const solution of solutions) {
+            if (solution.type !== 'unique' || solution.action) continue;
+            const label = (solution.display_name || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
+            const raiseMatch = label.match(/(?:raise|relance|open|r)\s*(?:to|a|à)?\s*(\d+(?:[.,]\d+)?)\s*(?:bb)?/i);
+
+            if (raiseMatch) {
+                solution.action = 'raise';
+                solution.raiseAmount = Number(raiseMatch[1].replace(',', '.'));
+            } else if (/^(all ?in|ai|tapis|shove|push)$/.test(label)) solution.action = 'all-in';
+            else if (/^(fold|couche|se couche)$/.test(label)) solution.action = 'fold';
+            else if (/^(check|parole)$/.test(label)) solution.action = 'check';
+            else if (/^(call|suit|suivre)$/.test(label)) solution.action = 'call';
+            else if (/^(limp|limper)$/.test(label)) solution.action = 'limp';
+            else if (/^(raise|relance)$/.test(label)) solution.action = 'raise';
+        }
+        return solutions;
+    }
+
+    solutionActionLabel(solution: Solution): string {
+        const label = this.solutionActions.find(action => action.code === solution.action)?.name || 'Action à sélectionner';
+        return solution.action === 'raise' && solution.raiseAmount != null ? `${label} ${solution.raiseAmount} BB` : label;
     }
 
     /**

@@ -1,13 +1,15 @@
 import { NgStyle } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { CardComponent } from '../../components/card/card.component';
 import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
 import { ActiveSituation, TableCard, TableColorCard, TableColorCardObj } from '../../interfaces/active-situation';
 import { Card } from '../../interfaces/card';
 import { Situation } from '../../interfaces/situation';
-import { Solution } from '../../interfaces/solution';
+import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
@@ -19,7 +21,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe],
+    imports: [NgStyle, FormsModule, InputNumberModule, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe],
     templateUrl: './training.component.html'
 })
 export class TrainingComponent {
@@ -54,6 +56,7 @@ export class TrainingComponent {
     showEndSurvivalModal: boolean = false;
     private showEndChallengeAfterSolution: boolean = false;
     private showEndSurvivalAfterSolution: boolean = false;
+    raiseAmount: number = 2;
 
     tableColors = {
         "green": "rgb(0, 151, 0)",
@@ -179,6 +182,7 @@ export class TrainingComponent {
      */
     generateSituation() {
         let situation = this.getRandomSituation(this.situationList);
+        this.commonService.migrateSolutions(situation.solutions);
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations);
@@ -197,6 +201,96 @@ export class TrainingComponent {
             previousPlayer1Action: situation.previousPlayer1Action,
             previousPlayer2Action: situation.previousPlayer2Action
         }
+        this.raiseAmount = Math.min(this.maximumRaise(), Math.max(2, this.highestCurrentBet() * 2));
+    }
+
+    submitPokerAction(action: SolutionAction) {
+        const solution = this.activeSituation.solutions.find(item =>
+            item.type === 'unique' && item.action === action &&
+            (action !== 'raise' || Math.abs((item.raiseAmount ?? -1) - this.raiseAmount) < 0.001)
+        );
+        this.checkResultCase(solution?.id ?? `invalid_${action}_${this.raiseAmount}`);
+    }
+
+    setRaisePreset(preset: 'x2' | 'x3' | 'pot') {
+        const highestBet = this.highestCurrentBet();
+        const amount = preset === 'x2' ? highestBet * 2 : preset === 'x3' ? highestBet * 3 : this.potRaiseAmount();
+        this.raiseAmount = Math.min(this.maximumRaise(), Math.max(this.minimumRaise(), amount));
+    }
+
+    updateRaiseAmount(event: Event) {
+        this.setRaiseAmount(Number((event.target as HTMLInputElement).value));
+    }
+
+    setRaiseAmount(amount: number) {
+        this.raiseAmount = Math.min(this.maximumRaise(), Math.max(this.minimumRaise(), amount || this.minimumRaise()));
+    }
+
+    adjustRaiseAmount(delta: number) {
+        this.setRaiseAmount(Math.round((this.raiseAmount + delta) * 2) / 2);
+    }
+
+    canCheck(): boolean {
+        return this.playerCurrentBet() >= this.highestCurrentBet();
+    }
+
+    canCall(): boolean {
+        if (this.canCheck()) return false;
+        const facesAction = this.previousActions().some(action => action === 'Limp' || action === 'Call' || action?.startsWith('Raise') || action === 'All In');
+        return facesAction || !this.hasSolutionAction('limp');
+    }
+
+    canLimp(): boolean {
+        return this.playerCurrentBet() < 1
+            && !this.previousActions().some(action => action && action !== 'Fold' && action !== 'Aucune')
+            && this.hasSolutionAction('limp');
+    }
+
+    canRaise(): boolean {
+        return this.maximumRaise() > this.highestCurrentBet();
+    }
+
+    private previousActions(): (string | undefined)[] {
+        if (this.activeSituation.nbPlayer === 2) return [this.activeSituation.previousPlayer1Action];
+        return [this.activeSituation.previousPlayer1Action, this.activeSituation.previousPlayer2Action];
+    }
+
+    private hasSolutionAction(action: SolutionAction): boolean {
+        return this.activeSituation.solutions.some(solution => solution.type === 'unique' && solution.action === action);
+    }
+
+    private playerCurrentBet(): number {
+        return this.activeSituation.position === 'bb' ? 1 : this.activeSituation.position === 'sb' ? 0.5 : 0;
+    }
+
+    private opponentBets(): number[] {
+        if (this.activeSituation.nbPlayer === 2) {
+            const position = this.getHUOpponentPosition(this.activeSituation.position!);
+            return [this.getBetAmount(position, this.activeSituation.previousPlayer1Action, this.activeSituation.stack)];
+        }
+        return ['left', 'right'].map(slot => {
+            const side = slot as 'left' | 'right';
+            return this.getBetAmount(this.getOpponentPosition(side), this.getOpponentAction(side), this.activeSituation.stack);
+        });
+    }
+
+    highestCurrentBet(): number {
+        return Math.max(1, this.playerCurrentBet(), ...this.opponentBets());
+    }
+
+    maximumRaise(): number {
+        return this.activeSituation.stack ?? 0;
+    }
+
+    minimumRaise(): number {
+        return Math.min(this.maximumRaise(), this.highestCurrentBet() * 2);
+    }
+
+    potRaiseAmount(): number {
+        const heroBet = this.playerCurrentBet();
+        const highestBet = this.highestCurrentBet();
+        const pot = heroBet + this.opponentBets().reduce((total, bet) => total + bet, 0);
+        return Math.min(this.maximumRaise(), highestBet + pot + (highestBet - heroBet));
     }
 
     /**

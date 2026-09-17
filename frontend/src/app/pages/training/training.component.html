@@ -3,6 +3,7 @@
     <div class="flex justify-center items-center h-[85%]">
         <!-- Table de poker -->
         <div class="flex-col justify-center items-center" id="poker-table-div">
+            <div class="-translate-y-10">
             <div class="flex justify-center items-center animate-appear opacity-0">
                 <div class="relative w-[48vw] max-w-[1000px] h-[27vw] max-h-[550px] rounded-full border-solid border-8 border-gray-800 dark:border-gray-300 shadow-2xl"
                     [style.background]="backgroundColor">
@@ -241,18 +242,65 @@
 
                 </div>
             </div>
+            </div>
 
-            <!-- Div des boutons de réponses -->
-            <div
-                class="mt-16 flex gap-4 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
-                @for (solution of filteredSolutionLst(activeSituation.solutions, 'unique'); track $index) {
-                @if (solution.display_name) {
-                <div class="inline-flex h-12 w-32 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer"
-                    [id]="'button_' + solution.id" (click)="checkResultCase(solution.id)">
-                    {{solution.display_name}}
+            <!-- Interface d'actions de poker -->
+            <div class="pointer-events-none absolute inset-x-0 -bottom-3 z-40 flex justify-center px-4">
+            <div class="pointer-events-auto p-3 rounded-xl shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-all duration-500"
+                [class.w-full]="canRaise()" [class.max-w-2xl]="canRaise()" [class.w-fit]="!canRaise()">
+                @if (canRaise()) {
+                <div class="grid grid-cols-4 gap-2 mb-2">
+                    <button type="button" (click)="setRaisePreset('x2')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">x2</button>
+                    <button type="button" (click)="setRaisePreset('x3')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">x3</button>
+                    <button type="button" (click)="setRaisePreset('pot')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Pot</button>
+                    <button type="button" (click)="submitPokerAction('all-in')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">All-in</button>
+                </div>
+                <div class="flex items-center gap-3 mb-2 rounded-md bg-gray-100 px-3 py-1.5 dark:bg-main-dark-bg">
+                    <input type="range" class="w-full accent-red-600" [min]="minimumRaise()" [max]="maximumRaise()" step="0.5"
+                        [ngModel]="raiseAmount" (ngModelChange)="setRaiseAmount($event)" aria-label="Montant de la relance" />
+                    <div class="flex shrink-0 items-center gap-2">
+                        <div class="relative w-24">
+                            <p-inputNumber inputId="trainingRaiseAmount" [min]="minimumRaise()" [max]="maximumRaise()"
+                                [step]="0.5" [minFractionDigits]="0" [maxFractionDigits]="2" [ngModel]="raiseAmount"
+                                (ngModelChange)="setRaiseAmount($event)" styleClass="situation-stack-input w-24"
+                                [inputStyle]="{'width': '6rem', 'height': '2.25rem', 'padding-right': '2.5rem'}"
+                                inputStyleClass="situation-stack-input-field"></p-inputNumber>
+                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                            </div>
+                        </div>
+                        <div class="grid h-11 w-8 grid-rows-2 gap-1">
+                            <button type="button" (click)="adjustRaiseAmount(0.5)" [disabled]="raiseAmount >= maximumRaise()"
+                                class="flex cursor-pointer items-center justify-center rounded border-0 bg-gray-800 text-xs text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                aria-label="Augmenter la relance de 0,5 BB">
+                                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" (click)="adjustRaiseAmount(-0.5)" [disabled]="raiseAmount <= minimumRaise()"
+                                class="flex cursor-pointer items-center justify-center rounded border-0 bg-gray-800 text-xs text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                aria-label="Réduire la relance de 0,5 BB">
+                                <i class="fa-solid fa-minus" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 }
-                }
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button type="button" (click)="submitPokerAction('fold')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Fold</button>
+                    @if (canCheck()) {
+                    <button type="button" (click)="submitPokerAction('check')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Check</button>
+                    }
+                    @if (canCall()) {
+                    <button type="button" (click)="submitPokerAction('call')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Call</button>
+                    }
+                    @if (canLimp()) {
+                    <button type="button" (click)="submitPokerAction('limp')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Limp</button>
+                    }
+                    @if (canRaise()) {
+                    <button type="button" (click)="submitPokerAction('raise')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Raise {{raiseAmount}} BB</button>
+                    }
+                </div>
+            </div>
             </div>
         </div>
     </div>
