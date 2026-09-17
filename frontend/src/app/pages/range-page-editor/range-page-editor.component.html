@@ -137,17 +137,18 @@
 			Créer un bloc de range
 		</h4>
 		<label for="rangePositionBlock" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Bloc de positions</label>
-		<select
+		<p-dropdown
 			id="rangePositionBlock"
 			[(ngModel)]="selectedRangePositionBlockId"
 			name="selectedRangePositionBlockId"
-			class="h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none focus:border-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-		>
-			<option [ngValue]="undefined" disabled>Sélectionner un bloc</option>
-			@for (positionBlock of positionBlocks(); track positionBlock.id) {
-				<option [value]="positionBlock.id">{{ positionBlock.title || "Positions" }}</option>
-			}
-		</select>
+			[options]="positionBlocks()"
+			optionLabel="title"
+			optionValue="id"
+			placeholder="Sélectionner un bloc"
+			styleClass="w-full h-11"
+			appendTo="body"
+			[baseZIndex]="10000"
+		></p-dropdown>
 		<div class="mt-5 flex justify-end">
 			<div
 				(click)="addRangeBlock()"

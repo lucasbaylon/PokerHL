@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { RangePage, RangePageBlock } from '../../interfaces/range-page';
@@ -37,7 +38,7 @@ interface BlockConnectionLine {
 @Component({
     selector: 'app-range-page-editor',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, AppModalComponent],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, DropdownModule, AppModalComponent],
     templateUrl: './range-page-editor.component.html'
 })
 export class RangePageEditorComponent implements OnInit, OnDestroy {
