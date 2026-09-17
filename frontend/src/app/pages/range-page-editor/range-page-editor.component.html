@@ -1,415 +1,694 @@
 <div class="flex h-screen flex-col overflow-hidden bg-gray-100 transition-colors duration-500 dark:bg-main-dark-bg">
-<div
-    class="z-50 flex flex-wrap items-center gap-3 bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
-    <input [(ngModel)]="page.name" (ngModelChange)="scheduleAutoSave()" name="pageName" type="text"
-        class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
-        autocomplete="off" pInputText />
+	<div
+		class="z-50 flex flex-wrap items-center gap-3 bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
+	>
+		<input
+			[(ngModel)]="page.name"
+			(ngModelChange)="scheduleAutoSave()"
+			name="pageName"
+			type="text"
+			class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+			autocomplete="off"
+			pInputText
+		/>
 
-    <div (click)="openPositionSituationPopup()"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-plus mr-2"></i>
-        Positions
-    </div>
-    <div (click)="openRangeSituationPopup()"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-        <i class="fa-solid fa-plus mr-2"></i>
-        Range
-    </div>
-    <div (click)="addTextBlock()"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-plus mr-2"></i>
-        Note
-    </div>
-    @if (!isDefaultView()) {
-        <div (click)="resetView()"
-            class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-            <i class="fa-solid fa-compress mr-2"></i>
-            Reinitialiser vue
-        </div>
-    }
-    @if (linkMode) {
-        <button type="button" (click)="exitLinkMode()"
-            class="ml-auto inline-flex h-11 cursor-pointer items-center justify-center rounded-md border-0 bg-gray-700 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-600 dark:text-gray-300">
-            <i class="fa-solid fa-xmark mr-2"></i>
-            Quitter l'édition des liens
-        </button>
-    }
-    <div (click)="showGridHelpPopup = true"
-        [ngClass]="linkMode ? '' : 'ml-auto'"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-circle-question mr-2"></i>
-        Aide
-    </div>
-    <div (click)="goBack()"
-        class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer">
-        <i class="fa-solid fa-arrow-left mr-2"></i>
-        Retour
-    </div>
-</div>
+		<div
+			(click)="openPositionSituationPopup()"
+			class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer"
+		>
+			<i class="fa-solid fa-plus mr-2"></i>
+			Positions
+		</div>
+		<div
+			(click)="openRangeSituationPopup()"
+			class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+		>
+			<i class="fa-solid fa-plus mr-2"></i>
+			Range
+		</div>
+		<div
+			(click)="addTextBlock()"
+			class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer"
+		>
+			<i class="fa-solid fa-plus mr-2"></i>
+			Note
+		</div>
+		@if (!isDefaultView()) {
+			<div
+				(click)="resetView()"
+				class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer"
+			>
+				<i class="fa-solid fa-compress mr-2"></i>
+				Reinitialiser vue
+			</div>
+		}
+		@if (linkMode) {
+			<button
+				type="button"
+				(click)="exitLinkMode()"
+				class="ml-auto inline-flex h-11 cursor-pointer items-center justify-center rounded-md border-0 bg-gray-700 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-600 dark:text-gray-300"
+			>
+				<i class="fa-solid fa-xmark mr-2"></i>
+				Quitter l'édition des liens
+			</button>
+		}
+		<div
+			(click)="showGridHelpPopup = true"
+			[ngClass]="linkMode ? '' : 'ml-auto'"
+			class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer"
+		>
+			<i class="fa-solid fa-circle-question mr-2"></i>
+			Aide
+		</div>
+		<div
+			(click)="goBack()"
+			class="inline-flex h-11 items-center justify-center rounded-md bg-gray-700 text-white dark:text-gray-300 hover:bg-gray-600 px-4 text-sm font-medium shadow transition-colors cursor-pointer"
+		>
+			<i class="fa-solid fa-arrow-left mr-2"></i>
+			Retour
+		</div>
+	</div>
 
-<app-modal [open]="showGridHelpPopup" (closed)="showGridHelpPopup = false" ariaLabelledBy="grid-help-title"
-    panelClass="w-[520px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
-        <h4 id="grid-help-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Aide grille
-        </h4>
-        <div class="space-y-4 text-sm leading-6 text-gray-700 dark:text-gray-300">
-            <div>
-                Cette page sert a regrouper plusieurs informations de travail sur une meme grille personnalisable : situations, positions et notes.
-            </div>
+	<app-modal
+		[open]="showGridHelpPopup"
+		(closed)="showGridHelpPopup = false"
+		ariaLabelledBy="grid-help-title"
+		panelClass="w-[520px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700"
+	>
+		<h4 id="grid-help-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+			Aide grille
+		</h4>
+		<div class="space-y-4 text-sm leading-6 text-gray-700 dark:text-gray-300">
+			<div>
+				Cette page sert a regrouper plusieurs informations de travail sur une meme grille personnalisable : situations, positions et notes.
+			</div>
 
-            <div>
-                <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Fonctionnalites</div>
-                <ul class="m-0 list-disc space-y-1 pl-5">
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Deplacer un bloc selectionne</span> : deplace toute la selection.</li>
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Modifier</span> : permet de changer le titre, le contenu et de redimensionner le bloc.</li>
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Bloc Positions</span> : un clic sur un rectangle affiche la situation correspondante au deep choisi.</li>
-                </ul>
-            </div>
+			<div>
+				<div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Fonctionnalites</div>
+				<ul class="m-0 list-disc space-y-1 pl-5">
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Deplacer un bloc selectionne</span>
+						: deplace toute la selection.
+					</li>
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Modifier</span>
+						: permet de changer le titre, le contenu et de redimensionner le bloc.
+					</li>
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Bloc Positions</span>
+						: un clic sur un rectangle affiche la situation correspondante au deep choisi.
+					</li>
+				</ul>
+			</div>
 
-            <div class="h-px bg-gray-200 dark:bg-gray-700"></div>
+			<div class="h-px bg-gray-200 dark:bg-gray-700"></div>
 
-            <div>
-                <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Raccourcis</div>
-                <ul class="m-0 list-disc space-y-1 pl-5">
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Molette</span> : defilement vertical.</li>
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Maj + molette</span> : defilement horizontal.</li>
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Ctrl + molette</span> : zoom / dezoom de la grille.</li>
-                    <li><span class="font-semibold text-gray-900 dark:text-gray-100">Clic gauche maintenu sur le fond</span> : selection multiple de blocs.</li>
-                </ul>
-            </div>
-        </div>
-</app-modal>
+			<div>
+				<div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Raccourcis</div>
+				<ul class="m-0 list-disc space-y-1 pl-5">
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Molette</span>
+						: defilement vertical.
+					</li>
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Maj + molette</span>
+						: defilement horizontal.
+					</li>
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Ctrl + molette</span>
+						: zoom / dezoom de la grille.
+					</li>
+					<li>
+						<span class="font-semibold text-gray-900 dark:text-gray-100">Clic gauche maintenu sur le fond</span>
+						: selection multiple de blocs.
+					</li>
+				</ul>
+			</div>
+		</div>
+	</app-modal>
 
-<app-modal [open]="showRangeSituationPopup" (closed)="closeRangeSituationPopup()" ariaLabelledBy="range-situation-title"
-    panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
-    <h4 id="range-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase tracking-wider text-gray-800 dark:text-gray-300">
-        Créer un bloc de range
-    </h4>
-    <label for="rangePositionBlock" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-        Bloc de positions
-    </label>
-    <select id="rangePositionBlock" [(ngModel)]="selectedRangePositionBlockId" name="selectedRangePositionBlockId"
-        class="h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none focus:border-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
-        <option [ngValue]="undefined" disabled>Sélectionner un bloc</option>
-        @for (positionBlock of positionBlocks(); track positionBlock.id) {
-            <option [value]="positionBlock.id">{{ positionBlock.title || 'Positions' }}</option>
-        }
-    </select>
-    <div class="mt-5 flex justify-end">
-        <div (click)="addRangeBlock()"
-            class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-            Ajouter
-        </div>
-    </div>
-</app-modal>
+	<app-modal
+		[open]="showRangeSituationPopup"
+		(closed)="closeRangeSituationPopup()"
+		ariaLabelledBy="range-situation-title"
+		panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700"
+	>
+		<h4 id="range-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase tracking-wider text-gray-800 dark:text-gray-300">
+			Créer un bloc de range
+		</h4>
+		<label for="rangePositionBlock" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Bloc de positions</label>
+		<select
+			id="rangePositionBlock"
+			[(ngModel)]="selectedRangePositionBlockId"
+			name="selectedRangePositionBlockId"
+			class="h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none focus:border-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+		>
+			<option [ngValue]="undefined" disabled>Sélectionner un bloc</option>
+			@for (positionBlock of positionBlocks(); track positionBlock.id) {
+				<option [value]="positionBlock.id">{{ positionBlock.title || "Positions" }}</option>
+			}
+		</select>
+		<div class="mt-5 flex justify-end">
+			<div
+				(click)="addRangeBlock()"
+				class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+			>
+				Ajouter
+			</div>
+		</div>
+	</app-modal>
 
-<app-modal [open]="showPositionSituationPopup" (closed)="closePositionSituationPopup()" ariaLabelledBy="position-situation-title"
-    panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700">
-        <h4 id="position-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Créer un bloc positions
-        </h4>
-        <p-autoComplete [(ngModel)]="selectedPositionSituation" name="modalSelectedPositionSituation"
-            [suggestions]="positionSituationSuggestions" (completeMethod)="searchPositionSituations($event)"
-            (onSelect)="selectPositionSituation($event)" field="name" placeholder="Rechercher un type de situation"
-            [dropdown]="true" [forceSelection]="true" [completeOnFocus]="true" appendTo="body"
-            styleClass="grid-situation-autocomplete" panelStyleClass="grid-situation-autocomplete-panel" />
-        <div class="mt-5 flex justify-end">
-            <div (click)="addPositionsBlock()"
-                class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-sm font-medium shadow transition-colors cursor-pointer">
-                Ajouter
-            </div>
-        </div>
-</app-modal>
+	<app-modal
+		[open]="showPositionSituationPopup"
+		(closed)="closePositionSituationPopup()"
+		ariaLabelledBy="position-situation-title"
+		panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700"
+	>
+		<h4 id="position-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+			Créer un bloc positions
+		</h4>
+		<p-autoComplete
+			[(ngModel)]="selectedPositionSituation"
+			name="modalSelectedPositionSituation"
+			[suggestions]="positionSituationSuggestions"
+			(completeMethod)="searchPositionSituations($event)"
+			(onSelect)="selectPositionSituation($event)"
+			field="name"
+			placeholder="Rechercher un type de situation"
+			[dropdown]="true"
+			[forceSelection]="true"
+			[completeOnFocus]="true"
+			appendTo="body"
+			styleClass="grid-situation-autocomplete"
+			panelStyleClass="grid-situation-autocomplete-panel"
+		/>
+		<div class="mt-5 flex justify-end">
+			<div
+				(click)="addPositionsBlock()"
+				class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-sm font-medium shadow transition-colors cursor-pointer"
+			>
+				Ajouter
+			</div>
+		</div>
+	</app-modal>
 
-<app-modal [open]="showRemoveBlockModal" (closed)="closeRemoveBlockModal()" ariaLabelledBy="remove-block-title"
-    panelClass="w-full max-w-lg">
-    <h4 id="remove-block-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-        Attention !
-    </h4>
-    <p class="m-0 text-gray-600 dark:text-gray-300">Voulez-vous vraiment supprimer ce bloc ?</p>
-    <div class="mt-6 flex justify-end gap-3">
-        <button type="button" (click)="closeRemoveBlockModal()"
-            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-200 px-5 text-sm font-medium text-gray-800 shadow transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-            Annuler
-        </button>
-        <button type="button" (click)="confirmRemoveBlock()"
-            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-red-600 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-red-700 cursor-pointer">
-            Supprimer
-        </button>
-    </div>
-</app-modal>
+	<app-modal [open]="showRemoveBlockModal" (closed)="closeRemoveBlockModal()" ariaLabelledBy="remove-block-title" panelClass="w-full max-w-lg">
+		<h4 id="remove-block-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+			Attention !
+		</h4>
+		<p class="m-0 text-gray-600 dark:text-gray-300">Voulez-vous vraiment supprimer ce bloc ?</p>
+		<div class="mt-6 flex justify-end gap-3">
+			<button
+				type="button"
+				(click)="closeRemoveBlockModal()"
+				class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-200 px-5 text-sm font-medium text-gray-800 shadow transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+			>
+				Annuler
+			</button>
+			<button
+				type="button"
+				(click)="confirmRemoveBlock()"
+				class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-red-600 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-red-700 cursor-pointer"
+			>
+				Supprimer
+			</button>
+		</div>
+	</app-modal>
 
-<main class="min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
-    <div class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
-        (wheel)="onGridWheel($event)">
-        <div class="relative" [style.width.px]="scaledCanvasWidth()" [style.height.px]="scaledCanvasHeight()">
-        <div class="relative" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"
-            data-range-canvas
-            [ngStyle]="canvasStyle()"
-            (mousedown)="startSelection($event)">
-            @if (linkMode) {
-                <svg class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible">
-                    @for (line of connectionLines(); track line.id) {
-                        <g>
-                            @if (selectedConnectionId === line.id) {
-                                <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2"
-                                    stroke="#9ca3af" stroke-width="10" opacity="0.2" />
-                            }
-                            <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2"
-                                stroke="#6b7280" stroke-width="2" />
-                            <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2"
-                                stroke="transparent" stroke-width="18" class="cursor-pointer"
-                                style="pointer-events: stroke" (mousedown)="selectConnection(line, $event)" />
-                            @if (selectedConnectionId === line.id) {
-                                <circle [attr.cx]="line.x1" [attr.cy]="line.y1" r="6" fill="#374151" stroke="#d1d5db" stroke-width="2"
-                                    class="cursor-crosshair" style="pointer-events: all"
-                                    (mousedown)="startConnectionReconnect(line, 'positions', $event)">
-                                    <title>Déplacer l’extrémité</title>
-                                </circle>
-                                <circle [attr.cx]="line.x2" [attr.cy]="line.y2" r="6" fill="#374151" stroke="#d1d5db" stroke-width="2"
-                                    class="cursor-crosshair" style="pointer-events: all"
-                                    (mousedown)="startConnectionReconnect(line, 'range', $event)">
-                                    <title>Déplacer l’extrémité</title>
-                                </circle>
-                                <circle [attr.cx]="(line.x1 + line.x2) / 2" [attr.cy]="(line.y1 + line.y2) / 2" r="11"
-                                    fill="#374151" stroke="#9ca3af" stroke-width="1" class="cursor-pointer"
-                                    style="pointer-events: all" (mousedown)="removeConnection(line, $event)">
-                                    <title>Supprimer le lien</title>
-                                </circle>
-                                <text [attr.x]="(line.x1 + line.x2) / 2" [attr.y]="(line.y1 + line.y2) / 2 + 4"
-                                    text-anchor="middle" fill="#f3f4f6" font-size="14" class="pointer-events-none">×</text>
-                            }
-                        </g>
-                    }
-                    @if (connectionPreview(); as preview) {
-                        <line [attr.x1]="preview.x1" [attr.y1]="preview.y1" [attr.x2]="preview.x2" [attr.y2]="preview.y2"
-                            stroke="#6b7280" stroke-width="2" stroke-dasharray="6 5" />
-                    }
-                </svg>
-            }
-            @for (block of page.blocks; track block.id) {
-                <section
-                    [attr.data-block-id]="block.id"
-                    class="absolute overflow-visible border bg-white text-gray-800 shadow-lg transition-[width,background-color,border-color,color] duration-300 ease-out dark:bg-secondary-dark-bg dark:text-gray-300"
-                    [ngClass]="[isSelected(block) ? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600' : 'border-gray-300 dark:border-gray-700', isSelected(block) || isMovingBlock(block) ? 'rounded-none' : 'rounded-md']"
-                    [ngStyle]="blockStyle(block)">
-                    <div class="relative flex h-10 cursor-move items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300"
-                        (mousedown)="startDrag($event, block, 'move')">
-                        @if (isSelected(block)) {
-                            @if (isEditing(block)) {
-                                <input [(ngModel)]="block.title" (ngModelChange)="scheduleAutoSave()" [name]="'blockTitle_' + block.id" type="text"
-                                    class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
-                                    autocomplete="off" pInputText (mousedown)="$event.stopPropagation()" />
-                            } @else {
-                                <span class="min-w-0 flex-1 truncate pr-1 text-sm font-semibold">{{ block.title || block.type }}</span>
-                            }
-                            @if (!isEditing(block)) {
-                              @if (isHeaderActionsVisible(block)) {
-                                <button type="button" title="Actions" aria-label="Afficher les actions du bloc"
-                                    [attr.aria-expanded]="isBlockActionsOpen(block)"
-                                    (click)="toggleBlockActions(block, $event); $event.stopPropagation()"
-                                    (mousedown)="$event.stopPropagation()"
-                                    class="flex h-8 w-8 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
-                                    <i class="fa-solid fa-gear text-sm"></i>
-                                </button>
-                                @if (isBlockActionsOpen(block)) {
-                                    <div class="absolute right-2 z-[9999] flex items-center gap-1 rounded-md border border-gray-600 bg-gray-800 p-1 shadow-lg dark:bg-gray-700"
-                                        [ngClass]="actionsMenuPlacement === 'above' ? 'bottom-9' : 'top-9'"
-                                        (mousedown)="$event.stopPropagation()">
-                                        <button type="button" title="Modifier" (click)="editBlock(block); $event.stopPropagation()"
-                                            class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
-                                            <i class="fa-solid fa-pencil text-xs"></i>
-                                        </button>
-                                        <button type="button" title="Dupliquer" (click)="duplicateBlock(block); $event.stopPropagation()"
-                                            class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
-                                            <i class="fa-solid fa-clone text-xs"></i>
-                                        </button>
-                                        @if (block.type === 'positions' || block.type === 'range') {
-                                            <button type="button" title="Relier les blocs" (click)="toggleLinkMode(block); $event.stopPropagation()"
-                                                [ngClass]="linkMode && linkModeRootBlockId === block.id ? 'bg-gray-500/40 text-gray-100' : 'bg-transparent text-gray-100'"
-                                                class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 p-0 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600">
-                                                <i class="fa-solid fa-diagram-project text-xs"></i>
-                                            </button>
-                                        }
-                                        <button type="button" title="Supprimer" (click)="removeBlock(block.id); $event.stopPropagation()"
-                                            class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-red-200 outline-none transition-all duration-150 hover:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/20">
-                                            <i class="fa-solid fa-trash-can text-xs"></i>
-                                        </button>
-                                    </div>
-                                }
-                              }
-                            }
-                        } @else {
-                            <span class="min-w-0 flex-1 truncate text-sm font-semibold">{{ block.title || block.type }}</span>
-                        }
-                    </div>
+	<main class="min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
+		<div
+			class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
+			(wheel)="onGridWheel($event)"
+		>
+			<div class="relative" [style.width.px]="scaledCanvasWidth()" [style.height.px]="scaledCanvasHeight()">
+				<div
+					class="relative"
+					[style.width.px]="canvasWidth"
+					[style.height.px]="canvasHeight"
+					data-range-canvas
+					[ngStyle]="canvasStyle()"
+					(mousedown)="startSelection($event)"
+				>
+					@if (linkMode) {
+						<svg class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible">
+							@for (line of connectionLines(); track line.id) {
+								<g>
+									@if (selectedConnectionId === line.id) {
+										<line
+											[attr.x1]="line.x1"
+											[attr.y1]="line.y1"
+											[attr.x2]="line.x2"
+											[attr.y2]="line.y2"
+											stroke="#9ca3af"
+											stroke-width="10"
+											opacity="0.2"
+										/>
+									}
+									<line
+										[attr.x1]="line.x1"
+										[attr.y1]="line.y1"
+										[attr.x2]="line.x2"
+										[attr.y2]="line.y2"
+										stroke="#6b7280"
+										stroke-width="2"
+									/>
+									<line
+										[attr.x1]="line.x1"
+										[attr.y1]="line.y1"
+										[attr.x2]="line.x2"
+										[attr.y2]="line.y2"
+										stroke="transparent"
+										stroke-width="18"
+										class="cursor-pointer"
+										style="pointer-events: stroke"
+										(mousedown)="selectConnection(line, $event)"
+									/>
+									@if (selectedConnectionId === line.id) {
+										<circle
+											[attr.cx]="line.x1"
+											[attr.cy]="line.y1"
+											r="6"
+											fill="#374151"
+											stroke="#d1d5db"
+											stroke-width="2"
+											class="cursor-crosshair"
+											style="pointer-events: all"
+											(mousedown)="startConnectionReconnect(line, 'positions', $event)"
+										>
+											<title>Déplacer l’extrémité</title>
+										</circle>
+										<circle
+											[attr.cx]="line.x2"
+											[attr.cy]="line.y2"
+											r="6"
+											fill="#374151"
+											stroke="#d1d5db"
+											stroke-width="2"
+											class="cursor-crosshair"
+											style="pointer-events: all"
+											(mousedown)="startConnectionReconnect(line, 'range', $event)"
+										>
+											<title>Déplacer l’extrémité</title>
+										</circle>
+										<circle
+											[attr.cx]="(line.x1 + line.x2) / 2"
+											[attr.cy]="(line.y1 + line.y2) / 2"
+											r="11"
+											fill="#374151"
+											stroke="#9ca3af"
+											stroke-width="1"
+											class="cursor-pointer"
+											style="pointer-events: all"
+											(mousedown)="removeConnection(line, $event)"
+										>
+											<title>Supprimer le lien</title>
+										</circle>
+										<text
+											[attr.x]="(line.x1 + line.x2) / 2"
+											[attr.y]="(line.y1 + line.y2) / 2 + 4"
+											text-anchor="middle"
+											fill="#f3f4f6"
+											font-size="14"
+											class="pointer-events-none"
+										>
+											×
+										</text>
+									}
+								</g>
+							}
+							@if (connectionPreview(); as preview) {
+								<line
+									[attr.x1]="preview.x1"
+									[attr.y1]="preview.y1"
+									[attr.x2]="preview.x2"
+									[attr.y2]="preview.y2"
+									stroke="#6b7280"
+									stroke-width="2"
+									stroke-dasharray="6 5"
+								/>
+							}
+						</svg>
+					}
+					@for (block of page.blocks; track block.id) {
+						<section
+							[attr.data-block-id]="block.id"
+							class="absolute overflow-visible border bg-white text-gray-800 shadow-lg transition-[width,background-color,border-color,color] duration-300 ease-out dark:bg-secondary-dark-bg dark:text-gray-300"
+							[ngClass]="[
+								isSelected(block)
+									? 'border-gray-900 dark:border-gray-100 ring-2 ring-gray-300 dark:ring-gray-600'
+									: 'border-gray-300 dark:border-gray-700',
+								isSelected(block) || isMovingBlock(block) ? 'rounded-none' : 'rounded-md',
+							]"
+							[ngStyle]="blockStyle(block)"
+						>
+							<div
+								class="relative flex h-10 cursor-move items-center gap-2 bg-gray-800 px-3 text-white dark:bg-gray-700 dark:text-gray-300"
+								(mousedown)="startDrag($event, block, 'move')"
+							>
+								@if (isSelected(block)) {
+									@if (isEditing(block)) {
+										<input
+											[(ngModel)]="block.title"
+											(ngModelChange)="scheduleAutoSave()"
+											[name]="'blockTitle_' + block.id"
+											type="text"
+											class="min-w-0 flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-white outline-none dark:bg-gray-800 dark:text-gray-300"
+											autocomplete="off"
+											pInputText
+											(mousedown)="$event.stopPropagation()"
+										/>
+									} @else {
+										<span class="min-w-0 flex-1 truncate pr-1 text-sm font-semibold">{{ block.title || block.type }}</span>
+									}
+									@if (!isEditing(block)) {
+										@if (isHeaderActionsVisible(block)) {
+											<button
+												type="button"
+												title="Actions"
+												aria-label="Afficher les actions du bloc"
+												[attr.aria-expanded]="isBlockActionsOpen(block)"
+												(click)="toggleBlockActions(block, $event); $event.stopPropagation()"
+												(mousedown)="$event.stopPropagation()"
+												class="flex h-8 w-8 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600"
+											>
+												<i class="fa-solid fa-gear text-sm"></i>
+											</button>
+											@if (isBlockActionsOpen(block)) {
+												<div
+													class="absolute right-2 z-[9999] flex items-center gap-1 rounded-md border border-gray-600 bg-gray-800 p-1 shadow-lg dark:bg-gray-700"
+													[ngClass]="actionsMenuPlacement === 'above' ? 'bottom-9' : 'top-9'"
+													(mousedown)="$event.stopPropagation()"
+												>
+													<button
+														type="button"
+														title="Modifier"
+														(click)="editBlock(block); $event.stopPropagation()"
+														class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600"
+													>
+														<i class="fa-solid fa-pencil text-xs"></i>
+													</button>
+													<button
+														type="button"
+														title="Dupliquer"
+														(click)="duplicateBlock(block); $event.stopPropagation()"
+														class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600"
+													>
+														<i class="fa-solid fa-clone text-xs"></i>
+													</button>
+													@if (block.type === "positions" || block.type === "range") {
+														<button
+															type="button"
+															title="Relier les blocs"
+															(click)="toggleLinkMode(block); $event.stopPropagation()"
+															[ngClass]="
+																linkMode && linkModeRootBlockId === block.id
+																	? 'bg-gray-500/40 text-gray-100'
+																	: 'bg-transparent text-gray-100'
+															"
+															class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 p-0 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600"
+														>
+															<i class="fa-solid fa-diagram-project text-xs"></i>
+														</button>
+													}
+													<button
+														type="button"
+														title="Supprimer"
+														(click)="removeBlock(block.id); $event.stopPropagation()"
+														class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-red-200 outline-none transition-all duration-150 hover:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/20"
+													>
+														<i class="fa-solid fa-trash-can text-xs"></i>
+													</button>
+												</div>
+											}
+										}
+									}
+								} @else {
+									<span class="min-w-0 flex-1 truncate text-sm font-semibold">{{ block.title || block.type }}</span>
+								}
+							</div>
 
-                    <div class="overflow-visible">
-                        @if (block.type === 'range') {
-                            @if (rangeForBlock(block); as range) {
-                                @if (isEditing(block)) {
-                                    <div class="border-b border-gray-200 p-2 text-xs dark:border-gray-700">
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <label class="flex items-center gap-1">
-                                                Cellule
-                                                <input [(ngModel)]="block.cellSize" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'cellSize_' + block.id" type="number"
-                                                    min="22" max="52"
-                                                    class="h-8 w-16 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg" />
-                                            </label>
-                                            <label class="flex items-center gap-1">
-                                                <input [(ngModel)]="block.compact" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'compact_' + block.id" type="checkbox" />
-                                                Compact
-                                            </label>
-                                            <label class="flex items-center gap-1">
-                                                <input [(ngModel)]="block.showLegend" (ngModelChange)="fitAndScheduleAutoSave(block)" [name]="'legend_' + block.id" type="checkbox" />
-                                                Légende
-                                            </label>
-                                        </div>
+							<div class="overflow-visible">
+								@if (block.type === "range") {
+									@if (rangeForBlock(block); as range) {
+										@if (isEditing(block)) {
+											<div class="border-b border-gray-200 p-2 text-xs dark:border-gray-700">
+												<div class="flex flex-wrap items-center gap-2">
+													<label class="flex items-center gap-1">
+														Cellule
+														<input
+															[(ngModel)]="block.cellSize"
+															(ngModelChange)="fitAndScheduleAutoSave(block)"
+															[name]="'cellSize_' + block.id"
+															type="number"
+															min="22"
+															max="52"
+															class="h-8 w-16 rounded border border-gray-300 bg-white px-2 dark:border-gray-700 dark:bg-main-dark-bg"
+														/>
+													</label>
+													<label class="flex items-center gap-1">
+														<input
+															[(ngModel)]="block.compact"
+															(ngModelChange)="fitAndScheduleAutoSave(block)"
+															[name]="'compact_' + block.id"
+															type="checkbox"
+														/>
+														Compact
+													</label>
+													<label class="flex items-center gap-1">
+														<input
+															[(ngModel)]="block.showLegend"
+															(ngModelChange)="fitAndScheduleAutoSave(block)"
+															[name]="'legend_' + block.id"
+															type="checkbox"
+														/>
+														Légende
+													</label>
+												</div>
+											</div>
+										}
 
-                                    </div>
-                                }
+										<div class="p-3">
+											<table class="border-separate border-spacing-1 select-none" oncontextmenu="return false;">
+												<tbody>
+													@for (row of range.situations; track rowIndex; let rowIndex = $index) {
+														<tr>
+															@for (item of row; track cellIndex; let cellIndex = $index) {
+																<td
+																	class="relative cursor-default overflow-hidden rounded text-center align-middle font-semibold text-white shadow"
+																	[style.width.px]="cellSize(block)"
+																	[style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
+																	[style.font-size.px]="block.compact ? 11 : 13"
+																	[style.background]="animatedCellBackground(block, rowIndex, cellIndex, range)"
+																>
+																	<span class="relative z-10">{{ item.card }}</span>
+																</td>
+															}
+														</tr>
+													}
+												</tbody>
+											</table>
 
-                                <div class="p-3">
-                                    <table class="border-separate border-spacing-1 select-none" oncontextmenu="return false;">
-                                        <tbody>
-                                            @for (row of range.situations; track rowIndex; let rowIndex = $index) {
-                                                <tr>
-                                                    @for (item of row; track cellIndex; let cellIndex = $index) {
-                                                        <td class="relative cursor-default overflow-hidden rounded text-center align-middle font-semibold text-white shadow"
-                                                            [style.width.px]="cellSize(block)"
-                                                            [style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
-                                                            [style.font-size.px]="block.compact ? 11 : 13"
-                                                            [style.background]="animatedCellBackground(block, rowIndex, cellIndex, range)">
-                                                            <span class="relative z-10">{{ item.card }}</span>
-                                                        </td>
-                                                    }
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+											@if (block.showLegend) {
+												<div class="flex flex-wrap gap-3 mt-3">
+													@for (solution of range.solutions; track solution.id) {
+														<div class="flex items-center gap-2">
+															<div
+																class="h-5 w-5 rounded shadow"
+																[style.background]="solution.id | solutionColor: range.solutions"
+															></div>
+															<span class="text-sm">{{ solution.display_name }}</span>
+														</div>
+													}
+												</div>
+											}
+										</div>
+									} @else {
+										<div class="p-4 text-red-700 dark:text-red-300">Situation introuvable.</div>
+									}
+								}
 
-                                    @if (block.showLegend) {
-                                        <div class="flex flex-wrap gap-3 mt-3">
-                                            @for (solution of range.solutions; track solution.id) {
-                                                <div class="flex items-center gap-2">
-                                                    <div class="h-5 w-5 rounded shadow"
-                                                        [style.background]="(solution.id | solutionColor:range.solutions)"></div>
-                                                    <span class="text-sm">{{ solution.display_name }}</span>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            } @else {
-                                <div class="p-4 text-red-700 dark:text-red-300">Situation introuvable.</div>
-                            }
-                        }
+								@if (block.type === "text") {
+									@if (isEditing(block)) {
+										<textarea
+											[(ngModel)]="block.text"
+											(ngModelChange)="scheduleAutoSave()"
+											[name]="'text_' + block.id"
+											class="min-h-40 w-full resize-none border-none bg-white p-3 text-gray-800 outline-none transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
+										></textarea>
+									} @else {
+										<div class="min-h-10 whitespace-pre-wrap p-3 text-gray-800 transition-colors duration-500 dark:text-gray-300">
+											{{ block.text }}
+										</div>
+									}
+								}
 
-                        @if (block.type === 'text') {
-                            @if (isEditing(block)) {
-                                <textarea [(ngModel)]="block.text" (ngModelChange)="scheduleAutoSave()" [name]="'text_' + block.id"
-                                    class="min-h-40 w-full resize-none border-none bg-white p-3 text-gray-800 outline-none transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"></textarea>
-                            } @else {
-                                <div class="min-h-10 whitespace-pre-wrap p-3 text-gray-800 transition-colors duration-500 dark:text-gray-300">{{ block.text }}</div>
-                            }
-                        }
+								@if (block.type === "positions") {
+									<div class="p-3">
+										<div
+											class="overflow-visible rounded-sm border border-gray-700 bg-gray-800 shadow dark:border-gray-700 dark:bg-gray-700"
+										>
+											@for (position of block.positions; track rowIndex; let rowIndex = $index) {
+												<div
+													class="flex h-7 cursor-pointer items-center border bg-gray-800 text-center text-xs font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+													[ngClass]="
+														isPositionDisplayed(block, position)
+															? 'border-gray-200 shadow-[inset_0_0_0_1px_rgba(229,231,235,0.95)] dark:border-gray-100 dark:shadow-[inset_0_0_0_1px_rgba(243,244,246,0.95)]'
+															: 'border-gray-600 dark:border-gray-500'
+													"
+													(click)="applyPositionToSituations(position, block); $event.stopPropagation()"
+													(mousedown)="$event.stopPropagation()"
+													(dragover)="allowPositionDrop($event, block)"
+													(drop)="dropPosition($event, block, rowIndex)"
+												>
+													@if (isEditing(block)) {
+														<div
+															draggable="true"
+															class="flex h-full w-8 cursor-grab items-center justify-center text-white/60 active:cursor-grabbing"
+															(dragstart)="startPositionDrag($event, block, rowIndex)"
+															(dragend)="endPositionDrag()"
+															(mousedown)="$event.stopPropagation()"
+														>
+															<i class="fa-solid fa-grip-lines text-[0.65rem]"></i>
+														</div>
+														<input
+															[(ngModel)]="block.positions![rowIndex]"
+															(ngModelChange)="scheduleAutoSave()"
+															[name]="'position_' + block.id + '_' + rowIndex"
+															class="h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-center text-xs font-semibold text-white outline-none"
+															autocomplete="off"
+															(mousedown)="$event.stopPropagation()"
+														/>
+														<button
+															type="button"
+															title="Supprimer"
+															(click)="removePositionItem(block, rowIndex); $event.stopPropagation()"
+															(mousedown)="$event.stopPropagation()"
+															class="flex h-full w-8 cursor-pointer appearance-none items-center justify-center border-0 bg-transparent p-0 text-red-200 outline-none transition-colors hover:bg-red-500/20"
+														>
+															<i class="fa-solid fa-trash-can text-[0.65rem]"></i>
+														</button>
+													} @else {
+														<div class="w-full px-2">{{ position }}</div>
+													}
+												</div>
+											}
+										</div>
+									</div>
+								}
+							</div>
 
-                        @if (block.type === 'positions') {
-                            <div class="p-3">
-                                <div class="overflow-visible rounded-sm border border-gray-700 bg-gray-800 shadow dark:border-gray-700 dark:bg-gray-700">
-                                    @for (position of block.positions; track rowIndex; let rowIndex = $index) {
-                                        <div class="flex h-7 cursor-pointer items-center border bg-gray-800 text-center text-xs font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                                            [ngClass]="isPositionDisplayed(block, position) ? 'border-gray-200 shadow-[inset_0_0_0_1px_rgba(229,231,235,0.95)] dark:border-gray-100 dark:shadow-[inset_0_0_0_1px_rgba(243,244,246,0.95)]' : 'border-gray-600 dark:border-gray-500'"
-                                            (click)="applyPositionToSituations(position, block); $event.stopPropagation()"
-                                            (mousedown)="$event.stopPropagation()"
-                                            (dragover)="allowPositionDrop($event, block)"
-                                            (drop)="dropPosition($event, block, rowIndex)">
-                                            @if (isEditing(block)) {
-                                                <div draggable="true"
-                                                    class="flex h-full w-8 cursor-grab items-center justify-center text-white/60 active:cursor-grabbing"
-                                                    (dragstart)="startPositionDrag($event, block, rowIndex)"
-                                                    (dragend)="endPositionDrag()"
-                                                    (mousedown)="$event.stopPropagation()">
-                                                    <i class="fa-solid fa-grip-lines text-[0.65rem]"></i>
-                                                </div>
-                                                <input [(ngModel)]="block.positions![rowIndex]" (ngModelChange)="scheduleAutoSave()"
-                                                    [name]="'position_' + block.id + '_' + rowIndex"
-                                                    class="h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-center text-xs font-semibold text-white outline-none"
-                                                    autocomplete="off" (mousedown)="$event.stopPropagation()" />
-                                                <button type="button" title="Supprimer" (click)="removePositionItem(block, rowIndex); $event.stopPropagation()"
-                                                    (mousedown)="$event.stopPropagation()"
-                                                    class="flex h-full w-8 cursor-pointer appearance-none items-center justify-center border-0 bg-transparent p-0 text-red-200 outline-none transition-colors hover:bg-red-500/20">
-                                                    <i class="fa-solid fa-trash-can text-[0.65rem]"></i>
-                                                </button>
-                                            } @else {
-                                                <div class="w-full px-2">{{ position }}</div>
-                                            }
-                                        </div>
-                                    }
-                                    <button type="button" (click)="addPositionItem(block)"
-                                        class="flex h-7 w-full cursor-pointer appearance-none items-center justify-center border-0 border-t border-gray-700 bg-gray-800 p-0 text-white outline-none transition-colors hover:bg-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                                        <i class="fa-solid fa-plus text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-
-                    <div class="absolute -top-1 left-2 right-2 z-40 h-2 cursor-n-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'n')"></div>
-                    <div class="absolute -right-1 top-2 bottom-2 z-40 w-2 cursor-e-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'e')"></div>
-                    <div class="absolute -bottom-1 left-2 right-2 z-40 h-2 cursor-s-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 's')"></div>
-                    <div class="absolute -left-1 top-2 bottom-2 z-40 w-2 cursor-w-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'w')"></div>
-                    <div class="absolute -right-1 -top-1 z-50 h-3 w-3 cursor-ne-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'ne')"></div>
-                    <div class="absolute -right-1 -bottom-1 z-50 h-3 w-3 cursor-se-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'se')"></div>
-                    <div class="absolute -left-1 -bottom-1 z-50 h-3 w-3 cursor-sw-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'sw')"></div>
-                    <div class="absolute -left-1 -top-1 z-50 h-3 w-3 cursor-nw-resize"
-                        (mousedown)="startDrag($event, block, 'resize', 'nw')"></div>
-                    @if (isBlockInLinkScope(block)) {
-                        <button type="button" title="Relier ce bloc"
-                            [attr.data-link-anchor-block-id]="block.id"
-                            class="group absolute -top-px left-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
-                            (mousedown)="startLinkDrag($event, block, 'top')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
-                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
-                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
-                        </button>
-                        <button type="button" title="Relier ce bloc"
-                            [attr.data-link-anchor-block-id]="block.id"
-                            class="group absolute -right-px top-1/2 z-[60] grid h-6 w-6 translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
-                            (mousedown)="startLinkDrag($event, block, 'right')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
-                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
-                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
-                        </button>
-                        <button type="button" title="Relier ce bloc"
-                            [attr.data-link-anchor-block-id]="block.id"
-                            class="group absolute -bottom-px left-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
-                            (mousedown)="startLinkDrag($event, block, 'bottom')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
-                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
-                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
-                        </button>
-                        <button type="button" title="Relier ce bloc"
-                            [attr.data-link-anchor-block-id]="block.id"
-                            class="group absolute -left-px top-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
-                            (mousedown)="startLinkDrag($event, block, 'left')" (click)="selectLinkAnchor(block); $event.stopPropagation()">
-                            <span class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
-                                [ngClass]="linkSourceBlockId === block.id ? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400' : ''"></span>
-                        </button>
-                    }
-                </section>
-            }
-            @if (isSelectingBlocks()) {
-                <div class="pointer-events-none absolute border border-gray-200 bg-gray-300/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)] dark:border-gray-400 dark:bg-gray-100/10"
-                    [ngStyle]="selectionBoxStyle()"></div>
-            }
-        </div>
-        </div>
-    </div>
-</main>
+							<div
+								class="absolute -top-1 left-2 right-2 z-40 h-2 cursor-n-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'n')"
+							></div>
+							<div
+								class="absolute -right-1 top-2 bottom-2 z-40 w-2 cursor-e-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'e')"
+							></div>
+							<div
+								class="absolute -bottom-1 left-2 right-2 z-40 h-2 cursor-s-resize"
+								(mousedown)="startDrag($event, block, 'resize', 's')"
+							></div>
+							<div
+								class="absolute -left-1 top-2 bottom-2 z-40 w-2 cursor-w-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'w')"
+							></div>
+							<div
+								class="absolute -right-1 -top-1 z-50 h-3 w-3 cursor-ne-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'ne')"
+							></div>
+							<div
+								class="absolute -right-1 -bottom-1 z-50 h-3 w-3 cursor-se-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'se')"
+							></div>
+							<div
+								class="absolute -left-1 -bottom-1 z-50 h-3 w-3 cursor-sw-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'sw')"
+							></div>
+							<div
+								class="absolute -left-1 -top-1 z-50 h-3 w-3 cursor-nw-resize"
+								(mousedown)="startDrag($event, block, 'resize', 'nw')"
+							></div>
+							@if (isBlockInLinkScope(block)) {
+								<button
+									type="button"
+									title="Relier ce bloc"
+									[attr.data-link-anchor-block-id]="block.id"
+									class="group absolute -top-px left-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+									(mousedown)="startLinkDrag($event, block, 'top')"
+									(click)="selectLinkAnchor(block); $event.stopPropagation()"
+								>
+									<span
+										class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+										[ngClass]="
+											linkSourceBlockId === block.id
+												? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400'
+												: ''
+										"
+									></span>
+								</button>
+								<button
+									type="button"
+									title="Relier ce bloc"
+									[attr.data-link-anchor-block-id]="block.id"
+									class="group absolute -right-px top-1/2 z-[60] grid h-6 w-6 translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+									(mousedown)="startLinkDrag($event, block, 'right')"
+									(click)="selectLinkAnchor(block); $event.stopPropagation()"
+								>
+									<span
+										class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+										[ngClass]="
+											linkSourceBlockId === block.id
+												? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400'
+												: ''
+										"
+									></span>
+								</button>
+								<button
+									type="button"
+									title="Relier ce bloc"
+									[attr.data-link-anchor-block-id]="block.id"
+									class="group absolute -bottom-px left-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+									(mousedown)="startLinkDrag($event, block, 'bottom')"
+									(click)="selectLinkAnchor(block); $event.stopPropagation()"
+								>
+									<span
+										class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+										[ngClass]="
+											linkSourceBlockId === block.id
+												? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400'
+												: ''
+										"
+									></span>
+								</button>
+								<button
+									type="button"
+									title="Relier ce bloc"
+									[attr.data-link-anchor-block-id]="block.id"
+									class="group absolute -left-px top-1/2 z-[60] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-crosshair appearance-none place-items-center rounded-md border-0 bg-transparent p-0"
+									(mousedown)="startLinkDrag($event, block, 'left')"
+									(click)="selectLinkAnchor(block); $event.stopPropagation()"
+								>
+									<span
+										class="h-2 w-2 rounded-full border-[1.5px] border-gray-500 bg-gray-100 shadow-sm ring-1 ring-gray-900/40 transition-all group-hover:border-gray-700 group-hover:bg-gray-300 dark:border-gray-300 dark:bg-gray-700 dark:ring-white/50 dark:group-hover:border-gray-100 dark:group-hover:bg-gray-500"
+										[ngClass]="
+											linkSourceBlockId === block.id
+												? 'h-3 w-3 border-gray-700 bg-gray-400 ring-2 ring-gray-500/30 dark:border-gray-100 dark:bg-gray-400'
+												: ''
+										"
+									></span>
+								</button>
+							}
+						</section>
+					}
+					@if (isSelectingBlocks()) {
+						<div
+							class="pointer-events-none absolute border border-gray-200 bg-gray-300/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)] dark:border-gray-400 dark:bg-gray-100/10"
+							[ngStyle]="selectionBoxStyle()"
+						></div>
+					}
+				</div>
+			</div>
+		</div>
+	</main>
 </div>

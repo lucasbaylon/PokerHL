@@ -1279,12 +1279,6 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         return this.selectionState !== undefined;
     }
 
-    addPositionItem(block: RangePageBlock) {
-        if (!block.positions) block.positions = [];
-        block.positions.push(`${block.positions.length + 1}`);
-        this.fitAndScheduleAutoSave(block);
-    }
-
     removePositionItem(block: RangePageBlock, index: number) {
         if (!block.positions) return;
         block.positions.splice(index, 1);
@@ -1545,7 +1539,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         const headerHeight = 40;
         const paddingHeight = 24;
         const rowHeight = 28;
-        const contentHeight = headerHeight + paddingHeight + (((block.positions || []).length + 1) * rowHeight);
+        const contentHeight = headerHeight + paddingHeight + ((block.positions || []).length * rowHeight);
         return this.snapToGrid(contentHeight, this.gridSize * 8, this.canvasHeight);
     }
 
