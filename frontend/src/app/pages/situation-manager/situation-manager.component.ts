@@ -371,7 +371,13 @@ export class SituationManagerComponent {
 
     onChangeSolutionAction(solution: Solution, action: SolutionAction) {
         solution.action = action;
-        if (action !== 'raise') solution.raiseAmount = undefined;
+        if (action === 'raise') {
+            if (!solution.raiseAmount) {
+                solution.raiseAmount = 2;
+            }
+        } else {
+            solution.raiseAmount = undefined;
+        }
         solution.display_name = this.commonService.solutionActionLabel(solution);
     }
 
