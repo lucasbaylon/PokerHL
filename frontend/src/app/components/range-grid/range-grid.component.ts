@@ -16,6 +16,7 @@ export class RangeGridComponent {
     @Input() solutions: Solution[] = [];
     @Input() editable: boolean = false;
     @Input() selectedSolutionId?: string;
+    @Input() highlightedCard?: string;
     @Input() size: 'default' | 'md' | 'custom' = 'default';
     @Input() cellWidth?: number;
     @Input() cellHeight?: number;
@@ -92,10 +93,13 @@ export class RangeGridComponent {
     }
 
     getCellDynamicClasses(item: Card): string {
+        const highlightClasses = item.card === this.highlightedCard
+            ? 'relative z-10 scale-110 outline outline-4 outline-offset-2 outline-amber-400'
+            : '';
         if (this.editable) {
-            return item.solution ? 'text-white dark:text-gray-300' : 'text-gray-800';
+            return `${item.solution ? 'text-white dark:text-gray-300' : 'text-gray-800'} ${highlightClasses}`;
         }
-        return '';
+        return highlightClasses;
     }
 
     getCellBackground(rowIndex: number, colIndex: number, item: Card): string {

@@ -68,6 +68,8 @@ export class TrainingComponent {
     showEndSessionModal: boolean = false;
     showEndChallengeModal: boolean = false;
     showEndSurvivalModal: boolean = false;
+    selectedAnswerLabel: string = '';
+    currentHand: string = '';
     private showEndChallengeAfterSolution: boolean = false;
     private showEndSurvivalAfterSolution: boolean = false;
     raiseAmount: number = 2;
@@ -183,6 +185,7 @@ export class TrainingComponent {
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
         let situationCase = this.getRandomCase(this.currentSituation.situations);
+        this.currentHand = situationCase.card;
         let cards = this.generateCards(situationCase);
         let result = this.getResultCase(situationCase.solution!);
         this.activeSituation = {
@@ -209,7 +212,28 @@ export class TrainingComponent {
             item.type === 'unique' && item.action === action &&
             (action !== 'raise' || Math.abs((item.raiseAmount ?? -1) - this.raiseAmount) < 0.001)
         );
+        this.selectedAnswerLabel = solution?.display_name || this.submittedActionLabel(action);
         this.checkResultCase(solution?.id ?? `invalid_${action}_${this.raiseAmount}`);
+    }
+
+    get correctAnswerLabel(): string {
+        return this.activeSituation.result
+            .map(id => this.activeSituation.solutions.find(solution => solution.id === id))
+            .filter((solution): solution is Solution => !!solution)
+            .map(solution => solution.display_name || this.commonService.solutionActionLabel(solution))
+            .join(' / ');
+    }
+
+    private submittedActionLabel(action: SolutionAction): string {
+        const labels: Record<SolutionAction, string> = {
+            'fold': 'Fold',
+            'check': 'Check',
+            'call': 'Call',
+            'limp': 'Limp',
+            'raise': `Raise ${this.raiseAmount} BB`,
+            'all-in': 'All-in'
+        };
+        return labels[action];
     }
 
     setRaisePreset(preset: 'x2' | 'x3' | 'pot') {
