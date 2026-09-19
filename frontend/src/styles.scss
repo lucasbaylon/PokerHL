@@ -1,6 +1,25 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
+.p-tooltip.all-in-range-tooltip {
+    max-width: min(320px, calc(100vw - 24px));
+
+    .p-tooltip-text {
+        padding: 12px 14px;
+        border: 1px solid #4b5563;
+        border-radius: 10px;
+        background: #1f2937;
+        color: #f9fafb;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 30%);
+        overflow-wrap: anywhere;
+    }
+
+    &.p-tooltip-top .p-tooltip-arrow { border-top-color: #1f2937; }
+    &.p-tooltip-bottom .p-tooltip-arrow { border-bottom-color: #1f2937; }
+    &.p-tooltip-left .p-tooltip-arrow { border-left-color: #1f2937; }
+    &.p-tooltip-right .p-tooltip-arrow { border-right-color: #1f2937; }
+}
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';

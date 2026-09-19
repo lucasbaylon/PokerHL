@@ -1,6 +1,6 @@
 import { Situation } from './situation';
 
-type RangeBlockType = 'range' | 'text' | 'positions';
+type RangeBlockType = 'range' | 'text' | 'positions' | 'all-in';
 type RangeBlockSource = 'situation';
 
 interface RangePageDisplaySettings {

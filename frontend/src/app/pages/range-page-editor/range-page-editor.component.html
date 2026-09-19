@@ -19,6 +19,10 @@
 			<i class="fa-solid fa-plus mr-2"></i>
 			Positions
 		</div>
+		<button type="button" (click)="openPositionSituationPopup('all-in')"
+            class="inline-flex h-11 cursor-pointer items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+            <i class="fa-solid fa-plus mr-2"></i>All-in
+        </button>
 		<div
 			(click)="openRangeSituationPopup()"
 			class="inline-flex h-11 items-center justify-center rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors cursor-pointer hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
@@ -166,7 +170,7 @@
 		panelClass="w-[420px] max-w-[calc(100vw-2rem)] border border-gray-200 dark:border-gray-700"
 	>
 		<h4 id="position-situation-title" class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-			Créer un bloc positions
+			{{ positionPopupMode === 'all-in' ? 'Créer un tableau all-in' : 'Créer un bloc positions' }}
 		</h4>
 		<p-autoComplete
 			[(ngModel)]="selectedPositionSituation"
@@ -383,6 +387,7 @@
 													<button
 														type="button"
 														title="Modifier"
+                                                    [hidden]="block.type === 'all-in'"
 														(click)="editBlock(block); $event.stopPropagation()"
 														class="flex h-8 w-8 cursor-pointer appearance-none items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-100 outline-none transition-all duration-150 hover:bg-white/10 dark:text-gray-300 dark:hover:bg-gray-600"
 													>
@@ -497,6 +502,12 @@
 										<div class="p-4 text-red-700 dark:text-red-300">Situation introuvable.</div>
 									}
 								}
+
+                                @if (block.type === "all-in") {
+                                    <div class="p-3">
+                                        <app-all-in-grid [situations]="allInSituations(block)" [cellSize]="cellSize(block)" />
+                                    </div>
+                                }
 
 								@if (block.type === "text") {
 									@if (isEditing(block)) {

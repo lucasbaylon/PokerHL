@@ -17,6 +17,7 @@ import { SituationService } from '../../services/situation.service';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { Card } from '../../interfaces/card';
+import { AllInGridComponent } from '../../components/all-in-grid/all-in-grid.component';
 
 type DragMode = 'move' | 'resize';
 type ResizeDirection = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
@@ -40,7 +41,7 @@ interface BlockConnectionLine {
 @Component({
     selector: 'app-range-page-editor',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, DropdownModule, AppModalComponent, RangeGridComponent],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, DropdownModule, AppModalComponent, RangeGridComponent, AllInGridComponent],
     templateUrl: './range-page-editor.component.html'
 })
 export class RangePageEditorComponent implements OnInit, OnDestroy {
@@ -102,6 +103,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     private rangeAnimationTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
     private previousRangesByBlockId = new Map<string, Situation>();
     private rangeAnimationProgress = new Map<string, number>();
+    private allInSituationCache = new Map<string, Situation[]>();
 
     page: RangePage = this.createEmptyPage();
     situations: Situation[] = [];
@@ -115,6 +117,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     selectedPositionSituation?: PositionSituationTypeOption;
     selectedRangePositionBlockId?: string;
     showPositionSituationPopup = false;
+    positionPopupMode: 'positions' | 'all-in' = 'positions';
     showRangeSituationPopup = false;
     showGridHelpPopup = false;
     showRemoveBlockModal = false;
@@ -148,6 +151,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.situationsSubscription = this.situationService.situations.subscribe((data: Situation[]) => {
+            this.allInSituationCache.clear();
             this.situations = data.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
             this.refreshPositionBlocks();
         });
@@ -199,7 +203,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         }
 
         this.page.blocks = (this.page.blocks || [])
-            .filter(block => block.type === 'range' || block.type === 'text' || block.type === 'positions')
+            .filter(block => block.type === 'range' || block.type === 'text' || block.type === 'positions' || block.type === 'all-in')
             .map(block => this.normalizeBlock(block));
 
         const rangeIds = this.page.blocks.filter(block => block.type === 'range').map(block => block.id);
@@ -407,7 +411,8 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         ].join('|');
     }
 
-    openPositionSituationPopup() {
+    openPositionSituationPopup(mode: 'positions' | 'all-in' = 'positions') {
+        this.positionPopupMode = mode;
         this.selectedPositionSituation = undefined;
         this.positionSituationSuggestions = this.positionSituationTypeOptions();
         this.showPositionSituationPopup = true;
@@ -437,6 +442,21 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
 
         const positionTypeName = this.selectedPositionSituation.name;
         const referenceSituation = this.selectedPositionSituation.situation;
+        if (this.positionPopupMode === 'all-in') {
+            const block = this.normalizeBlock({
+                id: this.createBlockId(), type: 'all-in', title: positionTypeName,
+                positionSituationId: referenceSituation.id,
+                positionReference: cloneDeep(referenceSituation),
+                ...this.nextBlockPosition(), w: 492, h: 504, zIndex: this.nextZIndex()
+            });
+            this.page.blocks.push(block);
+            this.selectedBlockId = block.id;
+            this.selectedBlockIds = [block.id];
+            this.editingBlockId = undefined;
+            this.closePositionSituationPopup();
+            this.scheduleAutoSave();
+            return;
+        }
         const position = this.nextBlockPosition();
         const block: RangePageBlock = {
             id: this.createBlockId(),
@@ -799,6 +819,7 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     editBlock(block: RangePageBlock) {
+        if (block.type === 'all-in') return;
         this.selectBlock(block);
         this.actionsMenuBlockId = undefined;
         this.editingBlockId = block.id;
@@ -1365,6 +1386,15 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         return this.situations.filter(situation => this.sameSituationParametersExceptStack(situation, reference));
     }
 
+    allInSituations(block: RangePageBlock): Situation[] {
+        const reference = this.positionReferenceForBlock(block);
+        const key = reference ? this.situationTypeKey(reference) : '';
+        if (!this.allInSituationCache.has(key)) {
+            this.allInSituationCache.set(key, reference ? this.similarSituations(reference) : []);
+        }
+        return this.allInSituationCache.get(key)!;
+    }
+
     findSimilarSituationWithStack(reference: Situation, stack: number): Situation | undefined {
         return this.situations.find(situation =>
             this.sameSituationParametersExceptStack(situation, reference) && Number(situation.stack) === stack
@@ -1494,6 +1524,13 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     minSizeForBlock(block: RangePageBlock) {
+        if (block.type === 'all-in') {
+            const cellSize = this.cellSize(block);
+            return {
+                width: Math.ceil(((cellSize + 4) * 13 + 56) / this.gridSize) * this.gridSize,
+                height: Math.ceil(((cellSize + 4) * 13 + 180) / this.gridSize) * this.gridSize
+            };
+        }
         if (block.type === 'range') {
             const cellSize = block.cellSize || this.page.displaySettings.cellSize;
             const gridWidth = Math.ceil((cellSize + 4) * 13 + 32);
