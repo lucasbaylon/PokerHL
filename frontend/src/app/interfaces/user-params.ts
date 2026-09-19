@@ -26,6 +26,10 @@ export interface UserParams {
 
     autoMultipleSolutionName: boolean;
 
+    rangeTextOutline?: boolean;
+
+    rangeFontSize?: 'small' | 'medium' | 'large';
+
     showParticules: boolean;
 
     particleCount?: number;

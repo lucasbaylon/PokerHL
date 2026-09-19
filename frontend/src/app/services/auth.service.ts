@@ -34,7 +34,7 @@ export class AuthService {
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',
-                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false, showParticules: false, ...DEFAULT_PARTICLE_SETTINGS })
+                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false, rangeTextOutline: false, rangeFontSize: 'small', showParticules: false, ...DEFAULT_PARTICLE_SETTINGS })
                     );
                 }
                 if (!localStorage.getItem('theme')) {
@@ -47,6 +47,8 @@ export class AuthService {
                 }
                 const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
                 this.commonService.setShowParticule(userParams.showParticules);
+                this.commonService.setRangeTextOutline(userParams.rangeTextOutline ?? false);
+                this.commonService.setRangeFontSize(userParams.rangeFontSize ?? 'small');
                 this.commonService.setParticleSettings({
                     particleCount: userParams.particleCount ?? DEFAULT_PARTICLE_SETTINGS.particleCount,
                     particleSize: userParams.particleSize ?? DEFAULT_PARTICLE_SETTINGS.particleSize,

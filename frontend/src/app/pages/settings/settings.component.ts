@@ -31,6 +31,8 @@ export class SettingsComponent {
     particleLinks: boolean = DEFAULT_PARTICLE_SETTINGS.particleLinks;
     displaySolutionOnError: boolean = true;
     autoMultipleSolutionName: boolean = false;
+    rangeTextOutline: boolean = false;
+    rangeFontSize: { name: string, code: 'small' | 'medium' | 'large' } = { name: 'Petit', code: 'small' };
 
     newUserName: string = '';
     oldPassword: string = '';
@@ -54,6 +56,12 @@ export class SettingsComponent {
         { name: 'Rouge', code: 'red' },
     ];
 
+    availableRangeFontSizes: { name: string, code: 'small' | 'medium' | 'large' }[] = [
+        { name: 'Petit', code: 'small' },
+        { name: 'Moyen', code: 'medium' },
+        { name: 'Grand', code: 'large' },
+    ];
+
     cardsStyle: { name: string, code: string } = this.availableCardsStyles[0];
     pokerTableColor: { name: string, code: string } = this.availablePokerTableColors[0];
 
@@ -66,6 +74,8 @@ export class SettingsComponent {
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
         userParams.autoMultipleSolutionName ? this.autoMultipleSolutionName = userParams.autoMultipleSolutionName : this.autoMultipleSolutionName = false;
+        this.rangeTextOutline = userParams.rangeTextOutline ?? false;
+        this.rangeFontSize = this.availableRangeFontSizes.find(size => size.code === (userParams.rangeFontSize ?? 'small'))!;
         userParams.showParticules ? this.showParticules = userParams.showParticules : this.showParticules = false;
         this.particleCount = userParams.particleCount ?? DEFAULT_PARTICLE_SETTINGS.particleCount;
         this.particleSize = userParams.particleSize ?? DEFAULT_PARTICLE_SETTINGS.particleSize;
@@ -226,6 +236,16 @@ export class SettingsComponent {
     changeUserName(){
         this.authService.setUserDisplayName(this.newUserName);
         this.closeUserNameModal();
+    }
+
+    updateRangeTextOutline(): void {
+        this.commonService.setRangeTextOutline(this.rangeTextOutline);
+        this.updateUserParam('rangeTextOutline', this.rangeTextOutline);
+    }
+
+    updateRangeFontSize(): void {
+        this.commonService.setRangeFontSize(this.rangeFontSize.code);
+        this.updateUserParam('rangeFontSize', this.rangeFontSize.code);
     }
 
     openUserNameModal(): void {

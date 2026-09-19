@@ -32,8 +32,15 @@ export class RangeGridComponent {
     private isSelectionActive: boolean = false;
     private readonly solutionColorPipe: SolutionColorPipe;
 
-    constructor(commonService: CommonService) {
+    constructor(private readonly commonService: CommonService) {
         this.solutionColorPipe = new SolutionColorPipe(commonService);
+    }
+
+    getCellTextShadow(item: Card): string | null {
+        if (!item.solution || !this.commonService.getRangeTextOutline()) {
+            return null;
+        }
+        return '-0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000';
     }
 
     get computedTableClass(): string {
@@ -57,15 +64,31 @@ export class RangeGridComponent {
             return this.cellClass;
         }
         if (this.editable) {
-            return 'rounded cursor-pointer font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl';
+            return `rounded cursor-pointer ${this.getTextSizeClass(true)} font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl`;
         }
         if (this.size === 'md') {
-            return 'h-10 w-10 select-none rounded text-center align-middle text-sm font-semibold text-white shadow-sm';
+            return `h-10 w-10 select-none rounded text-center align-middle ${this.getTextSizeClass(false)} font-semibold text-white shadow-sm`;
         }
         if (this.cellWidth || this.cellHeight) {
             return 'relative cursor-default overflow-hidden rounded text-center align-middle font-semibold text-white shadow';
         }
-        return 'h-10 w-10 select-none rounded text-center align-middle text-sm font-semibold text-white shadow-sm';
+        return `h-10 w-10 select-none rounded text-center align-middle ${this.getTextSizeClass(false)} font-semibold text-white shadow-sm`;
+    }
+
+    getCustomFontSize(): number | undefined {
+        if (!this.fontSize) {
+            return undefined;
+        }
+        const offset = { small: 0, medium: 1, large: 3 }[this.commonService.getRangeFontSize()];
+        return this.fontSize + offset;
+    }
+
+    private getTextSizeClass(editable: boolean): string {
+        const size = this.commonService.getRangeFontSize();
+        if (editable) {
+            return { small: 'text-base', medium: 'text-[17px]', large: 'text-xl' }[size];
+        }
+        return { small: 'text-sm', medium: 'text-[15px]', large: 'text-lg' }[size];
     }
 
     getCellDynamicClasses(item: Card): string {

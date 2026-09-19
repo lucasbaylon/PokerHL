@@ -13,6 +13,8 @@ export class CommonService {
     private showParticules = signal<boolean>(false);
     private darkMode = signal<boolean>(localStorage.getItem('theme') === 'dark');
     private particleSettings = signal<ParticleSettings>(DEFAULT_PARTICLE_SETTINGS);
+    private rangeTextOutline = signal<boolean>(false);
+    private rangeFontSize = signal<'small' | 'medium' | 'large'>('small');
 
     constructor(
         private router: Router
@@ -194,6 +196,22 @@ export class CommonService {
 
     setParticleSettings(value: ParticleSettings) {
         this.particleSettings.set(value);
+    }
+
+    getRangeTextOutline() {
+        return this.rangeTextOutline();
+    }
+
+    setRangeTextOutline(value: boolean) {
+        this.rangeTextOutline.set(value);
+    }
+
+    getRangeFontSize() {
+        return this.rangeFontSize();
+    }
+
+    setRangeFontSize(value: 'small' | 'medium' | 'large') {
+        this.rangeFontSize.set(value);
     }
     
     /**
