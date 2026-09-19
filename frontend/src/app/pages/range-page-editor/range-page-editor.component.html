@@ -469,25 +469,15 @@
 										}
 
 										<div class="p-3">
-											<table class="border-separate border-spacing-1 select-none" oncontextmenu="return false;">
-												<tbody>
-													@for (row of range.situations; track rowIndex; let rowIndex = $index) {
-														<tr>
-															@for (item of row; track cellIndex; let cellIndex = $index) {
-																<td
-																	class="relative cursor-default overflow-hidden rounded text-center align-middle font-semibold text-white shadow"
-																	[style.width.px]="cellSize(block)"
-																	[style.height.px]="block.compact ? cellSize(block) - 8 : cellSize(block)"
-																	[style.font-size.px]="block.compact ? 11 : 13"
-																	[style.background]="animatedCellBackground(block, rowIndex, cellIndex, range)"
-																>
-																	<span class="relative z-10">{{ item.card }}</span>
-																</td>
-															}
-														</tr>
-													}
-												</tbody>
-											</table>
+											<app-range-grid
+												[situations]="range.situations"
+												[solutions]="range.solutions"
+												[cellWidth]="cellSize(block)"
+												[cellHeight]="block.compact ? cellSize(block) - 8 : cellSize(block)"
+												[fontSize]="block.compact ? 11 : 13"
+												[customBackgroundFn]="rangeCellBackground"
+												[customBackgroundContext]="block">
+											</app-range-grid>
 
 											@if (block.showLegend) {
 												<div class="flex flex-wrap gap-3 mt-3">

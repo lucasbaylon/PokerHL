@@ -6,6 +6,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { CardComponent } from '../../components/card/card.component';
 import { DefaultCardsComponent } from '../../components/default-cards/default-cards.component';
+import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { ActiveSituation, TableCard, TableColorCard, TableColorCardObj } from '../../interfaces/active-situation';
 import { Card } from '../../interfaces/card';
 import { Situation } from '../../interfaces/situation';
@@ -21,7 +22,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, FormsModule, InputNumberModule, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe],
+    imports: [NgStyle, FormsModule, InputNumberModule, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe, RangeGridComponent],
     templateUrl: './training.component.html'
 })
 export class TrainingComponent {

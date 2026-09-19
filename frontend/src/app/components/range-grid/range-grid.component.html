@@ -1,0 +1,31 @@
+<table
+    [class]="computedTableClass"
+    (mouseleave)="onMouseLeave()"
+    (contextmenu)="editable ? $event.preventDefault() : null">
+    <tbody>
+        @for (row of situations; track rowIndex; let rowIndex = $index) {
+            <tr
+                [class]="animateRows ? 'table-row animate-appear opacity-0' : 'table-row'"
+                [style.animation-delay]="animateRows ? (rowIndex * 0.025 + 's') : null">
+                @for (item of row; track colIndex; let colIndex = $index) {
+                    <td
+                        [class]="getCellClass(item)"
+                        [style.width.px]="cellWidth"
+                        [style.height.px]="cellHeight"
+                        [style.font-size.px]="fontSize"
+                        [style.background]="getCellBackground(rowIndex, colIndex, item)"
+                        [ngClass]="getCellDynamicClasses(item)"
+                        (mousedown)="onMouseDown(rowIndex, colIndex, $event)"
+                        (mouseenter)="onMouseEnter(rowIndex, colIndex, $event)"
+                        (mouseup)="onMouseUp($event)">
+                        @if (cellWidth || cellHeight) {
+                            <span class="relative z-10">{{ item.card }}</span>
+                        } @else {
+                            {{ item.card }}
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

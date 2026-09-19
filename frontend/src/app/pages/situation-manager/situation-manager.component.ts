@@ -13,6 +13,7 @@ import { AppModalComponent } from '../../components/app-modal/app-modal.componen
 import { Situation } from '../../interfaces/situation';
 import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
+import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
 import { SituationService } from '../../services/situation.service';
@@ -20,7 +21,7 @@ import { SituationService } from '../../services/situation.service';
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule, AppModalComponent],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule, AppModalComponent, RangeGridComponent],
     templateUrl: './situation-manager.component.html'
 })
 export class SituationManagerComponent {
@@ -31,7 +32,6 @@ export class SituationManagerComponent {
     situation_obj!: Situation;
     solutionSelected: string = "unique_solution_0";
     showOpponent2: boolean = true;
-    isSelectionActive: boolean = false;
     situation_objSolutionsRef: any;
     mixedSolutionSliderMinValue: number = 50;
     mixedSolutionSliderMaxValue: number = 100;
@@ -214,54 +214,6 @@ export class SituationManagerComponent {
             if (solutionLst.length === 6) {
                 document.getElementById("add-solution-button")!.style.display = "none";
             }
-        }
-    }
-
-    /**
-     * Commence la sélection de cases dans le tableau des ranges.
-     * @param event L'événement souris.
-     */
-    startSelection(event: any) {
-        let cell_index = event.target.cellIndex;
-        let row_index = event.target.parentElement.rowIndex;
-        if (event.button === 0) {
-            this.isSelectionActive = true;
-            this.situation_obj.situations[row_index][cell_index].solution = this.solutionSelected;
-        } else if (event.button === 2) {
-            for (let i = cell_index; i < this.situation_obj.situations[row_index].length; i++) {
-                this.situation_obj.situations[row_index][i].solution = this.solutionSelected;
-            }
-        }
-    }
-
-    /**
-     * Met à jour les cases survolées pendant une sélection active.
-     * @param event L'événement souris.
-     */
-    updateSelection(event: any) {
-        let cell_index = event.target.cellIndex;
-        let row_index = event.target.parentElement.rowIndex;
-        if (!this.isSelectionActive) {
-            return;
-        }
-
-        this.isSelectionActive = true;
-        if (event.button === 0) {
-            this.situation_obj.situations[row_index][cell_index].solution = this.solutionSelected;
-        } else if (event.button === 2) {
-            for (let i = cell_index; i < this.situation_obj.situations[row_index].length; i++) {
-                this.situation_obj.situations[row_index][i].solution = this.solutionSelected;
-            }
-        }
-    }
-
-    /**
-     * Arrête le mode de sélection active.
-     * @param event L'événement souris.
-     */
-    endSelection(event: any) {
-        if (event.button === 0) {
-            this.isSelectionActive = false;
         }
     }
 

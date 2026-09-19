@@ -15,6 +15,8 @@ import { CommonService } from '../../services/common.service';
 import { RangePageService } from '../../services/range-page.service';
 import { SituationService } from '../../services/situation.service';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
+import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
+import { Card } from '../../interfaces/card';
 
 type DragMode = 'move' | 'resize';
 type ResizeDirection = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
@@ -38,10 +40,16 @@ interface BlockConnectionLine {
 @Component({
     selector: 'app-range-page-editor',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, DropdownModule, AppModalComponent],
+    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputTextModule, AutoCompleteModule, DropdownModule, AppModalComponent, RangeGridComponent],
     templateUrl: './range-page-editor.component.html'
 })
 export class RangePageEditorComponent implements OnInit, OnDestroy {
+
+    readonly rangeCellBackground = (rowIndex: number, cellIndex: number, _card: Card, context?: unknown): string => {
+        const block = context as RangePageBlock;
+        const range = this.rangeForBlock(block);
+        return range ? this.animatedCellBackground(block, rowIndex, cellIndex, range) : '';
+    };
 
     private rangePageSubscription!: Subscription;
     private situationsSubscription!: Subscription;

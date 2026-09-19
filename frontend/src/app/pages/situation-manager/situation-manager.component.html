@@ -97,24 +97,13 @@
 <div class="flex items-center justify-center w-10/12 my-16 mx-auto">
 
     <!-- Tableau des ranges -->
-    <table (mouseleave)="endSelection($event)" oncontextmenu="return false;"
-        class="mx-auto table-fixed border-separate border-spacing-1">
-        <tbody>
-            @for (row of situation_obj.situations; track i; let i = $index) {
-            <tr class="table-row animate-appear opacity-0" [style.animation-delay]="i * 0.025+'s'">
-                @for (item of row; track j; let j = $index) {
-                <td class="rounded cursor-pointer font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl"
-                    (mousedown)="startSelection($event)" (mouseenter)="updateSelection($event)"
-                    (mouseup)="endSelection($event)"
-                    [ngStyle]="{'background': (item.solution! | solutionColor:situation_objSolutionsRef)}"
-                    [ngClass]="item.solution ? 'text-white dark:text-gray-300' : 'text-gray-800'">
-                    {{item.card}}
-                </td>
-                }
-            </tr>
-            }
-        </tbody>
-    </table>
+    <app-range-grid
+        [situations]="situation_obj.situations"
+        [solutions]="situation_objSolutionsRef"
+        [selectedSolutionId]="solutionSelected"
+        [editable]="true"
+        [animateRows]="true">
+    </app-range-grid>
 
     <!-- Div solutions -->
     <div

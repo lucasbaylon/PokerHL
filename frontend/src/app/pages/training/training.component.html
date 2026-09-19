@@ -339,20 +339,10 @@
             </div>
             <div class="flex flex-col justify-center gap-4 lg:flex-row lg:items-start">
                 <div class="overflow-x-auto">
-                    <table class="mx-auto border-separate border-spacing-1">
-                        <tbody>
-                            @for (row of currentSituation.situations; track $index) {
-                            <tr>
-                                @for (item of row; track $index) {
-                                <td class="h-10 w-10 select-none rounded text-center align-middle text-sm font-semibold text-white shadow-sm"
-                                    [style.background]="(item.solution! | solutionColor:currentSituation.solutions)">
-                                    {{item.card}}
-                                </td>
-                                }
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <app-range-grid
+                        [situations]="currentSituation.situations"
+                        [solutions]="currentSituation.solutions">
+                    </app-range-grid>
                 </div>
                 <div class="min-w-36">
                     <h4
