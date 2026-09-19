@@ -22,6 +22,8 @@ export interface UserParams {
 
     displaySolution: boolean;
 
+    nextSituationOnError?: boolean;
+
     displaySituation: boolean;
 
     autoMultipleSolutionName: boolean;

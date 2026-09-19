@@ -34,7 +34,7 @@ export class AuthService {
                 if (!localStorage.getItem('userParams')) {
                     localStorage.setItem(
                         'userParams',
-                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, autoMultipleSolutionName: false, rangeTextOutline: false, rangeFontSize: 'small', showParticules: false, ...DEFAULT_PARTICLE_SETTINGS })
+                        JSON.stringify({ cardStyle: 'default', playmatColor: 'green', displaySolution: false, nextSituationOnError: false, autoMultipleSolutionName: false, rangeTextOutline: false, rangeFontSize: 'small', showParticules: false, ...DEFAULT_PARTICLE_SETTINGS })
                     );
                 }
                 if (!localStorage.getItem('theme')) {

@@ -30,6 +30,7 @@ export class SettingsComponent {
     particleSpeed: number = DEFAULT_PARTICLE_SETTINGS.particleSpeed;
     particleLinks: boolean = DEFAULT_PARTICLE_SETTINGS.particleLinks;
     displaySolutionOnError: boolean = true;
+    nextSituationOnError: boolean = false;
     autoMultipleSolutionName: boolean = false;
     rangeTextOutline: boolean = false;
     rangeFontSize: { name: string, code: 'small' | 'medium' | 'large' } = { name: 'Petit', code: 'small' };
@@ -73,6 +74,7 @@ export class SettingsComponent {
         userParams.playmatColor ? this.pokerTableColor = this.availablePokerTableColors.find((color) => color.code === userParams.playmatColor)! : this.pokerTableColor = this.availablePokerTableColors[0];
         userParams.cardStyle ? this.cardsStyle = this.availableCardsStyles.find((style) => style.code === userParams.cardStyle)! : this.cardsStyle = this.availableCardsStyles[0];
         userParams.displaySolution ? this.displaySolutionOnError = userParams.displaySolution : this.displaySolutionOnError = false;
+        this.nextSituationOnError = userParams.nextSituationOnError ?? false;
         userParams.autoMultipleSolutionName ? this.autoMultipleSolutionName = userParams.autoMultipleSolutionName : this.autoMultipleSolutionName = false;
         this.rangeTextOutline = userParams.rangeTextOutline ?? false;
         this.rangeFontSize = this.availableRangeFontSizes.find(size => size.code === (userParams.rangeFontSize ?? 'small'))!;

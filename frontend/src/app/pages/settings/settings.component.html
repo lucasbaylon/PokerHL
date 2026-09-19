@@ -37,7 +37,7 @@
                     (onChange)="toggleShowParticules()"></p-inputSwitch>
             </div>
 
-            <div class="overflow-hidden transition-all duration-500 ease-in-out"
+            <div class="-mx-1 overflow-hidden px-1 transition-all duration-500 ease-in-out"
                 [class.max-h-0]="!showParticules" [class.max-h-96]="showParticules"
                 [class.opacity-0]="!showParticules" [class.opacity-100]="showParticules">
                 <div class="mt-4 border-0 border-t border-solid border-gray-200 pt-4 dark:border-gray-700">
@@ -224,6 +224,18 @@
                 </div>
                 <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="displaySolutionOnError"
                     (onChange)="updateUserParam('displaySolution', displaySolutionOnError)"></p-inputSwitch>
+            </div>
+            <div class="-mx-1 overflow-hidden px-1 transition-all duration-500 ease-in-out"
+                [class.max-h-0]="displaySolutionOnError" [class.max-h-32]="!displaySolutionOnError"
+                [class.opacity-0]="displaySolutionOnError" [class.opacity-100]="!displaySolutionOnError">
+                <div class="flex items-center justify-between gap-4 border-0 border-t border-solid border-gray-200 py-3 dark:border-gray-700">
+                    <div>
+                        <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Passer à la situation suivante après une erreur</p>
+                        <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Ne demande pas de retenter la situation jusqu’à trouver la bonne réponse.</p>
+                    </div>
+                    <p-inputSwitch styleClass="custom-inputSwitch" [(ngModel)]="nextSituationOnError"
+                        (onChange)="updateUserParam('nextSituationOnError', nextSituationOnError)"></p-inputSwitch>
+                </div>
             </div>
             <div class="flex items-center justify-between gap-4 py-3">
                 <label for="cards-style" class="font-medium text-gray-800 dark:text-gray-300">Style des cartes</label>

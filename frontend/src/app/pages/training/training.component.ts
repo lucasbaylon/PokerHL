@@ -632,7 +632,11 @@ export class TrainingComponent {
                         this.openWrongAnswerModal();
                     } else {
                         this.commonService.showSwalToast(`Mauvaise réponse !`, 'error');
-                        this.countResult = false;
+                        if (this.shouldGoToNextSituationOnError()) {
+                            this.generateSituation();
+                        } else {
+                            this.countResult = false;
+                        }
                     }
                     break;
                 case 'turbo':
@@ -674,6 +678,11 @@ export class TrainingComponent {
     private shouldDisplaySolutionOnError(): boolean {
         const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
         return userParams.displaySolution;
+    }
+
+    private shouldGoToNextSituationOnError(): boolean {
+        const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
+        return userParams.nextSituationOnError ?? false;
     }
 
     private openWrongAnswerModal() {
