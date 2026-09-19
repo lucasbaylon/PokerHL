@@ -240,6 +240,52 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         this.showRemoveSituationModal = true;
     }
 
+    onClickFileImport(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const files = input.files;
+        if (!files || this.selectedSituations.length > 0) return;
+
+        const handleFileImport = (file: File, type: 'application/zip' | 'application/json') => {
+            const blob = new Blob([file], { type });
+            const importObservable = type === 'application/zip'
+                ? this.apiSituation.importZIPSituationsForUser(blob)
+                : this.apiSituation.importJSONSituationsForUser(file.name, blob);
+
+            importObservable.subscribe({
+                next: response => {
+                    this.commonService.showSwalToast(`${response.count} fichier(s) importé(s) avec succès !`);
+                    this.apiSituation.getSituations();
+                },
+                error: () => this.commonService.showSwalToast(`Échec de l'import`, 'error')
+            });
+        };
+
+        for (const file of Array.from(files)) {
+            if (['application/zip', 'application/x-compressed', 'application/x-zip-compressed'].includes(file.type)) {
+                handleFileImport(file, 'application/zip');
+            } else if (file.type === 'application/json' || file.name.toLowerCase().endsWith('.json')) {
+                handleFileImport(file, 'application/json');
+            } else {
+                this.commonService.showSwalToast(`Veuillez sélectionner un fichier zip ou json.`, 'error');
+            }
+        }
+        input.value = '';
+    }
+
+    exportSelectedSituations() {
+        const ids = this.selectedSituations
+            .map(situation => situation.id)
+            .filter((id): id is number => id !== undefined);
+        if (ids.length === 0) return;
+
+        this.apiSituation.exportSituationsForUser(ids).subscribe({
+            next: () => this.commonService.showSwalToast(
+                `${ids.length} situation${ids.length > 1 ? 's' : ''} exportée${ids.length > 1 ? 's' : ''} !`
+            ),
+            error: () => this.commonService.showSwalToast(`Échec de l'export`, 'error')
+        });
+    }
+
     removeSelectedSituations() {
         const selectedIds = this.selectedSituations
             .map(situation => situation.id)

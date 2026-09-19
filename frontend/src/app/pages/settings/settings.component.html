@@ -189,20 +189,6 @@
                     [options]="availableRangeFontSizes" optionLabel="name"
                     (onChange)="updateRangeFontSize()"></p-dropdown>
             </div>
-            <div class="mt-3 grid grid-cols-1 gap-3 border-0 border-t border-solid border-gray-200 pt-4 dark:border-gray-700 sm:grid-cols-2">
-                <button type="button" (click)="fileImportInput.click()"
-                    class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors duration-500 hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                    <i class="fa-solid fa-download mr-2" aria-hidden="true"></i>
-                    Importer
-                </button>
-                <input type="file" #fileImportInput class="hidden" (change)="onClickFileImport($event)" multiple
-                    accept=".zip,.json,application/zip,application/json">
-                <button type="button" (click)="onClickFileExport()"
-                    class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                    <i class="fa-solid fa-upload mr-2" aria-hidden="true"></i>
-                    Exporter
-                </button>
-            </div>
         </section>
 
         <section class="animate-appear opacity-0 animation-delay-150 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"

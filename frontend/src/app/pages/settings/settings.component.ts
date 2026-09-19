@@ -6,7 +6,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings, UserParams } from '../../interfaces/user-params';
 import { AuthService } from '../../services/auth.service';
-import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class SettingsComponent {
 
     constructor(
         protected authService: AuthService,
-        private apiSituation: SituationService,
         protected commonService: CommonService
     ) { }
 
@@ -168,68 +166,6 @@ export class SettingsComponent {
                 this.authService.uploadAvatar(file);
             }
         }
-    }
-
-    /**
-    * Fonction déclenchée lors du clic pour importer des situations.
-    * Cette fonction traite les fichiers sélectionnés par l'utilisateur et les importe
-    * via l'API, en fonction de leur type (ZIP ou JSON).
-    *
-    * @param {Event} event - L'événement de sélection de fichiers.
-    */
-    onClickFileImport(event: any) {
-        const fileList = event.target.files;
-
-        const handleFileImport = (file: File, type: string) => {
-            const blob = new Blob([file], { type });
-
-            let importObservable;
-            if (type === 'application/zip') {
-                importObservable = this.apiSituation.importZIPSituationsForUser(blob);
-            } else if (type === 'application/json') {
-                importObservable = this.apiSituation.importJSONSituationsForUser(file.name, blob);
-            } else {
-                console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier zip ou json.');
-                this.commonService.showSwalToast(`Veuillez sélectionner un fichier zip ou json.`, 'error');
-                return;
-            }
-
-            importObservable.subscribe({
-                next: (response) => {
-                    console.log(`${response.count} fichier(s) importé(s)`);
-                    this.commonService.showSwalToast(`${response.count} fichier(s) importé(s) avec succès !`);
-                },
-                error: (error) => {
-                    console.error('Erreur lors du téléchargement du fichier', error);
-                    this.commonService.showSwalToast(`Échec de l'import`, 'error');
-                }
-            });
-        };
-
-        for (const file of fileList) {
-            if (file) {
-                if (file.type === 'application/zip' || file.type === 'application/x-compressed' || file.type === 'application/x-zip-compressed') {
-                    handleFileImport(file, 'application/zip');
-                } else if (file.type === 'application/json') {
-                    handleFileImport(file, 'application/json');
-                } else {
-                    console.error('Type de fichier non pris en charge. Veuillez sélectionner un fichier zip ou json.');
-                }
-            }
-        }
-
-        event.target.value = '';
-    }
-
-
-    /**
-    * Fonction déclenchée lors du clic pour exporter les situations.
-    * Cette fonction appelle l'API pour exporter les situations de l'utilisateur,
-    * puis affiche un message toast pour indiquer que l'exportation a réussi.
-    */
-    onClickFileExport() {
-        this.apiSituation.exportSituationsForUser();
-        this.commonService.showSwalToast(`Situations exportées !`);
     }
 
     /**

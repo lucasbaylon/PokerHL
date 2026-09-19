@@ -28,11 +28,23 @@
                 </p>
             </div>
         </div>
-        <div class="flex items-center gap-2 sm:shrink-0">
+        <div class="flex flex-wrap items-center gap-2 sm:shrink-0">
             <button type="button" (click)="removeSelectedSituations()" [disabled]="selectedSituations.length === 0"
                 class="h-11 rounded-md border-0 bg-red-600 px-5 font-medium text-white shadow transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer">
                 Supprimer
                 <i class="fa-solid fa-trash-can ml-2" aria-hidden="true"></i>
+            </button>
+            <button type="button" (click)="fileImportInput.click()" [disabled]="selectedSituations.length > 0"
+                class="h-11 rounded-md border border-solid border-gray-300 bg-white px-5 font-medium text-gray-700 shadow transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Importer
+                <i class="fa-solid fa-download ml-2" aria-hidden="true"></i>
+            </button>
+            <input type="file" #fileImportInput class="hidden" (change)="onClickFileImport($event)" multiple
+                accept=".zip,.json,application/zip,application/json">
+            <button type="button" (click)="exportSelectedSituations()" [disabled]="selectedSituations.length === 0"
+                class="h-11 rounded-md border-0 bg-gray-800 px-5 font-medium text-white shadow transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Exporter
+                <i class="fa-solid fa-upload ml-2" aria-hidden="true"></i>
             </button>
             <button type="button" (click)="startTraining()" [disabled]="selectedSituations.length === 0"
                 class="h-11 rounded-md border-0 bg-gray-800 px-5 font-medium text-white shadow transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">

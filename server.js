@@ -40,6 +40,7 @@ if (process.env.NODE_ENV === 'dev') {
 }
 
 app.use(cors(optionsCors));
+app.use(express.json());
 
 const io = require('socket.io')(http, optionsCors);
 
@@ -224,13 +225,26 @@ protectedRouter.get("/check_situation_name/:new_situation_name/:user", async fun
     }
 });
 
-protectedRouter.get("/export_situation/:user", async function (req, res) {
-    let user = req.params.user;
+protectedRouter.post("/export_situations", async function (req, res) {
+    const user = req.user?.email || req.body.user;
+    const ids = (Array.isArray(req.body.ids) ? req.body.ids : [])
+        .map(Number)
+        .filter(Number.isInteger);
     let connection;
 
     try {
+        if (!user) {
+            return res.status(400).send('Utilisateur manquant.');
+        }
         connection = await getConnection();
-        const [results] = await connection.execute('SELECT * FROM situations WHERE user = ?', [user]);
+        if (ids.length === 0) {
+            return res.status(400).send('Aucune situation sélectionnée.');
+        }
+        const placeholders = ids.map(() => '?').join(',');
+        const [results] = await connection.execute(
+            `SELECT * FROM situations WHERE user = ? AND id IN (${placeholders})`,
+            [user, ...ids]
+        );
 
         const zip = new JSZip();
 
@@ -245,7 +259,7 @@ protectedRouter.get("/export_situation/:user", async function (req, res) {
             res.send(content);
         });
     } catch (error) {
-        console.error('Erreur lors de la création du fichier ZIP:', err);
+        console.error('Erreur lors de la création du fichier ZIP:', error);
         res.status(500).send('Erreur du serveur');
     } finally {
         if (connection) {
