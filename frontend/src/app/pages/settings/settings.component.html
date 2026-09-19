@@ -185,7 +185,7 @@
             </div>
             <div class="flex items-center justify-between gap-4 border-0 border-t border-solid border-gray-200 py-3 dark:border-gray-700">
                 <label for="range-font-size" class="font-medium text-gray-800 dark:text-gray-300">Taille du texte des ranges</label>
-                <p-dropdown inputId="range-font-size" styleClass="w-44" [(ngModel)]="rangeFontSize"
+                <p-dropdown inputId="range-font-size" styleClass="w-44" [(ngModel)]="rangeFontSize" appendTo="body"
                     [options]="availableRangeFontSizes" optionLabel="name"
                     (onChange)="updateRangeFontSize()"></p-dropdown>
             </div>
