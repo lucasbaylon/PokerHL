@@ -71,6 +71,7 @@ export class TrainingComponent {
     private showEndChallengeAfterSolution: boolean = false;
     private showEndSurvivalAfterSolution: boolean = false;
     raiseAmount: number = 2;
+    playerInfoAnimationName: 'training-player-info-in-a' | 'training-player-info-in-b' = 'training-player-info-in-a';
     readonly confettiPieces = Array.from({ length: 28 }, (_, index) => ({
         x: (index * 37) % 100,
         delay: `-${(index % 8) * 0.18}s`,
@@ -198,6 +199,9 @@ export class TrainingComponent {
             previousPlayer2Action: situation.previousPlayer2Action
         }
         this.raiseAmount = Math.min(this.maximumRaise(), Math.max(2, this.highestCurrentBet() * 2));
+        this.playerInfoAnimationName = this.playerInfoAnimationName === 'training-player-info-in-a'
+            ? 'training-player-info-in-b'
+            : 'training-player-info-in-a';
     }
 
     submitPokerAction(action: SolutionAction) {

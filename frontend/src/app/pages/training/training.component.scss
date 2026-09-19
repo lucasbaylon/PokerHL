@@ -3,7 +3,7 @@
 .training-arena, .training-game { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .training-header { position: absolute; top: 0; right: 0; left: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
 .training-eyebrow { margin: 0 0 8px; font-size: 22px; font-weight: 700; }
-.session-stats { display: flex; gap: 28px; }
+.session-stats { position: fixed; bottom: 36px; left: 48px; z-index: 30; display: flex; gap: 28px; }
 .session-stats > div { display: flex; flex-direction: column; gap: 5px; font-size: 14px; }
 .session-stats strong { color: #1f2937; font-size: 25px; font-variant-numeric: tabular-nums; }
 :host-context(.dark) .session-stats strong { color: #fff; }
@@ -39,5 +39,6 @@
     .session-stats { gap: 16px; }
     .session-stats strong { font-size: 18px; }
     .decision-buttons > button { min-width: 60px; }
+    .session-stats { bottom: 24px; left: 12px; }
     .mode-status { right: 12px; bottom: 24px; }
 }

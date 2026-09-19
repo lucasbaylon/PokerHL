@@ -485,8 +485,34 @@ html.dark .range-pages-table .p-datatable-tbody > tr:last-child > td {
     100% { opacity: .85; transform: translate3d(calc(var(--drift) * 1px), 560px, 0) rotate(760deg); }
 }
 
+.training-player-info-transition {
+    animation-duration: 160ms;
+    animation-timing-function: cubic-bezier(.2, .8, .2, 1);
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+}
+
+.action-panel button {
+    transition: color 120ms, background-color 120ms, border-color 120ms, transform 80ms;
+}
+
+.action-panel button:active {
+    transform: scale(.98);
+}
+
+@keyframes training-player-info-in-a {
+    from { opacity: .2; transform: translateY(-7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes training-player-info-in-b {
+    from { opacity: .2; transform: translateY(-7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .training-confetti { display: none; }
+    .training-player-info-transition { animation-duration: 1ms; }
 }
 
 html,
