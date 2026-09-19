@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -23,9 +23,22 @@ import { CommonService } from './../../services/common.service';
     selector: 'app-training',
     standalone: true,
     imports: [NgStyle, FormsModule, InputNumberModule, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe, RangeGridComponent],
-    templateUrl: './training.component.html'
+    templateUrl: './training.component.html',
+    styleUrl: './training.component.scss'
 })
 export class TrainingComponent {
+    private tableResizeObserver?: ResizeObserver;
+
+    @ViewChild('tableStage') set tableStage(element: ElementRef<HTMLElement> | undefined) {
+        this.tableResizeObserver?.disconnect();
+        if (!element) return;
+        const stage = element.nativeElement;
+        this.tableResizeObserver = new ResizeObserver(([entry]) => {
+            const scale = Math.min(1, entry.contentRect.width / 1000, entry.contentRect.height / 600);
+            stage.style.setProperty('--table-scale', String(scale));
+        });
+        this.tableResizeObserver.observe(stage);
+    }
 
     mode: string = "";
     countResult: boolean = true;
@@ -58,11 +71,17 @@ export class TrainingComponent {
     private showEndChallengeAfterSolution: boolean = false;
     private showEndSurvivalAfterSolution: boolean = false;
     raiseAmount: number = 2;
+    readonly confettiPieces = Array.from({ length: 28 }, (_, index) => ({
+        x: (index * 37) % 100,
+        delay: `-${(index % 8) * 0.18}s`,
+        duration: `${2.4 + (index % 5) * 0.18}s`,
+        drift: index % 2 === 0 ? 55 : -55
+    }));
 
     tableColors = {
-        "green": "rgb(0, 151, 0)",
-        "red": "rgb(255, 0, 0)",
-        "blue": "#3B82F6"
+        "green": "#31866f",
+        "red": "#a64a55",
+        "blue": "#4778ad"
     }
 
     constructor(
@@ -82,8 +101,8 @@ export class TrainingComponent {
             const tableColor = this.tableColors[userParams.playmatColor];
 
             this.backgroundColor = tableColor ?
-                `radial-gradient(${tableColor}, black 150%)` :
-                'radial-gradient(rgb(0, 151, 0), black 150%)';
+                `radial-gradient(ellipse at 50% 30%, ${tableColor}, #162825 145%)` :
+                'radial-gradient(ellipse at 50% 30%, #31866f, #162825 145%)';
 
             if (userParams.cardStyle === 'contrast') {
                 this.colorList = [{ name: "heart", color: "#d20000" }, { name: "diamond", color: "#3B82F6" }, { name: "club", color: "#009700" }, { name: "spade", color: "black" }];
@@ -130,32 +149,8 @@ export class TrainingComponent {
      * Nettoie les ressources (timer) lors de la destruction du composant.
      */
     ngOnDestroy() {
+        this.tableResizeObserver?.disconnect();
         this.clearCountdown();
-    }
-
-    /**
-     * Ajuste le zoom de la table après l'initialisation de la vue selon la hauteur de l'écran.
-     */
-    ngAfterViewInit() {
-        if (window.innerHeight >= 1080) {
-            document.getElementById("poker-table-div")?.classList.add("scale-125");
-        } else if (window.innerHeight <= 750) {
-            document.getElementById("poker-table-div")?.classList.add("scale-90");
-        }
-    }
-
-    /**
-     * Gère le redimensionnement de la fenêtre pour ajuster le zoom de la table.
-     * @param event L'événement de redimensionnement.
-     */
-    @HostListener('window:resize', ['$event'])
-    onResize(event: any) {
-        const div = document.getElementById("poker-table-div")!;
-        if (event.target.innerHeight > 1080) {
-            div.classList.add("scale-125");
-        } else {
-            div.classList.remove("scale-125");
-        }
     }
 
     /**

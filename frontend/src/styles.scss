@@ -241,12 +241,24 @@ html.dark .p-multiselect-filter {
 }
 
 html.dark .p-inputtext:enabled:focus,
-html.dark .p-inputnumber-input:enabled:focus,
 html.dark .p-password-input:enabled:focus,
 html.dark .p-autocomplete-input:enabled:focus,
 html.dark .p-multiselect-filter:enabled:focus {
     @apply border-white;
     box-shadow: 0 0 0 1px #ffffff !important;
+}
+
+html.dark .p-inputnumber-input:enabled:focus {
+    @apply border-gray-500;
+    box-shadow: 0 0 0 1px #6b7280 !important;
+}
+
+html.dark .p-inputnumber .p-inputnumber-button {
+    @apply border-gray-700 bg-gray-700 text-gray-300 transition-colors duration-150;
+}
+
+html.dark .p-inputnumber .p-inputnumber-button:hover {
+    @apply border-gray-600 bg-gray-600 text-white;
 }
 
 html.dark .p-dropdown {
@@ -444,6 +456,37 @@ html.dark .range-pages-table .p-datatable-tbody > tr:last-child > td {
 
 .app-modal-close {
     @apply absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent p-0 text-gray-500 outline-none transition-colors duration-500 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer;
+}
+
+.training-confetti {
+    @apply pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-xl;
+}
+
+.training-confetti-piece {
+    position: absolute;
+    top: -18px;
+    left: calc(var(--x) * 1%);
+    width: 8px;
+    height: 14px;
+    border-radius: 2px;
+    background: #16a34a;
+    opacity: 0;
+    animation: training-confetti-fall var(--duration) linear infinite;
+    animation-delay: var(--delay);
+}
+
+.training-confetti-piece:nth-child(4n + 2) { background: #eab308; }
+.training-confetti-piece:nth-child(4n + 3) { background: #dc2626; }
+.training-confetti-piece:nth-child(4n + 4) { background: #2563eb; }
+
+@keyframes training-confetti-fall {
+    0% { opacity: 0; transform: translate3d(0, -20px, 0) rotate(0deg); }
+    10% { opacity: 1; }
+    100% { opacity: .85; transform: translate3d(calc(var(--drift) * 1px), 560px, 0) rotate(760deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .training-confetti { display: none; }
 }
 
 html,

@@ -1,29 +1,38 @@
-<div class="relative h-[calc(100vh-64px)]">
+<div class="training-page">
+    <header class="training-header">
+        <div>
+            <p class="training-eyebrow text-gray-800 dark:text-gray-300 transition-colors duration-500">Entraînement · {{ mode === 'turbo' ? 'Turbo' : mode === 'challenge' ? 'Défi' : mode === 'survival' ? 'Survie' : 'Infini' }}</p>
+            <p class="m-0 mt-2 text-base text-gray-500 dark:text-gray-400">{{currentSituationName}}</p>
+        </div>
+        <div class="session-stats rounded-md bg-white px-4 py-3 text-gray-500 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-400" aria-label="Statistiques de la session">
+            <div><strong>{{goodResponse}}<span> / {{totalResponse}}</span></strong><span>Bonnes réponses</span></div>
+            <div><strong>{{successRatePercentage}}<span>%</span></strong><span>Réussite</span></div>
+        </div>
+    </header>
     @if (activeSituation) {
-    <div class="flex justify-center items-center h-[85%]">
+    <div class="training-arena">
         <!-- Table de poker -->
-        <div class="flex-col justify-center items-center" id="poker-table-div">
-            <div class="-translate-y-10">
-            <div class="flex justify-center items-center animate-appear opacity-0">
-                <div class="relative w-[48vw] max-w-[1000px] h-[27vw] max-h-[550px] rounded-full border-solid border-8 border-gray-800 dark:border-gray-300 shadow-2xl"
+        <div class="training-game">
+            <div class="table-stage" #tableStage>
+            <div class="table-wrap">
+                <div class="poker-table"
                     [style.background]="backgroundColor">
-                    <div class="flex items-center justify-center w-full h-full">
-                        <h1 class="opacity-60 font-semibold italic text-7xl select-none flex flex-col items-center">
-                            Poker HL
-                        </h1>
+                    <div class="table-brand" aria-hidden="true">
+                        <span>POKER<span class="font-light"> HL</span></span>
+                        <small>{{activeSituation.nbPlayer === 2 ? 'HEADS UP' : '3 PLAYERS'}} · PREFLOP</small>
                     </div>
 
                     <!-- Adversaire du milieu (HU) -->
                     @if (activeSituation.nbPlayer === 2) {
                     <div
-                        class="absolute top-[-10%] left-1/2 w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                        class="player-seat seat-hu bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300" [class.seat-folded]="activeSituation.previousPlayer1Action === 'Fold'">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1">
                             @if (activeSituation.opponentLevel == "fish"){
                             <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "shark") {
                             <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
-                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="seat-name">Adversaire</h3>
                             @if (getOpponentRemainingStack(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack) === 0) {
                                 <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
                             } @else {
@@ -32,8 +41,8 @@
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
-                                class="absolute top-[80%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                class="dealer-button absolute top-[135%] left-[105%]">
+                                <span class="font-bold">D</span>
                             </div>
                             }
                         </div>
@@ -52,8 +61,8 @@
                     <!-- Adversaire de gauche (3W) -->
                     @if (activeSituation.nbPlayer === 3) {
                     <div
-                        class="absolute top-[2%] left-[10%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                        class="player-seat seat-left bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300" [class.seat-folded]="getOpponentAction('left') === 'Fold'">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1">
                             @if (activeSituation.opponentLevel == "fish"){
                             <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "shark") {
@@ -66,7 +75,7 @@
                             <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             }
-                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="seat-name">Adversaire</h3>
                             @if (getOpponentRemainingStack(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack) === 0) {
                                 <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
                             } @else {
@@ -75,8 +84,8 @@
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'bb') {
                             <div
-                                class="absolute top-[130%] left-[40%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                class="dealer-button absolute top-[140%] left-[65%]">
+                                <span class="font-bold">D</span>
                             </div>
                             }
                         </div>
@@ -95,8 +104,8 @@
                     <!-- Adversaire de droite (3W) -->
                     @if (activeSituation.nbPlayer === 3) {
                     <div
-                        class="absolute top-[2%] left-[90%] w-64 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
-                        <div class="w-1/2 flex flex-col items-center justify-center gap-1 pl-5">
+                        class="player-seat seat-right bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300" [class.seat-folded]="getOpponentAction('right') === 'Fold'">
+                        <div class="w-1/2 flex flex-col items-center justify-center gap-1">
                             @if (activeSituation.opponentLevel == "fish"){
                             <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
                             } @else if (activeSituation.opponentLevel == "shark") {
@@ -109,7 +118,7 @@
                             <i class="fa-solid fa-crown text-2xl my-1"></i>
                             }
                             }
-                            <h3 class="m-0">Adversaire</h3>
+                            <h3 class="seat-name">Adversaire</h3>
                             @if (getOpponentRemainingStack(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack) === 0) {
                                 <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
                             } @else {
@@ -118,8 +127,8 @@
                             <!-- Dealer coin -->
                             @if (activeSituation.position == 'sb') {
                             <div
-                                class="absolute top-[130%] left-[60%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                class="dealer-button absolute top-[140%] left-[35%]">
+                                <span class="font-bold">D</span>
                             </div>
                             }
                         </div>
@@ -137,15 +146,14 @@
 
                     <!-- Joueur -->
                     <div
-                        class="absolute top-[86%] w-64 left-1/2 transform -translate-x-1/2 bg-secondary-dark-bg text-white tracking-wider dark:text-gray-300 shadow-lg rounded-lg flex items-center justify-center py-3">
+                        class="player-seat seat-hero bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
                         <div class="w-1/2 flex flex-col items-center justify-center">
                             <div class="w-8 h-8 rounded-full overflow-hidden">
                                 @if (authService.getUserAvatar()) {
-                                <img [src]="authService.getUserAvatar()"
+                                <img [src]="authService.getUserAvatar()" alt="Votre avatar"
                                     class="w-full h-full object-cover transition-all duration-300" />
                                 } @else {
-                                <img src="https://imgs.search.brave.com/6Abd5TBbHIoBHK1py-tGSUv7eRH_hf3KVb5Px1DBNMs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA4LzIzLzkxLzU1/LzM2MF9GXzgyMzkx/NTUzM19PalFLUGtD/TTNzaGRxRmdwWjVz/d01LV3U1cHhnMzls/VS5qcGc"
-                                    class="w-full h-full object-cover transition-all duration-300" />
+                                <span class="flex h-full w-full items-center justify-center bg-gray-700"><i class="fa-solid fa-user text-sm" aria-hidden="true"></i></span>
                                 }
                             </div>
                             <h3 class="m-0 mt-2">@if (authService.getUserDisplayName()) {
@@ -164,21 +172,21 @@
                             @if (activeSituation.nbPlayer === 2) {
                             @if (activeSituation.position == 'sb') {
                             <div
-                                class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                class="dealer-button absolute top-[-39%] left-[110%]">
+                                <span class="font-bold">D</span>
                             </div>
                             }
                             }
                             @if (activeSituation.nbPlayer === 3) {
                             @if (activeSituation.position == 'bu') {
                             <div
-                                class="absolute top-[20%] left-[120%] w-12 h-12 bg-gray-300 text-gray-800 rounded-full shadow-inner select-none transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                                <span class="text-2xl ml-0.5 mt-0.5 font-bold">D</span>
+                                class="dealer-button absolute top-[-39%] left-[110%]">
+                                <span class="font-bold">D</span>
                             </div>
                             }
                             }
                         </div>
-                        <div class="w-1/2 flex items-center justify-center select-none">
+                        <div class="hero-cards w-1/2 flex items-center justify-center select-none">
                             <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
                                 <card [cardColor]="activeSituation.leftCard.color.color"
                                     [cardColorName]="activeSituation.leftCard.color.name"
@@ -245,18 +253,17 @@
             </div>
 
             <!-- Interface d'actions de poker -->
-            <div class="pointer-events-none absolute inset-x-0 -bottom-3 z-40 flex justify-center px-4">
-            <div class="pointer-events-auto p-3 rounded-xl shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-100 transition-all duration-500"
-                [class.w-full]="canRaise()" [class.max-w-2xl]="canRaise()" [class.w-fit]="!canRaise()">
+            <div class="action-dock">
+            <div class="action-panel rounded-md bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300">
                 @if (canRaise()) {
-                <div class="grid grid-cols-4 gap-2 mb-2">
-                    <button type="button" (click)="setRaisePreset('x2')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">x2</button>
-                    <button type="button" (click)="setRaisePreset('x3')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">x3</button>
-                    <button type="button" (click)="setRaisePreset('pot')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Pot</button>
-                    <button type="button" (click)="submitPokerAction('all-in')" class="h-9 rounded-md border-0 bg-gray-800 text-white font-semibold hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">All-in</button>
+                <div class="raise-presets grid grid-cols-4 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
+                    <button type="button" (click)="setRaisePreset('x2')" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">x2</button>
+                    <button type="button" (click)="setRaisePreset('x3')" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">x3</button>
+                    <button type="button" (click)="setRaisePreset('pot')" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Pot</button>
+                    <button type="button" (click)="submitPokerAction('all-in')" class="h-9 rounded-md border-0 bg-red-700 px-3 text-sm font-semibold text-white shadow transition-colors duration-150 hover:bg-red-800 dark:bg-red-800 dark:hover:bg-red-700 cursor-pointer">All-in</button>
                 </div>
-                <div class="flex items-center gap-3 mb-2 rounded-md bg-gray-100 px-3 py-1.5 dark:bg-main-dark-bg">
-                    <input type="range" class="w-full accent-red-600" [min]="minimumRaise()" [max]="maximumRaise()" step="0.5"
+                <div class="flex items-center gap-3 mb-3 rounded-md bg-gray-100 px-3 py-1.5 dark:bg-main-dark-bg">
+                    <input type="range" class="w-full min-w-0 accent-gray-800 dark:accent-gray-400 cursor-pointer" [min]="minimumRaise()" [max]="maximumRaise()" step="0.5"
                         [ngModel]="raiseAmount" (ngModelChange)="setRaiseAmount($event)" aria-label="Montant de la relance" />
                     <div class="flex shrink-0 items-center gap-2">
                         <div class="relative w-24">
@@ -285,19 +292,19 @@
                     </div>
                 </div>
                 }
-                <div class="flex flex-wrap justify-center gap-2">
-                    <button type="button" (click)="submitPokerAction('fold')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Fold</button>
+                <div class="decision-buttons flex flex-wrap justify-center gap-2">
+                    <button type="button" (click)="submitPokerAction('fold')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Fold</button>
                     @if (canCheck()) {
-                    <button type="button" (click)="submitPokerAction('check')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Check</button>
+                    <button type="button" (click)="submitPokerAction('check')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Check</button>
                     }
                     @if (canCall()) {
-                    <button type="button" (click)="submitPokerAction('call')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Call</button>
+                    <button type="button" (click)="submitPokerAction('call')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Call</button>
                     }
                     @if (canLimp()) {
-                    <button type="button" (click)="submitPokerAction('limp')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Limp</button>
+                    <button type="button" (click)="submitPokerAction('limp')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Limp</button>
                     }
                     @if (canRaise()) {
-                    <button type="button" (click)="submitPokerAction('raise')" class="h-10 w-32 rounded-md border-0 bg-gray-800 text-white font-bold uppercase hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 cursor-pointer">Raise {{raiseAmount}} BB</button>
+                    <button type="button" (click)="submitPokerAction('raise')" class="h-10 w-32 rounded-md border-0 bg-green-700 text-white font-semibold shadow transition-colors duration-150 hover:bg-green-800 dark:bg-green-800 dark:hover:bg-green-700 cursor-pointer">Raise <span class="ml-1 font-normal opacity-80">{{raiseAmount}} BB</span></button>
                     }
                 </div>
             </div>
@@ -393,40 +400,28 @@
         }
     </app-modal>
 
-    <!-- Div des infos -->
-    <div
-        class="absolute -left-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
-        <div class="mb-1">
-            <span class="font-semibold">Ratio Bonne/Mauvaise réponse :</span> {{goodResponse}} / {{badResponse}}
-        </div>
-        <div class="mb-1">
-            <span class="font-semibold">Taux de réussite :</span> {{successRatePercentage}}%
-        </div>
-        <span class="font-semibold">Situation actuelle :</span> {{currentSituationName}}
-    </div>
-
     <!-- Compte à rebours -->
     @if (showTimer) {
         <div
-            class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+            class="mode-status text-gray-800 dark:text-gray-300">
             <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
                 <div class="flex flex-col">
-                    <span class="dui-countdown text-5xl">
+                    <span class="dui-countdown text-4xl">
                         <span [style.--value]="hours"></span>
                     </span>
-                    heure
+                    <span class="text-base">heure</span>
                 </div>
                 <div class="flex flex-col">
-                    <span class="dui-countdown text-5xl">
+                    <span class="dui-countdown text-4xl">
                         <span [style.--value]="minutes"></span>
                     </span>
-                    min
+                    <span class="text-base">min</span>
                 </div>
                 <div class="flex flex-col">
-                    <span class="dui-countdown text-5xl">
+                    <span class="dui-countdown text-4xl">
                         <span [style.--value]="seconds"></span>
                     </span>
-                    sec
+                    <span class="text-base">sec</span>
                 </div>
             </div>
         </div>
@@ -435,10 +430,10 @@
     <!-- Compteur Défi -->
     @if (mode === 'challenge') {
         <div
-            class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+            class="mode-status text-gray-800 dark:text-gray-300">
             <div class="flex flex-col items-center">
-                <span class="text-4xl font-bold">{{totalResponse}} / {{nbSituationsChallenge}}</span>
-                <span class="text-sm uppercase tracking-widest mt-1">Situations</span>
+                <span class="text-3xl font-bold">{{totalResponse}} / {{nbSituationsChallenge}}</span>
+                <span class="text-base uppercase tracking-widest mt-1">Situations</span>
             </div>
         </div>
     }
@@ -446,101 +441,132 @@
     <!-- Compteur Survie -->
     @if (mode === 'survival') {
         <div
-            class="absolute -right-10 -bottom-3 text-gray-800 tracking-wider dark:text-gray-300 w-fit text-md mx-auto p-5 rounded-lg shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200">
+            class="mode-status text-gray-800 dark:text-gray-300">
             <div class="flex flex-col items-center">
                 <div class="flex gap-0">
                     @for (life of survivalLifeSlots; track life) {
-                        <span class="flex h-12 w-12 items-center justify-center transition-colors duration-300"
+                        <span class="flex h-10 w-10 items-center justify-center transition-colors duration-300"
                             [class.text-red-600]="life <= survivalLives"
                             [class.dark:text-red-400]="life <= survivalLives"
                             [class.text-gray-300]="life > survivalLives"
                             [class.dark:text-gray-600]="life > survivalLives">
-                            <i class="text-2xl" [class.fa-solid]="life <= survivalLives"
+                            <i class="text-3xl" [class.fa-solid]="life <= survivalLives"
                                 [class.fa-regular]="life > survivalLives" [class.fa-heart]="true"
                                 aria-hidden="true"></i>
                         </span>
                     }
                 </div>
-                <span class="text-sm font-bold uppercase tracking-widest mt-2">Vies</span>
+                <span class="text-base font-bold uppercase tracking-widest mt-1">Vies</span>
             </div>
         </div>
     }
 </div>
 <app-modal [open]="showEndSessionModal" [showClose]="false" [closeOnBackdrop]="false" panelClass="w-full max-w-lg">
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Session terminée !
-        </h4>
-        <div class="flex flex-col gap-5 justify-center items-center my-4">
-            <span>Le temps est écoulé ! Vous avez terminé la session Turbo.</span>
-            <span>Score : {{goodResponse}} / {{totalResponse}}</span>
-            <span>Taux de réussite : {{successRatePercentage}}%</span>
+    <div class="flex flex-col items-center text-center">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-xl text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+            <i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
         </div>
-        <div class="flex justify-center items-center space-x-5 mt-8">
-            <div (click)="this.commonService.redirectTo('situations')"
-                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-3 h-4 w-4"></i>
-                Retour
-            </div>
-            <div (click)="resetSession()"
-                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
-                Rejouer
-            </div>
+        <p class="m-0 mt-5 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Mode Turbo</p>
+        <h4 class="m-0 mt-2 text-2xl font-bold text-gray-800 dark:text-gray-100">Session terminée</h4>
+        <p class="m-0 mt-2 text-sm text-gray-500 dark:text-gray-400">Le temps est écoulé. Voici le résultat de votre session.</p>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-3">
+        <div class="rounded-md bg-gray-100 p-4 text-center dark:bg-main-dark-bg">
+            <strong class="block text-2xl text-gray-800 dark:text-gray-100">{{goodResponse}} / {{totalResponse}}</strong>
+            <span class="mt-1 block text-sm text-gray-500 dark:text-gray-400">Bonnes réponses</span>
         </div>
+        <div class="rounded-md bg-gray-100 p-4 text-center dark:bg-main-dark-bg">
+            <strong class="block text-2xl text-gray-800 dark:text-gray-100">{{successRatePercentage}}%</strong>
+            <span class="mt-1 block text-sm text-gray-500 dark:text-gray-400">Réussite</span>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="this.commonService.redirectTo('situations')"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Retour
+        </button>
+        <button type="button" (click)="resetSession()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-150 hover:bg-gray-700 dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500 cursor-pointer">
+            <i class="fa-solid fa-rotate-right mr-2" aria-hidden="true"></i>Rejouer
+        </button>
+    </div>
 </app-modal>
 
 <app-modal [open]="showEndSurvivalModal" [showClose]="false" [closeOnBackdrop]="false" panelClass="w-full max-w-lg">
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Survie terminée !
-        </h4>
-        <div class="flex flex-col gap-5 justify-center items-center my-4">
-            <span class="text-red-600 font-bold text-xl uppercase text-center">Vous n'avez plus de vies.</span>
-            <div class="flex flex-col items-center mt-2">
-                <span>Score : {{goodResponse}} / {{totalResponse}}</span>
-                <span>Taux de réussite : {{successRatePercentage}}%</span>
-            </div>
+    <div class="flex flex-col items-center text-center">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-xl text-red-600 dark:bg-red-950/40 dark:text-red-400">
+            <i class="fa-solid fa-heart-crack" aria-hidden="true"></i>
         </div>
-        <div class="flex justify-center items-center space-x-5 mt-8">
-            <div (click)="this.commonService.redirectTo('situations')"
-                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-3 h-4 w-4"></i>
-                Retour
-            </div>
-            <div (click)="resetSession()"
-                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
-                Rejouer
-            </div>
+        <p class="m-0 mt-5 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Mode Survie</p>
+        <h4 class="m-0 mt-2 text-2xl font-bold text-gray-800 dark:text-gray-100">Session terminée</h4>
+        <p class="m-0 mt-2 text-sm text-gray-500 dark:text-gray-400">Vous n'avez plus de vies.</p>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-3">
+        <div class="rounded-md bg-gray-100 p-4 text-center dark:bg-main-dark-bg">
+            <strong class="block text-2xl text-gray-800 dark:text-gray-100">{{goodResponse}} / {{totalResponse}}</strong>
+            <span class="mt-1 block text-sm text-gray-500 dark:text-gray-400">Bonnes réponses</span>
         </div>
+        <div class="rounded-md bg-gray-100 p-4 text-center dark:bg-main-dark-bg">
+            <strong class="block text-2xl text-gray-800 dark:text-gray-100">{{successRatePercentage}}%</strong>
+            <span class="mt-1 block text-sm text-gray-500 dark:text-gray-400">Réussite</span>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="this.commonService.redirectTo('situations')"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Retour</button>
+        <button type="button" (click)="resetSession()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-150 hover:bg-gray-700 dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500 cursor-pointer">
+            <i class="fa-solid fa-rotate-right mr-2" aria-hidden="true"></i>Rejouer
+        </button>
+    </div>
 </app-modal>
 
 <app-modal [open]="showEndChallengeModal" [showClose]="false" [closeOnBackdrop]="false" panelClass="w-full max-w-lg">
-        <h4 class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-            Défi terminé !
-        </h4>
-        <div class="flex flex-col gap-5 justify-center items-center my-4">
-            @if (challengeSuccess) {
-                <span class="text-green-600 font-bold text-xl uppercase text-center">Défi réussi !</span>
-                <span class="text-center">Félicitations, vous avez répondu correctement à toutes les situations.</span>
-            } @else if (challengeFailed) {
-                <span class="text-red-600 font-bold text-xl uppercase text-center">Défi perdu...</span>
-                <span class="text-center">Vous avez fait une erreur. Le défi s'arrête donc ici. Entraînez-vous encore pour réussir !</span>
-            }
-            <div class="flex flex-col items-center mt-2">
-                <span>Score : {{goodResponse}} / {{totalResponse}}</span>
-                <span>Taux de réussite : {{successRatePercentage}}%</span>
-            </div>
+    @if (challengeSuccess) {
+    <div class="training-confetti" aria-hidden="true">
+        @for (piece of confettiPieces; track $index) {
+        <span class="training-confetti-piece"
+            [style.--x]="piece.x"
+            [style.--delay]="piece.delay"
+            [style.--duration]="piece.duration"
+            [style.--drift]="piece.drift"></span>
+        }
+    </div>
+    }
+    <div class="flex flex-col items-center text-center">
+        @if (challengeSuccess) {
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-green-50 text-xl text-green-600 dark:bg-green-950/40 dark:text-green-400">
+            <i class="fa-solid fa-trophy" aria-hidden="true"></i>
         </div>
-        <div class="flex justify-center items-center space-x-5 mt-8">
-            <div (click)="this.commonService.redirectTo('situations')"
-                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-3 h-4 w-4"></i>
-                Retour
-            </div>
-            <div (click)="resetSession()"
-                class="flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-6 text-base font-medium shadow transition-colors cursor-pointer">
-                <i class="fa-solid fa-play mr-3 h-4 w-4"></i>
-                Rejouer
-            </div>
+        } @else {
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-xl text-red-600 dark:bg-red-950/40 dark:text-red-400">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </div>
+        }
+        <p class="m-0 mt-5 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Mode Défi</p>
+        <h4 class="m-0 mt-2 text-2xl font-bold text-gray-800 dark:text-gray-100">{{challengeSuccess ? 'Défi réussi' : 'Défi terminé'}}</h4>
+        @if (challengeSuccess) {
+        <p class="m-0 mt-2 text-sm text-gray-500 dark:text-gray-400">Toutes les situations ont été résolues correctement.</p>
+        } @else if (challengeFailed) {
+        <p class="m-0 mt-2 text-sm text-gray-500 dark:text-gray-400">Une erreur a mis fin au défi.</p>
+        }
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-3">
+        <div class="rounded-md bg-gray-100 p-4 text-center dark:bg-main-dark-bg">
+            <strong class="block text-2xl text-gray-800 dark:text-gray-100">{{goodResponse}} / {{totalResponse}}</strong>
+            <span class="mt-1 block text-sm text-gray-500 dark:text-gray-400">Bonnes réponses</span>
+        </div>
+        <div class="rounded-md bg-gray-100 p-4 text-center dark:bg-main-dark-bg">
+            <strong class="block text-2xl text-gray-800 dark:text-gray-100">{{successRatePercentage}}%</strong>
+            <span class="mt-1 block text-sm text-gray-500 dark:text-gray-400">Réussite</span>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="this.commonService.redirectTo('situations')"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Retour</button>
+        <button type="button" (click)="resetSession()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-150 hover:bg-gray-700 dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500 cursor-pointer">
+            <i class="fa-solid fa-rotate-right mr-2" aria-hidden="true"></i>Rejouer
+        </button>
+    </div>
 </app-modal>
