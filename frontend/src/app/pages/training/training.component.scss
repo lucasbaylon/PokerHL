@@ -3,7 +3,7 @@
 .training-arena, .training-game { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .training-header { position: absolute; top: 0; right: 0; left: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
 .training-eyebrow { margin: 0 0 8px; font-size: 22px; font-weight: 700; }
-.session-stats { position: fixed; bottom: 36px; left: 48px; z-index: 30; display: flex; gap: 28px; }
+.session-stats { position: absolute; bottom: 12px; left: 0; z-index: 30; display: flex; gap: 32px; }
 .session-stats > div { display: flex; flex-direction: column; gap: 5px; font-size: 14px; }
 .session-stats strong { color: #1f2937; font-size: 25px; font-variant-numeric: tabular-nums; }
 :host-context(.dark) .session-stats strong { color: #fff; }
@@ -33,12 +33,13 @@
 .decision-buttons > button { flex: 1; min-width: 90px; height: 44px; font-size: 14px; }
 .action-panel button:focus-visible { outline: 2px solid #9ca3af; outline-offset: 3px; }
 .mode-status { position: fixed; right: 48px; bottom: 36px; z-index: 30; display: flex; justify-content: center; min-width: 210px; min-height: 86px; padding: 18px 24px; border-radius: 6px; background: #fff; box-shadow: 0 4px 12px #0002; }
+.survival-status { min-width: 180px; min-height: 72px; padding: 14px 18px; }
 :host-context(.dark) .mode-status { background: #232726; box-shadow: 0 4px 12px #0006; }
 @media (max-width: 700px) {
     .training-header { gap: 12px; flex-wrap: wrap; }
     .session-stats { gap: 16px; }
     .session-stats strong { font-size: 18px; }
     .decision-buttons > button { min-width: 60px; }
-    .session-stats { bottom: 24px; left: 12px; }
+    .session-stats { bottom: 0; left: 12px; }
     .mode-status { right: 12px; bottom: 24px; }
 }
