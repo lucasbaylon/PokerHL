@@ -208,12 +208,27 @@ export class TrainingComponent {
     }
 
     submitPokerAction(action: SolutionAction) {
-        const solution = this.activeSituation.solutions.find(item =>
-            item.type === 'unique' && item.action === action &&
-            (action !== 'raise' || Math.abs((item.raiseAmount ?? -1) - this.raiseAmount) < 0.001)
+        const matchingSolutions = this.activeSituation.solutions.filter(item =>
+            item.type === 'unique' && this.matchesSubmittedAction(item, action)
         );
+        const solution = matchingSolutions.find(item => this.activeSituation.result.includes(item.id))
+            ?? matchingSolutions[0];
         this.selectedAnswerLabel = solution?.display_name || this.submittedActionLabel(action);
         this.checkResultCase(solution?.id ?? `invalid_${action}_${this.raiseAmount}`);
+    }
+
+    private matchesSubmittedAction(solution: Solution, action: SolutionAction): boolean {
+        if (solution.action === action) {
+            return action !== 'raise' || Math.abs((solution.raiseAmount ?? -1) - this.raiseAmount) < 0.001;
+        }
+
+        const maximumRaise = this.maximumRaise();
+        const submittedMaximumRaise = action === 'raise' && Math.abs(this.raiseAmount - maximumRaise) < 0.001;
+        const solutionMaximumRaise = solution.action === 'raise'
+            && Math.abs((solution.raiseAmount ?? -1) - maximumRaise) < 0.001;
+
+        return (submittedMaximumRaise && solution.action === 'all-in')
+            || (action === 'all-in' && solutionMaximumRaise);
     }
 
     get correctAnswerLabel(): string {
