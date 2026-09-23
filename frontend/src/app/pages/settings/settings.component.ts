@@ -47,6 +47,8 @@ export class SettingsComponent {
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
         { name: 'Contraste', code: 'contrast' },
+        { name: 'Standard plein', code: 'default-full' },
+        { name: 'Contraste plein', code: 'contrast-full' },
     ];
 
     availablePokerTableColors: any[] = [

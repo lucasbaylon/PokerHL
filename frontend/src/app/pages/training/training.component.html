@@ -190,14 +190,14 @@
                             }
                         </div>
                         <div class="hero-cards w-1/2 flex items-center justify-center select-none">
-                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm">
-                                <card [cardColor]="activeSituation.leftCard.color.color"
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm" [ngStyle]="fullCardStyle ? {'background-color': activeSituation.leftCard.color.color} : null">
+                                <card [cardColor]="fullCardStyle ? '#ffffff' : activeSituation.leftCard.color.color"
                                     [cardColorName]="activeSituation.leftCard.color.name"
                                     [cardValue]="activeSituation.leftCard.value"></card>
                             </div>
                             <div
-                                class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
-                                <card [cardColor]="activeSituation.rightCard.color.color"
+                                class="relative bg-white h-20 w-14 border-l border-l-gray-800 border-t-0 border-r-0 border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm" [ngStyle]="fullCardStyle ? {'background-color': activeSituation.rightCard.color.color} : null">
+                                <card [cardColor]="fullCardStyle ? '#ffffff' : activeSituation.rightCard.color.color"
                                     [cardColorName]="activeSituation.rightCard.color.name"
                                     [cardValue]="activeSituation.rightCard.value"></card>
                             </div>
@@ -379,14 +379,14 @@
                         </h4>
                         <div class="flex items-center justify-center select-none">
                             <div
-                                class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none">
-                                <card [cardColor]="activeSituation.leftCard.color.color"
+                                class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none" [ngStyle]="fullCardStyle ? {'background-color': activeSituation.leftCard.color.color} : null">
+                                <card [cardColor]="fullCardStyle ? '#ffffff' : activeSituation.leftCard.color.color"
                                     [cardColorName]="activeSituation.leftCard.color.name"
                                     [cardValue]="activeSituation.leftCard.value"></card>
                             </div>
                             <div
-                                class="relative bg-white h-20 w-14 border border-gray-800 dark:border-l dark:border-l-gray-800 dark:border-t-0 dark:border-r-0 dark:border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm">
-                                <card [cardColor]="activeSituation.rightCard.color.color"
+                                class="relative bg-white h-20 w-14 border border-gray-800 dark:border-l dark:border-l-gray-800 dark:border-t-0 dark:border-r-0 dark:border-b-0 border-solid text-gray-800 -ml-[15%] rounded-sm" [ngStyle]="fullCardStyle ? {'background-color': activeSituation.rightCard.color.color} : null">
+                                <card [cardColor]="fullCardStyle ? '#ffffff' : activeSituation.rightCard.color.color"
                                     [cardColorName]="activeSituation.rightCard.color.name"
                                     [cardValue]="activeSituation.rightCard.value">
                                 </card>

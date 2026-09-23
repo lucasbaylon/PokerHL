@@ -58,6 +58,7 @@ export class TrainingComponent {
     seconds: number = 0;
     private countdownInterval: any;
     colorList: any[] = [{ name: "heart", color: "red" }, { name: "diamond", color: "red" }, { name: "club", color: "black" }, { name: "spade", color: "black" }];
+    fullCardStyle: boolean = false;
     nbSituationsChallenge: number = 0;
     readonly survivalMaxLives: number = 3;
     survivalLives: number = 3;
@@ -107,9 +108,10 @@ export class TrainingComponent {
                 `radial-gradient(ellipse at 50% 30%, ${tableColor}, #162825 145%)` :
                 'radial-gradient(ellipse at 50% 30%, #31866f, #162825 145%)';
 
-            if (userParams.cardStyle === 'contrast') {
+            if (userParams.cardStyle === 'contrast' || userParams.cardStyle === 'contrast-full') {
                 this.colorList = [{ name: "heart", color: "#d20000" }, { name: "diamond", color: "#3B82F6" }, { name: "club", color: "#009700" }, { name: "spade", color: "black" }];
             }
+            this.fullCardStyle = userParams.cardStyle === 'default-full' || userParams.cardStyle === 'contrast-full';
 
             this.situationList = JSON.parse(this.activatedRoute.snapshot.params['situationList']);
             this.mode = this.activatedRoute.snapshot.params['mode'];
