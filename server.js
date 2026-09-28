@@ -579,10 +579,9 @@ if (process.env.NODE_ENV !== 'dev') {
 }
 
 io.on('connection', (socket) => {
-    socket.on('AddSituation', async (data) => {
+    // `ack` confirme au client que l'écriture est terminée, pour qu'il ne recharge la liste qu'après.
+    socket.on('AddSituation', async (data, ack) => {
         let situation = data.data;
-
-        console.log(situation);
 
         let json = JSON.stringify(situation);
 
@@ -591,13 +590,12 @@ io.on('connection', (socket) => {
         try {
             connection = await getConnection();
 
-            await connection.execute("INSERT INTO situations (json, user) VALUES (?, ?)", [json, data.user], function (error, results, fields) {
-                if (error) throw error;
-                console.log('Ligne insérée avec ID:', results.insertId);
-            });
+            const [results] = await connection.execute("INSERT INTO situations (json, user) VALUES (?, ?)", [json, data.user]);
+            console.log('Ligne insérée avec ID:', results.insertId);
+            if (typeof ack === 'function') ack({ ok: true });
         } catch (error) {
             console.error('An error occurred:', error);
-            // socket.emit('Error', 'An error occurred while duplicating the situation.');
+            if (typeof ack === 'function') ack({ ok: false });
         } finally {
             if (connection) {
                 connection.release();
@@ -605,7 +603,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('EditSituation', async (data) => {
+    socket.on('EditSituation', async (data, ack) => {
         const situation = data.data;
         const situation_id = situation.id;
 
@@ -616,14 +614,13 @@ io.on('connection', (socket) => {
         try {
             connection = await getConnection();
 
-            await connection.execute("UPDATE situations SET json = ? WHERE id = ?", [JSON.stringify(situation), situation_id], function (error, results, fields) {
-                if (error) throw error;
-                console.log('Ligne mise à jour avec ID:', data.id);
-                console.log('Nombre de lignes affectées:', results.affectedRows);
-            });
+            const [results] = await connection.execute("UPDATE situations SET json = ? WHERE id = ?", [JSON.stringify(situation), situation_id]);
+            console.log('Ligne mise à jour avec ID:', situation_id);
+            console.log('Nombre de lignes affectées:', results.affectedRows);
+            if (typeof ack === 'function') ack({ ok: true });
         } catch (error) {
             console.error('An error occurred:', error);
-            // socket.emit('Error', 'An error occurred while updating the situation.');
+            if (typeof ack === 'function') ack({ ok: false });
         } finally {
             if (connection) {
                 connection.release();

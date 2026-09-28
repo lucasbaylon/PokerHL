@@ -66,19 +66,36 @@ export class SituationService {
     /**
      * Ajoute une nouvelle situation.
      * @param data Objet situation à ajouter.
+     * @returns Promesse résolue à true une fois la situation enregistrée en base.
      */
-    addSituation(data: Situation) {
-        console.log(data);
+    addSituation(data: Situation): Promise<boolean> {
         const actualUser = this.auth.getUser();
-        this.socket.emit('AddSituation', { data: data, user: actualUser?.email });
+        return this.emitWithAck('AddSituation', { data: data, user: actualUser?.email });
     }
 
     /**
      * Modifie une situation existante.
      * @param data Objet situation modifié.
+     * @returns Promesse résolue à true une fois la modification enregistrée en base.
      */
-    editSituation(data: Situation) {
-        this.socket.emit('EditSituation', { data: data });
+    editSituation(data: Situation): Promise<boolean> {
+        return this.emitWithAck('EditSituation', { data: data });
+    }
+
+    /**
+     * Émet un événement et attend la confirmation du serveur.
+     * @param event Nom de l'événement socket.
+     * @param payload Données envoyées.
+     * @returns Promesse résolue à false en cas d'erreur ou sans réponse sous 10 secondes.
+     */
+    private emitWithAck(event: string, payload: unknown): Promise<boolean> {
+        return new Promise(resolve => {
+            const timeout = setTimeout(() => resolve(false), 10000);
+            this.socket.emit(event, payload, (response?: { ok: boolean }) => {
+                clearTimeout(timeout);
+                resolve(!!response?.ok);
+            });
+        });
     }
 
     /**

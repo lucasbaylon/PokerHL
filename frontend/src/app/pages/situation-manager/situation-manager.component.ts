@@ -43,6 +43,7 @@ export class SituationManagerComponent {
     showHelpModal: boolean = false;
     readonly maxRaiseSizes = 3;
     showBrushMenu: boolean = false;
+    isSaving: boolean = false;
     showRaiseEditor: boolean = false;
     raiseEditorSolutionId?: string;
     raiseEditorAmount: number | null = 2;
@@ -401,8 +402,15 @@ export class SituationManagerComponent {
     /**
      * Appelle le service pour ajouter une nouvelle situation.
      */
-    addSituation() {
-        this.apiSituation.addSituation(this.situation_obj);
+    async addSituation() {
+        if (this.isSaving) return;
+        this.isSaving = true;
+        const saved = await this.apiSituation.addSituation(this.situation_obj);
+        this.isSaving = false;
+        if (!saved) {
+            this.commonService.showSwalToast(`La situation n'a pas pu être enregistrée. Veuillez réessayer.`, 'error');
+            return;
+        }
         this.commonService.showSwalToast(`Situation enregistrée !`);
         this.router.navigate(['situations']);
     }
@@ -410,8 +418,16 @@ export class SituationManagerComponent {
     /**
      * Appelle le service pour modifier la situation actuelle.
      */
-    editSituation() {
-        this.apiSituation.editSituation(this.situation_obj);
+    async editSituation() {
+        // Le serveur retire l'id du JSON enregistré : on envoie une copie pour garder l'objet local intact en cas d'échec.
+        if (this.isSaving) return;
+        this.isSaving = true;
+        const saved = await this.apiSituation.editSituation({ ...this.situation_obj });
+        this.isSaving = false;
+        if (!saved) {
+            this.commonService.showSwalToast(`La situation n'a pas pu être modifiée. Veuillez réessayer.`, 'error');
+            return;
+        }
         this.commonService.showSwalToast(`Situation modifiée !`);
         this.router.navigate(['situations']);
     }

@@ -22,9 +22,9 @@
             <i class="fa-solid fa-circle-question mr-2" aria-hidden="true"></i>
             Aide
         </button>
-        <button type="button" (click)="saveSituation()"
-            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-            <i class="fa-solid fa-floppy-disk mr-2" aria-hidden="true"></i>
+        <button type="button" (click)="saveSituation()" [disabled]="isSaving"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 disabled:cursor-wait disabled:opacity-60 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid mr-2" [class.fa-floppy-disk]="!isSaving" [class.fa-circle-notch]="isSaving" [class.fa-spin]="isSaving" aria-hidden="true"></i>
             Enregistrer
         </button>
     </div>
