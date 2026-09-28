@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Situation } from '../interfaces/situation';
 import { Solution, SolutionAction } from '../interfaces/solution';
-import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings } from '../interfaces/user-params';
+import { ActionColors, DEFAULT_ACTION_COLORS, DEFAULT_PARTICLE_SETTINGS, ParticleSettings } from '../interfaces/user-params';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +15,10 @@ export class CommonService {
     private particleSettings = signal<ParticleSettings>(DEFAULT_PARTICLE_SETTINGS);
     private rangeTextOutline = signal<boolean>(false);
     private rangeFontSize = signal<'small' | 'medium' | 'large'>('small');
+    private actionColors = signal<ActionColors>({ ...DEFAULT_ACTION_COLORS });
+
+    /** Couleur des solutions dont l'action n'est pas encore définie. */
+    readonly undefinedActionColor = '#9ca3af';
 
     constructor(
         private router: Router
@@ -84,20 +88,31 @@ export class CommonService {
     migrateSolutions(solutions: Solution[]): Solution[] {
         for (const solution of solutions) {
             if (solution.type !== 'unique' || solution.action) continue;
-            const label = (solution.display_name || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
-            const raiseMatch = label.match(/(?:raise|relance|open|r)\s*(?:to|a|à)?\s*(\d+(?:[.,]\d+)?)\s*(?:bb)?/i);
-
-            if (raiseMatch) {
-                solution.action = 'raise';
-                solution.raiseAmount = Number(raiseMatch[1].replace(',', '.'));
-            } else if (/^(all ?in|ai|tapis|shove|push)$/.test(label)) solution.action = 'all-in';
-            else if (/^(fold|couche|se couche)$/.test(label)) solution.action = 'fold';
-            else if (/^(check|parole)$/.test(label)) solution.action = 'check';
-            else if (/^(call|suit|suivre)$/.test(label)) solution.action = 'call';
-            else if (/^(limp|limper)$/.test(label)) solution.action = 'limp';
-            else if (/^(raise|relance)$/.test(label)) solution.action = 'raise';
+            const inferred = this.inferSolutionAction(solution);
+            solution.action = inferred.action;
+            if (inferred.raiseAmount != null) solution.raiseAmount = inferred.raiseAmount;
         }
         return solutions;
+    }
+
+    /**
+     * Déduit l'action d'une solution simple à partir de son action enregistrée ou, pour les anciennes situations, de son nom.
+     * @param solution Solution simple.
+     * @returns Action et montant de raise éventuel.
+     */
+    private inferSolutionAction(solution: Solution): { action?: SolutionAction, raiseAmount?: number } {
+        if (solution.action) return { action: solution.action, raiseAmount: solution.raiseAmount };
+        const label = (solution.display_name || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
+        const raiseMatch = label.match(/(?:raise|relance|open|r)\s*(?:to|a|à)?\s*(\d+(?:[.,]\d+)?)\s*(?:bb)?/i);
+
+        if (raiseMatch) return { action: 'raise', raiseAmount: Number(raiseMatch[1].replace(',', '.')) };
+        if (/^(all ?in|ai|tapis|shove|push)$/.test(label)) return { action: 'all-in' };
+        if (/^(fold|couche|se couche)$/.test(label)) return { action: 'fold' };
+        if (/^(check|parole)$/.test(label)) return { action: 'check' };
+        if (/^(call|suit|suivre)$/.test(label)) return { action: 'call' };
+        if (/^(limp|limper)$/.test(label)) return { action: 'limp' };
+        if (/^(raise|relance)$/.test(label)) return { action: 'raise' };
+        return {};
     }
 
     solutionActionLabel(solution: Solution): string {
@@ -113,14 +128,15 @@ export class CommonService {
      */
     cellBackground(solution: Solution, solutionLst: Solution[]) {
         if (solution.type === "unique") {
-            return `linear-gradient(to right, ${solution.color} 0%, ${solution.color} 100%)`;
+            const color = this.solutionColor(solution, solutionLst);
+            return `linear-gradient(to right, ${color} 0%, ${color} 100%)`;
         } else if (solution.type === "mixed") {
             let gradient = "linear-gradient(to right";
             let total = 0;
             solution.colorList!.map((d: any) => {
-                let goodColor = solutionLst.filter(solutionItem => solutionItem.id === d.color)[0];
+                const goodColor = this.solutionColor(solutionLst.find(solutionItem => solutionItem.id === d.color), solutionLst);
                 total += d.percent;
-                gradient += `, ${goodColor.color} ${total - d.percent}%, ${goodColor.color} ${total}%`
+                gradient += `, ${goodColor} ${total - d.percent}%, ${goodColor} ${total}%`
             });
             gradient += ")";
             return gradient;
@@ -196,6 +212,57 @@ export class CommonService {
 
     setParticleSettings(value: ParticleSettings) {
         this.particleSettings.set(value);
+    }
+
+    getActionColors(): ActionColors {
+        return this.actionColors();
+    }
+
+    /**
+     * Met à jour les couleurs des actions, en complétant les actions manquantes avec les couleurs par défaut.
+     * @param colors Couleurs personnalisées par action.
+     */
+    setActionColors(colors?: Partial<ActionColors>) {
+        this.actionColors.set({ ...DEFAULT_ACTION_COLORS, ...(colors ?? {}) });
+    }
+
+    /**
+     * Retourne la couleur d'une solution simple à partir de son action.
+     * Les raises de montants différents d'une même situation reçoivent des nuances distinctes de la couleur du raise.
+     * @param solution Solution simple à colorer.
+     * @param solutionLst Solutions de la situation, utilisées pour nuancer les raises.
+     * @returns Couleur hexadécimale.
+     */
+    solutionColor(solution: Solution | undefined, solutionLst: Solution[] = []): string {
+        if (!solution) return this.undefinedActionColor;
+        const { action, raiseAmount } = this.inferSolutionAction(solution);
+        if (!action) return solution.color || this.undefinedActionColor;
+        const baseColor = this.actionColors()[action];
+        if (action !== 'raise') return baseColor;
+
+        const amounts = [...new Set(solutionLst
+            .filter(item => item.type === 'unique')
+            .map(item => this.inferSolutionAction(item))
+            .filter(item => item.action === 'raise' && item.raiseAmount != null)
+            .map(item => item.raiseAmount!))].sort((a, b) => a - b);
+        const index = raiseAmount != null ? amounts.indexOf(raiseAmount) : -1;
+        if (amounts.length < 2 || index === -1) return baseColor;
+        return this.shadeColor(baseColor, -0.35 + 0.7 * index / (amounts.length - 1));
+    }
+
+    /**
+     * Éclaircit (valeur négative) ou assombrit (valeur positive) une couleur hexadécimale.
+     * @param hex Couleur au format #rrggbb.
+     * @param amount Intensité entre -1 et 1.
+     */
+    private shadeColor(hex: string, amount: number): string {
+        const target = amount < 0 ? 255 : 0;
+        const weight = Math.abs(amount);
+        const channels = [1, 3, 5].map(start => {
+            const value = parseInt(hex.slice(start, start + 2), 16);
+            return Math.round(value + (target - value) * weight).toString(16).padStart(2, '0');
+        });
+        return `#${channels.join('')}`;
     }
 
     getRangeTextOutline() {

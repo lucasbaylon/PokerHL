@@ -169,6 +169,24 @@
 
             <div class="flex items-center justify-between gap-4 py-3">
                 <div>
+                    <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Couleurs des actions</p>
+                    <div class="mt-2 flex gap-1.5" aria-hidden="true">
+                        @for (action of colorActions; track action.code) {
+                        <span class="group flex h-4 w-4" [pTooltip]="action.name" tooltipPosition="top" [showDelay]="100">
+                            <span class="h-full w-full rounded shadow-sm transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:scale-125 group-hover:shadow"
+                                [style.background]="commonService.getActionColors()[action.code]"></span>
+                        </span>
+                        }
+                    </div>
+                </div>
+                <button type="button" (click)="openActionColorsModal()"
+                    class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                    <i class="fa-solid fa-palette mr-2" aria-hidden="true"></i>
+                    Personnaliser
+                </button>
+            </div>
+            <div class="flex items-center justify-between gap-4 py-3">
+                <div>
                     <p class="m-0 font-medium text-gray-800 dark:text-gray-300">Nom automatique solutions mixtes</p>
                     <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Attribue un nom aux solutions mixtes lors de leur création.</p>
                 </div>
@@ -337,6 +355,51 @@
         <button type="button" (click)="changeUserName()"
             class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
             <i class="fa-solid fa-save mr-2" aria-hidden="true"></i>
+            Enregistrer
+        </button>
+    </div>
+</app-modal>
+
+<app-modal [open]="showActionColorsModal" (closed)="showActionColorsModal = false" ariaLabelledBy="action-colors-title"
+    panelClass="w-full max-w-2xl overflow-visible">
+    <h4 id="action-colors-title" class="m-0 mb-2 text-lg font-semibold text-gray-800 dark:text-gray-300">Couleurs des actions</h4>
+    <p class="m-0 mb-5 text-sm text-gray-500 dark:text-gray-400">
+        Chaque action garde la même couleur dans toutes vos situations. Les raises de tailles différentes reçoivent des nuances de leur couleur.
+    </p>
+
+    <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        @for (action of colorActions; track action.code) {
+        <div class="flex items-center gap-3 rounded-md bg-gray-50 p-2 transition-colors duration-500 dark:bg-main-dark-bg">
+            <label [for]="'action-color-hex-' + action.code" class="ml-2 min-w-0 flex-1 truncate font-medium text-gray-800 dark:text-gray-300">{{ action.name }}</label>
+            <input #hexInput pInputText type="text" maxlength="7" autocomplete="off" spellcheck="false"
+                [id]="'action-color-hex-' + action.code" [value]="actionColorsDraft[action.code]"
+                (change)="onActionColorInput(action.code, hexInput.value); hexInput.value = actionColorsDraft[action.code]"
+                class="box-border w-24 font-mono text-sm uppercase" />
+            <p-colorPicker [ngModel]="actionColorsDraft[action.code]" format="hex" appendTo="body" [baseZIndex]="10000"
+                styleClass="action-color-picker" (ngModelChange)="onActionColorInput(action.code, $event)"
+                (onShow)="setColorPickerOpen(true)" (onHide)="setColorPickerOpen(false)"></p-colorPicker>
+            <button type="button" (click)="onActionColorInput(action.code, defaultActionColors[action.code])"
+                [disabled]="actionColorsDraft[action.code] === defaultActionColors[action.code]"
+                class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-gray-600 hover:bg-gray-200 disabled:bg-transparent disabled:opacity-30 dark:text-gray-300 dark:hover:bg-gray-700"
+                [title]="'Couleur par défaut de ' + action.name" [attr.aria-label]="'Couleur par défaut de ' + action.name">
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            </button>
+        </div>
+        }
+    </div>
+
+    <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+        <button type="button" (click)="resetActionColors()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-transparent px-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer sm:mr-auto">
+            Tout réinitialiser
+        </button>
+        <button type="button" (click)="showActionColorsModal = false"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors duration-500 hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="saveActionColors()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors duration-500 hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-floppy-disk mr-2" aria-hidden="true"></i>
             Enregistrer
         </button>
     </div>

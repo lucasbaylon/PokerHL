@@ -30,7 +30,7 @@ export class SituationManagerComponent {
     situationSubscription!: Subscription;
     multipleSolutionName: string = "";
     situation_obj!: Situation;
-    solutionSelected: string = "unique_solution_0";
+    solutionSelected?: string = "unique_solution_0";
     showOpponent2: boolean = true;
     situation_objSolutionsRef: any;
     mixedSolutionSliderMinValue: number = 50;
@@ -41,9 +41,13 @@ export class SituationManagerComponent {
     multipleSituationId?: string;
     showMultipleSolutionModal: boolean = false;
     showHelpModal: boolean = false;
+    readonly maxRaiseSizes = 3;
+    showBrushMenu: boolean = false;
+    showRaiseEditor: boolean = false;
+    raiseEditorSolutionId?: string;
+    raiseEditorAmount: number | null = 2;
     editSituationName?: string;
     multipleSolutionCheckBox: string[] = [];
-    listener: any;
 
     options: Options = {
         floor: 0,
@@ -113,7 +117,7 @@ export class SituationManagerComponent {
      */
     ngOnInit(): void {
         this.situation_obj = cloneDeep(this.commonService.empty_situation_obj);
-        this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
+        this.ensureActionSolutions();
         if (this._Activatedroute.snapshot.params["situation_id"]) {
             this.apiSituation.getSituation(this._Activatedroute.snapshot.params["situation_id"]);
         }
@@ -123,7 +127,7 @@ export class SituationManagerComponent {
             this.situation_obj = JSON.parse(situation_str);
             this.commonService.migrateSolutions(this.situation_obj.solutions);
             this.editSituationName = this.situation_obj.name;
-            this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
+            this.ensureActionSolutions();
 
             // Initialisation des listes et des valeurs
             this.initializeValues();
@@ -188,33 +192,138 @@ export class SituationManagerComponent {
     }
 
     /**
-     * Sélectionne une couleur aléatoire qui n'est pas déjà utilisée.
-     * @returns Code couleur hexadécimal.
+     * Garantit qu'une solution simple existe pour chaque action, afin qu'elles soient toutes disponibles dans le pinceau.
+     * Les solutions inutilisées sont retirées à l'enregistrement.
      */
-    getRandomColor(): string {
-        let colorList = ["#d80c05", "#ff9100", "#7a5a00", "#3f7a89", "#96c582", "#303030", "#1c51ff", "#00aeff", "#8400ff", "#e284ff"];
-        const colorSolutionsSituation = this.situation_obj.solutions.map(solution => solution.color);
-
-        const filteredColorList = colorList.filter(color => !colorSolutionsSituation.includes(color));
-
-        const randomIndex = Math.floor(Math.random() * filteredColorList.length);
-
-        return filteredColorList[randomIndex];
+    ensureActionSolutions() {
+        for (const action of this.commonService.solutionActions) {
+            if (!this.situation_obj.solutions.some(solution => solution.type === 'unique' && solution.action === action.code)) {
+                this.createUniqueSolution(action.code, action.code === 'raise' ? 2 : undefined);
+            }
+        }
+        this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
+        if (!this.selectedSolution) {
+            this.solutionSelected = this.uniqueBrushSolutions[0]?.id;
+        }
     }
 
     /**
-     * Ajoute une nouvelle solution de type "unique" à la situation.
+     * Ajoute une solution simple avec un identifiant libre.
+     * @param action Action de la solution.
+     * @param raiseAmount Montant en BB pour un raise.
+     * @returns La solution créée.
      */
-    addUniqueSolution() {
-        let solutionLst = this.situation_obj.solutions.filter(solution => solution.type === "unique");
-        if (solutionLst.length < 7) {
-            let color = this.getRandomColor();
-            this.situation_obj.solutions.push({ id: `unique_solution_${solutionLst.length}`, type: "unique", display_name: undefined, action: undefined, color: color });
-            this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
-            if (solutionLst.length === 6) {
-                document.getElementById("add-solution-button")!.style.display = "none";
-            }
+    createUniqueSolution(action: SolutionAction, raiseAmount?: number): Solution {
+        const nextIndex = Math.max(-1, ...this.situation_obj.solutions
+            .map(solution => Number(solution.id.match(/^unique_solution_(\d+)$/)?.[1] ?? -1))) + 1;
+        const solution: Solution = { id: `unique_solution_${nextIndex}`, type: 'unique', display_name: undefined, action, raiseAmount };
+        solution.display_name = this.commonService.solutionActionLabel(solution);
+        this.situation_obj.solutions.push(solution);
+        return solution;
+    }
+
+    /**
+     * Solutions simples du pinceau, de All-in à Fold, les raises du plus gros au plus petit.
+     */
+    get uniqueBrushSolutions(): Solution[] {
+        // Ordre inverse des actions (All-in en premier) ; actions non reconnues en dernier
+        const order = (solution: Solution) => {
+            const index = this.commonService.solutionActions.findIndex(action => action.code === solution.action);
+            return index === -1 ? -1 : index;
+        };
+        return this.filteredSolutionList(this.situation_obj.solutions, 'unique')
+            .sort((a, b) => order(b) - order(a) || (b.raiseAmount ?? 0) - (a.raiseAmount ?? 0));
+    }
+
+    private brushOptionsCache?: { ref: Solution[], options: Solution[] };
+
+    /**
+     * Options du sélecteur de pinceau : solutions simples puis mixtes.
+     * Mémorisées tant que la liste des solutions ne change pas, pour ne pas recréer les options du dropdown à chaque rendu.
+     */
+    get brushOptions(): Solution[] {
+        if (this.brushOptionsCache?.ref !== this.situation_objSolutionsRef) {
+            this.brushOptionsCache = {
+                ref: this.situation_objSolutionsRef,
+                options: [...this.uniqueBrushSolutions, ...this.filteredSolutionList(this.situation_obj.solutions, 'mixed')]
+            };
         }
+        return this.brushOptionsCache!.options;
+    }
+
+    get raiseCount(): number {
+        return this.situation_obj.solutions.filter(solution => solution.type === 'unique' && solution.action === 'raise').length;
+    }
+
+    /**
+     * Ouvre l'éditeur de taille de raise.
+     * @param solution Raise à modifier, ou rien pour en ajouter un.
+     */
+    openRaiseEditor(solution?: Solution) {
+        this.raiseEditorSolutionId = solution?.id;
+        if (solution) {
+            this.raiseEditorAmount = solution.raiseAmount ?? 2;
+        } else {
+            const amounts = this.situation_obj.solutions.filter(item => item.action === 'raise').map(item => item.raiseAmount ?? 0);
+            this.raiseEditorAmount = amounts.length ? Math.max(...amounts) + 0.5 : 2;
+        }
+        this.showRaiseEditor = true;
+    }
+
+    closeRaiseEditor() {
+        this.showRaiseEditor = false;
+        this.raiseEditorSolutionId = undefined;
+    }
+
+    /**
+     * Crée ou modifie un raise avec le montant saisi, puis le sélectionne dans le pinceau.
+     */
+    saveRaiseEditor() {
+        const amount = this.raiseEditorAmount;
+        if (amount == null || !(amount > 0)) {
+            this.commonService.showSwalToast('Veuillez saisir un montant de raise valide.', 'error');
+            return;
+        }
+        const duplicate = this.situation_obj.solutions.find(solution =>
+            solution.type === 'unique' && solution.action === 'raise' && solution.raiseAmount === amount && solution.id !== this.raiseEditorSolutionId);
+        if (duplicate) {
+            this.commonService.showSwalToast(`Un raise de ${amount} BB existe déjà.`, 'error');
+            return;
+        }
+
+        let solution = this.situation_obj.solutions.find(item => item.id === this.raiseEditorSolutionId);
+        if (solution) {
+            solution.raiseAmount = amount;
+            solution.display_name = this.commonService.solutionActionLabel(solution);
+        } else {
+            solution = this.createUniqueSolution('raise', amount);
+        }
+        this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
+        this.solutionSelected = solution.id;
+        this.closeRaiseEditor();
+    }
+
+    /**
+     * Supprime le raise en cours d'édition et vide les cases qui l'utilisaient.
+     */
+    deleteRaise() {
+        const solutionId = this.raiseEditorSolutionId;
+        if (!solutionId) return;
+        const usedInMixed = this.situation_obj.solutions.some(solution =>
+            solution.type === 'mixed' && solution.colorList?.some(item => item.color === solutionId));
+        if (usedInMixed) {
+            this.commonService.showSwalToast('Ce raise est utilisé dans une solution mixte. Modifiez-la avant de le supprimer.', 'error');
+            return;
+        }
+        this.situation_obj.situations.forEach(row => row.forEach(cell => {
+            if (cell.solution === solutionId) cell.solution = undefined;
+        }));
+        this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => solution.id !== solutionId);
+        this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
+        if (this.solutionSelected === solutionId) {
+            this.solutionSelected = this.uniqueBrushSolutions[0]?.id;
+        }
+        this.closeRaiseEditor();
     }
 
     /**
@@ -253,7 +362,11 @@ export class SituationManagerComponent {
                     if (invalidSolution) {
                         this.commonService.showSwalToast(`Veuillez sélectionner une action et un montant valide pour chaque relance utilisée.`, 'error');
                     } else {
-                        this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => uniqueSolutions.includes(solution.id));
+                        const usedSolutionIds = new Set<string | undefined>(uniqueSolutions);
+                        this.situation_obj.solutions
+                            .filter(solution => solution.type === 'mixed' && usedSolutionIds.has(solution.id))
+                            .forEach(solution => solution.colorList?.forEach(item => usedSolutionIds.add(item.color)));
+                        this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => usedSolutionIds.has(solution.id));
                         if (this.mode === "new") {
                             this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
@@ -304,6 +417,20 @@ export class SituationManagerComponent {
     }
 
     /**
+     * Retourne à la liste des situations sans enregistrer.
+     */
+    backToSituations() {
+        this.router.navigate(['situations']);
+    }
+
+    /**
+     * Solution actuellement sélectionnée pour l'attribution dans le tableau.
+     */
+    get selectedSolution(): Solution | undefined {
+        return this.situation_obj?.solutions.find(solution => solution.id === this.solutionSelected);
+    }
+
+    /**
      * Change la solution active pour l'attribution dans le tableau.
      * @param solutionId Identifiant de la solution choisie.
      */
@@ -319,23 +446,6 @@ export class SituationManagerComponent {
     onChangeSolutionName(solutionId: string, e: any) {
         const solutionLst = this.situation_obj.solutions.filter(solution => solution.id === solutionId)[0];
         solutionLst.display_name = e.target.value;
-    }
-
-    onChangeSolutionAction(solution: Solution, action: SolutionAction) {
-        solution.action = action;
-        if (action === 'raise') {
-            if (!solution.raiseAmount) {
-                solution.raiseAmount = 2;
-            }
-        } else {
-            solution.raiseAmount = undefined;
-        }
-        solution.display_name = this.commonService.solutionActionLabel(solution);
-    }
-
-    onChangeRaiseAmount(solution: Solution, amount: number | null) {
-        solution.raiseAmount = amount ?? undefined;
-        solution.display_name = this.commonService.solutionActionLabel(solution);
     }
 
     /**
@@ -357,36 +467,6 @@ export class SituationManagerComponent {
     }
 
     /**
-     * Ouvre l'interface de choix de couleur pour une solution.
-     * @param solutionId Identifiant de la solution.
-     */
-    onColorSolution(solutionId: string) {
-        document.getElementById(`color-picker-div_${solutionId}`)?.classList.remove("hidden");
-        setTimeout(() => {
-            this.listener = (event: any) => {
-                if (document.getElementById(`color-picker-div_${solutionId}`) !== event.target) {
-                    document.getElementById(`color-picker-div_${solutionId}`)?.classList.add('hidden');
-                    document.removeEventListener('click', this.listener);
-                    this.listener = null;
-                }
-            };
-            document.addEventListener('click', this.listener);
-        }, 0);
-    }
-
-    /**
-     * Applique une couleur à une solution.
-     * @param solutionId Identifiant de la solution.
-     * @param color Code couleur choisi.
-     */
-    onSelectColor(solutionId: string, color: string) {
-        let solutionLst = this.situation_obj.solutions.filter(solution => solution.id === solutionId)[0];
-        solutionLst.color = color;
-        document.getElementById(`color-picker-div_${solutionId}`)?.classList.add("hidden");
-        this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
-    }
-
-    /**
      * Gère le basculement entre slider simple et multiple selon le nombre de solutions cochées.
      */
     onCheckChange() {
@@ -400,12 +480,32 @@ export class SituationManagerComponent {
     }
 
     /**
+     * Segments du slider de solution mixte : action, couleur et pourcentage de chaque solution cochée.
+     */
+    mixedSliderSegments(): { name: string, color: string, percent: number }[] {
+        const solutions = this.multipleSolutionCheckBox
+            .map(solutionId => this.situation_obj.solutions.find(solution => solution.id === solutionId))
+            .filter((solution): solution is Solution => !!solution);
+        if (solutions.length < 2) return [];
+
+        const percents = solutions.length === 2
+            ? [this.mixedSolutionSliderMinValue, 100 - this.mixedSolutionSliderMinValue]
+            : [this.mixedSolutionSliderMinValue, this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue, 100 - this.mixedSolutionSliderMaxValue];
+        return solutions.map((solution, index) => ({
+            name: solution.display_name || 'Action non définie',
+            color: this.commonService.solutionColor(solution, this.situation_obj.solutions),
+            percent: percents[index] ?? 0
+        }));
+    }
+
+    /**
      * Construit la piste colorée du slider selon les solutions cochées.
      */
     mixedSliderGradient(): string {
         const selectedColors = this.multipleSolutionCheckBox
-            .map(solutionId => this.situation_obj.solutions.find(solution => solution.id === solutionId)?.color)
-            .filter((color): color is string => !!color);
+            .map(solutionId => this.situation_obj.solutions.find(solution => solution.id === solutionId))
+            .filter((solution): solution is Solution => !!solution)
+            .map(solution => this.commonService.solutionColor(solution, this.situation_obj.solutions));
 
         if (selectedColors.length < 2) {
             return 'linear-gradient(to right, #e5e7eb 0%, #e5e7eb 100%)';

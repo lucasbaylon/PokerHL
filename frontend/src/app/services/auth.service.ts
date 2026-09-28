@@ -48,6 +48,7 @@ export class AuthService {
                 const userParams: UserParams = JSON.parse(localStorage.getItem('userParams')!);
                 this.commonService.setShowParticule(userParams.showParticules);
                 this.commonService.setRangeTextOutline(userParams.rangeTextOutline ?? false);
+                this.commonService.setActionColors(userParams.actionColors);
                 this.commonService.setRangeFontSize(userParams.rangeFontSize ?? 'small');
                 this.commonService.setParticleSettings({
                     particleCount: userParams.particleCount ?? DEFAULT_PARTICLE_SETTINGS.particleCount,

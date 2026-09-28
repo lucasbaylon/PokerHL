@@ -253,6 +253,13 @@ html.dark .p-inputnumber-input:enabled:focus {
     box-shadow: 0 0 0 1px #6b7280 !important;
 }
 
+// Champs numériques des formulaires de situation : même focus que les autres champs du formulaire.
+html.dark #situationStack:enabled:focus,
+html.dark #raiseEditorAmount:enabled:focus {
+    @apply border-white;
+    box-shadow: 0 0 0 1px #ffffff !important;
+}
+
 html.dark .p-inputnumber .p-inputnumber-button {
     @apply border-gray-700 bg-gray-700 text-gray-300 transition-colors duration-150;
 }
@@ -411,7 +418,6 @@ p-inputnumber:has(#situationStack) .p-inputnumber,
 
 #situationStack {
     box-sizing: border-box;
-    height: 42px;
     padding-right: 3.5rem !important;
 }
 

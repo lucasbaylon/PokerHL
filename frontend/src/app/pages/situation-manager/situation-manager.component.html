@@ -1,24 +1,34 @@
-@if (mode === 'new') {
-<h3 class="text-3xl font-bold md:text-4xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
-    Créer une nouvelle situation</h3>
-<p class="text-gray-500 dark:text-gray-350 text-lg mt-2 mb-8 text-left animate-appear opacity-0">Créez une nouvelle
-    situation en renseignant ses ranges ainsi que ses caractéristiques.</p>
-}
-@if (mode === 'edit') {
-<h3 class="text-3xl font-bold md:text-4xl text-gray-800 dark:text-gray-300 animate-appear opacity-0 m-0">
-    Modifier une situation</h3>
-<p class="text-gray-500 dark:text-gray-350 text-lg mt-2 mb-8 text-left animate-appear opacity-0">Modifiez une de vos
-    situations existante en renseignant ses nouvelles ranges et caractéristiques.</p>
-}
-
-<div class="fixed right-8 top-8 z-10 animate-appear opacity-0 animation-delay-50">
-    <button type="button" (click)="showHelpModal = true"
-        class="inline-flex h-12 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-base font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-        title="Aide">
-        <i class="fa-solid fa-circle-question mr-2 text-lg" aria-hidden="true"></i>
-        Aide
-    </button>
-</div>
+<header class="animate-appear opacity-0 mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <div>
+        <h3 class="m-0 text-3xl font-bold text-gray-800 dark:text-gray-300 md:text-4xl">
+            {{ mode === 'edit' ? 'Modifier une situation' : 'Créer une nouvelle situation' }}
+        </h3>
+        <p class="m-0 mt-2 max-w-2xl text-lg text-gray-500 dark:text-gray-400">
+            @if (mode === 'edit') {
+                Mettez à jour le contexte et les ranges de votre situation.
+            } @else {
+                Définissez le contexte de jeu, puis peignez les ranges de la situation.
+            }
+        </p>
+    </div>
+    <div class="flex flex-wrap gap-3 self-start md:self-auto">
+        <button type="button" (click)="backToSituations()"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-arrow-left mr-2" aria-hidden="true"></i>
+            Retour
+        </button>
+        <button type="button" (click)="showHelpModal = true"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-circle-question mr-2" aria-hidden="true"></i>
+            Aide
+        </button>
+        <button type="button" (click)="saveSituation()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-floppy-disk mr-2" aria-hidden="true"></i>
+            Enregistrer
+        </button>
+    </div>
+</header>
 
 <app-modal [open]="showHelpModal" (closed)="showHelpModal = false" panelClass="w-full max-w-2xl">
     <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
@@ -93,334 +103,354 @@
     </div>
 </app-modal>
 
-<!-- Div container tableau + solutions -->
-<div class="flex items-center justify-center w-10/12 my-16 mx-auto">
+<div class="flex flex-col gap-6">
+    <div class="flex flex-wrap items-start gap-6">
+        <!-- TABLEAU DES RANGES -->
+        <section class="animate-appear opacity-0 animation-delay-50 w-fit max-w-full shrink-0 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+            aria-labelledby="range-title">
+            <!-- w-0 min-w-full : ces blocs prennent la largeur du tableau sans l'élargir -->
+            <div class="mb-4 flex w-0 min-w-full items-center justify-between gap-4">
+                <div class="flex min-w-0 items-center gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                        <i class="fa-solid fa-table-cells" aria-hidden="true"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 id="range-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Tableau des ranges</h4>
+                        <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Cliquez ou glissez pour appliquer une solution.</p>
+                    </div>
+                </div>
 
-    <!-- Tableau des ranges -->
-    <app-range-grid
-        [situations]="situation_obj.situations"
-        [solutions]="situation_objSolutionsRef"
-        [selectedSolutionId]="solutionSelected"
-        [editable]="true"
-        [animateRows]="true">
-    </app-range-grid>
+                <!-- Pinceau : cliquer ouvre la liste des solutions -->
+                <div class="relative shrink-0" (keydown.escape)="showBrushMenu = false">
+                    <button type="button" (click)="showBrushMenu = !showBrushMenu"
+                        class="inline-flex h-10 items-center gap-2 rounded-md border-0 bg-gray-100 px-3 text-sm text-gray-700 transition-colors duration-500 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+                        aria-haspopup="listbox" [attr.aria-expanded]="showBrushMenu" aria-label="Choisir la solution à appliquer">
+                        <span class="text-gray-500 dark:text-gray-400">Pinceau</span>
+                        @if (selectedSolution) {
+                            <span class="h-5 w-5 shrink-0 rounded shadow"
+                                [style.background]="commonService.cellBackground(selectedSolution, situation_objSolutionsRef)"></span>
+                            <span class="max-w-40 truncate font-medium">{{ selectedSolution.display_name || 'Action non définie' }}</span>
+                        } @else {
+                            <span class="font-medium">Aucun</span>
+                        }
+                        <i class="fa-solid fa-chevron-down ml-1 text-xs text-gray-500 transition-transform dark:text-gray-400"
+                            [class.rotate-180]="showBrushMenu" aria-hidden="true"></i>
+                    </button>
 
-    <!-- Div solutions -->
-    <div
-        class="text-gray-800 bg-white dark:bg-secondary-dark-bg w-[474px] rounded-md py-5 px-5 shadow-lg mx-auto flex flex-col mb-2 animate-appear opacity-0 animation-delay-100 transition-colors duration-500">
-        <div class="mb-4 flex items-center justify-between gap-3">
-            <div>
-                <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                    Solutions
-                </h4>
-                <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">Choisissez l'action à appliquer.</p>
-            </div>
-            <button type="button" (click)="addUniqueSolution()" id="add-solution-button"
-                class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
-                Ajouter
-            </button>
-        </div>
-
-        <div class="flex flex-col gap-3 overflow-visible">
-            @for (solution of filteredSolutionList(situation_obj.solutions, 'unique'); track i; let i = $index) {
-                <div class="relative rounded-md border-2 border-solid p-3 transition-colors duration-150"
-                    [ngClass]="solutionSelected === solution.id ? 'border-gray-800 bg-white shadow-md dark:border-gray-400 dark:bg-secondary-dark-bg' : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-secondary-dark-bg dark:hover:bg-gray-700'">
-                    <div class="grid grid-cols-[1fr_auto_auto] items-center gap-3">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <p-dropdown [ngModel]="solution.action" [options]="commonService.solutionActions"
-                                (ngModelChange)="onChangeSolutionAction(solution, $event)" optionLabel="name" optionValue="code"
-                                placeholder="Action" styleClass="w-36 shrink-0" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                            @if (solution.action === 'raise') {
-                                <div class="relative w-24 shrink-0">
-                                    <p-inputNumber [ngModel]="solution.raiseAmount" (ngModelChange)="onChangeRaiseAmount(solution, $event)"
-                                        [min]="0.01" [max]="999" [minFractionDigits]="0" [maxFractionDigits]="2"
-                                        placeholder="2" styleClass="w-full" inputStyleClass="w-full box-border h-[42px] pr-9 text-base"></p-inputNumber>
-                                    <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
-                                        <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
-                                        <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
-                                    </div>
+                    @if (showBrushMenu) {
+                        <div class="fixed inset-0 z-40" (click)="showBrushMenu = false" aria-hidden="true"></div>
+                        <div class="absolute right-0 top-full z-50 mt-2 w-64 rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 animate-fadeIn dark:bg-gray-700"
+                            role="listbox" aria-label="Solutions">
+                            @for (solution of brushOptions; track solution.id) {
+                                <div class="flex items-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-600"
+                                    [ngClass]="solutionSelected === solution.id ? 'bg-gray-100 dark:bg-gray-800' : ''">
+                                    <button type="button" role="option" [attr.aria-selected]="solutionSelected === solution.id"
+                                        (click)="onChangeSolution(solution.id); showBrushMenu = false"
+                                        class="flex min-w-0 flex-1 items-center gap-2 border-0 bg-transparent px-3 py-2 text-left text-sm text-gray-800 outline-none focus-visible:bg-gray-200 dark:text-gray-200 dark:focus-visible:bg-gray-600 cursor-pointer">
+                                        <span class="h-4 w-4 shrink-0 rounded-sm shadow-sm"
+                                            [style.background]="commonService.cellBackground(solution, situation_objSolutionsRef)"></span>
+                                        <span class="truncate">{{ solution.display_name || 'Action non définie' }}</span>
+                                        @if (solution.type === 'mixed') {
+                                            <span class="text-xs text-gray-400">Mixte</span>
+                                        }
+                                        @if (solutionSelected === solution.id) {
+                                            <i class="fa-solid fa-check ml-auto text-xs" aria-hidden="true"></i>
+                                        }
+                                    </button>
+                                    @if (solution.action === 'raise') {
+                                        <button type="button" (click)="openRaiseEditor(solution); showBrushMenu = false"
+                                            class="mr-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded border-0 bg-transparent text-xs text-gray-500 outline-none transition-colors focus-visible:bg-gray-200 dark:focus-visible:bg-gray-500 hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-500 dark:hover:text-gray-100 cursor-pointer"
+                                            [title]="'Modifier ' + solution.display_name" [attr.aria-label]="'Modifier ' + solution.display_name">
+                                            <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                                        </button>
+                                    }
                                 </div>
                             }
-                        </div>
-                        <button type="button" class="h-10 w-10 shrink-0 rounded-md border border-solid border-gray-200 p-0 shadow transition-transform hover:scale-105 dark:border-gray-600 cursor-pointer"
-                            [ngStyle]="{'background': commonService.cellBackground(solution, situation_objSolutionsRef)}"
-                            (click)="onColorSolution(solution.id)" [attr.aria-label]="'Changer la couleur'">
-                        </button>
-                        <button type="button" (click)="onChangeSolution(solution.id)" [id]="'button_' + solution.id"
-                            class="inline-flex h-10 min-w-24 shrink-0 items-center justify-center rounded-md border-0 bg-gray-800 px-3 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
-                            [attr.aria-label]="solutionSelected === solution.id ? 'Solution sélectionnée' : 'Sélectionner la solution'">
-                            @if (solutionSelected === solution.id) {
-                                <i class="fa-solid fa-check" aria-hidden="true"></i>
-                            } @else {
-                                Choisir
+                            @if (raiseCount < maxRaiseSizes) {
+                                <div class="my-1 h-px bg-gray-100 dark:bg-gray-600" aria-hidden="true"></div>
+                                <button type="button" (click)="openRaiseEditor(); showBrushMenu = false"
+                                    class="flex w-full items-center gap-2 border-0 bg-transparent px-3 py-2 text-left text-sm font-medium text-gray-600 outline-none transition-colors focus-visible:bg-gray-100 dark:focus-visible:bg-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-gray-100 cursor-pointer">
+                                    <i class="fa-solid fa-plus w-4 text-center text-xs" aria-hidden="true"></i>
+                                    Ajouter une taille de raise
+                                </button>
                             }
-                        </button>
-                    </div>
-
-                    <!-- Div qui apparait lorsqu'on clique sur un carré color picker -->
-                    <div class="bg-white dark:bg-gray-700 p-4 top-16 right-14 rounded-md shadow-lg absolute z-50 w-fit animate-appear opacity-0 duration-100 hidden"
-                        [id]="'color-picker-div_' + solution.id">
-                        <div class="grid grid-cols-5 gap-2">
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #d80c05"
-                                (click)="onSelectColor(solution.id, '#d80c05')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #ff9100"
-                                (click)="onSelectColor(solution.id, '#ff9100')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #7a5a00"
-                                (click)="onSelectColor(solution.id, '#7a5a00')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #3f7a89"
-                                (click)="onSelectColor(solution.id, '#3f7a89')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #96c582"
-                                (click)="onSelectColor(solution.id, '#96c582')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #303030"
-                                (click)="onSelectColor(solution.id, '#303030')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #1c51ff"
-                                (click)="onSelectColor(solution.id, '#1c51ff')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #00aeff"
-                                (click)="onSelectColor(solution.id, '#00aeff')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #8350ff"
-                                (click)="onSelectColor(solution.id, '#8350ff')"></button>
-                            <button type="button" class="h-8 w-8 rounded border-0 shadow cursor-pointer" style="background: #e284ff"
-                                (click)="onSelectColor(solution.id, '#e284ff')"></button>
                         </div>
-                    </div>
+                    }
                 </div>
-            }
-        </div>
-    </div>
-</div>
-
-<!-- Div conteneur SOLUTIONS MIXTES et CARACTÉRISTIQUES DE LA SITUATION -->
-<div class="flex items-stretch justify-center w-full my-16 mx-auto h-auto">
-    <!-- Div SOLUTIONS MIXTES -->
-    <div
-        class="p-5 rounded-md shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-150 w-1/2 flex flex-col overflow-visible transition-colors duration-500">
-        <div class="mb-5 flex items-center justify-between gap-4">
-            <div>
-                <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                    Solutions mixtes</h4>
-                <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Combinez plusieurs actions simples avec des fréquences.
-                </p>
             </div>
-            <button type="button" (click)="showMultipleSolutionModal = true"
-                class="inline-flex h-10 shrink-0 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
-                Ajouter
-            </button>
-        </div>
 
-        @if (solutionCount('mixed') === 0) {
-            <div class="flex min-h-64 flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 p-6 text-center transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg">
-                <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow dark:bg-secondary-dark-bg dark:text-gray-400">
-                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-                </div>
-                <p class="m-0 font-semibold text-gray-800 dark:text-gray-300">Aucune solution mixte</p>
-                <p class="m-0 mt-1 max-w-sm text-sm text-gray-500 dark:text-gray-400">
-                    Ajoutez-en une pour représenter une stratégie mixte avec plusieurs actions possibles.
-                </p>
-                <button type="button" (click)="showMultipleSolutionModal = true"
-                    class="mt-5 inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                    <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
-                    Ajouter une solution
-                </button>
-            </div>
-        } @else {
-            <div class="flex flex-col gap-3">
-                @for (solution of filteredSolutionList(situation_obj.solutions, 'mixed'); track $index) {
-                    <div class="rounded-md border-2 border-solid p-3 transition-colors duration-150"
-                        [ngClass]="solutionSelected === solution.id ? 'border-gray-800 bg-white shadow-md dark:border-gray-400 dark:bg-secondary-dark-bg' : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-secondary-dark-bg dark:hover:bg-gray-700'">
-                        <div class="grid grid-cols-[minmax(0,1fr)_auto_auto_auto_auto] items-center gap-3">
-                            <div class="min-w-0">
-                                <p class="m-0 truncate text-base font-semibold text-gray-800 dark:text-gray-300">
-                                    {{solution.display_name}}
-                                </p>
+            <div class="w-0 min-w-full">
+                @if (showRaiseEditor) {
+                    <div class="mb-4 flex flex-wrap items-center gap-3 rounded-md bg-gray-50 p-3 transition-colors duration-500 dark:bg-main-dark-bg"
+                        (keydown.enter)="saveRaiseEditor()" (keydown.escape)="closeRaiseEditor()">
+                        <label for="raiseEditorAmount" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {{ raiseEditorSolutionId ? 'Taille du raise' : 'Nouveau raise' }}
+                        </label>
+                        <div class="relative w-28">
+                            <p-inputNumber inputId="raiseEditorAmount" [(ngModel)]="raiseEditorAmount"
+                                [min]="0.01" [max]="999" [minFractionDigits]="0" [maxFractionDigits]="2" [autofocus]="true"
+                                styleClass="w-full" inputStyleClass="w-full box-border h-10 pr-9 text-base"></p-inputNumber>
+                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
                             </div>
-                            <div class="h-10 w-10 rounded-md shadow"
-                                [ngStyle]="{'background': commonService.cellBackground(solution, situation_objSolutionsRef)}">
-                            </div>
-                            <button type="button" title="Modifier" [attr.aria-label]="'Modifier ' + solution.display_name"
-                                (click)="editMultipleSolution(solution.id)"
-                                class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-                                <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                        </div>
+                        <div class="ml-auto flex gap-2">
+                            @if (raiseEditorSolutionId) {
+                                <button type="button" (click)="deleteRaise()" title="Supprimer ce raise" aria-label="Supprimer ce raise"
+                                    class="dui-btn dui-btn-ghost dui-btn-square h-10 min-h-10 w-10 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                                </button>
+                            }
+                            <button type="button" (click)="closeRaiseEditor()"
+                                class="inline-flex h-10 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                                Annuler
                             </button>
-                            <button type="button" title="Supprimer" [attr.aria-label]="'Supprimer ' + solution.display_name"
-                                (click)="deleteMultipleSolution(solution.id)"
-                                class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
-                                <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-                            </button>
-                            <button type="button" (click)="onChangeSolution(solution.id)" [id]="'button_' + solution.id"
-                                class="inline-flex h-10 min-w-24 items-center justify-center rounded-md border-0 bg-gray-800 px-3 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                                @if (solutionSelected === solution.id) {
-                                    <i class="fa-solid fa-check" aria-hidden="true"></i>
-                                } @else {
-                                    Choisir
-                                }
+                            <button type="button" (click)="saveRaiseEditor()"
+                                class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                                <i class="fa-solid fa-check mr-2" aria-hidden="true"></i>
+                                Valider
                             </button>
                         </div>
                     </div>
                 }
+            </div>
+
+            <app-range-grid
+                [situations]="situation_obj.situations"
+                [solutions]="situation_objSolutionsRef"
+                [selectedSolutionId]="solutionSelected"
+                [editable]="true"
+                [animateRows]="true">
+            </app-range-grid>
+        </section>
+
+        <div class="flex min-w-[420px] flex-1 flex-col gap-6">
+            <!-- CARACTÉRISTIQUES DE LA SITUATION -->
+            <section class="animate-appear opacity-0 animation-delay-100 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+                aria-labelledby="characteristics-title">
+                <div class="mb-5 flex items-center gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                        <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h4 id="characteristics-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Caractéristiques</h4>
+                        <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Configurez le contexte utilisé pendant l'entraînement.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="situationName" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom de la situation</label>
+                        <div class="flex gap-2">
+                            <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
+                                id="situationName" autocomplete="off" class="box-border min-w-0 flex-1" pInputText />
+                            <button type="button" (click)="generateAutoSituationName()"
+                                class="inline-flex w-11 shrink-0 items-center justify-center rounded-md border border-solid border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+                                title="Générer automatiquement le nom" aria-label="Générer automatiquement le nom">
+                                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="situationType" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
+                        <p-dropdown inputId="situationType" [(ngModel)]="situationType" type="text" name="situationType"
+                            [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
+                            optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    <div>
+                        <label for="situationStack" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Stack effectif</label>
+                        <div class="relative">
+                            <p-inputNumber inputId="situationStack" [min]="0" [max]="999"
+                                [minFractionDigits]="0" [maxFractionDigits]="2"
+                                [(ngModel)]="situation_obj.stack" styleClass="w-full"
+                                inputStyleClass="w-full box-border pr-12"></p-inputNumber>
+                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="nbPlayer" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Joueurs</label>
+                        <p-dropdown inputId="nbPlayer" [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
+                            optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    <div>
+                        <label for="position" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Votre position</label>
+                        <p-dropdown inputId="position" [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
+                            optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    <div>
+                        <label for="opponentLevel" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Niveau adversaire</label>
+                        <p-dropdown inputId="opponentLevel" [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
+                            (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    @if (opponentLevel.code === "fish_shark") {
+                    <div>
+                        <label for="fishPosition" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Position du fish</label>
+                        <p-dropdown inputId="fishPosition" [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
+                            (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    }
+
+                    @if (nbPlayer.code === 3) {
+                        @if (position.code !== 'bu') {
+                        <div>
+                            <label for="previousPlayer1Action" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Action précédente (BU)</label>
+                            <p-dropdown inputId="previousPlayer1Action" [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                                (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                        </div>
+                        }
+                        @if (position.code === 'bb') {
+                        <div>
+                            <label for="previousPlayer2Action" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Action précédente (SB)</label>
+                            <p-dropdown inputId="previousPlayer2Action" [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
+                                (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                        </div>
+                        }
+                    }
+
+                    @if (nbPlayer.code === 2) {
+                        @if (position.code !== 'sb') {
+                        <div>
+                            <label for="previousPlayer1Action" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Action précédente (SB)</label>
+                            <p-dropdown inputId="previousPlayer1Action" [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
+                                (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                        </div>
+                        }
+                    }
+                </div>
+            </section>
+
+            <!-- SOLUTIONS MIXTES -->
+            <section class="animate-appear opacity-0 animation-delay-150 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+                aria-labelledby="mixed-title">
+                <div class="mb-5 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h4 id="mixed-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Solutions mixtes</h4>
+                            <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Combinez plusieurs actions avec des fréquences.</p>
+                        </div>
+                    </div>
+                    <button type="button" (click)="showMultipleSolutionModal = true"
+                        class="inline-flex h-10 shrink-0 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                        <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>
+                        Ajouter
+                    </button>
+                </div>
+
+                @if (solutionCount('mixed') === 0) {
+                    <div class="flex flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 px-6 py-8 text-center transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg">
+                        <i class="fa-regular fa-folder-open mb-3 text-2xl text-gray-800 dark:text-gray-300" aria-hidden="true"></i>
+                        <p class="m-0 font-semibold text-gray-800 dark:text-gray-300">Aucune solution mixte</p>
+                        <p class="m-0 mt-1 max-w-sm text-sm text-gray-500 dark:text-gray-400">
+                            Ajoutez-en une pour représenter une stratégie avec plusieurs actions possibles.
+                        </p>
+                    </div>
+                } @else {
+                    <div class="flex flex-col gap-2">
+                        @for (solution of filteredSolutionList(situation_obj.solutions, 'mixed'); track $index) {
+                            <div class="flex items-center gap-3 rounded-md border-2 border-solid p-2 transition-colors duration-150"
+                                [ngClass]="solutionSelected === solution.id ? 'border-gray-800 bg-gray-50 dark:border-gray-400 dark:bg-gray-800' : 'border-transparent bg-gray-50 hover:border-gray-200 dark:bg-main-dark-bg dark:hover:border-gray-700'">
+                                <div class="h-8 w-8 shrink-0 rounded-md shadow"
+                                    [ngStyle]="{'background': commonService.cellBackground(solution, situation_objSolutionsRef)}">
+                                </div>
+                                <p class="m-0 min-w-0 flex-1 truncate font-medium text-gray-800 dark:text-gray-300">
+                                    {{solution.display_name}}
+                                </p>
+                                <button type="button" title="Modifier" [attr.aria-label]="'Modifier ' + solution.display_name"
+                                    (click)="editMultipleSolution(solution.id)"
+                                    class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700">
+                                    <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" title="Supprimer" [attr.aria-label]="'Supprimer ' + solution.display_name"
+                                    (click)="deleteMultipleSolution(solution.id)"
+                                    class="dui-btn dui-btn-ghost dui-btn-sm dui-btn-square text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODALE SOLUTION MIXTE -->
+<app-modal [open]="showMultipleSolutionModal" (closed)="resetMultipleSituation()" panelClass="w-full max-w-2xl">
+    <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
+        {{ multipleSituationId ? 'Modifier une solution mixte' : 'Ajouter une solution mixte' }}
+    </h4>
+    <p class="m-0 mt-1 text-left text-sm text-gray-500 dark:text-gray-400">
+        Cochez les actions à combiner, puis réglez leurs fréquences.
+    </p>
+
+    @if (!autoMultipleSolutionName) {
+        <div class="mt-6">
+            <label for="multipleSolution" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom de la solution</label>
+            <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
+                name="multipleSolutionName" id="multipleSolution" autocomplete="off" class="box-border w-full" pInputText />
+        </div>
+    }
+
+    <div class="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        @for (solution of uniqueBrushSolutions; track solution.id) {
+            <label [for]="'mixed-check-' + solution.id"
+                class="flex items-center gap-3 rounded-md bg-gray-50 p-3 transition-colors hover:bg-gray-100 dark:bg-main-dark-bg dark:hover:bg-gray-700 cursor-pointer">
+                <div class="h-8 w-8 shrink-0 rounded shadow" [style.background]="commonService.solutionColor(solution, situation_obj.solutions)"></div>
+                <span class="min-w-0 flex-1 truncate text-left font-medium text-gray-800 dark:text-gray-300">{{solution.display_name}}</span>
+                <p-checkbox [(ngModel)]="multipleSolutionCheckBox" [inputId]="'mixed-check-' + solution.id"
+                    name="multipleSolutionCheckBox" [value]="solution.id" (onChange)="onCheckChange()" />
+            </label>
+        }
+    </div>
+
+    <div class="mt-6">
+        @if (mixedSliderSegments().length) {
+            <!-- Légende alignée sur les segments de la piste (décalée de 10px comme le dégradé) -->
+            <div class="flex px-[10px] text-xs" aria-live="polite">
+                @for (segment of mixedSliderSegments(); track $index) {
+                    @if (segment.percent > 0) {
+                        <div class="flex min-w-0 items-center justify-center gap-1.5 px-1 text-gray-600 dark:text-gray-400"
+                            [style.flex-basis.%]="segment.percent" [style.flex-grow]="0" [style.flex-shrink]="1">
+                            <span class="h-2.5 w-2.5 shrink-0 rounded-sm" [style.background]="segment.color"></span>
+                            <span class="truncate">{{ segment.name }}</span>
+                            <span class="shrink-0 font-semibold text-gray-800 dark:text-gray-200">{{ segment.percent }}%</span>
+                        </div>
+                    }
+                }
+            </div>
+        }
+        @if (simpleSlider) {
+            <div class="custom-slider mixed-color-slider">
+                <div class="mixed-slider-gradient" [style.background]="mixedSliderGradient()"></div>
+                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
+            </div>
+        }
+        @if (multipleSlider) {
+            <div class="custom-slider mixed-color-slider">
+                <div class="mixed-slider-gradient" [style.background]="mixedSliderGradient()"></div>
+                <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
+                    [options]="options"></ngx-slider>
             </div>
         }
     </div>
 
-    <!-- Div AJOUTER SOLUTIONS MIXTES-->
-    <app-modal [open]="showMultipleSolutionModal" (closed)="resetMultipleSituation()" panelClass="w-full max-w-2xl">
-            <h4
-                class="m-0 mb-4 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                {{ multipleSituationId ? 'Modifier une solution mixte' : 'Ajouter une solution mixte' }}
-            </h4>
-            @if (!autoMultipleSolutionName) {
-                <div class="my-7">
-                    <label for="multipleSolution" class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Nom de la solution</label>
-                    <input [(ngModel)]="multipleSolutionName" type="text" placeholder="Nom de la solution"
-                        name="multipleSolutionName" id='multipleSolution' autocomplete="off" class="box-border w-full" pInputText />
-                </div>
-            }
-
-            <div class="space-y-3">
-            @for (solution of filteredSolutionList(situation_obj.solutions, 'unique', true); track $index;) {
-                <div class="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-md border border-solid border-gray-200 p-3 dark:border-gray-700">
-                    <span class="min-w-0 truncate text-gray-800 dark:text-gray-300">{{solution.display_name}}</span>
-                    <div class="h-8 w-8 rounded shadow" [style]="'background: ' + solution.color"></div>
-                    <p-checkbox [(ngModel)]="multipleSolutionCheckBox"
-                        name="multipleSolutionCheckBox" [value]="solution.id" (onChange)="onCheckChange()" />
-                </div>
-            }
-            </div>
-            <div class="mt-6">
-                @if (simpleSlider) {
-                    <div class="custom-slider mixed-color-slider">
-                        <div class="mixed-slider-gradient" [style.background]="mixedSliderGradient()"></div>
-                        <ngx-slider [(value)]="mixedSolutionSliderMinValue" [options]="options"></ngx-slider>
-                    </div>
-                }
-                @if (multipleSlider) {
-                    <div class="custom-slider mixed-color-slider">
-                        <div class="mixed-slider-gradient" [style.background]="mixedSliderGradient()"></div>
-                        <ngx-slider [(value)]="mixedSolutionSliderMinValue" [(highValue)]="mixedSolutionSliderMaxValue"
-                            [options]="options"></ngx-slider>
-                    </div>
-                }
-            </div>
-            <div class="flex justify-end gap-3 mt-8">
-                <button type="button" (click)="resetMultipleSituation()"
-                    class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                    Annuler
-                </button>
-                <button type="button" (click)="saveMultipleSolution()"
-                    class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk mr-2" aria-hidden="true"></i>
-                    Enregistrer
-                </button>
-            </div>
-    </app-modal>
-
-    <!-- Div CARACTÉRISTIQUES DE LA SITUATION-->
-    <div
-        class="mx-auto p-5 ml-14 rounded-md shadow-lg bg-white dark:bg-secondary-dark-bg animate-appear opacity-0 animation-delay-200 w-1/2 h-auto transition-colors duration-500">
-        <div class="mb-5">
-            <h4 class="m-0 text-left text-lg font-semibold uppercase text-gray-800 dark:text-gray-300 tracking-wider">
-                Caractéristiques</h4>
-            <p class="m-0 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Configurez le contexte utilisé pendant l'entraînement.
-            </p>
-        </div>
-
-        <div class="space-y-4">
-            <div>
-                <div class="mb-2 flex items-center justify-start gap-2">
-                    <label for="situationName" class="text-sm font-medium text-gray-800 dark:text-gray-300">Nom de la situation</label>
-                    <button type="button" (click)="generateAutoSituationName()"
-                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border-0 bg-gray-800 text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer"
-                        title="Générer automatiquement le nom">
-                        <i class="fa-solid fa-wand-magic-sparkles text-sm" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <input [(ngModel)]="situation_obj.name" type="text" placeholder="Nom de la situation" name="situationName"
-                    id='situationName' autocomplete="off" class="box-border w-full" pInputText />
-            </div>
-
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Type</label>
-                    <p-dropdown [(ngModel)]="situationType" type="text" name="situationType"
-                        [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
-                        optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Stack effectif</label>
-                    <div class="relative">
-                        <p-inputNumber inputId="situationStack" [min]="0" [max]="999"
-                            [minFractionDigits]="0" [maxFractionDigits]="2"
-                            [(ngModel)]="situation_obj.stack" styleClass="situation-stack-input"
-                            inputStyleClass="situation-stack-input-field"></p-inputNumber>
-                        <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
-                            <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
-                            <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Joueurs</label>
-                    <p-dropdown [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
-                        optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Votre position</label>
-                    <p-dropdown [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
-                        optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Niveau adversaire</label>
-                    <p-dropdown [(ngModel)]="opponentLevel" [options]="availableOpponentsPlayersLevel"
-                        (onChange)="onChangeProperty('opponentLevel', opponentLevel)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                </div>
-                @if (opponentLevel.code === "fish_shark") {
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Position du fish</label>
-                    <p-dropdown [(ngModel)]="fishPosition" [options]="availableFishPlayerPosition"
-                        (onChange)="onChangeProperty('fishPosition', fishPosition)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                </div>
-                }
-
-                @if (nbPlayer.code === 3) {
-                    @if (position.code !== 'bu') {
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (BU)</label>
-                        <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                    </div>
-                    }
-                    @if (position.code === 'bb') {
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (SB)</label>
-                        <p-dropdown [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
-                            (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                    </div>
-                    }
-                }
-
-                @if (nbPlayer.code === 2) {
-                    @if (position.code !== 'sb') {
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-300">Action précédente (SB)</label>
-                        <p-dropdown [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
-                            (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
-                    </div>
-                    }
-                }
-            </div>
-        </div>
-
+    <div class="mt-8 flex justify-end gap-3">
+        <button type="button" (click)="resetMultipleSituation()"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="saveMultipleSolution()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-floppy-disk mr-2" aria-hidden="true"></i>
+            Enregistrer
+        </button>
     </div>
-</div>
-
-<!-- Bouton d'enregistrement de la situation -->
-<div class="flex justify-center items-center mt-10 mb-8 animate-appear opacity-0 animation-delay-200">
-    <div (click)="saveSituation()"
-        class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer absolute">
-        <i class="fa-solid fa-floppy-disk mr-3 h-4 w-4"></i>
-        Enregistrer la situation
-    </div>
-</div>
+</app-modal>

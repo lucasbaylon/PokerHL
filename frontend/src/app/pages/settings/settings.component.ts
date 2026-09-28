@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
+import { ColorPickerModule } from 'primeng/colorpicker';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
-import { DEFAULT_PARTICLE_SETTINGS, ParticleSettings, UserParams } from '../../interfaces/user-params';
+import { SolutionAction } from '../../interfaces/solution';
+import { ActionColors, DEFAULT_ACTION_COLORS, DEFAULT_PARTICLE_SETTINGS, ParticleSettings, UserParams } from '../../interfaces/user-params';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from './../../services/common.service';
 
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [DropdownModule, InputSwitchModule, FormsModule, InputTextModule, AppModalComponent],
+    imports: [DropdownModule, InputSwitchModule, FormsModule, InputTextModule, AppModalComponent, ColorPickerModule, TooltipModule],
     templateUrl: './settings.component.html'
 })
 export class SettingsComponent {
@@ -43,6 +46,10 @@ export class SettingsComponent {
     isChangingPassword: boolean = false;
     showPasswordModal: boolean = false;
     showUserNameModal: boolean = false;
+    showActionColorsModal: boolean = false;
+    actionColorsDraft: ActionColors = { ...DEFAULT_ACTION_COLORS };
+    readonly defaultActionColors = DEFAULT_ACTION_COLORS;
+    readonly colorActions = [...this.commonService.solutionActions].reverse();
 
     availableCardsStyles: any[] = [
         { name: 'Standard', code: 'default' },
@@ -137,6 +144,55 @@ export class SettingsComponent {
             particleSpeed: Number(this.particleSpeed),
             particleLinks: this.particleLinks,
         };
+    }
+
+    /**
+     * Ouvre la fenêtre de personnalisation des couleurs d'actions avec les couleurs actuelles.
+     */
+    openActionColorsModal(): void {
+        this.actionColorsDraft = { ...this.commonService.getActionColors() };
+        this.showActionColorsModal = true;
+    }
+
+    /**
+     * Met à jour la couleur d'une action, si la valeur est une couleur hexadécimale valide.
+     * @param action Action concernée.
+     * @param value Couleur saisie ou choisie.
+     */
+    onActionColorInput(action: SolutionAction, value: string): void {
+        const trimmed = (value || '').trim();
+        const color = trimmed.startsWith('#') ? trimmed : `#${trimmed}`;
+        if (/^#[0-9a-f]{6}$/i.test(color)) {
+            this.actionColorsDraft = { ...this.actionColorsDraft, [action]: color.toLowerCase() };
+        }
+    }
+
+    /**
+     * Empêche la sélection du texte de la page pendant qu'un color picker est ouvert,
+     * sinon glisser jusqu'aux bords du sélecteur sélectionne le contenu de la fenêtre.
+     * @param open Vrai quand le sélecteur s'ouvre.
+     */
+    setColorPickerOpen(open: boolean): void {
+        document.body.classList.toggle('select-none', open);
+        if (open) window.getSelection()?.removeAllRanges();
+    }
+
+    ngOnDestroy() {
+        document.body.classList.remove('select-none');
+    }
+
+    resetActionColors(): void {
+        this.actionColorsDraft = { ...DEFAULT_ACTION_COLORS };
+    }
+
+    /**
+     * Enregistre les couleurs d'actions. Elles s'appliquent à toutes les situations.
+     */
+    saveActionColors(): void {
+        this.commonService.setActionColors(this.actionColorsDraft);
+        this.updateUserParam('actionColors', { ...this.actionColorsDraft });
+        this.showActionColorsModal = false;
+        this.commonService.showSwalToast('Couleurs des actions enregistrées !');
     }
 
     /**

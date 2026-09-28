@@ -996,16 +996,16 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     }
 
     private solutionColorAt(solution: Solution, solutions: Solution[], position: number): string {
-        if (solution.type !== 'mixed') return solution.color || '#000000';
+        if (solution.type !== 'mixed') return this.commonService.solutionColor(solution, solutions);
         let total = 0;
         for (const item of solution.colorList || []) {
             total += item.percent || 0;
             if (position <= total) {
-                return solutions.find(candidate => candidate.id === item.color)?.color || '#000000';
+                return this.commonService.solutionColor(solutions.find(candidate => candidate.id === item.color), solutions);
             }
         }
         const last = solution.colorList?.at(-1);
-        return solutions.find(candidate => candidate.id === last?.color)?.color || '#000000';
+        return this.commonService.solutionColor(solutions.find(candidate => candidate.id === last?.color), solutions);
     }
 
     private interpolateColor(from: string, to: string, progress: number): string {
