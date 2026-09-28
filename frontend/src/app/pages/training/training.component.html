@@ -17,10 +17,34 @@
             <div class="table-wrap">
                 <div class="poker-table animate-appear opacity-0"
                     [style.background]="backgroundColor">
+                    @if (isFlop) {
+                    <div class="flop-board" aria-label="Flop">
+                        <small class="flop-board-label" aria-hidden="true">{{activeSituation.nbPlayer === 2 ? 'HEADS UP' : '3 PLAYERS'}} · FLOP</small>
+                        <div class="flex gap-2 select-none">
+                            @for (card of activeSituation.board; track $index) {
+                            <div class="relative h-20 w-14 rounded-sm bg-white text-gray-800" [ngStyle]="fullCardStyle ? {'background-color': card.color.color} : null">
+                                <card [cardColor]="fullCardStyle ? '#ffffff' : card.color.color"
+                                    [cardColorName]="card.color.name"
+                                    [cardValue]="card.value"></card>
+                            </div>
+                            }
+                        </div>
+                        <div class="flop-pot">
+                            <img src="assets/img/chip-medium.png" class="h-7 w-auto object-contain drop-shadow-lg" alt="" />
+                            <span>Pot {{activeSituation.pot}} BB</span>
+                        </div>
+                        @if (isFacingBet) {
+                        <div class="flop-pot flop-bet">
+                            <span>Mise adverse {{ facingBetAmount() }} BB <span class="font-normal opacity-80">({{ activeSituation.facingBetPercent }}%)</span></span>
+                        </div>
+                        }
+                    </div>
+                    } @else {
                     <div class="table-brand" aria-hidden="true">
                         <span>POKER<span class="font-light"> HL</span></span>
                         <small>{{activeSituation.nbPlayer === 2 ? 'HEADS UP' : '3 PLAYERS'}} · PREFLOP</small>
                     </div>
+                    }
 
                     <!-- Adversaire du milieu (HU) -->
                     @if (activeSituation.nbPlayer === 2) {
@@ -295,8 +319,60 @@
                     </div>
                 </div>
                 }
+                @if (isFacingBet) {
+                <div class="raise-presets grid grid-cols-4 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
+                    @for (preset of raiseMultiplierPresets; track preset) {
+                    <button type="button" (click)="setRaiseMultiplier(preset)" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">x{{preset}}</button>
+                    }
+                    <button type="button" (click)="submitPokerAction('all-in')" class="h-9 rounded-md border-0 bg-red-700 px-3 text-sm font-semibold text-white shadow transition-colors duration-150 hover:bg-red-800 dark:bg-red-800 dark:hover:bg-red-700 cursor-pointer">All-in</button>
+                </div>
+                <div class="flex items-center gap-3 mb-3 rounded-md bg-gray-100 px-3 py-1.5 dark:bg-main-dark-bg">
+                    <input type="range" class="w-full min-w-0 accent-gray-800 dark:accent-gray-400 cursor-pointer" min="1.5" [max]="maximumRaiseMultiplier()" step="0.5"
+                        [ngModel]="raiseMultiplier" (ngModelChange)="setRaiseMultiplier($event)" aria-label="Taille de la relance en multiple de la mise adverse" />
+                    <div class="flex shrink-0 items-center gap-2">
+                        <div class="relative w-24">
+                            <p-inputNumber inputId="trainingRaiseMultiplier" [min]="1.5" [max]="maximumRaiseMultiplier()"
+                                [step]="0.5" [minFractionDigits]="0" [maxFractionDigits]="1" [ngModel]="raiseMultiplier"
+                                (ngModelChange)="setRaiseMultiplier($event)" styleClass="situation-stack-input w-24"
+                                [inputStyle]="{'width': '6rem', 'height': '2.25rem', 'padding-right': '2rem'}"
+                                inputStyleClass="situation-stack-input-field"></p-inputNumber>
+                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">x</span>
+                            </div>
+                        </div>
+                        <span class="w-16 text-sm text-gray-500 dark:text-gray-400">{{raiseMultiplierAmount()}} BB</span>
+                    </div>
+                </div>
+                }
+                @if (isFlop && !isFacingBet) {
+                <div class="raise-presets grid grid-cols-5 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
+                    @for (preset of betPresets; track preset) {
+                    <button type="button" (click)="setBetPercent(preset)" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">{{preset}}%</button>
+                    }
+                    <button type="button" (click)="submitPokerAction('all-in')" class="h-9 rounded-md border-0 bg-red-700 px-3 text-sm font-semibold text-white shadow transition-colors duration-150 hover:bg-red-800 dark:bg-red-800 dark:hover:bg-red-700 cursor-pointer">All-in</button>
+                </div>
+                <div class="flex items-center gap-3 mb-3 rounded-md bg-gray-100 px-3 py-1.5 dark:bg-main-dark-bg">
+                    <input type="range" class="w-full min-w-0 accent-gray-800 dark:accent-gray-400 cursor-pointer" min="1" [max]="maximumBetPercent()" step="1"
+                        [ngModel]="betPercent" (ngModelChange)="setBetPercent($event)" aria-label="Taille de la mise en pourcentage du pot" />
+                    <div class="flex shrink-0 items-center gap-2">
+                        <div class="relative w-24">
+                            <p-inputNumber inputId="trainingBetPercent" [min]="1" [max]="maximumBetPercent()"
+                                [step]="1" [maxFractionDigits]="0" [ngModel]="betPercent"
+                                (ngModelChange)="setBetPercent($event)" styleClass="situation-stack-input w-24"
+                                [inputStyle]="{'width': '6rem', 'height': '2.25rem', 'padding-right': '2rem'}"
+                                inputStyleClass="situation-stack-input-field"></p-inputNumber>
+                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">%</span>
+                            </div>
+                        </div>
+                        <span class="w-16 text-sm text-gray-500 dark:text-gray-400">{{betAmount()}} BB</span>
+                    </div>
+                </div>
+                }
                 <div class="decision-buttons flex flex-wrap justify-center gap-2">
+                    @if (!isFlop || isFacingBet) {
                     <button type="button" (click)="submitPokerAction('fold')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Fold</button>
+                    }
                     @if (canCheck()) {
                     <button type="button" (click)="submitPokerAction('check')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Check</button>
                     }
@@ -308,6 +384,12 @@
                     }
                     @if (canRaise()) {
                     <button type="button" (click)="submitPokerAction('raise')" class="h-10 w-32 rounded-md border-0 bg-green-700 text-white font-semibold shadow transition-colors duration-150 hover:bg-green-800 dark:bg-green-800 dark:hover:bg-green-700 cursor-pointer">Raise <span class="ml-1 font-normal opacity-80">{{raiseAmount}} BB</span></button>
+                    }
+                    @if (isFlop && !isFacingBet) {
+                    <button type="button" (click)="submitPokerAction('bet')" class="h-10 w-32 rounded-md border-0 bg-green-700 text-white font-semibold shadow transition-colors duration-150 hover:bg-green-800 dark:bg-green-800 dark:hover:bg-green-700 cursor-pointer">Bet <span class="ml-1 font-normal opacity-80">{{betPercent}}%</span></button>
+                    }
+                    @if (isFacingBet) {
+                    <button type="button" (click)="submitPokerAction('raise')" class="h-10 w-32 rounded-md border-0 bg-green-700 text-white font-semibold shadow transition-colors duration-150 hover:bg-green-800 dark:bg-green-800 dark:hover:bg-green-700 cursor-pointer">Raise <span class="ml-1 font-normal opacity-80">x{{raiseMultiplier}}</span></button>
                     }
                 </div>
             </div>
@@ -328,8 +410,20 @@
             <div class="mt-2 mb-0 flex flex-wrap gap-x-4 gap-y-1 border-b border-gray-200 pb-3 pr-10 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-layer-group text-gray-500" aria-hidden="true"></i>
-                    {{ currentSituation.type | type }}
+                    {{ currentSituation.type | type }}@if (isFlop) { · {{ flopTypesLabel }} }
                 </span>
+                @if (isFlop) {
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-sack-dollar text-gray-500" aria-hidden="true"></i>
+                    Pot {{ activeSituation.pot }} BB
+                </span>
+                @if (isFacingBet) {
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-hand-holding-dollar text-gray-500" aria-hidden="true"></i>
+                    Mise adverse {{ activeSituation.facingBetPercent }}%
+                </span>
+                }
+                }
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-coins text-gray-500" aria-hidden="true"></i>
                     {{ currentSituation.stack }} BB
@@ -348,6 +442,33 @@
                 </span>
             </div>
             <div class="flex flex-col justify-center gap-2 lg:flex-row lg:items-start">
+                @if (isFlop && activeSituation.hand) {
+                <div class="flex w-full max-w-md flex-none flex-col gap-4 px-2 py-3 text-left">
+                    <div>
+                        <h4 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Votre main</h4>
+                        <div class="flex flex-wrap gap-2">
+                            @for (label of describeHand(activeSituation.hand); track $index) {
+                            <span class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200">{{ label }}</span>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Règle appliquée</h4>
+                        @if (activeSituation.rule) {
+                        <div class="flex flex-wrap items-center gap-2">
+                            @for (condition of activeSituation.rule.conditions; track $index; let lastCondition = $last) {
+                            <span class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200">{{ describeCondition(condition) }}</span>
+                            @if (!lastCondition) {
+                            <span class="text-xs font-semibold uppercase text-gray-400">et</span>
+                            }
+                            }
+                        </div>
+                        } @else {
+                        <p class="m-0 text-sm text-gray-600 dark:text-gray-400">Aucune règle ne correspond : action « Sinon ».</p>
+                        }
+                    </div>
+                </div>
+                } @else {
                 <div class="w-fit flex-none overflow-x-auto px-2 py-3">
                     <app-range-grid
                         [situations]="currentSituation.situations"
@@ -355,6 +476,7 @@
                         [highlightedCard]="currentHand">
                     </app-range-grid>
                 </div>
+                }
                 <div class="w-40 flex-none">
                     <h4
                         class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -393,6 +515,24 @@
                             </div>
                         </div>
                     </div>
+                    @if (isFlop) {
+                    <div class="mt-6">
+                        <h4
+                            class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            Flop
+                        </h4>
+                        <div class="flex items-center justify-center select-none">
+                            @for (card of activeSituation.board; track $index; let first = $first) {
+                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none"
+                                [style.margin-left]="first ? null : '-15%'" [ngStyle]="fullCardStyle ? {'background-color': card.color.color} : null">
+                                <card [cardColor]="fullCardStyle ? '#ffffff' : card.color.color"
+                                    [cardColorName]="card.color.name"
+                                    [cardValue]="card.value"></card>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
                     <div class="mt-5 grid gap-3">
                         <div>
                             <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">

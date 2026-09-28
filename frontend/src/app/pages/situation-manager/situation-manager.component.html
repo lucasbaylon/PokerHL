@@ -103,6 +103,48 @@
     </div>
 </app-modal>
 
+<ng-template #sizeEditor>
+    <div class="mb-4 flex flex-wrap items-center gap-3 rounded-md bg-gray-50 p-3 transition-colors duration-500 dark:bg-main-dark-bg"
+        (keydown.enter)="saveRaiseEditor()" (keydown.escape)="closeRaiseEditor()">
+        <label for="raiseEditorAmount" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {{ raiseEditorSolutionId ? 'Taille du ' + sizeAction : 'Nouveau ' + sizeAction }}
+        </label>
+        <div class="relative w-28">
+            <p-inputNumber inputId="raiseEditorAmount" [(ngModel)]="raiseEditorAmount"
+                [min]="0.01" [max]="999" [minFractionDigits]="0" [maxFractionDigits]="2" [autofocus]="true"
+                styleClass="w-full" inputStyleClass="w-full box-border h-10 pr-9 text-base"></p-inputNumber>
+            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
+                @if (sizeUnit === 'BB') {
+                    <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                    <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                } @else {
+                    <span class="font-mono text-lg font-bold leading-none tracking-tight">{{ sizeUnit }}</span>
+                }
+            </div>
+        </div>
+        @if (sizeUnit !== 'BB') {
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{ sizeUnit === '%' ? 'du pot' : 'la mise adverse' }}</span>
+        }
+        <div class="ml-auto flex gap-2">
+            @if (raiseEditorSolutionId) {
+                <button type="button" (click)="deleteRaise()" [title]="'Supprimer ce ' + sizeAction" [attr.aria-label]="'Supprimer ce ' + sizeAction"
+                    class="dui-btn dui-btn-ghost dui-btn-square h-10 min-h-10 w-10 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                </button>
+            }
+            <button type="button" (click)="closeRaiseEditor()"
+                class="inline-flex h-10 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                Annuler
+            </button>
+            <button type="button" (click)="saveRaiseEditor()"
+                class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                <i class="fa-solid fa-check mr-2" aria-hidden="true"></i>
+                Valider
+            </button>
+        </div>
+    </div>
+</ng-template>
+
 <div class="flex flex-col gap-6">
     <div class="flex flex-wrap items-start gap-6">
         <!-- TABLEAU DES RANGES -->
@@ -115,11 +157,33 @@
                         <i class="fa-solid fa-table-cells" aria-hidden="true"></i>
                     </div>
                     <div class="min-w-0">
-                        <h4 id="range-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Tableau des ranges</h4>
-                        <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Cliquez ou glissez pour appliquer une solution.</p>
+                        <h4 id="range-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">{{ isFlop ? 'Range du héros' : 'Tableau des ranges' }}</h4>
+                        <p class="m-0 text-sm text-gray-500 dark:text-gray-400">
+                            {{ isFlop ? 'Mains que le héros peut avoir en arrivant au flop.' : 'Cliquez ou glissez pour appliquer une solution.' }}
+                        </p>
                     </div>
                 </div>
 
+                @if (isFlop) {
+                <div class="flex shrink-0 items-center gap-2">
+                    <div class="inline-flex rounded-md bg-gray-100 p-1 dark:bg-gray-700" role="group" aria-label="Pinceau de la range">
+                        <button type="button" (click)="rangeBrush = 'add'" [attr.aria-pressed]="rangeBrush === 'add'"
+                            class="h-8 rounded border-0 px-3 text-sm transition-colors cursor-pointer"
+                            [ngClass]="rangeBrush === 'add' ? 'bg-white font-medium text-gray-900 shadow-sm dark:bg-gray-500 dark:text-white' : 'bg-transparent text-gray-600 dark:text-gray-300'">
+                            <i class="fa-solid fa-plus mr-1 text-xs" aria-hidden="true"></i>Ajouter
+                        </button>
+                        <button type="button" (click)="rangeBrush = 'remove'" [attr.aria-pressed]="rangeBrush === 'remove'"
+                            class="h-8 rounded border-0 px-3 text-sm transition-colors cursor-pointer"
+                            [ngClass]="rangeBrush === 'remove' ? 'bg-white font-medium text-gray-900 shadow-sm dark:bg-gray-500 dark:text-white' : 'bg-transparent text-gray-600 dark:text-gray-300'">
+                            <i class="fa-solid fa-eraser mr-1 text-xs" aria-hidden="true"></i>Retirer
+                        </button>
+                    </div>
+                    <button type="button" (click)="setWholeRange(true)" title="Toutes les mains"
+                        class="inline-flex h-10 items-center rounded-md border border-solid border-gray-300 bg-white px-3 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Tout</button>
+                    <button type="button" (click)="setWholeRange(false)" title="Vider la range"
+                        class="inline-flex h-10 items-center rounded-md border border-solid border-gray-300 bg-white px-3 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Aucune</button>
+                </div>
+                } @else {
                 <!-- Pinceau : cliquer ouvre la liste des solutions -->
                 <div #brushMenu class="relative shrink-0" (keydown.escape)="showBrushMenu = false">
                     <button type="button" (click)="showBrushMenu = !showBrushMenu"
@@ -156,7 +220,7 @@
                                             <i class="fa-solid fa-check ml-auto text-xs" aria-hidden="true"></i>
                                         }
                                     </button>
-                                    @if (solution.action === 'raise') {
+                                    @if (solution.action === sizeAction) {
                                         <button type="button" (click)="openRaiseEditor(solution); showBrushMenu = false"
                                             class="mr-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded border-0 bg-transparent text-xs text-gray-500 outline-none transition-colors focus-visible:bg-gray-200 dark:focus-visible:bg-gray-500 hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-500 dark:hover:text-gray-100 cursor-pointer"
                                             [title]="'Modifier ' + solution.display_name" [attr.aria-label]="'Modifier ' + solution.display_name">
@@ -170,55 +234,25 @@
                                 <button type="button" (click)="openRaiseEditor(); showBrushMenu = false"
                                     class="flex w-full items-center gap-2 border-0 bg-transparent px-3 py-2 text-left text-sm font-medium text-gray-600 outline-none transition-colors focus-visible:bg-gray-100 dark:focus-visible:bg-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-gray-100 cursor-pointer">
                                     <i class="fa-solid fa-plus w-4 text-center text-xs" aria-hidden="true"></i>
-                                    Ajouter une taille de raise
+                                    Ajouter une taille de {{ sizeAction }}
                                 </button>
                             }
                         </div>
                     }
                 </div>
+                }
             </div>
 
             <div class="w-0 min-w-full">
-                @if (showRaiseEditor) {
-                    <div class="mb-4 flex flex-wrap items-center gap-3 rounded-md bg-gray-50 p-3 transition-colors duration-500 dark:bg-main-dark-bg"
-                        (keydown.enter)="saveRaiseEditor()" (keydown.escape)="closeRaiseEditor()">
-                        <label for="raiseEditorAmount" class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {{ raiseEditorSolutionId ? 'Taille du raise' : 'Nouveau raise' }}
-                        </label>
-                        <div class="relative w-28">
-                            <p-inputNumber inputId="raiseEditorAmount" [(ngModel)]="raiseEditorAmount"
-                                [min]="0.01" [max]="999" [minFractionDigits]="0" [maxFractionDigits]="2" [autofocus]="true"
-                                styleClass="w-full" inputStyleClass="w-full box-border h-10 pr-9 text-base"></p-inputNumber>
-                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
-                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
-                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
-                            </div>
-                        </div>
-                        <div class="ml-auto flex gap-2">
-                            @if (raiseEditorSolutionId) {
-                                <button type="button" (click)="deleteRaise()" title="Supprimer ce raise" aria-label="Supprimer ce raise"
-                                    class="dui-btn dui-btn-ghost dui-btn-square h-10 min-h-10 w-10 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
-                                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-                                </button>
-                            }
-                            <button type="button" (click)="closeRaiseEditor()"
-                                class="inline-flex h-10 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                                Annuler
-                            </button>
-                            <button type="button" (click)="saveRaiseEditor()"
-                                class="inline-flex h-10 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
-                                <i class="fa-solid fa-check mr-2" aria-hidden="true"></i>
-                                Valider
-                            </button>
-                        </div>
-                    </div>
+                @if (showRaiseEditor && !isFlop) {
+                    <ng-container *ngTemplateOutlet="sizeEditor"></ng-container>
                 }
             </div>
 
             <app-range-grid
                 [situations]="situation_obj.situations"
-                [solutions]="situation_objSolutionsRef"
-                [selectedSolutionId]="solutionSelected"
+                [solutions]="isFlop ? rangeSolutions : situation_objSolutionsRef"
+                [selectedSolutionId]="isFlop ? (rangeBrush === 'add' ? inRange : undefined) : solutionSelected"
                 [editable]="true"
                 [animateRows]="true">
             </app-range-grid>
@@ -238,7 +272,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div #characteristicsGrid class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label for="situationName" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom de la situation</label>
                         <div class="flex gap-2">
@@ -254,7 +288,7 @@
                     <div>
                         <label for="situationType" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
                         <p-dropdown inputId="situationType" [(ngModel)]="situationType" type="text" name="situationType"
-                            [options]="availableSituationType" (onChange)="onChangeProperty('type', situationType)"
+                            [options]="availableSituationType" (onChange)="onChangeSituationType()"
                             optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                     </div>
                     <div>
@@ -272,12 +306,12 @@
                     </div>
                     <div>
                         <label for="nbPlayer" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Joueurs</label>
-                        <p-dropdown inputId="nbPlayer" [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onChangeNbPlayersTable()"
+                        <p-dropdown inputId="nbPlayer" [(ngModel)]="nbPlayer" [options]="availableNbPlayersTable" (onChange)="onSelectNbPlayers()"
                             optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                     </div>
                     <div>
                         <label for="position" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Votre position</label>
-                        <p-dropdown inputId="position" [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onChangeProperty('position', position)"
+                        <p-dropdown inputId="position" [(ngModel)]="position" [options]="availablePositionPlayer" (onChange)="onSelectPosition()"
                             optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                     </div>
                     <div>
@@ -293,16 +327,51 @@
                     </div>
                     }
 
-                    @if (nbPlayer.code === 3) {
+                    @if (isFlop) {
+                    <!-- Champs flop toujours groupés sur leurs propres lignes, quel que soit le nombre de champs avant -->
+                    <div class="grid grid-cols-1 gap-4 animate-fadeIn sm:col-span-2 sm:grid-cols-2">
+                    <div>
+                        <label for="heroSpot" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Situation du héros</label>
+                        <p-dropdown inputId="heroSpot" [(ngModel)]="situation_obj.heroSpot" [options]="heroSpotOptions" optionLabel="name" optionValue="code"
+                            (onChange)="onChangeHeroSpot()" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    @if (isFacingBet) {
+                    <div class="animate-fadeIn">
+                        <label for="facingBet" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Mise adverse</label>
+                        <div class="relative">
+                            <p-inputNumber inputId="facingBet" [min]="1" [max]="1000" [maxFractionDigits]="0"
+                                [(ngModel)]="situation_obj.facingBetPercent" styleClass="w-full"
+                                inputStyleClass="w-full box-border pr-24"></p-inputNumber>
+                            <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">% du pot</span>
+                        </div>
+                    </div>
+                    }
+                    <div>
+                        <label for="situationPot" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Pot au flop</label>
+                        <div class="relative">
+                            <p-inputNumber inputId="situationPot" [min]="0" [max]="9999"
+                                [minFractionDigits]="0" [maxFractionDigits]="2"
+                                [(ngModel)]="situation_obj.pot" styleClass="w-full"
+                                inputStyleClass="w-full box-border pr-12"></p-inputNumber>
+                            <div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 gap-0.5 text-gray-500 dark:text-gray-400">
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                                <span class="font-mono text-lg font-bold leading-none tracking-tight">B</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    }
+
+                    @if (nbPlayer.code === 3 && !isFlop) {
                         @if (position.code !== 'bu') {
-                        <div>
+                        <div class="animate-fadeIn">
                             <label for="previousPlayer1Action" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Action précédente (BU)</label>
                             <p-dropdown inputId="previousPlayer1Action" [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
                                 (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
                         </div>
                         }
                         @if (position.code === 'bb') {
-                        <div>
+                        <div class="animate-fadeIn">
                             <label for="previousPlayer2Action" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Action précédente (SB)</label>
                             <p-dropdown inputId="previousPlayer2Action" [(ngModel)]="previousPlayer2Action" [options]="availablePreviousActions"
                                 (onChange)="onChangeProperty('previousPlayer2Action', previousPlayer2Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
@@ -310,9 +379,9 @@
                         }
                     }
 
-                    @if (nbPlayer.code === 2) {
+                    @if (nbPlayer.code === 2 && !isFlop) {
                         @if (position.code !== 'sb') {
-                        <div>
+                        <div class="animate-fadeIn">
                             <label for="previousPlayer1Action" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Action précédente (SB)</label>
                             <p-dropdown inputId="previousPlayer1Action" [(ngModel)]="previousPlayer1Action" [options]="availablePreviousActions"
                                 (onChange)="onChangeProperty('previousPlayer1Action', previousPlayer1Action)" optionLabel="name" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
@@ -322,6 +391,187 @@
                 </div>
             </section>
 
+            @if (isFlop) {
+            <!-- BOARD -->
+            <section class="animate-appear opacity-0 animation-delay-150 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+                aria-labelledby="board-title">
+                <div class="mb-5 flex items-center gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                        <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h4 id="board-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Board</h4>
+                        <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Flops tirés au hasard pendant l'entraînement.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="flopTypes" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Types de flop</label>
+                        <p-multiSelect inputId="flopTypes" [(ngModel)]="selectedFlopTypes" [options]="flopTypes" optionLabel="name" optionValue="code"
+                            (onChange)="refreshFlopPool()" placeholder="Choisir des types de flop" [showHeader]="false"
+                            display="chip" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-multiSelect>
+                    </div>
+                    <div>
+                        <label for="boardSuits" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Couleurs du flop</label>
+                        <p-dropdown inputId="boardSuits" [(ngModel)]="situation_obj.boardSuits" [options]="boardSuitsOptions" optionLabel="name" optionValue="code"
+                            (onChange)="refreshFlopPool()" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="m-0 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Critères supplémentaires</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            @for (condition of situation_obj.boardConditions ?? []; track i; let i = $index) {
+                            <span class="inline-flex max-w-full items-center rounded-full bg-gray-100 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                                <button type="button" (click)="openBoardCondition(i)" [title]="'Modifier : ' + describeCondition(condition)"
+                                    class="min-w-0 truncate border-0 bg-transparent py-1 pl-3 pr-1 text-left text-sm text-inherit cursor-pointer">
+                                    {{ describeCondition(condition) }}
+                                </button>
+                                <button type="button" (click)="removeBoardCondition(i)" [attr.aria-label]="'Retirer ' + describeCondition(condition)"
+                                    class="mr-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-0 bg-transparent text-xs text-gray-500 hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-100 cursor-pointer">
+                                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                            }
+                            <button type="button" (click)="openBoardCondition()"
+                                class="inline-flex h-8 items-center gap-1 rounded-full border border-dashed border-gray-300 bg-transparent px-3 text-sm text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer">
+                                <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
+                                Critère
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="flex items-center gap-4 rounded-md bg-gray-50 p-3 transition-colors duration-500 dark:bg-main-dark-bg">
+                            <p class="m-0 min-w-0 flex-1 text-sm" [class.text-red-600]="!flopPoolSize" [class.text-gray-600]="flopPoolSize" [class.dark:text-gray-400]="flopPoolSize">
+                                <strong>{{ flopPoolSize }}</strong> flop(s) correspondent.
+                            </p>
+                            <div class="flex shrink-0 gap-1" aria-label="Exemple de flop">
+                                @for (card of exampleFlop; track $index) {
+                                <span class="inline-flex h-10 w-8 items-center justify-center rounded border border-solid border-gray-300 bg-white text-sm font-bold shadow-sm dark:border-gray-600"
+                                    [class.text-red-600]="isRedSuit(card)" [class.text-gray-900]="!isRedSuit(card)">{{ card.value }}{{ suitSymbols[card.color] }}</span>
+                                }
+                            </div>
+                            <button type="button" (click)="refreshExampleFlop()" title="Autre exemple" aria-label="Autre exemple de flop" [disabled]="!flopPoolSize"
+                                class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-solid border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-40 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                                <i class="fa-solid fa-shuffle" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RÈGLES -->
+            <section class="animate-appear opacity-0 animation-delay-150 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+                aria-labelledby="rules-title">
+                <div class="mb-5 flex items-center gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                        <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h4 id="rules-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Règles</h4>
+                        <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Testées dans l'ordre : la première dont toutes les conditions sont remplies donne l'action.</p>
+                    </div>
+                </div>
+
+                <div class="mb-4 flex flex-wrap items-center gap-2">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Actions</span>
+                    @for (solution of flopActions; track solution.id) {
+                    <span class="inline-flex items-center gap-2 rounded-full bg-gray-100 py-1 pl-2 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                        [class.pr-3]="solution.action !== sizeAction">
+                        <span class="h-3 w-3 rounded-sm" [style.background]="commonService.solutionColor(solution, situation_objSolutionsRef)"></span>
+                        {{ solution.display_name }}
+                        @if (solution.action === sizeAction) {
+                        <button type="button" (click)="openRaiseEditor(solution)" [attr.aria-label]="'Modifier ' + solution.display_name"
+                            class="mr-1 inline-flex h-6 w-6 items-center justify-center rounded-full border-0 bg-transparent text-xs text-gray-500 hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-100 cursor-pointer">
+                            <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        }
+                    </span>
+                    }
+                    @if (raiseCount < maxRaiseSizes) {
+                    <button type="button" (click)="openRaiseEditor()"
+                        class="inline-flex h-8 items-center gap-1 rounded-full border border-dashed border-gray-300 bg-transparent px-3 text-sm text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer">
+                        <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
+                        Taille de {{ sizeAction }}
+                    </button>
+                    }
+                </div>
+                @if (showRaiseEditor) {
+                    <ng-container *ngTemplateOutlet="sizeEditor"></ng-container>
+                }
+
+                <app-flop-rules-editor
+                    [rules]="situation_obj.rules!"
+                    [actions]="flopActions"
+                    [solutions]="situation_objSolutionsRef"
+                    [(defaultSolutionId)]="situation_obj.defaultSolutionId">
+                </app-flop-rules-editor>
+            </section>
+
+            <!-- TEST DES RÈGLES -->
+            <section class="animate-appear opacity-0 animation-delay-150 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+                aria-labelledby="test-title">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                            <i class="fa-solid fa-flask" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h4 id="test-title" class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-300">Tester</h4>
+                            <p class="m-0 text-sm text-gray-500 dark:text-gray-400">Tirez une main de la range et un flop pour vérifier vos règles.</p>
+                        </div>
+                    </div>
+                    <button type="button" (click)="testRules()"
+                        class="inline-flex h-10 shrink-0 items-center justify-center rounded-md border-0 bg-gray-800 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+                        <i class="fa-solid fa-shuffle mr-2" aria-hidden="true"></i>
+                        Tirer une main
+                    </button>
+                </div>
+                @if (testResult) {
+                <div class="mt-4 flex flex-col gap-3 rounded-md bg-gray-50 p-4 transition-colors duration-500 dark:bg-main-dark-bg" aria-live="polite">
+                    <div class="flex flex-wrap items-center gap-6">
+                        <div>
+                            <p class="m-0 mb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Main</p>
+                            <div class="flex gap-1">
+                                @for (card of testResult.hero; track $index) {
+                                <span class="inline-flex h-10 w-8 items-center justify-center rounded border border-solid border-gray-300 bg-white text-sm font-bold shadow-sm dark:border-gray-600"
+                                    [class.text-red-600]="isRedSuit(card)" [class.text-gray-900]="!isRedSuit(card)">{{ card.value }}{{ suitSymbols[card.color] }}</span>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <p class="m-0 mb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Flop</p>
+                            <div class="flex gap-1">
+                                @for (card of testResult.board; track $index) {
+                                <span class="inline-flex h-10 w-8 items-center justify-center rounded border border-solid border-gray-300 bg-white text-sm font-bold shadow-sm dark:border-gray-600"
+                                    [class.text-red-600]="isRedSuit(card)" [class.text-gray-900]="!isRedSuit(card)">{{ card.value }}{{ suitSymbols[card.color] }}</span>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <p class="m-0 mb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ testResult.rule }}</p>
+                            <p class="m-0 inline-flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-gray-100">
+                                @if (testResult.action) {
+                                <span class="h-4 w-4 rounded-sm" [style.background]="commonService.solutionColor(testResult.action, situation_objSolutionsRef)"></span>
+                                {{ testResult.action.display_name }}
+                                } @else {
+                                Aucune action
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        @for (label of testResult.hand; track $index) {
+                        <span class="rounded-full bg-white px-3 py-1 text-sm text-gray-800 shadow-sm dark:bg-gray-700 dark:text-gray-200">{{ label }}</span>
+                        }
+                    </div>
+                </div>
+                }
+            </section>
+
+            <app-flop-condition-dialog [open]="boardConditionDialogOpen" [condition]="editedBoardCondition" [boardOnly]="true"
+                (saved)="onBoardConditionSaved($event)" (closed)="closeBoardConditionDialog()">
+            </app-flop-condition-dialog>
+            } @else {
             <!-- SOLUTIONS MIXTES -->
             <section class="animate-appear opacity-0 animation-delay-150 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
                 aria-labelledby="mixed-title">
@@ -376,6 +626,7 @@
                     </div>
                 }
             </section>
+            }
         </div>
     </div>
 

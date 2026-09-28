@@ -1,0 +1,245 @@
+<app-modal [open]="open" (closed)="closed.emit()" panelClass="w-full max-w-xl">
+    <h4 class="m-0 text-left text-lg font-semibold uppercase tracking-wider text-gray-800 dark:text-gray-300">
+        {{ condition ? 'Modifier la condition' : 'Ajouter une condition' }}
+    </h4>
+
+    <div class="mt-5 grid grid-cols-1 gap-4 text-left sm:grid-cols-2">
+        @if (!boardOnly) {
+        <div class="sm:col-span-2">
+            <label for="conditionKind" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Type de condition</label>
+            <p-dropdown inputId="conditionKind" [(ngModel)]="draft.kind" [options]="availableKinds" optionLabel="name" optionValue="code" (onChange)="onChangeKind()" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+        </div>
+        }
+
+        @switch (draft.kind) {
+            @case ('made') {
+            <div>
+                <label for="madeOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
+                <p-dropdown inputId="madeOp" [(ngModel)]="draft.op" [options]="madeComparators" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="madeLevel" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Main</label>
+                <p-dropdown inputId="madeLevel" [(ngModel)]="draft.level" [options]="levels" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (hasKicker) {
+            <div>
+                <label for="madeKicker" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Kicker</label>
+                <p-dropdown inputId="madeKicker" [(ngModel)]="draft.kickerMode" [options]="rankModes" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (draft.kickerMode !== 'none') {
+            <div>
+                <label for="madeKickerN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">N</label>
+                <p-inputNumber inputId="madeKickerN" [(ngModel)]="draft.kickerN" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            }
+            @if (draft.level === 'flush') {
+            <div>
+                <label for="madeFlush" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Hauteur de la couleur</label>
+                <p-dropdown inputId="madeFlush" [(ngModel)]="draft.flushMode" [options]="rankModes" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (draft.flushMode !== 'none') {
+            <div>
+                <label for="madeFlushN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">N</label>
+                <p-inputNumber inputId="madeFlushN" [(ngModel)]="draft.flushN" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            }
+            @if (draft.level === 'straight') {
+            <div>
+                <label for="madeStraight" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Quinte</label>
+                <p-dropdown inputId="madeStraight" [(ngModel)]="draft.straight" [options]="straightOptions" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            }
+
+            @case ('pocketPair') {
+            <div>
+                <label for="ppOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
+                <p-dropdown inputId="ppOp" [(ngModel)]="draft.op" [options]="comparators" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="ppRank" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Paire</label>
+                <p-dropdown inputId="ppRank" [(ngModel)]="draft.rank" [options]="ranks" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+
+            @case ('underpair') {
+            <div>
+                <label for="underpairMode" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Parmi les paires possibles sous la top card</label>
+                <p-dropdown inputId="underpairMode" [(ngModel)]="draft.kickerMode" [options]="rankModes.slice(1)" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="underpairN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">N</label>
+                <p-inputNumber inputId="underpairN" [(ngModel)]="draft.kickerN" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            <p class="m-0 text-xs text-gray-500 sm:col-span-2 dark:text-gray-400">
+                Paires servies plus basses que la top card, hors rangs présents sur le board. « Parmi les 2 plus hautes » : les deux paires les plus fortes sous la top card.
+            </p>
+            }
+
+            @case ('kicker') {
+            <div>
+                <label for="kickerMode" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Kicker (ou carte basse sans main faite)</label>
+                <p-dropdown inputId="kickerMode" [(ngModel)]="draft.kickerMode" [options]="rankModes.slice(1)" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="kickerN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">N</label>
+                <p-inputNumber inputId="kickerN" [(ngModel)]="draft.kickerN" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+
+            @case ('heroCard') {
+            <div>
+                <label for="heroCard" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Carte du héros</label>
+                <p-dropdown inputId="heroCard" [(ngModel)]="draft.card" [options]="cards" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="heroOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
+                <p-dropdown inputId="heroOp" [(ngModel)]="draft.op" [options]="comparators" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="heroRef" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Référence</label>
+                <p-dropdown inputId="heroRef" [(ngModel)]="draft.ref" [options]="refs" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (draft.ref === 'rank') {
+            <div>
+                <label for="heroRank" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Rang</label>
+                <p-dropdown inputId="heroRank" [(ngModel)]="draft.rank" [options]="ranks" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            }
+
+            @case ('th') {
+            <div>
+                <label for="thOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
+                <p-dropdown inputId="thOp" [(ngModel)]="draft.op" [options]="comparators" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div>
+                <label for="thN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Position</label>
+                <p-inputNumber inputId="thN" [(ngModel)]="draft.n" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            <p class="m-0 text-xs text-gray-500 sm:col-span-2 dark:text-gray-400">
+                Position de la plus haute carte non pairée du héros parmi les rangs absents du board : 1 = la plus haute carte absente, 2 = la suivante, etc.
+            </p>
+            }
+
+            @case ('draw') {
+            <div>
+                <label for="drawType" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Tirage</label>
+                <p-dropdown inputId="drawType" [(ngModel)]="draft.draw" [options]="draws" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (draft.draw === 'fd') {
+            <div>
+                <label for="drawFd" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Hauteur de la carte à couleur</label>
+                <p-dropdown inputId="drawFd" [(ngModel)]="draft.fdMode" [options]="rankModes" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (draft.fdMode !== 'none') {
+            <div>
+                <label for="drawFdN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">N</label>
+                <p-inputNumber inputId="drawFdN" [(ngModel)]="draft.fdN" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            }
+            }
+
+            @case ('backdoor') {
+            <div class="sm:col-span-2">
+                <label for="backdoorType" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Backdoor</label>
+                <p-dropdown inputId="backdoorType" [(ngModel)]="draft.draw" [options]="backdoors" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            <div class="flex flex-col gap-3 sm:col-span-2">
+                @if (draft.draw === 'bdfd') {
+                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <p-checkbox [(ngModel)]="draft.highCard" [binary]="true" inputId="bdHigh" />
+                    Avec une carte plus haute que le board
+                </label>
+                }
+                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <p-checkbox [(ngModel)]="draft.twoCards" [binary]="true" inputId="bdTwo" />
+                    Utilise les deux cartes du héros
+                </label>
+                @if (draft.draw !== 'bdfd') {
+                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <p-checkbox [(ngModel)]="draft.throughTop" [binary]="true" inputId="bdTop" />
+                    Passe par la top card du board
+                </label>
+                }
+            </div>
+            }
+
+            @case ('board') {
+            <div class="sm:col-span-2">
+                <label for="boardAttr" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Critère</label>
+                <p-dropdown inputId="boardAttr" [(ngModel)]="draft.attr" [options]="boardAttrs" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'broadwayCount'].includes(draft.attr)) {
+            <div>
+                <label for="boardOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
+                <p-dropdown inputId="boardOp" [(ngModel)]="draft.op" [options]="comparators" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'containsRank'].includes(draft.attr)) {
+            <div>
+                <label for="boardRank" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Rang</label>
+                <p-dropdown inputId="boardRank" [(ngModel)]="draft.rank" [options]="ranks" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            @if (draft.attr === 'broadwayCount') {
+            <div>
+                <label for="boardN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+                <p-inputNumber inputId="boardN" [(ngModel)]="draft.n" [min]="0" [max]="5" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            @if (draft.attr === 'suits') {
+            <div>
+                <label for="boardSuits" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Couleurs</label>
+                <p-dropdown inputId="boardSuits" [(ngModel)]="draft.suits" [options]="suitOptions" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            }
+        }
+
+        <label class="flex items-center gap-2 text-sm text-gray-700 sm:col-span-2 dark:text-gray-300 cursor-pointer">
+            <p-checkbox [(ngModel)]="draft.negate" [binary]="true" inputId="conditionNegate" />
+            Inverser la condition (la main ne doit pas la remplir)
+        </label>
+    </div>
+
+    <div class="mt-5 rounded-md bg-gray-50 px-3 py-2 text-left text-sm text-gray-700 transition-colors duration-500 dark:bg-main-dark-bg dark:text-gray-300" aria-live="polite">
+        <span class="text-gray-500 dark:text-gray-400">Aperçu :</span> <strong>{{ preview }}</strong>
+    </div>
+
+    <div class="mt-6 flex justify-end gap-3">
+        <button type="button" (click)="closed.emit()"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-solid border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-secondary-dark-bg dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            Annuler
+        </button>
+        <button type="button" (click)="save()"
+            class="inline-flex h-11 items-center justify-center rounded-md border-0 bg-gray-800 px-5 text-sm font-medium text-white shadow transition-colors hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            <i class="fa-solid fa-check mr-2" aria-hidden="true"></i>
+            Valider
+        </button>
+    </div>
+</app-modal>

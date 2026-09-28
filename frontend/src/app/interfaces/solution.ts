@@ -1,4 +1,4 @@
-export type SolutionAction = 'fold' | 'check' | 'call' | 'limp' | 'raise' | 'all-in';
+export type SolutionAction = 'fold' | 'check' | 'call' | 'limp' | 'raise' | 'bet' | 'all-in';
 
 export interface Solution {
     id: string;
@@ -10,6 +10,11 @@ export interface Solution {
     action?: SolutionAction;
 
     raiseAmount?: number;
+
+    betPercent?: number;
+
+    /** Raise au flop face à une mise : multiple de la mise adverse. */
+    raiseMultiplier?: number;
 
     color?: string;
 

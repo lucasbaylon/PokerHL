@@ -152,7 +152,10 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.situationsSubscription = this.situationService.situations.subscribe((data: Situation[]) => {
             this.allInSituationCache.clear();
-            this.situations = data.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            // Les pages de ranges affichent des grilles préflop : les situations flop (grille = range + règles) en sont exclues
+            this.situations = data
+                .filter(situation => situation.type !== 'flop')
+                .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
             this.refreshPositionBlocks();
         });
         this.situationService.getSituations();

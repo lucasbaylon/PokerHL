@@ -255,6 +255,7 @@ html.dark .p-inputnumber-input:enabled:focus {
 
 // Champs numériques des formulaires de situation : même focus que les autres champs du formulaire.
 html.dark #situationStack:enabled:focus,
+html.dark #situationPot:enabled:focus,
 html.dark #raiseEditorAmount:enabled:focus {
     @apply border-white;
     box-shadow: 0 0 0 1px #ffffff !important;
@@ -365,6 +366,45 @@ html.dark .p-column-filter-overlay .p-checkbox .p-checkbox-box.p-highlight {
     @apply border-gray-500 bg-gray-600;
 }
 
+// Multiselect des formulaires : même rendu que les dropdowns en dark mode
+html.dark .p-multiselect {
+    @apply border border-solid border-gray-700 bg-secondary-dark-bg text-gray-300 transition-colors duration-500;
+}
+
+html.dark .p-multiselect:not(.p-disabled):hover {
+    @apply border-gray-600;
+}
+
+html.dark .p-multiselect:not(.p-disabled).p-focus {
+    @apply border-white;
+    box-shadow: 0 0 0 1px #ffffff !important;
+}
+
+html.dark .p-multiselect .p-multiselect-label,
+html.dark .p-multiselect .p-multiselect-trigger {
+    @apply text-gray-300;
+}
+
+html.dark .p-multiselect .p-multiselect-label.p-placeholder {
+    @apply text-gray-500;
+}
+
+html.dark .p-multiselect .p-multiselect-trigger {
+    @apply border-0 border-l border-solid border-gray-700 bg-transparent;
+}
+
+html.dark .p-multiselect .p-multiselect-token {
+    @apply bg-gray-700 text-gray-200;
+}
+
+html.dark .p-multiselect-panel .p-checkbox .p-checkbox-box {
+    @apply border-gray-600 bg-main-dark-bg;
+}
+
+html.dark .p-multiselect-panel .p-checkbox .p-checkbox-box.p-highlight {
+    @apply border-gray-500 bg-gray-600;
+}
+
 html.dark .p-column-filter-overlay .p-multiselect {
     @apply border-gray-700 bg-main-dark-bg text-gray-300;
 }
@@ -376,6 +416,10 @@ html.dark .p-column-filter-overlay .p-multiselect:not(.p-disabled):hover {
 html.dark .p-column-filter-overlay .p-multiselect-label,
 html.dark .p-column-filter-overlay .p-multiselect-trigger {
     @apply text-gray-300;
+}
+
+html.dark .p-column-filter-overlay .p-multiselect-trigger {
+    @apply border-0;
 }
 
 html.dark .p-multiselect-panel {
@@ -412,11 +456,15 @@ html.dark .p-multiselect-panel .p-multiselect-item:not(.p-highlight):not(.p-disa
 
 p-inputnumber:has(#situationStack),
 p-inputnumber:has(#situationStack) .p-inputnumber,
-#situationStack {
+#situationStack,
+p-inputnumber:has(#situationPot),
+p-inputnumber:has(#situationPot) .p-inputnumber,
+#situationPot {
     width: 100% !important;
 }
 
-#situationStack {
+#situationStack,
+#situationPot {
     box-sizing: border-box;
     padding-right: 3.5rem !important;
 }

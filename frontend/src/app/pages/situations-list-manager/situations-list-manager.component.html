@@ -145,7 +145,7 @@
                         {{ situation.name }}
                     </button>
                 </td>
-                <td class="dark:border-gray-700">{{ situation.type | type }}</td>
+                <td class="dark:border-gray-700">{{ situation.type | type }}@if (situation.type === 'flop' && (situation.flopTypes ?? situation.flopType)) { · {{ (situation.flopTypes ?? situation.flopType) | flopType }} }</td>
                 <td class="dark:border-gray-700">{{ situation.stack }} BB</td>
                 <td class="dark:border-gray-700">{{ situation.nbPlayer }}</td>
                 <td class="dark:border-gray-700">{{ situation.position | position }}</td>
@@ -195,8 +195,14 @@
             <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-layer-group text-gray-500" aria-hidden="true"></i>
-                    {{ situationToDisplay.type | type }}
+                    {{ situationToDisplay.type | type }}@if (situationToDisplay.type === 'flop' && (situationToDisplay.flopTypes ?? situationToDisplay.flopType)) { · {{ (situationToDisplay.flopTypes ?? situationToDisplay.flopType) | flopType }} }
                 </span>
+                @if (situationToDisplay.type === 'flop' && situationToDisplay.heroSpot === 'facingBet') {
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-hand-holding-dollar text-gray-500" aria-hidden="true"></i>
+                    Face à {{ situationToDisplay.facingBetPercent }}% du pot
+                </span>
+                }
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-coins text-gray-500" aria-hidden="true"></i>
                     {{ situationToDisplay.stack }} BB
@@ -216,7 +222,7 @@
             <div class="overflow-x-auto">
                 <app-range-grid
                     [situations]="situationToDisplay.situations"
-                    [solutions]="situationToDisplay.solutions">
+                    [solutions]="gridSolutions(situationToDisplay)">
                 </app-range-grid>
             </div>
 

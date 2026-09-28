@@ -9,7 +9,7 @@ import { DefaultCardsComponent } from '../../components/default-cards/default-ca
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { ActiveSituation, TableCard, TableColorCard, TableColorCardObj } from '../../interfaces/active-situation';
 import { Card } from '../../interfaces/card';
-import { Situation } from '../../interfaces/situation';
+import { IN_RANGE, Situation } from '../../interfaces/situation';
 import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
@@ -17,6 +17,9 @@ import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
 import { AuthService } from '../../services/auth.service';
+import { FlopCard, FlopService, flopTypeName } from '../../services/flop.service';
+import { describeCondition, describeHand, resolveAction } from '../../services/flop-rules';
+import { cardRank, evaluateHand } from '../../services/hand-evaluator';
 import { CommonService } from './../../services/common.service';
 
 @Component({
@@ -74,6 +77,12 @@ export class TrainingComponent {
     private showEndChallengeAfterSolution: boolean = false;
     private showEndSurvivalAfterSolution: boolean = false;
     raiseAmount: number = 2;
+    betPercent: number = 50;
+    readonly betPresets: number[] = [33, 50, 75, 100];
+    raiseMultiplier: number = 3;
+    readonly raiseMultiplierPresets: number[] = [2.5, 3, 4];
+    readonly describeCondition = describeCondition;
+    readonly describeHand = describeHand;
     playerInfoAnimationName: 'training-player-info-in-a' | 'training-player-info-in-b' = 'training-player-info-in-a';
     readonly confettiPieces = Array.from({ length: 28 }, (_, index) => ({
         x: (index * 37) % 100,
@@ -93,6 +102,7 @@ export class TrainingComponent {
         private activatedRoute: ActivatedRoute,
         protected commonService: CommonService,
         protected authService: AuthService,
+        private flopService: FlopService,
     ) { }
 
     /**
@@ -186,11 +196,83 @@ export class TrainingComponent {
         this.commonService.migrateSolutions(situation.solutions);
         this.currentSituation = situation;
         this.currentSituationName = this.currentSituation.name!;
-        let situationCase = this.getRandomCase(this.currentSituation.situations);
+        if (situation.type === 'flop' && situation.rules) {
+            if (!this.generateFlopSituation(situation)) return;
+        } else {
+            this.generatePreflopSituation(situation);
+        }
+        this.raiseAmount = Math.min(this.maximumRaise(), Math.max(2, this.highestCurrentBet() * 2));
+        this.betPercent = 50;
+        this.raiseMultiplier = Math.min(3, this.maximumRaiseMultiplier());
+        this.playerInfoAnimationName = this.playerInfoAnimationName === 'training-player-info-in-a'
+            ? 'training-player-info-in-b'
+            : 'training-player-info-in-a';
+    }
+
+    /**
+     * Carte affichable à partir d'une carte du moteur de flop.
+     */
+    private toTableCard(card: FlopCard): TableColorCard {
+        return { value: card.value, color: this.colorList.find(color => color.name === card.color) };
+    }
+
+    /**
+     * Situation flop : main tirée dans la range, flop tiré selon les critères du board,
+     * réponse attendue donnée par la première règle remplie (ou l'action « Sinon »).
+     * @returns Faux si la situation est inutilisable (l'entraînement est alors quitté).
+     */
+    private generateFlopSituation(situation: Situation): boolean {
+        const hands = situation.situations.flat().filter(cell => cell.solution === IN_RANGE).map(cell => cell.card);
+        const hero = this.flopService.randomHeroHand(hands);
+        const board = this.flopService.randomFlop({
+            flopTypes: situation.flopTypes ?? [],
+            boardSuits: situation.boardSuits,
+            boardConditions: situation.boardConditions
+        }, hero);
+        if (!hero.length || !board.length) {
+            // Situation importée sans range ou dont les critères de board n'admettent aucun flop
+            this.commonService.showSwalToast(`La situation « ${situation.name} » est incomplète (range vide ou aucun flop possible).`, 'error');
+            this.router.navigate(['situations']);
+            return false;
+        }
+        const hand = evaluateHand(hero, board);
+        const rules = situation.rules ?? [];
+        const { solutionId, ruleIndex } = resolveAction(rules, situation.defaultSolutionId, hand);
+        const [high, low] = [...hero].sort((a, b) => cardRank(b.value) - cardRank(a.value));
+        const suffix = high.value === low.value ? '' : high.color === low.color ? 's' : 'o';
+        this.currentHand = `${high.value}${low.value}${suffix}`;
+        this.activeSituation = {
+            type: 'flop',
+            board: board.map(card => this.toTableCard(card)),
+            pot: situation.pot,
+            flopTypes: situation.flopTypes,
+            heroSpot: situation.heroSpot,
+            facingBetPercent: situation.facingBetPercent,
+            hand,
+            rule: ruleIndex === -1 ? undefined : rules[ruleIndex],
+            nbPlayer: situation.nbPlayer!,
+            position: situation.position,
+            leftCard: this.toTableCard(hero[0]),
+            rightCard: this.toTableCard(hero[1]),
+            solutions: situation.solutions,
+            result: solutionId ? [solutionId] : [],
+            stack: situation.stack,
+            opponentLevel: situation.opponentLevel,
+            fishPosition: situation.fishPosition
+        };
+        return true;
+    }
+
+    /**
+     * Situation préflop : main tirée dans la grille, réponse attendue donnée par sa case.
+     */
+    private generatePreflopSituation(situation: Situation) {
+        let situationCase = this.getRandomCase(situation.situations);
         this.currentHand = situationCase.card;
         let cards = this.generateCards(situationCase);
         let result = this.getResultCase(situationCase.solution!);
         this.activeSituation = {
+            type: 'preflop',
             nbPlayer: situation.nbPlayer!,
             position: situation.position,
             leftCard: cards.leftCard,
@@ -203,10 +285,6 @@ export class TrainingComponent {
             previousPlayer1Action: situation.previousPlayer1Action,
             previousPlayer2Action: situation.previousPlayer2Action
         }
-        this.raiseAmount = Math.min(this.maximumRaise(), Math.max(2, this.highestCurrentBet() * 2));
-        this.playerInfoAnimationName = this.playerInfoAnimationName === 'training-player-info-in-a'
-            ? 'training-player-info-in-b'
-            : 'training-player-info-in-a';
     }
 
     submitPokerAction(action: SolutionAction) {
@@ -216,12 +294,28 @@ export class TrainingComponent {
         const solution = matchingSolutions.find(item => this.activeSituation.result.includes(item.id))
             ?? matchingSolutions[0];
         this.selectedAnswerLabel = solution?.display_name || this.submittedActionLabel(action);
-        this.checkResultCase(solution?.id ?? `invalid_${action}_${this.raiseAmount}`);
+        this.checkResultCase(solution?.id ?? `invalid_${action}`);
     }
 
     private matchesSubmittedAction(solution: Solution, action: SolutionAction): boolean {
         if (solution.action === action) {
+            if (action === 'bet') return Math.abs((solution.betPercent ?? -1) - this.betPercent) < 0.5;
+            if (action === 'raise' && this.isFacingBet) return Math.abs((solution.raiseMultiplier ?? -1) - this.raiseMultiplier) < 0.05;
             return action !== 'raise' || Math.abs((solution.raiseAmount ?? -1) - this.raiseAmount) < 0.001;
+        }
+
+        if (this.isFacingBet) {
+            // Un raise de la taille du tapis équivaut à un all-in
+            const raiseIsAllIn = (multiplier: number) => this.facingBetAmount() * multiplier >= this.maximumRaise() - 0.001;
+            return (action === 'raise' && raiseIsAllIn(this.raiseMultiplier) && solution.action === 'all-in')
+                || (action === 'all-in' && solution.action === 'raise' && raiseIsAllIn(solution.raiseMultiplier ?? 0));
+        }
+
+        if (this.isFlop) {
+            // Un bet de la taille du tapis équivaut à un all-in
+            const betIsAllIn = (percent: number) => this.betAmount(percent) >= this.maximumRaise() - 0.001;
+            return (action === 'bet' && betIsAllIn(this.betPercent) && solution.action === 'all-in')
+                || (action === 'all-in' && solution.action === 'bet' && betIsAllIn(solution.betPercent ?? 0));
         }
 
         const maximumRaise = this.maximumRaise();
@@ -247,10 +341,70 @@ export class TrainingComponent {
             'check': 'Check',
             'call': 'Call',
             'limp': 'Limp',
-            'raise': `Raise ${this.raiseAmount} BB`,
+            'raise': this.isFacingBet ? `Raise x${this.raiseMultiplier}` : `Raise ${this.raiseAmount} BB`,
+            'bet': `Bet ${this.betPercent}%`,
             'all-in': 'All-in'
         };
         return labels[action];
+    }
+
+    get isFlop(): boolean {
+        return this.activeSituation?.type === 'flop';
+    }
+
+    get isFacingBet(): boolean {
+        return this.isFlop && this.activeSituation.heroSpot === 'facingBet';
+    }
+
+    /**
+     * Noms des types de flop de la situation en cours.
+     */
+    get flopTypesLabel(): string {
+        return (this.activeSituation.flopTypes ?? []).map(type => flopTypeName(type)).join(', ');
+    }
+
+    /**
+     * Mise adverse en BB, arrondie à 0,1 BB.
+     */
+    facingBetAmount(): number {
+        return Math.round((this.activeSituation.pot ?? 0) * (this.activeSituation.facingBetPercent ?? 0) / 10) / 10;
+    }
+
+    /**
+     * Multiple de la mise adverse au-delà duquel le raise couvre tout le tapis.
+     */
+    maximumRaiseMultiplier(): number {
+        const bet = this.isFacingBet ? this.facingBetAmount() : 0;
+        return bet > 0 ? Math.max(1.5, Math.ceil(this.maximumRaise() / bet * 10) / 10) : 10;
+    }
+
+    setRaiseMultiplier(multiplier: number) {
+        this.raiseMultiplier = Math.min(this.maximumRaiseMultiplier(), Math.max(1.5, Math.round((multiplier || 1.5) * 10) / 10));
+    }
+
+    raiseMultiplierAmount(): number {
+        return Math.min(this.maximumRaise(), Math.round(this.facingBetAmount() * this.raiseMultiplier * 10) / 10);
+    }
+
+    /**
+     * Montant en BB d'un bet exprimé en pourcentage du pot, arrondi à 0,1 BB et limité au tapis.
+     * @param percent Pourcentage du pot.
+     */
+    betAmount(percent: number = this.betPercent): number {
+        const amount = Math.round((this.activeSituation.pot ?? 0) * percent / 10) / 10;
+        return Math.min(this.maximumRaise(), amount);
+    }
+
+    /**
+     * Pourcentage du pot au-delà duquel le bet couvre tout le tapis.
+     */
+    maximumBetPercent(): number {
+        const pot = this.activeSituation.pot ?? 0;
+        return pot > 0 ? Math.max(1, Math.ceil(this.maximumRaise() / pot * 100)) : 100;
+    }
+
+    setBetPercent(percent: number) {
+        this.betPercent = Math.min(this.maximumBetPercent(), Math.max(1, Math.round(percent || 1)));
     }
 
     setRaisePreset(preset: 'x2' | 'x3' | 'pot') {
@@ -272,23 +426,26 @@ export class TrainingComponent {
     }
 
     canCheck(): boolean {
+        // Au flop, le héros peut checker sauf face à une mise
+        if (this.isFlop) return !this.isFacingBet;
         return this.playerCurrentBet() >= this.highestCurrentBet();
     }
 
     canCall(): boolean {
+        if (this.isFlop) return this.isFacingBet;
         if (this.canCheck()) return false;
         const facesAction = this.previousActions().some(action => action === 'Limp' || action === 'Call' || action?.startsWith('Raise') || action === 'All In');
         return facesAction || !this.hasSolutionAction('limp');
     }
 
     canLimp(): boolean {
-        return this.playerCurrentBet() < 1
+        return !this.isFlop && this.playerCurrentBet() < 1
             && !this.previousActions().some(action => action && action !== 'Fold' && action !== 'Aucune')
             && this.hasSolutionAction('limp');
     }
 
     canRaise(): boolean {
-        return this.maximumRaise() > this.highestCurrentBet();
+        return !this.isFlop && this.maximumRaise() > this.highestCurrentBet();
     }
 
     private previousActions(): (string | undefined)[] {
@@ -513,6 +670,8 @@ export class TrainingComponent {
      * @returns Montant en BB.
      */
     getBetAmount(position: string, action: string | undefined, stack: number | undefined): number {
+        // Au flop, les mises préflop sont dans le pot : personne n'a encore misé
+        if (this.isFlop) return 0;
         const stackVal = stack ?? 0;
         const blindValues: Record<string, number> = { 'bb': 1, 'sb': 0.5, 'bu': 0 };
 
@@ -549,6 +708,7 @@ export class TrainingComponent {
      * @returns Chemin de l'image.
      */
     getChipImageForBet(action: string | undefined, position: string): string {
+        if (this.isFlop) return '';
         const bet = this.getBetAmount(position, action, this.activeSituation.stack);
         if (!action || action === 'Aucune' || action === 'Check') {
             // Afficher les jetons de blind pour BB et SB
@@ -596,7 +756,7 @@ export class TrainingComponent {
      * @returns Nom de l'action ou undefined.
      */
     getOpponentAction(slot: 'left' | 'right'): string | undefined {
-        if (this.activeSituation.nbPlayer !== 3) return undefined;
+        if (this.activeSituation.nbPlayer !== 3 || this.isFlop) return undefined;
 
         switch (this.activeSituation.position) {
             case 'bb':

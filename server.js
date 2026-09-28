@@ -396,7 +396,10 @@ function validateJsonContent(fileName, jsonContent) {
         const jsonData = JSON.parse(jsonContent);
 
         const champsObligatoires = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "solutions", "situations"];
-        const champsOptionnels = ["fishPosition", "previousPlayer1Action", "previousPlayer2Action"];
+        const champsOptionnels = [
+            "fishPosition", "previousPlayer1Action", "previousPlayer2Action",
+            "flopType", "flopTypes", "boardSuits", "boardConditions", "heroSpot", "facingBetPercent", "pot", "rules", "defaultSolutionId"
+        ];
         const champsValides = [...champsObligatoires, ...champsOptionnels];
 
         // Vérifiez que tous les champs requis sont présents et qu'aucun champ supplémentaire n'est présent
@@ -436,8 +439,21 @@ function validateJsonContent(fileName, jsonContent) {
             }
         }
 
+        const flopTypesValides = ['dry_2_high', 'dry_1_high', 'connected_high', 'straight_high', 'low', 'straight_low', 'paired_low', 'paired_high_low', 'paired_high', 'mono_2_high', 'other'];
         const previousActionsValides = ['Fold', 'Limp', 'Call', 'Raise 2BB', 'Raise 2.5BB', 'All In'];
+        const isCondition = val => val !== null && typeof val === 'object' && typeof val.kind === 'string';
         const optionalValidations = {
+            flopType: val => typeof val === 'string' && flopTypesValides.includes(val),
+            flopTypes: val => Array.isArray(val) && val.every(type => flopTypesValides.includes(type)),
+            boardSuits: val => ['any', 'rainbow', 'twoTone', 'mono'].includes(val),
+            boardConditions: val => Array.isArray(val) && val.every(isCondition),
+            heroSpot: val => ['first', 'facingBet'].includes(val),
+            facingBetPercent: val => typeof val === 'number' && val > 0,
+            rules: val => Array.isArray(val) && val.every(rule => rule !== null && typeof rule === 'object'
+                && typeof rule.id === 'string' && Array.isArray(rule.conditions) && rule.conditions.every(isCondition)
+                && (rule.solutionId === undefined || typeof rule.solutionId === 'string')),
+            defaultSolutionId: val => typeof val === 'string',
+            pot: val => typeof val === 'number' && val > 0,
             fishPosition: val => typeof val === 'string' && ['sb', 'bb', 'bu'].includes(val),
             previousPlayer1Action: val => typeof val === 'string' && previousActionsValides.includes(val),
             previousPlayer2Action: val => typeof val === 'string' && previousActionsValides.includes(val),
@@ -474,7 +490,9 @@ function validateJsonContent(fileName, jsonContent) {
                 solutionErrors.push(`Solution ${index}: 'display_name' doit être une chaîne de caractères.`);
             }
 
-            if (typeof solution.color === 'string') {
+            if (typeof solution.action === 'string') {
+                // Solution simple définie par son action : la couleur vient des paramètres de l'utilisateur
+            } else if (typeof solution.color === 'string') {
                 if (!/^#[0-9A-Fa-f]{6}$/.test(solution.color)) {
                     solutionErrors.push(`Solution ${index}: 'color' doit être au format hexadécimal.`);
                 }
@@ -488,7 +506,7 @@ function validateJsonContent(fileName, jsonContent) {
                     }
                 });
             } else {
-                solutionErrors.push(`Solution ${index}: doit avoir un 'color' hexadécimal ou une 'colorList'.`);
+                solutionErrors.push(`Solution ${index}: doit avoir une 'action', un 'color' hexadécimal ou une 'colorList'.`);
             }
         });
 
@@ -519,7 +537,11 @@ function validateJsonContent(fileName, jsonContent) {
                 if (typeof situation.card !== 'string') {
                     situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'card' doit être une chaîne de caractères.`);
                 }
-                if (!/^(unique_solution_|mixed_solution_)\d+$/.test(situation.solution)) {
+                // Situation flop : la grille est la range du héros (case dans la range ou vide)
+                const validCell = jsonData.type === 'flop'
+                    ? situation.solution === undefined || situation.solution === null || situation.solution === 'in_range'
+                    : /^(unique_solution_|mixed_solution_)\d+$/.test(situation.solution);
+                if (!validCell) {
                     situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'solution' invalide.`);
                 }
             });

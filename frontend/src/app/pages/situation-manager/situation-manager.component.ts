@@ -1,6 +1,6 @@
 import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
-import { NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
@@ -8,20 +8,26 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
-import { Situation } from '../../interfaces/situation';
+import { FlopConditionDialogComponent } from '../../components/flop-condition-dialog/flop-condition-dialog.component';
+import { FlopRulesEditorComponent } from '../../components/flop-rules-editor/flop-rules-editor.component';
+import { HeroSpot, IN_RANGE, Situation } from '../../interfaces/situation';
 import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
+import { BoardSuitsFilter, FLOP_TYPES, FlopCard, FlopFilter, FlopService, FlopType, FlopTypeInfo } from '../../services/flop.service';
+import { RuleCondition, describeCondition, describeHand, resolveAction } from '../../services/flop-rules';
+import { evaluateHand } from '../../services/hand-evaluator';
 import { SituationService } from '../../services/situation.service';
 
 @Component({
     selector: 'app-situation-manager',
     standalone: true,
-    imports: [FormsModule, NgStyle, NgClass, SolutionColorPipe, InputNumberModule, DropdownModule, InputTextModule, NgxSliderModule, CheckboxModule, AppModalComponent, RangeGridComponent],
+    imports: [FormsModule, NgStyle, NgClass, NgTemplateOutlet, SolutionColorPipe, InputNumberModule, DropdownModule, InputTextModule, MultiSelectModule, NgxSliderModule, CheckboxModule, AppModalComponent, RangeGridComponent, FlopRulesEditorComponent, FlopConditionDialogComponent],
     templateUrl: './situation-manager.component.html'
 })
 export class SituationManagerComponent {
@@ -44,6 +50,7 @@ export class SituationManagerComponent {
     readonly maxRaiseSizes = 3;
     showBrushMenu: boolean = false;
     @ViewChild('brushMenu') brushMenu?: ElementRef<HTMLElement>;
+    @ViewChild('characteristicsGrid') characteristicsGrid?: ElementRef<HTMLElement>;
     isSaving: boolean = false;
     showRaiseEditor: boolean = false;
     raiseEditorSolutionId?: string;
@@ -60,6 +67,34 @@ export class SituationManagerComponent {
         { name: 'Pré-flop', code: 'preflop' },
         { name: 'Flop', code: 'flop' }
     ];
+
+    readonly flopTypes: FlopTypeInfo[] = FLOP_TYPES;
+    exampleFlop: FlopCard[] = [];
+    flopPoolSize = 0;
+    readonly suitSymbols: Record<string, string> = { heart: '♥', diamond: '♦', club: '♣', spade: '♠' };
+    readonly describeCondition = describeCondition;
+
+    readonly boardSuitsOptions: { name: string, code: BoardSuitsFilter }[] = [
+        { name: 'Indifférent', code: 'any' },
+        { name: 'Arc-en-ciel (sans tirage couleur)', code: 'rainbow' },
+        { name: 'Two-tone (tirage couleur)', code: 'twoTone' },
+        { name: 'Monotone', code: 'mono' }
+    ];
+
+    readonly heroSpotOptions: { name: string, code: HeroSpot }[] = [
+        { name: 'Premier à parler / checké', code: 'first' },
+        { name: 'Face à une mise', code: 'facingBet' }
+    ];
+
+    /** Pinceau de la range flop : une seule « solution » pour marquer les mains de la range. */
+    readonly rangeSolutions: Solution[] = [{ id: IN_RANGE, type: 'unique', display_name: 'Dans la range', color: '#16a34a' }];
+    readonly inRange = IN_RANGE;
+    rangeBrush: 'add' | 'remove' = 'add';
+
+    boardConditionDialogOpen = false;
+    editedBoardConditionIndex?: number;
+
+    testResult?: { hero: FlopCard[], board: FlopCard[], hand: string[], rule: string, action?: Solution };
 
     availablePreviousActions: any[] = [
         { name: 'Fold', code: 'Fold' },
@@ -111,6 +146,8 @@ export class SituationManagerComponent {
         private router: Router,
         private apiSituation: SituationService,
         public commonService: CommonService,
+        private flopService: FlopService,
+        private changeDetector: ChangeDetectorRef,
         private _Activatedroute: ActivatedRoute
     ) { }
 
@@ -129,6 +166,7 @@ export class SituationManagerComponent {
             this.situation_obj = JSON.parse(situation_str);
             this.commonService.migrateSolutions(this.situation_obj.solutions);
             this.editSituationName = this.situation_obj.name;
+            if (this.isFlop) this.initializeFlopFields();
             this.ensureActionSolutions();
 
             // Initialisation des listes et des valeurs
@@ -172,6 +210,275 @@ export class SituationManagerComponent {
         if (this.availableSituationType) {
             this.situationType = this.availableSituationType.find(situationType => situationType.code === this.situation_obj.type);
         }
+
+        this.refreshFlopPool();
+    }
+
+    get isFlop(): boolean {
+        return this.situation_obj.type === 'flop';
+    }
+
+    get isFacingBet(): boolean {
+        return this.isFlop && this.situation_obj.heroSpot === 'facingBet';
+    }
+
+    /**
+     * Complète les champs d'une situation flop et migre l'ancien format (un seul type de flop, grille peinte d'actions).
+     */
+    initializeFlopFields() {
+        const situation = this.situation_obj;
+        situation.flopTypes ??= situation.flopType ? [situation.flopType] : [this.flopTypes[0].code];
+        delete situation.flopType;
+        situation.boardSuits ??= 'any';
+        situation.boardConditions ??= [];
+        situation.heroSpot ??= 'first';
+        situation.rules ??= [];
+        situation.situations.forEach(row => row.forEach(cell => {
+            if (cell.solution) cell.solution = IN_RANGE;
+        }));
+    }
+
+    /**
+     * Action dont la taille est réglable : raise en BB au préflop, bet en % du pot au flop,
+     * raise en multiple de la mise adverse au flop face à une mise.
+     */
+    get sizeAction(): 'raise' | 'bet' {
+        return this.isFlop && !this.isFacingBet ? 'bet' : 'raise';
+    }
+
+    get sizeUnit(): string {
+        if (!this.isFlop) return 'BB';
+        return this.isFacingBet ? 'x' : '%';
+    }
+
+    /**
+     * Taille d'une solution : montant en BB ou multiple de la mise pour un raise, pourcentage du pot pour un bet.
+     */
+    solutionSize(solution: Solution): number | undefined {
+        return solution.action === 'bet' ? solution.betPercent : solution.raiseMultiplier ?? solution.raiseAmount;
+    }
+
+    /**
+     * Indique si une solution est utilisable pour le type et le spot actuels.
+     */
+    private isSolutionAllowed(solution: Solution): boolean {
+        if (solution.type === 'mixed') return !this.isFlop;
+        const allowed = this.commonService.actionsForType(this.situation_obj.type, this.situation_obj.heroSpot);
+        if (!solution.action || !allowed.some(action => action.code === solution.action)) return false;
+        // Un raise au flop s'exprime en multiple de la mise, au préflop en BB
+        return solution.action !== 'raise' || (solution.raiseMultiplier != null) === this.isFlop;
+    }
+
+    /**
+     * Change le type de situation : retire les actions non disponibles pour ce type et vide les cases qui les utilisaient.
+     */
+    onChangeSituationType() {
+        this.withCharacteristicsAnimation(() => this.applySituationType());
+    }
+
+    /**
+     * Changement du nombre de joueurs par l'utilisateur : les champs d'action précédente peuvent apparaître ou disparaître.
+     */
+    onSelectNbPlayers() {
+        this.withCharacteristicsAnimation(() => this.onChangeNbPlayersTable());
+    }
+
+    /**
+     * Changement de position par l'utilisateur : les champs d'action précédente peuvent apparaître ou disparaître.
+     */
+    onSelectPosition() {
+        this.withCharacteristicsAnimation(() => this.onChangeProperty('position', this.position));
+    }
+
+    /**
+     * Applique un changement qui ajoute ou retire des champs, puis anime la hauteur de la grille des caractéristiques
+     * de l'ancienne à la nouvelle valeur.
+     * @param apply Changement à appliquer.
+     */
+    private withCharacteristicsAnimation(apply: () => void) {
+        const grid = this.characteristicsGrid?.nativeElement;
+        const previousHeight = grid?.offsetHeight;
+        apply();
+        if (!grid || previousHeight == null) return;
+
+        this.changeDetector.detectChanges();
+        const nextHeight = grid.offsetHeight;
+        if (nextHeight !== previousHeight && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            grid.animate(
+                [{ height: `${previousHeight}px`, overflow: 'hidden' }, { height: `${nextHeight}px`, overflow: 'hidden' }],
+                { duration: 300, easing: 'ease-in-out' }
+            );
+        }
+    }
+
+    /**
+     * Change le type de situation. La grille préflop devient la range du flop ; au retour au préflop, la range est vidée.
+     */
+    private applySituationType() {
+        const wasFlop = this.isFlop;
+        this.situation_obj.type = this.situationType.code;
+        if (this.isFlop && !wasFlop) {
+            this.initializeFlopFields();
+        } else if (!this.isFlop && wasFlop) {
+            this.situation_obj.situations.forEach(row => row.forEach(cell => cell.solution = undefined));
+        }
+        this.applyAllowedActions();
+        this.refreshFlopPool();
+    }
+
+    /**
+     * Changement de spot du héros au flop : les actions disponibles changent.
+     */
+    onChangeHeroSpot() {
+        this.withCharacteristicsAnimation(() => {
+            if (this.isFacingBet) this.situation_obj.facingBetPercent ??= 50;
+            this.applyAllowedActions();
+        });
+    }
+
+    /**
+     * Retire les actions non disponibles pour le type et le spot actuels, vide les cases et règles qui les utilisaient,
+     * puis ajoute les actions manquantes.
+     */
+    private applyAllowedActions() {
+        const removedIds = new Set(this.situation_obj.solutions
+            .filter(solution => solution.type === 'unique' && !this.isSolutionAllowed(solution))
+            .map(solution => solution.id));
+        this.situation_obj.solutions
+            .filter(solution => solution.type === 'mixed' && (!this.isSolutionAllowed(solution) || solution.colorList?.some(item => removedIds.has(item.color))))
+            .forEach(solution => removedIds.add(solution.id));
+
+        let clearedCells = 0;
+        this.situation_obj.situations.forEach(row => row.forEach(cell => {
+            if (cell.solution && removedIds.has(cell.solution)) {
+                cell.solution = undefined;
+                clearedCells++;
+            }
+        }));
+        this.situation_obj.rules?.forEach(rule => {
+            if (rule.solutionId && removedIds.has(rule.solutionId)) rule.solutionId = undefined;
+        });
+        if (this.situation_obj.defaultSolutionId && removedIds.has(this.situation_obj.defaultSolutionId)) {
+            this.situation_obj.defaultSolutionId = undefined;
+        }
+        this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => !removedIds.has(solution.id));
+        if (this.solutionSelected && removedIds.has(this.solutionSelected)) this.solutionSelected = undefined;
+        this.countMultipleSolution = this.solutionCount('mixed');
+        this.ensureActionSolutions();
+        if (clearedCells > 0) {
+            this.commonService.showSwalToast(`${clearedCells} case(s) vidée(s) : leurs actions ne sont pas disponibles pour ce type.`, 'warning');
+        }
+    }
+
+    get selectedFlopTypes(): FlopType[] {
+        return this.situation_obj.flopTypes ?? [];
+    }
+
+    set selectedFlopTypes(types: FlopType[]) {
+        this.situation_obj.flopTypes = types;
+    }
+
+    private get flopFilter(): FlopFilter {
+        return {
+            flopTypes: this.situation_obj.flopTypes ?? [],
+            boardSuits: this.situation_obj.boardSuits,
+            boardConditions: this.situation_obj.boardConditions
+        };
+    }
+
+    /**
+     * Recalcule le nombre de flops correspondant au filtre et tire un nouvel exemple.
+     */
+    refreshFlopPool() {
+        this.flopPoolSize = this.isFlop ? this.flopService.flopPool(this.flopFilter).length : 0;
+        this.refreshExampleFlop();
+    }
+
+    /**
+     * Tire un nouvel exemple de flop correspondant au filtre.
+     */
+    refreshExampleFlop() {
+        this.exampleFlop = this.isFlop ? this.flopService.randomFlop(this.flopFilter) : [];
+    }
+
+    /**
+     * Ouvre le dialogue de condition de board : ajout, ou modification de la condition d'index donné.
+     */
+    openBoardCondition(index?: number) {
+        this.editedBoardConditionIndex = index;
+        this.boardConditionDialogOpen = true;
+    }
+
+    get editedBoardCondition(): RuleCondition | undefined {
+        return this.editedBoardConditionIndex === undefined ? undefined : this.situation_obj.boardConditions?.[this.editedBoardConditionIndex];
+    }
+
+    onBoardConditionSaved(condition: RuleCondition) {
+        const conditions = this.situation_obj.boardConditions ??= [];
+        if (this.editedBoardConditionIndex === undefined) conditions.push(condition);
+        else conditions[this.editedBoardConditionIndex] = condition;
+        this.closeBoardConditionDialog();
+        this.refreshFlopPool();
+    }
+
+    removeBoardCondition(index: number) {
+        this.situation_obj.boardConditions?.splice(index, 1);
+        this.refreshFlopPool();
+    }
+
+    closeBoardConditionDialog() {
+        this.boardConditionDialogOpen = false;
+        this.editedBoardConditionIndex = undefined;
+    }
+
+    /**
+     * Mains de la range flop ('AA', 'AKs', 'AKo').
+     */
+    get rangeHands(): string[] {
+        return this.situation_obj.situations.flat().filter(cell => cell.solution === IN_RANGE).map(cell => cell.card);
+    }
+
+    /**
+     * Ajoute ou retire toutes les mains de la range.
+     */
+    setWholeRange(inRange: boolean) {
+        this.situation_obj.situations.forEach(row => row.forEach(cell => cell.solution = inRange ? IN_RANGE : undefined));
+    }
+
+    /**
+     * Actions proposées dans les règles flop, avec leurs tailles.
+     */
+    get flopActions(): Solution[] {
+        return this.uniqueBrushSolutions;
+    }
+
+    /**
+     * Tire une main de la range et un flop, puis affiche l'analyse de la main et la règle déclenchée.
+     */
+    testRules() {
+        const hero = this.flopService.randomHeroHand(this.rangeHands);
+        if (!hero.length) {
+            this.commonService.showSwalToast('Ajoutez des mains à la range pour tester les règles.', 'error');
+            return;
+        }
+        const board = this.flopService.randomFlop(this.flopFilter, hero);
+        if (!board.length) {
+            this.commonService.showSwalToast('Aucun flop ne correspond aux critères du board.', 'error');
+            return;
+        }
+        const hand = evaluateHand(hero, board);
+        const { solutionId, ruleIndex } = resolveAction(this.situation_obj.rules ?? [], this.situation_obj.defaultSolutionId, hand);
+        this.testResult = {
+            hero,
+            board,
+            hand: describeHand(hand),
+            rule: ruleIndex === -1 ? 'Aucune règle : action « Sinon »' : `Règle ${ruleIndex + 1}`,
+            action: this.situation_obj.solutions.find(solution => solution.id === solutionId)
+        };
+    }
+
+    isRedSuit(card: FlopCard): boolean {
+        return card.color === 'heart' || card.color === 'diamond';
     }
 
     /**
@@ -198,9 +505,10 @@ export class SituationManagerComponent {
      * Les solutions inutilisées sont retirées à l'enregistrement.
      */
     ensureActionSolutions() {
-        for (const action of this.commonService.solutionActions) {
+        const defaultSizes: Partial<Record<SolutionAction, number>> = { raise: this.isFlop ? 3 : 2, bet: 33 };
+        for (const action of this.commonService.actionsForType(this.situation_obj.type, this.situation_obj.heroSpot)) {
             if (!this.situation_obj.solutions.some(solution => solution.type === 'unique' && solution.action === action.code)) {
-                this.createUniqueSolution(action.code, action.code === 'raise' ? 2 : undefined);
+                this.createUniqueSolution(action.code, defaultSizes[action.code]);
             }
         }
         this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
@@ -212,20 +520,21 @@ export class SituationManagerComponent {
     /**
      * Ajoute une solution simple avec un identifiant libre.
      * @param action Action de la solution.
-     * @param raiseAmount Montant en BB pour un raise.
+     * @param size Montant en BB pour un raise préflop, multiple de la mise pour un raise au flop, pourcentage du pot pour un bet.
      * @returns La solution créée.
      */
-    createUniqueSolution(action: SolutionAction, raiseAmount?: number): Solution {
+    createUniqueSolution(action: SolutionAction, size?: number): Solution {
         const nextIndex = Math.max(-1, ...this.situation_obj.solutions
             .map(solution => Number(solution.id.match(/^unique_solution_(\d+)$/)?.[1] ?? -1))) + 1;
-        const solution: Solution = { id: `unique_solution_${nextIndex}`, type: 'unique', display_name: undefined, action, raiseAmount };
+        const solution: Solution = { id: `unique_solution_${nextIndex}`, type: 'unique', display_name: undefined, action };
+        this.setSolutionSize(solution, size);
         solution.display_name = this.commonService.solutionActionLabel(solution);
         this.situation_obj.solutions.push(solution);
         return solution;
     }
 
     /**
-     * Solutions simples du pinceau, de All-in à Fold, les raises du plus gros au plus petit.
+     * Solutions simples du pinceau, de All-in à Fold, les raises (ou bets) du plus gros au plus petit.
      */
     get uniqueBrushSolutions(): Solution[] {
         // Ordre inverse des actions (All-in en premier) ; actions non reconnues en dernier
@@ -234,7 +543,7 @@ export class SituationManagerComponent {
             return index === -1 ? -1 : index;
         };
         return this.filteredSolutionList(this.situation_obj.solutions, 'unique')
-            .sort((a, b) => order(b) - order(a) || (b.raiseAmount ?? 0) - (a.raiseAmount ?? 0));
+            .sort((a, b) => order(b) - order(a) || (this.solutionSize(b) ?? 0) - (this.solutionSize(a) ?? 0));
     }
 
     private brushOptionsCache?: { ref: Solution[], options: Solution[] };
@@ -253,21 +562,35 @@ export class SituationManagerComponent {
         return this.brushOptionsCache!.options;
     }
 
+    /**
+     * Enregistre la taille d'une solution dans le champ adapté à son action et au type de situation.
+     */
+    private setSolutionSize(solution: Solution, size?: number) {
+        if (size == null) return;
+        if (solution.action === 'bet') solution.betPercent = size;
+        else if (solution.action === 'raise' && this.isFlop) solution.raiseMultiplier = size;
+        else if (solution.action === 'raise') solution.raiseAmount = size;
+    }
+
     get raiseCount(): number {
-        return this.situation_obj.solutions.filter(solution => solution.type === 'unique' && solution.action === 'raise').length;
+        return this.situation_obj.solutions.filter(solution => solution.type === 'unique' && solution.action === this.sizeAction).length;
     }
 
     /**
-     * Ouvre l'éditeur de taille de raise.
-     * @param solution Raise à modifier, ou rien pour en ajouter un.
+     * Ouvre l'éditeur de taille de raise (préflop) ou de bet (flop).
+     * @param solution Raise ou bet à modifier, ou rien pour en ajouter un.
      */
     openRaiseEditor(solution?: Solution) {
         this.raiseEditorSolutionId = solution?.id;
+        const isBet = this.sizeAction === 'bet';
+        let defaultSize = 2;
+        if (this.isFlop) defaultSize = isBet ? 33 : 3;
         if (solution) {
-            this.raiseEditorAmount = solution.raiseAmount ?? 2;
+            this.raiseEditorAmount = this.solutionSize(solution) ?? defaultSize;
         } else {
-            const amounts = this.situation_obj.solutions.filter(item => item.action === 'raise').map(item => item.raiseAmount ?? 0);
-            this.raiseEditorAmount = amounts.length ? Math.max(...amounts) + 0.5 : 2;
+            const amounts = this.situation_obj.solutions.filter(item => item.action === this.sizeAction).map(item => this.solutionSize(item) ?? 0);
+            const step = isBet ? 25 : 0.5;
+            this.raiseEditorAmount = amounts.length ? Math.max(...amounts) + step : defaultSize;
         }
         this.showRaiseEditor = true;
     }
@@ -278,27 +601,28 @@ export class SituationManagerComponent {
     }
 
     /**
-     * Crée ou modifie un raise avec le montant saisi, puis le sélectionne dans le pinceau.
+     * Crée ou modifie un raise (ou bet) avec la taille saisie, puis le sélectionne dans le pinceau.
      */
     saveRaiseEditor() {
         const amount = this.raiseEditorAmount;
+        const action = this.sizeAction;
         if (amount == null || !(amount > 0)) {
-            this.commonService.showSwalToast('Veuillez saisir un montant de raise valide.', 'error');
+            this.commonService.showSwalToast(`Veuillez saisir une taille de ${action} valide.`, 'error');
             return;
         }
         const duplicate = this.situation_obj.solutions.find(solution =>
-            solution.type === 'unique' && solution.action === 'raise' && solution.raiseAmount === amount && solution.id !== this.raiseEditorSolutionId);
+            solution.type === 'unique' && solution.action === action && this.solutionSize(solution) === amount && solution.id !== this.raiseEditorSolutionId);
         if (duplicate) {
-            this.commonService.showSwalToast(`Un raise de ${amount} BB existe déjà.`, 'error');
+            this.commonService.showSwalToast(`Un ${action} de ${amount} ${this.sizeUnit} existe déjà.`, 'error');
             return;
         }
 
         let solution = this.situation_obj.solutions.find(item => item.id === this.raiseEditorSolutionId);
         if (solution) {
-            solution.raiseAmount = amount;
+            this.setSolutionSize(solution, amount);
             solution.display_name = this.commonService.solutionActionLabel(solution);
         } else {
-            solution = this.createUniqueSolution('raise', amount);
+            solution = this.createUniqueSolution(action, amount);
         }
         this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
         this.solutionSelected = solution.id;
@@ -306,7 +630,7 @@ export class SituationManagerComponent {
     }
 
     /**
-     * Supprime le raise en cours d'édition et vide les cases qui l'utilisaient.
+     * Supprime le raise (ou bet) en cours d'édition et vide les cases qui l'utilisaient.
      */
     deleteRaise() {
         const solutionId = this.raiseEditorSolutionId;
@@ -314,12 +638,16 @@ export class SituationManagerComponent {
         const usedInMixed = this.situation_obj.solutions.some(solution =>
             solution.type === 'mixed' && solution.colorList?.some(item => item.color === solutionId));
         if (usedInMixed) {
-            this.commonService.showSwalToast('Ce raise est utilisé dans une solution mixte. Modifiez-la avant de le supprimer.', 'error');
+            this.commonService.showSwalToast(`Ce ${this.sizeAction} est utilisé dans une solution mixte. Modifiez-la avant de le supprimer.`, 'error');
             return;
         }
         this.situation_obj.situations.forEach(row => row.forEach(cell => {
             if (cell.solution === solutionId) cell.solution = undefined;
         }));
+        this.situation_obj.rules?.forEach(rule => {
+            if (rule.solutionId === solutionId) rule.solutionId = undefined;
+        });
+        if (this.situation_obj.defaultSolutionId === solutionId) this.situation_obj.defaultSolutionId = undefined;
         this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => solution.id !== solutionId);
         this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
         if (this.solutionSelected === solutionId) {
@@ -329,69 +657,67 @@ export class SituationManagerComponent {
     }
 
     /**
+     * Premier problème qui empêche d'enregistrer la situation, ou rien si elle est valide.
+     */
+    private validationError(): string | undefined {
+        const situation = this.situation_obj;
+        if (!situation.name) return 'Veuillez donner un nom à la situation.';
+        if (situation.stack == null) return 'Veuillez remplir le champ "Stack effectif".';
+        const invalidSize = (solution?: Solution) => solution?.type === 'unique' && (!solution.action
+            || (solution.action === 'raise' && !((solution.raiseMultiplier ?? solution.raiseAmount)! > 0))
+            || (solution.action === 'bet' && !(solution.betPercent! > 0)));
+
+        if (!this.isFlop) {
+            if (situation.situations.flat().some(cell => cell.solution === undefined)) return 'Veuillez remplir toutes les cases du tableau des ranges.';
+            const usedIds = new Set(situation.situations.flat().map(cell => cell.solution));
+            if (situation.solutions.some(solution => usedIds.has(solution.id) && invalidSize(solution))) {
+                return 'Veuillez sélectionner une action et un montant valide pour chaque relance utilisée.';
+            }
+            return undefined;
+        }
+
+        if (!situation.flopTypes?.length) return 'Veuillez choisir au moins un type de flop.';
+        if (!this.flopPoolSize) return 'Aucun flop ne correspond aux critères du board.';
+        if (!(situation.pot! > 0)) return 'Veuillez remplir le champ "Pot".';
+        if (this.isFacingBet && !(situation.facingBetPercent! > 0)) return 'Veuillez indiquer la mise adverse (% du pot).';
+        if (!this.rangeHands.length) return 'Veuillez ajouter au moins une main à la range.';
+        const rules = situation.rules ?? [];
+        const emptyRule = rules.findIndex(rule => !rule.conditions.length);
+        if (emptyRule !== -1) return `La règle ${emptyRule + 1} n'a aucune condition.`;
+        const noAction = rules.findIndex(rule => !situation.solutions.some(solution => solution.id === rule.solutionId));
+        if (noAction !== -1) return `Veuillez choisir une action pour la règle ${noAction + 1}.`;
+        if (!situation.solutions.some(solution => solution.id === situation.defaultSolutionId)) return 'Veuillez choisir l\'action « Sinon ».';
+        const usedIds = new Set([...rules.map(rule => rule.solutionId), situation.defaultSolutionId]);
+        if (situation.solutions.some(solution => usedIds.has(solution.id) && invalidSize(solution))) {
+            return 'Veuillez indiquer une taille valide pour chaque bet ou raise utilisé.';
+        }
+        return undefined;
+    }
+
+    /**
      * Valide et prépare la sauvegarde de la situation (création ou édition).
      */
     saveSituation() {
-        // On check si il y a bien un nom à la situation
-        if (!this.situation_obj.name) {
-            this.commonService.showSwalToast(`Veuillez donner un nom à la situation.`, 'error');
-        } else {
-            let situation_empty = false;
-            this.situation_obj.situations.map(row => {
-                row.map(situation => {
-                    if (situation.solution === undefined) situation_empty = true;
-                })
+        const error = this.validationError();
+        if (error) {
+            this.commonService.showSwalToast(error, 'error');
+            return;
+        }
+        const nameTaken = 'Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.';
+        if (this.mode === "new") {
+            this.apiSituation.checkSituationNameFromUser(this.situation_obj.name!).subscribe((data: any) => {
+                if (data.exist) this.commonService.showSwalToast(nameTaken, 'error');
+                else this.addSituation();
             });
-            // On check si toutes les cases sont bien remplies
-            if (situation_empty) {
-                this.commonService.showSwalToast(`Veuillez remplir toutes les cases du tableau des ranges.`, 'error');
-            } else {
-                // On check si il y a bien un nombre de jetons
-                if (this.situation_obj.stack == null) {
-                    this.commonService.showSwalToast(`Veuillez remplir le champ "Stack effectif".`, 'error');
-                } else {
-                    const flatArray = this.situation_obj.situations.flat();
-                    const uniqueSolutions = Array.from(new Set(flatArray.map(item => item.solution)));
-                    let invalidSolution = false;
-
-                    uniqueSolutions.forEach(solution => {
-                        const selectedSolution = this.situation_obj.solutions.find(item => item.id === solution);
-                        if (selectedSolution?.type === 'unique' && (!selectedSolution.action || (selectedSolution.action === 'raise' && !(selectedSolution.raiseAmount! > 0)))) {
-                            invalidSolution = true;
-                        }
-                    });
-                    // On check si toutes les solutions simple ont bien un nom
-                    if (invalidSolution) {
-                        this.commonService.showSwalToast(`Veuillez sélectionner une action et un montant valide pour chaque relance utilisée.`, 'error');
-                    } else {
-                        if (this.mode === "new") {
-                            this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
-                                if (data.exist) {
-                                    this.commonService.showSwalToast(`Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.`, 'error');
-                                } else {
-                                    this.addSituation();
-                                }
-                            });
-                        } else if (this.mode === "edit") {
-                            let situation_name_change = false;
-                            if (this.situation_obj.name !== this.editSituationName) {
-                                situation_name_change = true;
-                            }
-                            if (situation_name_change) {
-                                this.apiSituation.checkChangeSituationNameFromUser(this.situation_obj.id!, this.situation_obj.name).subscribe((data: any) => {
-                                    if (data.exist) {
-                                        this.commonService.showSwalToast('Une situation existe déjà avec ce nom. Vous ne pouvez pas avoir deux situations avec le même nom.', 'error');
-                                    } else {
-                                        this.editSituation();
-                                    }
-                                });
-                            } else {
-                                this.editSituation();
-                            }
-                        }
-                    }
-                }
+        } else if (this.mode === "edit") {
+            if (this.situation_obj.name === this.editSituationName) {
+                this.editSituation();
+                return;
             }
+            this.apiSituation.checkChangeSituationNameFromUser(this.situation_obj.id!, this.situation_obj.name!).subscribe((data: any) => {
+                if (data.exist) this.commonService.showSwalToast(nameTaken, 'error');
+                else this.editSituation();
+            });
         }
     }
 
@@ -429,18 +755,33 @@ export class SituationManagerComponent {
 
     /**
      * Copie de la situation à envoyer au serveur, sans les solutions inutilisées.
-     * Une solution est conservée si elle est peinte dans le tableau ou si elle compose une solution mixte peinte.
+     * Une solution est conservée si elle est peinte dans le tableau, utilisée par une règle flop,
+     * ou si elle compose une solution mixte peinte.
      * La situation éditée n'est pas modifiée : en cas d'échec, toutes les actions restent dans le pinceau.
+     * Les champs propres à l'autre type de situation (actions précédentes ou flop) sont retirés.
      */
     situationToSave(): Situation {
-        const usedSolutionIds = new Set<string | undefined>(this.situation_obj.situations.flat().map(cell => cell.solution));
+        const usedSolutionIds = new Set<string | undefined>(this.isFlop
+            ? [...(this.situation_obj.rules ?? []).map(rule => rule.solutionId), this.situation_obj.defaultSolutionId]
+            : this.situation_obj.situations.flat().map(cell => cell.solution));
         this.situation_obj.solutions
             .filter(solution => solution.type === 'mixed' && usedSolutionIds.has(solution.id))
             .forEach(solution => solution.colorList?.forEach(item => usedSolutionIds.add(item.color)));
-        return {
+        const situation: Situation = {
             ...this.situation_obj,
             solutions: this.situation_obj.solutions.filter(solution => usedSolutionIds.has(solution.id))
         };
+        delete situation.flopType;
+        if (this.isFlop) {
+            delete situation.previousPlayer1Action;
+            delete situation.previousPlayer2Action;
+            if (situation.heroSpot !== 'facingBet') delete situation.facingBetPercent;
+        } else {
+            for (const field of ['flopTypes', 'boardSuits', 'boardConditions', 'heroSpot', 'facingBetPercent', 'pot', 'rules', 'defaultSolutionId'] as const) {
+                delete situation[field];
+            }
+        }
+        return situation;
     }
 
     /**
@@ -751,6 +1092,8 @@ export class SituationManagerComponent {
         // 1. Déterminer le MODE
         if (this.nbPlayer.code === 2) {
             mode = "HU";
+        } else if (this.isFlop) {
+            mode = "3w";
         } else {
             if (this.previousPlayer1Action.code === 'Fold') {
                 mode = "BVB";
@@ -763,7 +1106,12 @@ export class SituationManagerComponent {
         const isFirstToAct = (this.nbPlayer.code === 2 && this.position.code === 'sb') || 
                             (this.nbPlayer.code === 3 && this.position.code === 'bu');
 
-        if (!isFirstToAct) {
+        if (this.isFlop) {
+            // Flop : les types de flop et la mise adverse remplacent l'action précédente
+            const types = this.flopTypes.filter(type => this.selectedFlopTypes.includes(type.code)).map(type => type.name).join(' / ');
+            const facing = this.isFacingBet ? `vs ${this.situation_obj.facingBetPercent ?? 0}% ` : '';
+            action = `${types ? types + ' ' : ''}${facing}`;
+        } else if (!isFirstToAct) {
             let lastAction = "Fold";
 
             if (this.nbPlayer.code === 2) {

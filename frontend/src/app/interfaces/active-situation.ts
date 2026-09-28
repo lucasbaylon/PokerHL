@@ -1,3 +1,6 @@
+import { FlopRule } from "../services/flop-rules";
+import { HandFeatures } from "../services/hand-evaluator";
+import { HeroSpot } from "./situation";
 import { Solution } from "./solution";
 
 export interface TableColorCardObj {
@@ -16,6 +19,8 @@ export interface TableCard {
 }
 
 export interface ActiveSituation {
+    type: string;
+
     nbPlayer: number;
 
     position?: string;
@@ -37,4 +42,19 @@ export interface ActiveSituation {
     previousPlayer1Action?: string;
 
     previousPlayer2Action?: string;
+
+    board?: TableColorCard[];
+
+    pot?: number;
+
+    flopTypes?: string[];
+
+    heroSpot?: HeroSpot;
+
+    facingBetPercent?: number;
+
+    /** Analyse de la main sur le flop et règle qui a donné la réponse (-1 : action par défaut). */
+    hand?: HandFeatures;
+
+    rule?: FlopRule;
 }

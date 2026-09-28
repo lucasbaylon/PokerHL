@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Situation } from '../interfaces/situation';
+import { HeroSpot, Situation } from '../interfaces/situation';
 import { Solution, SolutionAction } from '../interfaces/solution';
 import { ActionColors, DEFAULT_ACTION_COLORS, DEFAULT_PARTICLE_SETTINGS, ParticleSettings } from '../interfaces/user-params';
 
@@ -82,8 +82,23 @@ export class CommonService {
         { name: 'Call', code: 'call' },
         { name: 'Limp', code: 'limp' },
         { name: 'Raise', code: 'raise' },
+        { name: 'Bet', code: 'bet' },
         { name: 'All-in', code: 'all-in' }
     ];
+
+    /**
+     * Actions disponibles pour un type de situation.
+     * Au flop : check, bet ou all-in en premier à parler ; fold, call, raise ou all-in face à une mise.
+     * @param type Type de situation ('preflop' ou 'flop').
+     * @param heroSpot Situation du héros au flop.
+     */
+    actionsForType(type: string | undefined, heroSpot?: HeroSpot): { name: string, code: SolutionAction }[] {
+        let codes: SolutionAction[] = ['fold', 'check', 'call', 'limp', 'raise', 'all-in'];
+        if (type === 'flop') {
+            codes = heroSpot === 'facingBet' ? ['fold', 'call', 'raise', 'all-in'] : ['check', 'bet', 'all-in'];
+        }
+        return this.solutionActions.filter(action => codes.includes(action.code));
+    }
 
     migrateSolutions(solutions: Solution[]): Solution[] {
         for (const solution of solutions) {
@@ -101,7 +116,7 @@ export class CommonService {
      * @returns Action et montant de raise éventuel.
      */
     private inferSolutionAction(solution: Solution): { action?: SolutionAction, raiseAmount?: number } {
-        if (solution.action) return { action: solution.action, raiseAmount: solution.raiseAmount };
+        if (solution.action) return { action: solution.action, raiseAmount: solution.action === 'bet' ? solution.betPercent : solution.raiseMultiplier ?? solution.raiseAmount };
         const label = (solution.display_name || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
         const raiseMatch = label.match(/(?:raise|relance|open|r)\s*(?:to|a|à)?\s*(\d+(?:[.,]\d+)?)\s*(?:bb)?/i);
 
@@ -117,6 +132,8 @@ export class CommonService {
 
     solutionActionLabel(solution: Solution): string {
         const label = this.solutionActions.find(action => action.code === solution.action)?.name || 'Action à sélectionner';
+        if (solution.action === 'bet' && solution.betPercent != null) return `${label} ${solution.betPercent}%`;
+        if (solution.action === 'raise' && solution.raiseMultiplier != null) return `${label} x${solution.raiseMultiplier}`;
         return solution.action === 'raise' && solution.raiseAmount != null ? `${label} ${solution.raiseAmount} BB` : label;
     }
 
@@ -236,7 +253,7 @@ export class CommonService {
 
     /**
      * Retourne la couleur d'une solution simple à partir de son action.
-     * Les raises de montants différents d'une même situation reçoivent des nuances distinctes de la couleur du raise.
+     * Les raises (ou bets) de tailles différentes d'une même situation reçoivent des nuances distinctes de la couleur de l'action.
      * @param solution Solution simple à colorer.
      * @param solutionLst Solutions de la situation, utilisées pour nuancer les raises.
      * @returns Couleur hexadécimale.
@@ -247,12 +264,12 @@ export class CommonService {
         const { action, raiseAmount } = this.inferSolutionAction(solution);
         if (!action) return solution.color || this.undefinedActionColor;
         const baseColor = this.actionColors()[action];
-        if (action !== 'raise') return baseColor;
+        if (action !== 'raise' && action !== 'bet') return baseColor;
 
         const amounts = [...new Set(solutionLst
             .filter(item => item.type === 'unique')
             .map(item => this.inferSolutionAction(item))
-            .filter(item => item.action === 'raise' && item.raiseAmount != null)
+            .filter(item => item.action === action && item.raiseAmount != null)
             .map(item => item.raiseAmount!))].sort((a, b) => a - b);
         const index = raiseAmount != null ? amounts.indexOf(raiseAmount) : -1;
         if (amounts.length < 2 || index === -1) return baseColor;

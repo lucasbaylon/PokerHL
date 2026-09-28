@@ -7,10 +7,12 @@ import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
-import { Situation } from '../../interfaces/situation';
+import { IN_RANGE, Situation } from '../../interfaces/situation';
+import { Solution } from '../../interfaces/solution';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
+import { FlopTypePipe } from '../../pipes/flop-type.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
 import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
@@ -18,7 +20,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, OpponentLevelPipe, PositionPipe, TypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle, AppModalComponent, RangeGridComponent],
+    imports: [TableModule, OpponentLevelPipe, PositionPipe, TypePipe, FlopTypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle, AppModalComponent, RangeGridComponent],
     templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent implements AfterViewInit, OnDestroy {
@@ -59,6 +61,14 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     ];
 
     situationToDisplay!: Situation;
+    private readonly rangeSolution: Solution = { id: IN_RANGE, type: 'unique', display_name: 'Dans la range', color: '#16a34a' };
+
+    /**
+     * Solutions servant à colorer la grille : pour une situation flop, la grille est la range du héros.
+     */
+    gridSolutions(situation: Situation): Solution[] {
+        return situation.type === 'flop' ? [...situation.solutions, this.rangeSolution] : situation.solutions;
+    }
     showSituationModal = false;
     showRemoveSituationModal = false;
     situationIdsToRemove: number[] = [];

@@ -8,6 +8,7 @@ export const DEFAULT_ACTION_COLORS: ActionColors = {
     'call': '#00aeff',
     'limp': '#8350ff',
     'raise': '#ff9100',
+    'bet': '#e8b100',
     'all-in': '#d80c05',
 };
 
