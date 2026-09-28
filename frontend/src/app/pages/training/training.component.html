@@ -19,25 +19,29 @@
                     [style.background]="backgroundColor">
                     @if (isFlop) {
                     <div class="flop-board" aria-label="Flop">
-                        <small class="flop-board-label" aria-hidden="true">{{activeSituation.nbPlayer === 2 ? 'HEADS UP' : '3 PLAYERS'}} · FLOP</small>
-                        <div class="flex gap-2 select-none">
-                            @for (card of activeSituation.board; track $index) {
-                            <div class="relative h-20 w-14 rounded-sm bg-white text-gray-800" [ngStyle]="fullCardStyle ? {'background-color': card.color.color} : null">
-                                <card [cardColor]="fullCardStyle ? '#ffffff' : card.color.color"
-                                    [cardColorName]="card.color.name"
-                                    [cardValue]="card.value"></card>
+                        <div class="relative">
+                            <!-- Mise adverse : jetons juste au-dessus du flop -->
+                            @if (isFacingBet) {
+                            <div class="flop-bet-chips">
+                                <img [src]="getChipImage('Bet', facingBetAmount())"
+                                     [class]="getChipClass('Bet', facingBetAmount()) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
+                                <span class="text-white text-sm font-bold drop-shadow-md bg-black/40 px-1 rounded">{{ facingBetAmount() }} BB</span>
                             </div>
                             }
+                            <div class="flex gap-2 select-none">
+                                @for (card of activeSituation.board; track $index) {
+                                <div class="relative h-20 w-14 rounded-sm bg-white text-gray-800" [ngStyle]="fullCardStyle ? {'background-color': card.color.color} : null">
+                                    <card [cardColor]="fullCardStyle ? '#ffffff' : card.color.color"
+                                        [cardColorName]="card.color.name"
+                                        [cardValue]="card.value"></card>
+                                </div>
+                                }
+                            </div>
                         </div>
                         <div class="flop-pot">
                             <img src="assets/img/chip-medium.png" class="h-7 w-auto object-contain drop-shadow-lg" alt="" />
                             <span>Pot {{activeSituation.pot}} BB</span>
                         </div>
-                        @if (isFacingBet) {
-                        <div class="flop-pot flop-bet">
-                            <span>Mise adverse {{ facingBetAmount() }} BB <span class="font-normal opacity-80">({{ activeSituation.facingBetPercent }}%)</span></span>
-                        </div>
-                        }
                     </div>
                     } @else {
                     <div class="table-brand" aria-hidden="true">
@@ -399,7 +403,8 @@
     }
 
     <!-- Div affichée lors d'une mauvaise réponse -->
-    <app-modal [open]="showWrongAnswerModal" (closed)="closeSolutionModal()" panelClass="w-fit max-w-[94vw]">
+    <app-modal [open]="showWrongAnswerModal" (closed)="closeSolutionModal()"
+        [panelClass]="isFlop ? 'w-[44rem] max-w-[94vw]' : 'w-fit max-w-[94vw]'">
         @if (currentSituation) {
             <h4
                 class="m-0 text-left text-sm font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
@@ -441,11 +446,29 @@
                     {{ currentSituation.opponentLevel! | opponentLevel }}
                 </span>
             </div>
-            <div class="flex flex-col justify-center gap-2 lg:flex-row lg:items-start">
-                @if (isFlop && activeSituation.hand) {
-                <div class="flex w-full max-w-md flex-none flex-col gap-4 px-2 py-3 text-left">
+            @if (isFlop && activeSituation.hand) {
+            <!-- Flop : cartes et caractéristiques à gauche, solutions et réponses à droite -->
+            <div class="grid gap-6 pt-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+                <div class="flex min-w-0 flex-col gap-5 text-left">
+                    <div class="flex flex-wrap gap-x-8 gap-y-4">
+                        <div>
+                            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Vos cartes</h4>
+                            <div class="flex gap-1.5 select-none">
+                                <ng-container *ngTemplateOutlet="modalCard; context: { $implicit: activeSituation.leftCard }"></ng-container>
+                                <ng-container *ngTemplateOutlet="modalCard; context: { $implicit: activeSituation.rightCard }"></ng-container>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Flop</h4>
+                            <div class="flex gap-1.5 select-none">
+                                @for (card of activeSituation.board; track $index) {
+                                <ng-container *ngTemplateOutlet="modalCard; context: { $implicit: card }"></ng-container>
+                                }
+                            </div>
+                        </div>
+                    </div>
                     <div>
-                        <h4 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Votre main</h4>
+                        <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Votre main</h4>
                         <div class="flex flex-wrap gap-2">
                             @for (label of describeHand(activeSituation.hand); track $index) {
                             <span class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200">{{ label }}</span>
@@ -453,7 +476,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Règle appliquée</h4>
+                        <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Règle appliquée</h4>
                         @if (activeSituation.rule) {
                         <div class="flex flex-wrap items-center gap-2">
                             @for (condition of activeSituation.rule.conditions; track $index; let lastCondition = $last) {
@@ -468,7 +491,13 @@
                         }
                     </div>
                 </div>
-                } @else {
+                <div class="flex flex-col gap-5 border-0 border-t border-solid border-gray-200 pt-4 sm:w-44 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0 dark:border-gray-700">
+                    <ng-container *ngTemplateOutlet="modalSolutions"></ng-container>
+                    <ng-container *ngTemplateOutlet="modalAnswers"></ng-container>
+                </div>
+            </div>
+            } @else {
+            <div class="flex flex-col justify-center gap-2 lg:flex-row lg:items-start">
                 <div class="w-fit flex-none overflow-x-auto px-2 py-3">
                     <app-range-grid
                         [situations]="currentSituation.situations"
@@ -476,27 +505,10 @@
                         [highlightedCard]="currentHand">
                     </app-range-grid>
                 </div>
-                }
                 <div class="w-40 flex-none">
-                    <h4
-                        class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                        Solutions
-                    </h4>
-                    @for (solution of activeSituation.solutions; track i; let i = $index) {
-                    @if (solution.display_name) {
-                    <div
-                        class="mb-2 grid grid-cols-[auto_1fr] items-center gap-2 text-gray-800 dark:text-gray-200">
-                        <div class="h-5 w-5 rounded shadow-sm"
-                            [ngStyle]="{'background': (solution.id | solutionColor:activeSituation.solutions)}"></div>
-                        <span class="min-w-0 truncate text-base text-gray-800 dark:text-gray-200">
-                            {{solution.display_name}}
-                        </span>
-                    </div>
-                    }
-                    }
+                    <ng-container *ngTemplateOutlet="modalSolutions"></ng-container>
                     <div class="mt-6">
-                        <h4
-                            class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                             Vos cartes
                         </h4>
                         <div class="flex items-center justify-center select-none">
@@ -515,40 +527,12 @@
                             </div>
                         </div>
                     </div>
-                    @if (isFlop) {
-                    <div class="mt-6">
-                        <h4
-                            class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                            Flop
-                        </h4>
-                        <div class="flex items-center justify-center select-none">
-                            @for (card of activeSituation.board; track $index; let first = $first) {
-                            <div class="relative bg-white h-20 w-14 text-gray-800 rounded-sm border border-gray-800 border-solid dark:border-none"
-                                [style.margin-left]="first ? null : '-15%'" [ngStyle]="fullCardStyle ? {'background-color': card.color.color} : null">
-                                <card [cardColor]="fullCardStyle ? '#ffffff' : card.color.color"
-                                    [cardColorName]="card.color.name"
-                                    [cardValue]="card.value"></card>
-                            </div>
-                            }
-                        </div>
-                    </div>
-                    }
-                    <div class="mt-5 grid gap-3">
-                        <div>
-                            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Votre choix
-                            </h4>
-                            <p class="m-0 text-lg font-semibold text-gray-900 dark:text-gray-100">{{ selectedAnswerLabel }}</p>
-                        </div>
-                        <div>
-                            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Bonne réponse
-                            </h4>
-                            <p class="m-0 text-lg font-semibold text-gray-900 dark:text-gray-100">{{ correctAnswerLabel }}</p>
-                        </div>
+                    <div class="mt-5">
+                        <ng-container *ngTemplateOutlet="modalAnswers"></ng-container>
                     </div>
                 </div>
             </div>
+            }
             <div class="mt-6 flex justify-center">
                 <div (click)="closeSolutionModal()"
                     class="inline-flex h-12 items-center justify-center rounded-md bg-gray-800 text-white dark:text-gray-300 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 px-5 text-base font-medium shadow transition-colors cursor-pointer">
@@ -557,6 +541,44 @@
             </div>
         }
     </app-modal>
+
+    <!-- Blocs de la div de mauvaise réponse -->
+    <ng-template #modalCard let-card>
+        <div class="relative h-20 w-14 flex-none rounded-md bg-white text-gray-800 shadow-sm ring-1 ring-inset ring-gray-800/70 dark:ring-0"
+            [ngStyle]="fullCardStyle ? {'background-color': card.color.color} : null">
+            <card [cardColor]="fullCardStyle ? '#ffffff' : card.color.color"
+                [cardColorName]="card.color.name"
+                [cardValue]="card.value"></card>
+        </div>
+    </ng-template>
+
+    <ng-template #modalSolutions>
+        <div>
+            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Solutions</h4>
+            @for (solution of activeSituation.solutions; track i; let i = $index) {
+            @if (solution.display_name) {
+            <div class="mb-2 grid grid-cols-[auto_1fr] items-center gap-2 text-gray-800 dark:text-gray-200">
+                <div class="h-5 w-5 rounded shadow-sm"
+                    [ngStyle]="{'background': (solution.id | solutionColor:activeSituation.solutions)}"></div>
+                <span class="min-w-0 truncate text-base text-gray-800 dark:text-gray-200">{{solution.display_name}}</span>
+            </div>
+            }
+            }
+        </div>
+    </ng-template>
+
+    <ng-template #modalAnswers>
+        <div class="grid gap-3">
+            <div>
+                <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Votre choix</h4>
+                <p class="m-0 text-lg font-semibold text-gray-900 dark:text-gray-100">{{ selectedAnswerLabel }}</p>
+            </div>
+            <div>
+                <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Bonne réponse</h4>
+                <p class="m-0 text-lg font-semibold text-gray-900 dark:text-gray-100">{{ correctAnswerLabel }}</p>
+            </div>
+        </div>
+    </ng-template>
 
     <!-- Compte à rebours -->
     @if (showTimer) {

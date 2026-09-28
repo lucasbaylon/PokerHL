@@ -107,6 +107,10 @@ export interface HandFeatures {
     fd: boolean;
     fdRank?: RankPosition;
     oesd: boolean;
+    /** L'OESD n'existe qu'avec les deux cartes du héros (aucune des deux ne le fait seule). */
+    oesdTwoCards: boolean;
+    /** L'OESD se fait avec des cartes du héros plus hautes que la 3e carte du board (la plus petite sur un board pairé). */
+    oesdOverThird: boolean;
     gutshot: boolean;
     bdfd: BackdoorFlush[];
     bdsd: BackdoorStraight[];
@@ -147,6 +151,47 @@ function straightOuts(heroRanks: number[], boardRanks: number[]): number {
         if (straightHigh([...heroRanks, ...boardRanks, rank]) && !straightHigh([...boardRanks, rank])) outs++;
     }
     return outs;
+}
+
+/**
+ * Nombre de rangs qui complètent une quinte contenant un rang donné du board et au moins une carte du héros.
+ * @param heroRanks Rangs du héros.
+ * @param boardRanks Rangs du board.
+ * @param through Rang du board que la quinte doit contenir.
+ */
+function straightOutsThrough(heroRanks: number[], boardRanks: number[], through: number): number {
+    const withLowAce = (ranks: number[]) => new Set(ranks.includes(14) ? [...ranks, 1] : ranks);
+    const hero = withLowAce(heroRanks);
+    let outs = 0;
+    for (let rank = 2; rank <= 14; rank++) {
+        const all = withLowAce([...heroRanks, ...boardRanks, rank]);
+        const board = withLowAce([...boardRanks, rank]);
+        for (let high = 5; high <= 14; high++) {
+            const window = [high, high - 1, high - 2, high - 3, high - 4];
+            if (!window.includes(through) && !(through === 14 && high === 5)) continue;
+            if (window.every(item => all.has(item)) && !window.every(item => board.has(item)) && window.some(item => hero.has(item))) {
+                outs++;
+                break;
+            }
+        }
+    }
+    return outs;
+}
+
+/**
+ * Tirage par les deux bouts : 4 rangs consécutifs (de 2-5 à T-K) formés avec au moins une carte du héros.
+ * @param heroRanks Rangs du héros.
+ * @param boardRanks Rangs du board.
+ * @param through Rang du board que les 4 rangs doivent contenir (facultatif).
+ */
+function openEnded(heroRanks: number[], boardRanks: number[], through?: number): boolean {
+    const all = new Set([...heroRanks, ...boardRanks]);
+    for (let low = 2; low <= 10; low++) {
+        const run = [low, low + 1, low + 2, low + 3];
+        if (run.every(rank => all.has(rank)) && run.some(rank => heroRanks.includes(rank))
+            && !run.every(rank => boardRanks.includes(rank)) && (through === undefined || run.includes(through))) return true;
+    }
+    return false;
 }
 
 /**
@@ -296,6 +341,9 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
     const hasStraight = level === 'straight' || level === 'straight_flush';
     const outs = hasStraight ? 0 : straightOuts(heroRanks, boardRanks);
     const oesd = outs >= 2;
+    const oesdTwoCards = oesd && Math.max(...heroRanks.map(rank => straightOuts([rank], boardRanks))) < 2;
+    const overThirdRanks = heroRanks.filter(rank => rank > (boardFeatures.third ?? boardFeatures.bottom));
+    const oesdOverThird = oesd && overThirdRanks.length > 0 && straightOuts(overThirdRanks, boardRanks) >= 2;
     const gutshot = outs === 1;
 
     // Backdoors (flop uniquement)
@@ -319,12 +367,18 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
                 const turnOuts = straightOuts(heroRanks, [...boardRanks, turn]);
                 if (!turnOuts) continue;
                 const singleOuts = Math.max(...heroRanks.map(rank => straightOuts([rank], [...boardRanks, turn])));
-                const topOuts = straightOuts(heroRanks, [boardFeatures.top, turn]);
+                // Tirage du turn dont la quinte passe par la top card du flop
+                const topOuts = straightOutsThrough(heroRanks, [...boardRanks, turn], boardFeatures.top);
                 if (!oesd && !gutshot) {
                     bdsd.push({ twoCards: singleOuts === 0, throughTop: topOuts >= 1 });
                 }
-                if (!oesd && turnOuts >= 2) {
-                    bdoesd.push({ twoCards: singleOuts < 2, throughTop: topOuts >= 2 });
+                // BDOESD : le turn donne 4 cartes consécutives ouvertes aux deux bouts (un double gutshot ne compte pas)
+                const turnBoard = [...boardRanks, turn];
+                if (!oesd && openEnded(heroRanks, turnBoard)) {
+                    bdoesd.push({
+                        twoCards: !heroRanks.some(rank => openEnded([rank], turnBoard)),
+                        throughTop: openEnded(heroRanks, turnBoard, boardFeatures.top)
+                    });
                 }
             }
         }
@@ -349,6 +403,8 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
         fd: !!fdSuit,
         fdRank,
         oesd,
+        oesdTwoCards,
+        oesdOverThird,
         gutshot,
         bdfd,
         bdsd,

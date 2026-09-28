@@ -1,4 +1,4 @@
-import { NgStyle } from '@angular/common';
+import { NgStyle, NgTemplateOutlet } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +25,7 @@ import { CommonService } from './../../services/common.service';
 @Component({
     selector: 'app-training',
     standalone: true,
-    imports: [NgStyle, FormsModule, InputNumberModule, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe, RangeGridComponent],
+    imports: [NgStyle, NgTemplateOutlet, FormsModule, InputNumberModule, SolutionColorPipe, DefaultCardsComponent, CardComponent, AppModalComponent, TypePipe, PositionPipe, OpponentLevelPipe, RangeGridComponent],
     templateUrl: './training.component.html',
     styleUrl: './training.component.scss'
 })
@@ -736,6 +736,11 @@ export class TrainingComponent {
      */
     getOpponentRemainingStack(position: string, action: string | undefined, stack: number | undefined): number {
         const totalStack = stack ?? 0;
+        // Au flop, l'adversaire qui mise a déjà mis sa mise devant lui
+        if (this.isFlop) {
+            const facingBet = this.isFacingBet && position !== this.activeSituation.position ? this.facingBetAmount() : 0;
+            return Math.round((totalStack - facingBet) * 10) / 10;
+        }
         if (action === 'All In') return 0;
         const bet = this.getBetAmount(position, action, totalStack);
         return totalStack - bet;

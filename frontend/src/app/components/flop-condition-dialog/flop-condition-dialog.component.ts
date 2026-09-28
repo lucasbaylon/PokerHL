@@ -28,6 +28,7 @@ interface ConditionDraft {
     fdN: number;
     highCard: boolean;
     twoCards: boolean;
+    overThird: boolean;
     throughTop: boolean;
     card: 'high' | 'low' | 'any';
     ref: string;
@@ -39,7 +40,7 @@ const DEFAULT_DRAFT: ConditionDraft = {
     kind: 'made', negate: false, op: '>=', level: 'top_pair',
     kickerMode: 'none', kickerN: 4, flushMode: 'none', flushN: 4, straight: 'any',
     rank: 10, n: 2, draw: 'fd', fdMode: 'none', fdN: 4,
-    highCard: false, twoCards: false, throughTop: false,
+    highCard: false, twoCards: false, overThird: false, throughTop: false,
     card: 'high', ref: 'top', attr: 'topRank', suits: 'twoTone'
 };
 
@@ -154,7 +155,12 @@ export class FlopConditionDialogComponent implements OnChanges {
             case 'underpair': [draft.kickerMode, draft.kickerN] = fromConstraint(condition.constraint); break;
             case 'heroCard': draft.card = condition.card; draft.op = condition.op; draft.ref = condition.ref; draft.rank = condition.rank ?? 10; break;
             case 'th': draft.op = condition.op; draft.n = condition.n; break;
-            case 'draw': draft.draw = condition.draw; [draft.fdMode, draft.fdN] = fromConstraint(condition.fdRank); break;
+            case 'draw':
+                draft.draw = condition.draw;
+                [draft.fdMode, draft.fdN] = fromConstraint(condition.fdRank);
+                draft.twoCards = !!condition.twoCards;
+                draft.overThird = !!condition.overThird;
+                break;
             case 'backdoor':
                 draft.draw = condition.draw;
                 draft.highCard = !!condition.highCard;
@@ -213,6 +219,8 @@ export class FlopConditionDialogComponent implements OnChanges {
             case 'draw': {
                 const draw: RuleCondition = { kind: 'draw', draw: d.draw as 'fd', ...negate };
                 if (d.draw === 'fd' && constraint(d.fdMode, d.fdN)) draw.fdRank = constraint(d.fdMode, d.fdN);
+                if (d.draw === 'oesd' && d.twoCards) draw.twoCards = true;
+                if (d.draw === 'oesd' && d.overThird) draw.overThird = true;
                 return draw;
             }
             case 'backdoor': {

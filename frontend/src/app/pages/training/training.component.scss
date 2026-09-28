@@ -15,10 +15,9 @@
 .table-brand { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; color: #fff5; font-weight: 700; letter-spacing: .24em; font-size: 30px; pointer-events: none; }
 .table-brand small { font-size: 11px; letter-spacing: .25em; font-weight: 500; }
 .flop-board { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-.flop-board-label { color: #fff5; font-size: 11px; font-weight: 500; letter-spacing: .25em; }
+.flop-bet-chips { position: absolute; bottom: 100%; left: 50%; display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 10px; transform: translateX(-50%); pointer-events: none; }
 .flop-board .rounded-sm { border-radius: 7px; box-shadow: 0 4px 12px #0003; }
 .flop-pot { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px; background: #0006; color: #fff; font-size: 14px; font-weight: 700; }
-.flop-bet { background: #b91c1c99; }
 .player-seat { position: absolute; z-index: 1; display: flex; align-items: center; width: 236px; min-height: 112px; padding: 12px 8px; border: 1px solid transparent; border-radius: 6px; transform: translateX(-50%); }
 .seat-folded { background-color: rgb(255 255 255 / 55%) !important; box-shadow: none; }
 .seat-folded > div:last-child,

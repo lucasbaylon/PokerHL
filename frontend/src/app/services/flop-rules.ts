@@ -16,7 +16,7 @@ export type RuleCondition = { negate?: boolean } & (
     | { kind: 'made', op: '>=' | '=' | '<=', level: MadeHandLevel, kicker?: RankConstraint, flushRank?: RankConstraint, straight?: 'bottom' | 'notBottom' }
     | { kind: 'pocketPair', op: Comparator, rank: number }
     | { kind: 'underpair', constraint: RankConstraint }
-    | { kind: 'draw', draw: 'fd' | 'oesd' | 'gutshot' | 'straightDraw' | 'combo' | 'any', fdRank?: RankConstraint }
+    | { kind: 'draw', draw: 'fd' | 'oesd' | 'gutshot' | 'straightDraw' | 'combo' | 'any', fdRank?: RankConstraint, twoCards?: boolean, overThird?: boolean }
     | { kind: 'backdoor', draw: 'bdfd' | 'bdsd' | 'bdoesd', highCard?: boolean, twoCards?: boolean, throughTop?: boolean }
     | { kind: 'heroCard', card: 'high' | 'low' | 'any', op: Comparator, ref: 'top' | 'second' | 'third' | 'bottom' | 'pair' | 'rank', rank?: number }
     | { kind: 'kicker', constraint: RankConstraint }
@@ -105,7 +105,7 @@ export function matchCondition(condition: RuleCondition, hand: HandFeatures): bo
                 const straightDraw = hand.oesd || hand.gutshot;
                 switch (condition.draw) {
                     case 'fd': return hand.fd && matchRank(hand.fdRank, condition.fdRank);
-                    case 'oesd': return hand.oesd;
+                    case 'oesd': return hand.oesd && (!condition.twoCards || hand.oesdTwoCards) && (!condition.overThird || hand.oesdOverThird);
                     case 'gutshot': return hand.gutshot;
                     case 'straightDraw': return straightDraw;
                     case 'combo': return hand.fd && straightDraw;
@@ -171,7 +171,7 @@ export function describeHand(hand: HandFeatures): string[] {
         if (hand.th !== undefined) labels.push(`Carte haute : ${ordinal(hand.th)} meilleure absente du board`);
     }
     if (hand.fd) labels.push(`Tirage couleur${hand.fdRank ? ` (carte top ${hand.fdRank.top})` : ''}`);
-    if (hand.oesd) labels.push('OESD');
+    if (hand.oesd) labels.push(hand.oesdTwoCards ? 'OESD (à 2 cartes)' : 'OESD');
     if (hand.gutshot) labels.push('Gutshot');
     if (hand.bdfd.length) {
         const details = [hand.bdfd.some(item => item.highCard) ? 'carte haute' : '', hand.bdfd.some(item => item.twoCards) ? 'à 2 cartes' : ''].filter(Boolean).join(', ');
@@ -236,7 +236,9 @@ export function describeCondition(condition: RuleCondition): string {
             }
             case 'draw': {
                 const names = { fd: 'Tirage couleur', oesd: 'OESD', gutshot: 'Gutshot', straightDraw: 'Tirage quinte', combo: 'Combo-draw', any: 'Tirage' };
-                const details = describeRank(condition.fdRank, 'carte');
+                const details = condition.draw === 'oesd'
+                    ? [condition.twoCards ? 'à 2 cartes' : '', condition.overThird ? 'carte > 3e carte du board' : ''].filter(Boolean).join(', ')
+                    : describeRank(condition.fdRank, 'carte');
                 return `${names[condition.draw]}${details ? ` (${details})` : ''}`;
             }
             case 'backdoor': {

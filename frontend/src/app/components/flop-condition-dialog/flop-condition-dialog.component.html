@@ -157,6 +157,18 @@
             </div>
             }
             }
+            @if (draft.draw === 'oesd') {
+            <div class="flex flex-col gap-3 sm:col-span-2">
+                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <p-checkbox [(ngModel)]="draft.twoCards" [binary]="true" inputId="drawTwo" />
+                    Utilise les deux cartes du héros
+                </label>
+                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <p-checkbox [(ngModel)]="draft.overThird" [binary]="true" inputId="drawOverThird" />
+                    Fait avec une carte plus haute que la 3e carte du board
+                </label>
+            </div>
+            }
             }
 
             @case ('backdoor') {
@@ -169,7 +181,7 @@
                 @if (draft.draw === 'bdfd') {
                 <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                     <p-checkbox [(ngModel)]="draft.highCard" [binary]="true" inputId="bdHigh" />
-                    Avec une carte plus haute que le board
+                    Avec la carte haute du héros
                 </label>
                 }
                 <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
