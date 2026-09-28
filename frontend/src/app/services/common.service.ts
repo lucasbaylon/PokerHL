@@ -15,7 +15,7 @@ export class CommonService {
     private particleSettings = signal<ParticleSettings>(DEFAULT_PARTICLE_SETTINGS);
     private rangeTextOutline = signal<boolean>(false);
     private rangeFontSize = signal<'small' | 'medium' | 'large'>('small');
-    private actionColors = signal<ActionColors>({ ...DEFAULT_ACTION_COLORS });
+    private actionColors = signal<ActionColors>({ ...DEFAULT_ACTION_COLORS, ...this.readStoredActionColors() });
 
     /** Couleur des solutions dont l'action n'est pas encore définie. */
     readonly undefinedActionColor = '#9ca3af';
@@ -214,6 +214,14 @@ export class CommonService {
         this.particleSettings.set(value);
     }
 
+    private readStoredActionColors(): Partial<ActionColors> {
+        try {
+            return JSON.parse(localStorage.getItem('userParams') ?? '{}')?.actionColors ?? {};
+        } catch {
+            return {};
+        }
+    }
+
     getActionColors(): ActionColors {
         return this.actionColors();
     }
@@ -235,6 +243,7 @@ export class CommonService {
      */
     solutionColor(solution: Solution | undefined, solutionLst: Solution[] = []): string {
         if (!solution) return this.undefinedActionColor;
+        if (solution.type !== 'unique') return solution.color || this.undefinedActionColor;
         const { action, raiseAmount } = this.inferSolutionAction(solution);
         if (!action) return solution.color || this.undefinedActionColor;
         const baseColor = this.actionColors()[action];

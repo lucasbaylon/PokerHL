@@ -1,6 +1,6 @@
 import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 import { NgClass, NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
@@ -43,6 +43,7 @@ export class SituationManagerComponent {
     showHelpModal: boolean = false;
     readonly maxRaiseSizes = 3;
     showBrushMenu: boolean = false;
+    @ViewChild('brushMenu') brushMenu?: ElementRef<HTMLElement>;
     isSaving: boolean = false;
     showRaiseEditor: boolean = false;
     raiseEditorSolutionId?: string;
@@ -363,11 +364,6 @@ export class SituationManagerComponent {
                     if (invalidSolution) {
                         this.commonService.showSwalToast(`Veuillez sélectionner une action et un montant valide pour chaque relance utilisée.`, 'error');
                     } else {
-                        const usedSolutionIds = new Set<string | undefined>(uniqueSolutions);
-                        this.situation_obj.solutions
-                            .filter(solution => solution.type === 'mixed' && usedSolutionIds.has(solution.id))
-                            .forEach(solution => solution.colorList?.forEach(item => usedSolutionIds.add(item.color)));
-                        this.situation_obj.solutions = this.situation_obj.solutions.filter(solution => usedSolutionIds.has(solution.id));
                         if (this.mode === "new") {
                             this.apiSituation.checkSituationNameFromUser(this.situation_obj.name).subscribe((data: any) => {
                                 if (data.exist) {
@@ -405,7 +401,7 @@ export class SituationManagerComponent {
     async addSituation() {
         if (this.isSaving) return;
         this.isSaving = true;
-        const saved = await this.apiSituation.addSituation(this.situation_obj);
+        const saved = await this.apiSituation.addSituation(this.situationToSave());
         this.isSaving = false;
         if (!saved) {
             this.commonService.showSwalToast(`La situation n'a pas pu être enregistrée. Veuillez réessayer.`, 'error');
@@ -419,10 +415,9 @@ export class SituationManagerComponent {
      * Appelle le service pour modifier la situation actuelle.
      */
     async editSituation() {
-        // Le serveur retire l'id du JSON enregistré : on envoie une copie pour garder l'objet local intact en cas d'échec.
         if (this.isSaving) return;
         this.isSaving = true;
-        const saved = await this.apiSituation.editSituation({ ...this.situation_obj });
+        const saved = await this.apiSituation.editSituation(this.situationToSave());
         this.isSaving = false;
         if (!saved) {
             this.commonService.showSwalToast(`La situation n'a pas pu être modifiée. Veuillez réessayer.`, 'error');
@@ -430,6 +425,33 @@ export class SituationManagerComponent {
         }
         this.commonService.showSwalToast(`Situation modifiée !`);
         this.router.navigate(['situations']);
+    }
+
+    /**
+     * Copie de la situation à envoyer au serveur, sans les solutions inutilisées.
+     * Une solution est conservée si elle est peinte dans le tableau ou si elle compose une solution mixte peinte.
+     * La situation éditée n'est pas modifiée : en cas d'échec, toutes les actions restent dans le pinceau.
+     */
+    situationToSave(): Situation {
+        const usedSolutionIds = new Set<string | undefined>(this.situation_obj.situations.flat().map(cell => cell.solution));
+        this.situation_obj.solutions
+            .filter(solution => solution.type === 'mixed' && usedSolutionIds.has(solution.id))
+            .forEach(solution => solution.colorList?.forEach(item => usedSolutionIds.add(item.color)));
+        return {
+            ...this.situation_obj,
+            solutions: this.situation_obj.solutions.filter(solution => usedSolutionIds.has(solution.id))
+        };
+    }
+
+    /**
+     * Ferme le menu du pinceau lors d'un clic en dehors.
+     * (Un fond `fixed` ne couvre pas toute la page ici : la carte animée a un `transform`.)
+     */
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+        if (this.showBrushMenu && !this.brushMenu?.nativeElement.contains(event.target as Node)) {
+            this.showBrushMenu = false;
+        }
     }
 
     /**
@@ -569,11 +591,9 @@ export class SituationManagerComponent {
             if (index === 0) percent = this.mixedSolutionSliderMinValue;
             if (index === 1 && this.multipleSolutionCheckBox.length === 3) percent = this.mixedSolutionSliderMaxValue - this.mixedSolutionSliderMinValue;
             if (index + 1 === this.multipleSolutionCheckBox.length) {
-                if (this.mixedSolutionSliderMaxValue === 100) {
-                    percent = 100 - this.mixedSolutionSliderMinValue;
-                } else {
-                    percent = 100 - this.mixedSolutionSliderMaxValue;
-                }
+                percent = this.multipleSolutionCheckBox.length === 2
+                    ? 100 - this.mixedSolutionSliderMinValue
+                    : 100 - this.mixedSolutionSliderMaxValue;
             }
 
             let obj = {
@@ -598,7 +618,7 @@ export class SituationManagerComponent {
             }
         }
         let new_obj = {
-            id: this.multipleSituationId ? this.multipleSituationId : `mixed_solution_${this.countMultipleSolution}`,
+            id: this.multipleSituationId ? this.multipleSituationId : this.nextMixedSolutionId(),
             type: "mixed",
             display_name: this.multipleSolutionName,
             colorList: solutionLst
@@ -619,6 +639,15 @@ export class SituationManagerComponent {
         }
         this.situation_objSolutionsRef = this.situation_obj.solutions.slice();
         this.resetMultipleSituation();
+    }
+
+    /**
+     * Identifiant libre pour une nouvelle solution mixte.
+     */
+    nextMixedSolutionId(): string {
+        const nextIndex = Math.max(-1, ...this.situation_obj.solutions
+            .map(solution => Number(solution.id.match(/^mixed_solution_(\d+)$/)?.[1] ?? -1))) + 1;
+        return `mixed_solution_${nextIndex}`;
     }
 
     /**
