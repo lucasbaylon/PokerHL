@@ -78,7 +78,7 @@ export class TrainingComponent {
     private showEndSurvivalAfterSolution: boolean = false;
     raiseAmount: number = 2;
     betPercent: number = 50;
-    readonly betPresets: number[] = [33, 50, 75, 100];
+    readonly betPresets: number[] = [25, 33, 50, 75, 100];
     raiseMultiplier: number = 3;
     readonly raiseMultiplierPresets: number[] = [2.5, 3, 4];
     readonly describeCondition = describeCondition;
