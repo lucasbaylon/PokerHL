@@ -9,8 +9,10 @@ export interface LexiconEntry {
 type DefinitionData = Omit<LexiconEntry, 'term'>;
 
 const RAW_DEFINITIONS = `2barrel	Deuxième mise effectuée au turn après avoir déjà misé le flop avec l'initiative.	Il cbet flop puis 2barrel sur une brique turn.
+2nd pair	Paire formée avec la 2e carte du board.	Avec K9 sur A-9-4, le héros a 2nd pair.
 3b ou 3bet	Surrelance faite après une première relance preflop ou postflop.	UTG open, le bouton 3bet.
 3barrel	Troisième mise consécutive, généralement river après avoir misé flop et turn.	Il 3barrel bluff sur une river effrayante.
+3rd pair	Paire formée avec la 3e carte du board.	Avec A4 sur K-9-4, le héros a 3rd pair.
 3way	Coup joué à trois joueurs.	Le pot part 3way au flop.
 4b ou 4bet	Relance faite par-dessus un 3bet.	CO open, BTN 3bet, SB 4bet.
 4way	Coup joué à quatre joueurs.	La main se joue 4way après quatre calls preflop.
@@ -50,6 +52,9 @@ Balla	Joueur qui dépense ou mise de grosses sommes, souvent avec une image flam
 Bankroll	Capital total réservé au poker.	Sa bankroll de 2 000 euros lui permet de jouer la NL50.
 Bankroll management	Gestion prudente de la bankroll pour limiter le risque de ruine.	Il descend de limite quand son bankroll management l'impose.
 Barrel	Mise d'agression sur une street, souvent dans une séquence de bluff ou de value.	Il envoie un second barrel turn.
+BDFD	Backdoor flush draw : trois cartes de la même couleur au flop, il faut la turn et la river pour faire couleur.	Avec Kh7h sur Q-8h-3s, le héros a un BDFD.
+BDOESD	Backdoor OESD : une carte au turn peut donner un tirage quinte par les deux bouts (4 cartes qui se suivent).	Avec 65 sur Q-9-3, un 4 turn donne 3-4-5-6 : c'est un BDOESD.
+BDSD	Backdoor straight draw : une carte au turn peut donner un tirage quinte (OESD ou gutshot).	Avec 84 sur Q-9-3, un T turn donne un gutshot.
 Bellybuster	Tirage quinte ventral, aussi appelé gutshot.	Avec 8-9 sur 5-7-K, le 6 donne bellybuster.
 Bellybuster straight draw	Tirage quinte ventral nécessitant une seule valeur précise.	Avec A-2 sur 3-4-K, le 5 complète le bellybuster straight draw.
 Bet	Mise volontaire faite quand personne n'a encore misé sur la street.	Il bet demi-pot au flop.
@@ -68,6 +73,8 @@ Blocking bet	Petite mise destinée à contrôler le prix ou empêcher une grosse
 Bluff	Mise ou relance avec une main faible pour faire folder une main meilleure.	Il bluff river après avoir raté son tirage.
 Bluff catcher	Main qui ne bat presque que les bluffs adverses.	Deuxième paire devient un bluff catcher river.
 Board	Cartes communes visibles au centre de la table.	Le board A-K-7 favorise le relanceur initial.
+Board connecté	Board dont deux cartes sont à 4 rangs ou moins l'une de l'autre, donc proches pour faire des quintes.	K-9-6 est un board connecté (9 et 6).
+Board pairé	Board dont deux cartes ont la même valeur.	K-K-7 est un board pairé.
 Boat	Surnom anglais du full house.	Il fait boat river avec 77 sur 7-K-K-2-2.
 Boîte	Expression française pour all-in.	Il envoie la boîte avec QQ.
 Bombe	Main très forte ou mise massive selon le contexte.	Il touche une bombe avec carré au flop.
@@ -83,7 +90,7 @@ Brelan	Trois cartes de même valeur, souvent deux cartes fermées plus une carte
 Brick	Carte sans impact apparent, équivalent de blank.	La river est une brick qui ne complète aucun tirage.
 Bring-in	Mise forcée dans certaines variantes de stud, payée par une carte exposée précise.	En Stud, la plus petite carte peut payer le bring-in.
 Brique	Carte sans effet important sur la main ou les tirages.	Le 2 river est une brique.
-Broadway	Quinte hauteur As, ou carte haute de Dix à As selon le contexte.	A-K-Q-J-T est Broadway.
+Broadway	Quinte hauteur As (A-K-Q-J-T), ou main dont les deux cartes sont T ou plus (T, J, Q, K, A).	A-K-Q-J-T est Broadway ; KJ est une main broadway.
 Broke	Être sans bankroll ou avoir perdu son tapis.	Il joue trop haut et finit broke.
 Brûler	Écarter une carte du dessus du paquet avant de distribuer une street.	Le croupier brûle une carte avant le flop.
 Bubble	Phase juste avant les places payées d'un tournoi.	À la bubble, les petits tapis subissent la pression.
@@ -105,6 +112,9 @@ Capé	Se dit d'une range qui ne contient presque plus les mains les plus fortes.
 Carré	Quatre cartes de même valeur.	Il touche carré de Dames.
 Carreau	Une des quatre couleurs du jeu de cartes, diamonds en anglais.	L'As de carreau bloque la couleur max.
 Carte	Unité de base du jeu ; elle a une valeur et une couleur.	Chaque joueur reçoit deux cartes en Hold'em.
+Carte basse	La plus petite des deux cartes du héros.	Avec A5, la carte basse est le 5.
+Carte haute	La plus haute des deux cartes du héros. Elle se compare souvent aux valeurs absentes du board : la meilleure absente, la 2e meilleure absente, etc.	Avec K7 sur A-8-3, la carte haute K est la meilleure valeur absente du board.
+Carte non pairée	Sur un board pairé, la carte qui n'est pas appariée.	Sur K-K-7, la carte non pairée est le 7.
 Cash out	Retrait d'argent d'une room ou option permettant de sécuriser une partie d'un pot.	Il cash out une partie de ses gains.
 Cash-game	Partie où les jetons représentent directement de l'argent réel.	En cash-game, on peut recaver après une perte.
 Casser (une table)	Fermer une table ou la quitter après avoir gagné/perdu.	La table casse quand il ne reste plus assez de joueurs.
@@ -169,6 +179,7 @@ Deepstack	Structure ou situation avec beaucoup de blindes effectives.	Un tournoi
 Delayed cbet	Mise de continuation retardée, faite turn après avoir checké flop.	Il delayed cbet après le check flop.
 Dépareillé	Deux cartes de couleurs différentes, offsuit.	As-Roi dépareillé a moins d'équité qu'assorti.
 Déstacker	Prendre tout le tapis d'un joueur.	Il déstacke villain avec les nuts.
+Deux paires	Main où chacune des deux cartes du héros forme une paire avec le board.	Avec K9 sur K-9-4, le héros a deux paires.
 Diamond	Carreau en anglais.	Diamond indique la couleur carreau.
 Dominé	Main qui partage une carte haute avec une meilleure main adverse et a peu d'outs propres.	AJ est dominé par AQ.
 DoN	Abréviation de Double or Nothing.	En DoN, la moitié du field double son buy-in.
@@ -308,6 +319,7 @@ Luckbox	Joueur qui semble gagner grâce à beaucoup de chance.	Il touche toutes 
 M	Indicateur de tournoi : tapis divisé par le coût d'une orbite.	Avec un M de 5, il doit prendre des risques.
 Main	Cartes détenues par un joueur ou combinaison finale.	Sa main est paire de Rois.
 Main event	Tournoi principal d'une série.	Le main event attire le plus gros field.
+Main faite	Main qui a déjà une paire ou mieux, par opposition à un tirage ou à une main sans paire.	Top pair est une main faite ; un tirage couleur seul n'en est pas une.
 Max	Maximum autorisé, souvent pour la cave ou le nombre de joueurs.	La cave max est de 100 blindes.
 Merger	Miser une range fusionnée contenant des mains moyennes et fortes, non polarisée.	Il merge sa range avec top paire bon kicker.
 Metagame	Dynamique stratégique liée à l'historique et à l'image entre joueurs.	Le metagame rend son 4bet plus crédible.
@@ -316,6 +328,7 @@ Middle position	Position intermédiaire entre early et late.	En middle position,
 Middle stakes	Limites moyennes entre micro/low et high stakes.	La NL400 fait partie des middle stakes.
 Milk	Extraire lentement de la value avec une très grosse main.	Il milk son full avec une petite mise river.
 Misclick	Clic involontaire en ligne.	Il min-raise par misclick.
+Monotone	Board de trois cartes de la même couleur.	Kh-9h-4h est un flop monotone.
 Monstre	Main extrêmement forte.	Il slowplay un monstre au flop.
 Montante	Partie ou limite supérieure à celle jouée habituellement.	Il tente une montante en NL100.
 Mourant	Joueur avec un tapis presque nul.	Il est mourant avec deux blindes.
@@ -365,6 +378,7 @@ Overlay	Situation où la valeur ajoutée dépasse le coût, souvent avec garanti
 Overpair	Paire en main plus haute que toutes les cartes du board.	QQ sur 9-6-2 est une overpair.
 + (plus)	Notation indiquant une range incluant cette main et toutes les meilleures.	TT+ signifie TT, JJ, QQ, KK et AA.
 Package	Lot gagné ou acheté pour un événement, incluant buy-in et parfois frais.	Il gagne un package pour le main event.
+Paire servie	Paire reçue directement en main avant le flop.	77 est une paire servie.
 Parole	Check en français.	Il fait parole au flop.
 Passif	Joueur qui mise et relance peu, préférant suivre.	Un joueur passif call beaucoup.
 Pat	Main servie dans les variantes à tirage, qui ne demande pas de carte.	Il stand pat avec une main faite.
@@ -527,6 +541,11 @@ Tilter	Entrer en tilt.	Il commence à tilter et spew.
 Time bank	Réserve de temps supplémentaire en ligne.	Il utilise sa time bank river.
 Timing tell	Indice donné par la vitesse d'action.	Son snap-check peut être un timing tell.
 Tirage	Draw, main qui doit toucher une carte pour s'améliorer.	Il paie avec un tirage couleur.
+Tirage couleur	Quatre cartes de la même couleur : il en manque une pour faire couleur.	Avec AhKh sur Qh-7h-2c, le héros a un tirage couleur.
+Tirage quinte	Tirage vers une quinte : OESD ou gutshot.	Avec JT sur 9-8-2, le héros a un tirage quinte.
+Top card	La plus haute carte du board.	Sur K-9-4, la top card est le K.
+Top N	Rang d'une carte parmi les valeurs possibles, en partant de la meilleure : top 1 est la meilleure, top 4 la 4e meilleure. Les valeurs déjà sur le board ne comptent pas.	Sur K-9-4, un kicker Valet est top 3 (après l'As et la Dame).
+Top pair	Paire formée avec la plus haute carte du board ; sur un board pairé, avec la plus haute carte non pairée.	Avec AK sur K-9-4, le héros a top pair kicker top 1.
 Tournant	Turn, quatrième carte commune.	Le tournant complète la quinte.
 TPTK	Top pair top kicker.	AQ sur Q-7-2 donne TPTK.
 Tracker	Logiciel qui enregistre les mains et produit des statistiques.	Son tracker affiche 24/19.
@@ -537,6 +556,7 @@ Tricky	Joueur ou ligne difficile à lire.	Ce reg tricky check/raise des bluffs.
 Trips	Brelan formé avec une paire sur le board et une carte en main.	A7 sur 7-7-K donne trips.
 Turn	Quatrième carte commune.	Il mise turn après avoir cbet flop.
 Twice	Se réfère à run it twice : distribuer deux issues après un all-in.	Ils run twice pour réduire la variance.
+Two-tone	Board avec deux cartes de la même couleur : un tirage couleur est possible.	Kh-9h-4s est un flop two-tone.
 UI	Abréviation d'unimproved, main non améliorée.	Il fold turn si UI.
 ul	Abréviation d'unlucky, malchanceux.	ul après son bad beat.
 Under the gun	Première position à parler preflop après les blinds.	UTG open une range serrée.

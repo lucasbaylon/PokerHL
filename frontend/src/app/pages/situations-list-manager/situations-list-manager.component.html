@@ -145,7 +145,7 @@
                         {{ situation.name }}
                     </button>
                 </td>
-                <td class="dark:border-gray-700">{{ situation.type | type }}@if (situation.type === 'flop' && (situation.flopTypes ?? situation.flopType)) { · {{ (situation.flopTypes ?? situation.flopType) | flopType }} }</td>
+                <td class="dark:border-gray-700">@if (situation.type === 'flop' && flopTypesOf(situation).length) { {{ flopTypesOf(situation) | flopType }} } @else { {{ situation.type | type }} }</td>
                 <td class="dark:border-gray-700">{{ situation.stack }} BB</td>
                 <td class="dark:border-gray-700">{{ situation.nbPlayer }}</td>
                 <td class="dark:border-gray-700">{{ situation.position | position }}</td>

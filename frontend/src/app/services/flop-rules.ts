@@ -183,6 +183,62 @@ export function describeHand(hand: HandFeatures): string[] {
     return labels;
 }
 
+export interface FlopTerm {
+    term: string;
+    explanation: string;
+}
+
+/** Termes spéciaux des libellés de mains et de règles, avec une courte explication. */
+const FLOP_TERMS: (FlopTerm & { pattern: RegExp })[] = [
+    { term: 'Quinte flush', pattern: /Quinte flush/, explanation: 'Cinq cartes qui se suivent, toutes de la même couleur.' },
+    { term: 'Carré', pattern: /Carré/, explanation: 'Quatre cartes de même valeur.' },
+    { term: 'Full', pattern: /\bFull\b/, explanation: 'Un brelan et une paire.' },
+    { term: 'Couleur', pattern: /(^|[≥≤] )Couleur\b/, explanation: 'Cinq cartes de la même couleur.' },
+    { term: 'Quinte', pattern: /(^|[≥≤] )Quinte\b(?! flush)/, explanation: 'Cinq cartes qui se suivent. « La plus basse » : la plus petite quinte possible sur ce board.' },
+    { term: 'Set', pattern: /\bSet\b/, explanation: 'Brelan fait avec une paire servie et une carte du board.' },
+    { term: 'Trips', pattern: /\bTrips\b/, explanation: 'Brelan fait avec une carte de ta main et la paire du board.' },
+    { term: 'Deux paires', pattern: /Deux paires/, explanation: 'Chacune de tes deux cartes fait une paire avec le board.' },
+    { term: 'Overpair', pattern: /Overpair/, explanation: 'Paire servie plus haute que toutes les cartes du board.' },
+    { term: 'Top pair', pattern: /Top pair/, explanation: 'Paire avec la plus haute carte du board (sur un board pairé : avec la plus haute carte non pairée).' },
+    { term: '2nd pair', pattern: /2nd pair/, explanation: 'Paire avec la 2e carte du board.' },
+    { term: '3rd pair', pattern: /3rd pair/, explanation: 'Paire avec la 3e carte du board.' },
+    { term: 'Paire servie', pattern: /Paire servie/, explanation: 'Paire que tu as en main (ex. 77).' },
+    { term: 'Aucune main faite', pattern: /Aucune main faite/, explanation: 'Ni paire ni mieux.' },
+    { term: 'Top card', pattern: /top card/i, explanation: 'Plus haute carte du board.' },
+    { term: 'Kicker', pattern: /kicker/i, explanation: 'Ta carte qui ne sert pas à la paire (ou au brelan) : elle départage deux mains égales.' },
+    { term: 'Top N', pattern: /\btop \d/, explanation: '« top 4 » : 4e meilleure valeur possible parmi les cartes absentes du board (top 1 = la meilleure).' },
+    { term: 'Carte haute', pattern: /Carte haute/, explanation: 'Ta plus haute carte. « 2e meilleure absente du board » : 2e plus forte valeur parmi celles qui ne sont pas sur le board.' },
+    { term: 'Carte basse', pattern: /Carte basse/, explanation: 'Ta plus petite carte.' },
+    { term: 'Tirage couleur', pattern: /Tirage couleur/, explanation: 'Quatre cartes de la même couleur : il en manque une pour faire couleur.' },
+    { term: 'OESD', pattern: /\bOESD\b/, explanation: 'Tirage quinte par les deux bouts. « À 2 cartes » : il faut tes deux cartes. « Carte > 3e carte du board » : fait avec une carte plus haute que la 3e carte du board.' },
+    { term: 'Gutshot', pattern: /Gutshot/, explanation: 'Tirage quinte ventral : une seule valeur complète la quinte.' },
+    { term: 'Tirage quinte', pattern: /Tirage quinte/, explanation: 'OESD ou gutshot.' },
+    { term: 'Combodraw', pattern: /Combodraw/, explanation: 'Tirage couleur et tirage quinte en même temps.' },
+    { term: 'Tirage', pattern: /(^|: )Tirage$/, explanation: 'N\'importe quel tirage : tirage couleur, OESD ou gutshot.' },
+    { term: 'BDFD', pattern: /\bBDFD\b/, explanation: 'Backdoor couleur : trois cartes de la même couleur, il faut la turn et la river. « Carte haute » : ta carte haute en fait partie. « À 2 cartes » : tes deux cartes en font partie.' },
+    { term: 'BDSD', pattern: /\bBDSD\b/, explanation: 'Backdoor quinte : une carte au turn peut te donner un tirage quinte (OESD ou gutshot). « Par la top card » : la quinte passe par la plus haute carte du board.' },
+    { term: 'BDOESD', pattern: /\bBDOESD\b/, explanation: 'Backdoor OESD : une carte au turn peut te donner un tirage quinte par les deux bouts. « Par la top card » : la quinte passe par la plus haute carte du board.' },
+    { term: 'Broadway', pattern: /Broadway/, explanation: 'Tes deux cartes sont T ou plus (T, J, Q, K, A).' },
+    { term: 'Main assortie', pattern: /Main assortie/, explanation: 'Tes deux cartes sont de la même couleur.' },
+    { term: 'Board pairé', pattern: /Board pairé/, explanation: 'Deux cartes du board ont la même valeur.' },
+    { term: 'Carte non pairée', pattern: /carte non pairée/, explanation: 'Sur un board pairé, la carte qui n\'est pas appariée.' },
+    { term: 'Arc-en-ciel', pattern: /arc-en-ciel/i, explanation: 'Board de trois couleurs différentes : aucun tirage couleur au flop.' },
+    { term: 'Two-tone', pattern: /two-tone/i, explanation: 'Board avec deux cartes de la même couleur : tirage couleur possible.' },
+    { term: 'Monotone', pattern: /monotone/i, explanation: 'Board de trois cartes de la même couleur.' },
+    { term: 'Board connecté', pattern: /connecté/, explanation: 'Deux cartes du board à 4 rangs ou moins l\'une de l\'autre.' }
+];
+
+/**
+ * Explications courtes des termes spéciaux présents dans des libellés (caractéristiques de main, conditions).
+ * @param labels Libellés affichés.
+ * @returns Les termes trouvés, dans l'ordre du lexique des règles, sans doublon.
+ */
+export function explainTerms(labels: string[]): FlopTerm[] {
+    return FLOP_TERMS
+        .filter(item => labels.some(label => item.pattern.test(label)))
+        .map(({ term, explanation }) => ({ term, explanation }));
+}
+
 /** Nombre ordinal court : 1re, 2e, 3e… */
 function ordinal(n: number): string {
     return n === 1 ? '1re' : `${n}e`;
@@ -235,7 +291,7 @@ export function describeCondition(condition: RuleCondition): string {
                 return `Paire servie sous la top card, ${labels[mode]}`;
             }
             case 'draw': {
-                const names = { fd: 'Tirage couleur', oesd: 'OESD', gutshot: 'Gutshot', straightDraw: 'Tirage quinte', combo: 'Combo-draw', any: 'Tirage' };
+                const names = { fd: 'Tirage couleur', oesd: 'OESD', gutshot: 'Gutshot', straightDraw: 'Tirage quinte', combo: 'Combodraw', any: 'Tirage' };
                 const details = condition.draw === 'oesd'
                     ? [condition.twoCards ? 'à 2 cartes' : '', condition.overThird ? 'carte > 3e carte du board' : ''].filter(Boolean).join(', ')
                     : describeRank(condition.fdRank, 'carte');

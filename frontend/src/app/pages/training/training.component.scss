@@ -15,7 +15,7 @@
 .table-brand { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; color: #fff5; font-weight: 700; letter-spacing: .24em; font-size: 30px; pointer-events: none; }
 .table-brand small { font-size: 11px; letter-spacing: .25em; font-weight: 500; }
 .flop-board { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-.flop-bet-chips { position: absolute; bottom: 100%; left: 50%; display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 10px; transform: translateX(-50%); pointer-events: none; }
+.flop-bet-chips { position: absolute; bottom: 100%; left: 50%; display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 22px; transform: translateX(-50%); pointer-events: none; }
 .flop-board .rounded-sm { border-radius: 7px; box-shadow: 0 4px 12px #0003; }
 .flop-pot { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px; background: #0006; color: #fff; font-size: 14px; font-weight: 700; }
 .player-seat { position: absolute; z-index: 1; display: flex; align-items: center; width: 236px; min-height: 112px; padding: 12px 8px; border: 1px solid transparent; border-radius: 6px; transform: translateX(-50%); }
@@ -23,7 +23,7 @@
 .seat-folded > div:last-child,
 .seat-folded > div:first-child > :not(.dealer-button) { opacity: .55; }
 :host-context(.dark) .seat-folded { background-color: rgb(35 39 38 / 55%) !important; }
-.seat-hu { top: -58px; left: 50%; }
+.seat-hu { bottom: calc(100% - 38px); left: 50%; }
 .seat-left { top: -32px; left: 14%; }
 .seat-right { top: -32px; left: 86%; }
 .seat-hero { top: calc(100% - 38px); left: 50%; border-color: #9ca3af; }

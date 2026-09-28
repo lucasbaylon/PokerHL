@@ -1,6 +1,8 @@
 const TERMS_SOURCE = `2barrel
+2nd pair
 3b ou 3bet
 3barrel
+3rd pair
 3way
 4b ou 4bet
 4way
@@ -40,6 +42,9 @@ Balla
 Bankroll
 Bankroll management
 Barrel
+BDFD
+BDOESD
+BDSD
 Bellybuster
 Bellybuster straight draw
 Bet
@@ -58,6 +63,8 @@ Blocking bet
 Bluff
 Bluff catcher
 Board
+Board connecté
+Board pairé
 Boat
 Boîte
 Bombe
@@ -95,6 +102,9 @@ Capé
 Carré
 Carreau
 Carte
+Carte basse
+Carte haute
+Carte non pairée
 Cash out
 Cash-game
 Casser (une table)
@@ -159,6 +169,7 @@ Deepstack
 Delayed cbet
 Dépareillé
 Déstacker
+Deux paires
 Diamond
 Dominé
 DoN
@@ -298,6 +309,7 @@ Luckbox
 M
 Main
 Main event
+Main faite
 Max
 Merger
 Metagame
@@ -306,6 +318,7 @@ Middle position
 Middle stakes
 Milk
 Misclick
+Monotone
 Monstre
 Montante
 Mourant
@@ -355,6 +368,7 @@ Overlay
 Overpair
 + (plus)
 Package
+Paire servie
 Parole
 Passif
 Pat
@@ -517,6 +531,11 @@ Tilter
 Time bank
 Timing tell
 Tirage
+Tirage couleur
+Tirage quinte
+Top card
+Top N
+Top pair
 Tournant
 TPTK
 Tracker
@@ -527,6 +546,7 @@ Tricky
 Trips
 Turn
 Twice
+Two-tone
 UI
 ul
 Under the gun

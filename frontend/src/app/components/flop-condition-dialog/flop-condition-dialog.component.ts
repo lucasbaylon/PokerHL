@@ -95,7 +95,7 @@ export class FlopConditionDialogComponent implements OnChanges {
     readonly ranks = RANK_OPTIONS.map(item => ({ code: item.rank, name: item.name }));
     readonly draws: Option<string>[] = [
         { code: 'fd', name: 'Tirage couleur (FD)' }, { code: 'oesd', name: 'OESD' }, { code: 'gutshot', name: 'Gutshot' },
-        { code: 'straightDraw', name: 'Tirage quinte (OESD ou gutshot)' }, { code: 'combo', name: 'Combo-draw (FD + tirage quinte)' },
+        { code: 'straightDraw', name: 'Tirage quinte (OESD ou gutshot)' }, { code: 'combo', name: 'Combodraw (FD + tirage quinte)' },
         { code: 'any', name: 'N\'importe quel tirage' }
     ];
     readonly backdoors: Option<string>[] = [

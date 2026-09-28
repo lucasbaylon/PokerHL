@@ -164,6 +164,13 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         }
     }
 
+    /**
+     * Types de flop d'une situation (ancien champ flopType compris).
+     */
+    flopTypesOf(situation: Situation): string[] {
+        return situation.flopTypes ?? (situation.flopType ? [situation.flopType] : []);
+    }
+
     private scheduleRowsPerPageUpdate() {
         if (this.resizeFrameId !== undefined) {
             cancelAnimationFrame(this.resizeFrameId);

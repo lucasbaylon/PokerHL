@@ -236,7 +236,7 @@
 
                     <!-- Jetons HU : adversaire -->
                     @if (activeSituation.nbPlayer === 2 && getChipImageForBet(activeSituation.previousPlayer1Action, getHUOpponentPosition(activeSituation.position!))) {
-                    <div class="absolute top-[20%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                    <div class="absolute top-[11%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-0 pointer-events-none">
                         <img [src]="getChipImageForBet(activeSituation.previousPlayer1Action, getHUOpponentPosition(activeSituation.position!))" 
                              [class]="getChipClass(activeSituation.previousPlayer1Action, getBetAmount(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                         @if (getBetAmountStr(getHUOpponentPosition(activeSituation.position!), activeSituation.previousPlayer1Action, activeSituation.stack)) {
@@ -248,7 +248,7 @@
                     <!-- Jetons 3W : adversaire de gauche (BU = player1) -->
                     <!-- Jetons 3W : adversaire de gauche -->
                     @if (activeSituation.nbPlayer === 3 && getChipImageForBet(getOpponentAction('left'), getOpponentPosition('left'))) {
-                        <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <div class="absolute top-[28%] left-[28%] transform -translate-x-1/2 flex flex-col items-center gap-0 pointer-events-none">
                             <img [src]="getChipImageForBet(getOpponentAction('left'), getOpponentPosition('left'))" 
                                  [class]="getChipClass(getOpponentAction('left'), getBetAmount(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                             @if (getBetAmountStr(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack)) {
@@ -259,7 +259,7 @@
 
                     <!-- Jetons 3W : adversaire de droite -->
                     @if (activeSituation.nbPlayer === 3 && getChipImageForBet(getOpponentAction('right'), getOpponentPosition('right'))) {
-                        <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                        <div class="absolute top-[28%] left-[72%] transform -translate-x-1/2 flex flex-col items-center gap-0 pointer-events-none">
                             <img [src]="getChipImageForBet(getOpponentAction('right'), getOpponentPosition('right'))" 
                                  [class]="getChipClass(getOpponentAction('right'), getBetAmount(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                             @if (getBetAmountStr(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack)) {
@@ -270,7 +270,7 @@
 
                     <!-- Jetons du joueur (blind selon sa position) -->
                     @if (getChipImageForBet(undefined, activeSituation.position!)) {
-                    <div class="absolute top-[72%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                    <div class="absolute top-[72%] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-0 pointer-events-none">
                         <img [src]="getChipImageForBet(undefined, activeSituation.position!)" 
                              [class]="getChipClass(undefined, getBetAmount(activeSituation.position!, undefined, activeSituation.stack)) + ' w-auto object-contain drop-shadow-lg'" alt="chips" />
                         @if (getBetAmountStr(activeSituation.position!, undefined, activeSituation.stack)) {
@@ -490,6 +490,15 @@
                         <p class="m-0 text-sm text-gray-600 dark:text-gray-400">Aucune règle ne correspond : action « Sinon ».</p>
                         }
                     </div>
+                    @if (flopTerms.length) {
+                    <div class="rounded-lg bg-gray-100/70 px-3 py-2.5 dark:bg-gray-800/60">
+                        <ul class="m-0 flex list-none flex-col gap-1.5 p-0 text-sm leading-snug text-gray-600 dark:text-gray-400">
+                            @for (item of flopTerms; track item.term) {
+                            <li><span class="font-semibold text-gray-800 dark:text-gray-200">{{ item.term }}</span> : {{ item.explanation }}</li>
+                            }
+                        </ul>
+                    </div>
+                    }
                 </div>
                 <div class="flex flex-col gap-5 border-0 border-t border-solid border-gray-200 pt-4 sm:w-44 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0 dark:border-gray-700">
                     <ng-container *ngTemplateOutlet="modalAnswers"></ng-container>

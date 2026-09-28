@@ -18,7 +18,7 @@ import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { TypePipe } from '../../pipes/type.pipe';
 import { AuthService } from '../../services/auth.service';
 import { FlopCard, FlopService, flopTypeName } from '../../services/flop.service';
-import { describeCondition, describeHand, resolveAction } from '../../services/flop-rules';
+import { FlopTerm, describeCondition, describeHand, explainTerms, resolveAction } from '../../services/flop-rules';
 import { cardRank, evaluateHand } from '../../services/hand-evaluator';
 import { CommonService } from './../../services/common.service';
 
@@ -366,6 +366,15 @@ export class TrainingComponent {
     /**
      * Mise adverse en BB, arrondie à 0,1 BB.
      */
+    /**
+     * Termes spéciaux de la main et de la règle appliquée, avec une courte explication.
+     */
+    get flopTerms(): FlopTerm[] {
+        const hand = this.activeSituation.hand;
+        if (!hand) return [];
+        return explainTerms([...describeHand(hand), ...(this.activeSituation.rule?.conditions ?? []).map(describeCondition)]);
+    }
+
     facingBetAmount(): number {
         return Math.round((this.activeSituation.pot ?? 0) * (this.activeSituation.facingBetPercent ?? 0) / 10) / 10;
     }
