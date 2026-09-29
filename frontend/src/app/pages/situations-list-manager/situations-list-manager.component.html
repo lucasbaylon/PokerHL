@@ -76,10 +76,14 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" [filter]="true"
-                                    filterPlaceholder="Rechercher un type" [group]="true" optionGroupLabel="label" optionGroupChildren="items"
-                                    (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
-                                </p-multiSelect>
+                                <div class="flex w-64 max-w-full flex-col gap-2">
+                                    <p-multiSelect #multiSelect [ngModel]="value?.types" [options]="typeLst" placeholder="Type" [filter]="false"
+                                        (onChange)="filter(typeFilterValue($event.value, value?.flopText))" optionLabel="name" optionValue="value">
+                                    </p-multiSelect>
+                                    <input type="text" pInputText [ngModel]="value?.flopText" (ngModelChange)="filter(typeFilterValue(value?.types, $event))"
+                                        placeholder="Type de flop (ex. paired, mono)" aria-label="Filtrer par type de flop"
+                                        class="box-border w-full" />
+                                </div>
                             </ng-template>
                         </p-columnFilter>
                     </div>
@@ -146,7 +150,17 @@
                         {{ situation.name }}
                     </button>
                 </td>
-                <td class="dark:border-gray-700">@if (situation.type === 'flop' && flopTypesOf(situation).length) { {{ flopTypesOf(situation) | flopType }} } @else { {{ situation.type | type }} }</td>
+                <td class="dark:border-gray-700">
+                    @if (situation.type === 'flop' && flopTypesOf(situation).length) {
+                    <!-- Une seule ligne ; la liste complète des types de flop s'affiche au survol -->
+                    <div class="max-w-[13rem] truncate" [pTooltip]="flopTypeNamesOf(situation)" tooltipPosition="top"
+                        tooltipStyleClass="whitespace-pre-line" [showDelay]="100" [tooltipDisabled]="flopTypesOf(situation).length < 2">
+                        {{ flopTypesOf(situation) | flopType }}
+                    </div>
+                    } @else {
+                    {{ situation.type | type }}
+                    }
+                </td>
                 <td class="max-lg:hidden dark:border-gray-700">{{ situation.stack }} BB</td>
                 <td class="max-lg:hidden dark:border-gray-700">{{ situation.nbPlayer }}</td>
                 <td class="dark:border-gray-700">{{ situation.position | position }}</td>
@@ -194,9 +208,13 @@
                 {{ situationToDisplay.name }}
             </h4>
             <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
-                <span class="inline-flex items-center gap-1.5">
+                <span class="inline-flex min-w-0 max-w-xs items-center gap-1.5">
                     <i class="fa-solid fa-layer-group text-gray-500" aria-hidden="true"></i>
-                    {{ situationToDisplay.type | type }}@if (situationToDisplay.type === 'flop' && (situationToDisplay.flopTypes ?? situationToDisplay.flopType)) { · {{ (situationToDisplay.flopTypes ?? situationToDisplay.flopType) | flopType }} }
+                    <!-- Une seule ligne ; la liste complète des types de flop s'affiche au survol -->
+                    <span class="truncate" [pTooltip]="flopTypeNamesOf(situationToDisplay)" tooltipPosition="top"
+                        tooltipStyleClass="whitespace-pre-line" [showDelay]="100" [tooltipDisabled]="flopTypesOf(situationToDisplay).length < 2">
+                        {{ situationToDisplay.type | type }}@if (situationToDisplay.type === 'flop' && flopTypesOf(situationToDisplay).length) { · {{ flopTypesOf(situationToDisplay) | flopType }} }
+                    </span>
                 </span>
                 @if (situationToDisplay.type === 'flop' && situationToDisplay.heroSpot === 'facingBet') {
                 <span class="inline-flex items-center gap-1.5">

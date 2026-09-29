@@ -3,7 +3,9 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChil
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
 import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
@@ -14,16 +16,27 @@ import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { FlopTypePipe } from '../../pipes/flop-type.pipe';
-import { FLOP_TYPES } from '../../services/flop.service';
+import { flopTypeName } from '../../services/flop.service';
 import { describeCondition } from '../../services/flop-rules';
 import { TypePipe } from '../../pipes/type.pipe';
 import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
 
+/** Valeur du filtre de la colonne Type. */
+interface TypeFilter {
+    types: string[];
+    flopText: string;
+}
+
+/** Texte comparable : minuscules, sans accents ni espaces superflus. */
+function normalizeSearch(text: string): string {
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 @Component({
     selector: 'app-situations-list-manager',
     standalone: true,
-    imports: [TableModule, OpponentLevelPipe, PositionPipe, TypePipe, FlopTypePipe, FormsModule, MultiSelectModule, SolutionColorPipe, NgStyle, AppModalComponent, RangeGridComponent],
+    imports: [TableModule, OpponentLevelPipe, PositionPipe, TypePipe, FlopTypePipe, FormsModule, MultiSelectModule, InputTextModule, TooltipModule, SolutionColorPipe, NgStyle, AppModalComponent, RangeGridComponent],
     templateUrl: './situations-list-manager.component.html'
 })
 export class SituationsListManagerComponent implements AfterViewInit, OnDestroy {
@@ -47,17 +60,9 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         { name: 'Fish/Reg', value: "fish_shark" }
     ];
 
-    /** Options du filtre Type : types de situation, puis types de flop (sélectionnables séparément). */
     typeLst = [
-        {
-            label: 'Type', items: [
-                { name: 'Pré-flop', value: "preflop" },
-                { name: 'Flop', value: "flop" }
-            ]
-        },
-        {
-            label: 'Types de flop', items: FLOP_TYPES.map(type => ({ name: type.name, value: type.code }))
-        }
+        { name: 'Pré-flop', value: "preflop" },
+        { name: 'Flop', value: "flop" }
     ];
 
     positionLst = [
@@ -98,8 +103,8 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         protected commonService: CommonService,
         private filterService: FilterService
     ) {
-        this.filterService.register(this.situationTypeMatchMode, (id: number, selected: string[] | null) =>
-            this.matchesTypeFilter(this.situationList.find(situation => situation.id === id), selected)
+        this.filterService.register(this.situationTypeMatchMode, (id: number, filter: TypeFilter | null) =>
+            this.matchesTypeFilter(this.situationList.find(situation => situation.id === id), filter)
         );
     }
 
@@ -107,20 +112,33 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     readonly situationTypeMatchMode = 'situationType';
 
     /**
-     * Une situation passe le filtre Type si son type est sélectionné,
-     * ou si c'est un flop dont l'un des types de flop est sélectionné.
+     * Construit la valeur du filtre Type ; null quand rien n'est renseigné (filtre inactif).
      */
-    private matchesTypeFilter(situation: Situation | undefined, selected: string[] | null): boolean {
-        if (!selected || selected.length === 0) {
+    typeFilterValue(types: string[] | null | undefined, flopText: string | null | undefined): TypeFilter | null {
+        const value = { types: types ?? [], flopText: flopText ?? '' };
+        return value.types.length || value.flopText.trim() ? value : null;
+    }
+
+    /**
+     * Filtre Type : type de situation coché (Pré-flop / Flop) et, si du texte est saisi,
+     * flop dont l'un des types de flop contient ce texte (plusieurs recherches séparées par des virgules).
+     */
+    private matchesTypeFilter(situation: Situation | undefined, filter: TypeFilter | null): boolean {
+        if (!filter) {
             return true;
         }
         if (!situation) {
             return false;
         }
-        if (selected.includes(situation.type)) {
+        if (filter.types.length && !filter.types.includes(situation.type)) {
+            return false;
+        }
+        const searches = filter.flopText.split(',').map(normalizeSearch).filter(Boolean);
+        if (!searches.length) {
             return true;
         }
-        return situation.type === 'flop' && this.flopTypesOf(situation).some(type => selected.includes(type));
+        const flopTypeNames = this.flopTypesOf(situation).map(code => normalizeSearch(flopTypeName(code) ?? code));
+        return situation.type === 'flop' && flopTypeNames.some(name => searches.some(search => name.includes(search)));
     }
 
     /** Ajuste le nombre de lignes au redimensionnement de la fenêtre. */
@@ -212,6 +230,13 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
      */
     flopTypesOf(situation: Situation): string[] {
         return situation.flopTypes ?? (situation.flopType ? [situation.flopType] : []);
+    }
+
+    /**
+     * Noms des types de flop d'une situation, un par ligne (infobulle de la colonne Type).
+     */
+    flopTypeNamesOf(situation: Situation): string {
+        return this.flopTypesOf(situation).map(code => flopTypeName(code) ?? code).join('\n');
     }
 
     private scheduleRowsPerPageUpdate() {
