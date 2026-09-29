@@ -2,6 +2,7 @@ import { NgStyle } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FilterService } from 'primeng/api';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
@@ -13,6 +14,8 @@ import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { FlopTypePipe } from '../../pipes/flop-type.pipe';
+import { FLOP_TYPES } from '../../services/flop.service';
+import { describeCondition } from '../../services/flop-rules';
 import { TypePipe } from '../../pipes/type.pipe';
 import { SituationService } from '../../services/situation.service';
 import { CommonService } from './../../services/common.service';
@@ -44,9 +47,17 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         { name: 'Fish/Reg', value: "fish_shark" }
     ];
 
+    /** Options du filtre Type : types de situation, puis types de flop (sélectionnables séparément). */
     typeLst = [
-        { name: 'Pré-flop', value: "preflop" },
-        { name: 'Flop', value: "flop" }
+        {
+            label: 'Type', items: [
+                { name: 'Pré-flop', value: "preflop" },
+                { name: 'Flop', value: "flop" }
+            ]
+        },
+        {
+            label: 'Types de flop', items: FLOP_TYPES.map(type => ({ name: type.name, value: type.code }))
+        }
     ];
 
     positionLst = [
@@ -61,7 +72,8 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     ];
 
     situationToDisplay!: Situation;
-    private readonly rangeSolution: Solution = { id: IN_RANGE, type: 'unique', display_name: 'Dans la range', color: '#16a34a' };
+    readonly describeCondition = describeCondition;
+    readonly rangeSolution: Solution = { id: IN_RANGE, type: 'unique', display_name: 'Dans la range', color: '#16a34a' };
 
     /**
      * Solutions servant à colorer la grille : pour une situation flop, la grille est la range du héros.
@@ -69,6 +81,12 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
     gridSolutions(situation: Situation): Solution[] {
         return situation.type === 'flop' ? [...situation.solutions, this.rangeSolution] : situation.solutions;
     }
+
+    /** Nom d'affichage d'une action de la situation. */
+    solutionName(situation: Situation, solutionId: string | undefined): string {
+        return situation.solutions.find(solution => solution.id === solutionId)?.display_name ?? '—';
+    }
+
     showSituationModal = false;
     showRemoveSituationModal = false;
     situationIdsToRemove: number[] = [];
@@ -77,8 +95,33 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private apiSituation: SituationService,
-        protected commonService: CommonService
-    ) { }
+        protected commonService: CommonService,
+        private filterService: FilterService
+    ) {
+        this.filterService.register(this.situationTypeMatchMode, (id: number, selected: string[] | null) =>
+            this.matchesTypeFilter(this.situationList.find(situation => situation.id === id), selected)
+        );
+    }
+
+    /** Mode de filtre de la colonne Type (appliqué sur l'id pour accéder à toute la situation). */
+    readonly situationTypeMatchMode = 'situationType';
+
+    /**
+     * Une situation passe le filtre Type si son type est sélectionné,
+     * ou si c'est un flop dont l'un des types de flop est sélectionné.
+     */
+    private matchesTypeFilter(situation: Situation | undefined, selected: string[] | null): boolean {
+        if (!selected || selected.length === 0) {
+            return true;
+        }
+        if (!situation) {
+            return false;
+        }
+        if (selected.includes(situation.type)) {
+            return true;
+        }
+        return situation.type === 'flop' && this.flopTypesOf(situation).some(type => selected.includes(type));
+    }
 
     /** Ajuste le nombre de lignes au redimensionnement de la fenêtre. */
     @HostListener('window:resize')

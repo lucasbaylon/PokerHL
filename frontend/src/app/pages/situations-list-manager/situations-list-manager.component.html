@@ -72,11 +72,12 @@
                 <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Type
-                        <p-columnFilter (onShow)="openMultiSelect()" field="type" matchMode="in" display="menu"
+                        <p-columnFilter (onShow)="openMultiSelect()" field="id" [matchMode]="situationTypeMatchMode" display="menu"
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" [filter]="false"
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" [filter]="true"
+                                    filterPlaceholder="Rechercher un type" [group]="true" optionGroupLabel="label" optionGroupChildren="items"
                                     (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
                                 </p-multiSelect>
                             </ng-template>
@@ -226,6 +227,49 @@
                 </app-range-grid>
             </div>
 
+            @if (situationToDisplay.type === 'flop') {
+            <aside class="w-full max-w-sm">
+                <h5 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Range du héros</h5>
+                <div class="mb-2 grid grid-cols-[auto_1fr] items-center gap-2">
+                    <div class="h-5 w-5 rounded shadow-sm" [ngStyle]="{'background': rangeSolution.color}"></div>
+                    <span class="text-base text-gray-800 dark:text-gray-200">Main jouée jusqu'au flop</span>
+                </div>
+                <div class="grid grid-cols-[auto_1fr] items-center gap-2">
+                    <div class="h-5 w-5 rounded border border-gray-300 shadow-sm dark:border-gray-600"></div>
+                    <span class="text-base text-gray-800 dark:text-gray-200">Hors range</span>
+                </div>
+
+                <h5 class="m-0 mb-1 mt-5 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Actions au flop</h5>
+                <p class="m-0 mb-3 text-sm text-gray-500 dark:text-gray-400">
+                    Selon la main touchée : la première règle qui correspond s'applique.
+                </p>
+                <ol class="m-0 flex list-none flex-col gap-3 p-0">
+                    @for (rule of situationToDisplay.rules ?? []; track rule.id) {
+                    <li class="flex flex-col gap-1.5">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            @for (condition of rule.conditions; track $index; let lastCondition = $last) {
+                            <span class="rounded-full bg-gray-100 px-2.5 py-0.5 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200">{{ describeCondition(condition) }}</span>
+                            @if (!lastCondition) {
+                            <span class="text-xs font-semibold uppercase text-gray-400">et</span>
+                            }
+                            }
+                        </div>
+                        <div class="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+                            <i class="fa-solid fa-arrow-right text-gray-400" aria-hidden="true"></i>
+                            <span class="h-4 w-4 shrink-0 rounded shadow-sm" [ngStyle]="{'background': ((rule.solutionId ?? '') | solutionColor:situationToDisplay.solutions)}"></span>
+                            {{ solutionName(situationToDisplay, rule.solutionId) }}
+                        </div>
+                    </li>
+                    }
+                    <li class="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+                        <span class="text-xs font-semibold uppercase text-gray-400">Sinon</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400" aria-hidden="true"></i>
+                        <span class="h-4 w-4 shrink-0 rounded shadow-sm" [ngStyle]="{'background': ((situationToDisplay.defaultSolutionId ?? '') | solutionColor:situationToDisplay.solutions)}"></span>
+                        {{ solutionName(situationToDisplay, situationToDisplay.defaultSolutionId) }}
+                    </li>
+                </ol>
+            </aside>
+            } @else {
             <aside class="min-w-36">
                 <h5 class="m-0 mb-2 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Solutions</h5>
                 @for (solution of situationToDisplay.solutions; track i; let i = $index) {
@@ -240,6 +284,7 @@
                     }
                 }
             </aside>
+            }
         </div>
     }
 </app-modal>
