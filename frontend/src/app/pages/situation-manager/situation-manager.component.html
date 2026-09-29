@@ -148,10 +148,10 @@
 <div class="flex flex-col gap-6">
     <div class="flex flex-wrap items-start gap-6">
         <!-- TABLEAU DES RANGES -->
-        <section class="animate-appear opacity-0 animation-delay-50 w-fit max-w-full shrink-0 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
+        <section class="max-md:p-3 max-md:w-full animate-appear opacity-0 animation-delay-50 w-fit max-w-full shrink-0 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
             aria-labelledby="range-title">
             <!-- w-0 min-w-full : ces blocs prennent la largeur du tableau sans l'élargir -->
-            <div class="mb-4 flex w-0 min-w-full items-center justify-between gap-4">
+            <div class="max-md:flex-col max-md:items-start mb-4 flex w-0 min-w-full items-center justify-between gap-4">
                 <div class="flex min-w-0 items-center gap-3">
                     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                         <i class="fa-solid fa-table-cells" aria-hidden="true"></i>
@@ -165,7 +165,7 @@
                 </div>
 
                 @if (isFlop) {
-                <div class="flex shrink-0 items-center gap-2">
+                <div class="max-md:flex-wrap flex shrink-0 items-center gap-2">
                     <div class="inline-flex rounded-md bg-gray-100 p-1 dark:bg-gray-700" role="group" aria-label="Pinceau de la range">
                         <button type="button" (click)="rangeBrush = 'add'" [attr.aria-pressed]="rangeBrush === 'add'"
                             class="h-8 rounded border-0 px-3 text-sm transition-colors cursor-pointer"
@@ -202,7 +202,7 @@
                     </button>
 
                     @if (showBrushMenu) {
-                        <div class="absolute right-0 top-full z-50 mt-2 w-64 rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 animate-fadeIn dark:bg-gray-700"
+                        <div class="max-md:left-0 max-md:right-auto absolute right-0 top-full z-50 mt-2 w-64 rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 animate-fadeIn dark:bg-gray-700"
                             role="listbox" aria-label="Solutions">
                             @for (solution of brushOptions; track solution.id) {
                                 <div class="flex items-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -258,7 +258,7 @@
             </app-range-grid>
         </section>
 
-        <div class="flex min-w-[420px] flex-1 flex-col gap-6">
+        <div class="max-lg:min-w-0 max-lg:basis-full flex min-w-[420px] flex-1 flex-col gap-6">
             <!-- CARACTÉRISTIQUES DE LA SITUATION -->
             <section class="animate-appear opacity-0 animation-delay-100 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
                 aria-labelledby="characteristics-title">

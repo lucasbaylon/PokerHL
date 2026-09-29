@@ -349,7 +349,7 @@
                 </div>
                 }
                 @if (isFlop && !isFacingBet) {
-                <div class="raise-presets grid grid-cols-6 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
+                <div class="max-sm:grid-cols-3 raise-presets grid grid-cols-6 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
                     @for (preset of betPresets; track preset) {
                     <button type="button" (click)="setBetPercent(preset)" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">{{preset}}%</button>
                     }

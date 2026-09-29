@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthLayoutComponent } from '../../components/auth-layout/auth-layout.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,7 +9,7 @@ import { CommonService } from '../../services/common.service';
 @Component({
     selector: 'app-forgot-password',
     standalone: true,
-    imports: [FormsModule, InputTextModule],
+    imports: [FormsModule, InputTextModule, AuthLayoutComponent],
     templateUrl: './forgot-password.component.html',
 })
 export class ForgotPasswordComponent {

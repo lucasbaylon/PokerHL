@@ -171,6 +171,11 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
             this.rangePageService.getRangePage(pageId);
         }
 
+        // Écrans < 1024 px : la page s'ouvre dézoomée pour être consultable.
+        if (window.matchMedia('(max-width: 1023.98px)').matches) {
+            this.zoomLevel = this.minZoomLevel;
+        }
+
         window.addEventListener('mousemove', this.onWindowMouseMove);
         window.addEventListener('mouseup', this.onWindowMouseUp);
         window.addEventListener('keydown', this.onWindowKeyDown);
@@ -1488,6 +1493,25 @@ export class RangePageEditorComponent implements OnInit, OnDestroy {
         this.zoomLevel = nextZoom;
         container.scrollLeft = (pointerX * ratio) - (event.clientX - rect.left);
         container.scrollTop = (pointerY * ratio) - (event.clientY - rect.top);
+    }
+
+    /**
+     * Zoom par bouton (écrans tactiles), centré sur la zone visible.
+     * @param direction 1 pour zoomer, -1 pour dézoomer.
+     * @param container Zone de défilement de la grille.
+     */
+    zoomBy(direction: 1 | -1, container: HTMLElement) {
+        const previousZoom = this.zoomLevel;
+        const nextZoom = this.clampZoom(previousZoom + (direction * this.zoomStep));
+        if (nextZoom === previousZoom) return;
+
+        const centerX = container.scrollLeft + container.clientWidth / 2;
+        const centerY = container.scrollTop + container.clientHeight / 2;
+        const ratio = nextZoom / previousZoom;
+
+        this.zoomLevel = nextZoom;
+        container.scrollLeft = (centerX * ratio) - container.clientWidth / 2;
+        container.scrollTop = (centerY * ratio) - container.clientHeight / 2;
     }
 
     clampZoom(value: number): number {

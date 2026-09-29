@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthLayoutComponent } from '../../components/auth-layout/auth-layout.component';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [FormsModule, InputTextModule],
+    imports: [FormsModule, InputTextModule, AuthLayoutComponent],
     templateUrl: './login.component.html'
 })
 export class LoginComponent {

@@ -56,7 +56,8 @@ export class AuthService {
                     particleSpeed: userParams.particleSpeed ?? DEFAULT_PARTICLE_SETTINGS.particleSpeed,
                     particleLinks: userParams.particleLinks ?? DEFAULT_PARTICLE_SETTINGS.particleLinks,
                 });
-            } else {
+            } else if (!['/register', '/forgot-password'].some(page => window.location.pathname.startsWith(page))) {
+                // Les pages d'inscription et de mot de passe oublié restent accessibles sans compte.
                 this.router.navigate(['login']);
             }
         });

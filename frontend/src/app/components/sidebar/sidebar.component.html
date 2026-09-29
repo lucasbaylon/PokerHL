@@ -1,5 +1,6 @@
 <div [ngStyle]="{ 'width': commonService.isCollapsed ? '80px' : '224px' }"
-    class="fixed h-full whitespace-nowrap overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
+    [ngClass]="{ 'max-lg:-translate-x-full': !commonService.mobileMenuOpen }"
+    class="max-lg:!w-64 max-lg:z-50 fixed h-full whitespace-nowrap overflow-hidden transition-all duration-500 bg-white dark:bg-secondary-dark-bg shadow-xl">
     <ul class="absolute w-full list-none m-0 p-0">
         <li class="mb-6 ml-3 mt-4 w-fit">
             <div (click)="commonService.redirectTo('situations')" class="flex items-center cursor-pointer p-3 ">
@@ -7,6 +8,10 @@
                 <span class="ml-4 text-lg font-bold text-gray-800 dark:text-gray-300 transition-all duration-500">Poker
                     HL</span>
             </div>
+            <button type="button" (click)="commonService.mobileMenuOpen = false" aria-label="Fermer le menu"
+                class="absolute right-3 top-5 flex h-10 w-10 items-center justify-center rounded-md border-0 bg-transparent text-lg text-gray-800 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer lg:hidden">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
         </li>
         <li
             class="transition-all text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer w-full">
@@ -14,7 +19,7 @@
                 class="grid grid-cols-[56px_1fr] items-center px-3 py-4 text-gray-800 dark:text-gray-300">
                 <i class="fa-solid fa-layer-group w-6 justify-self-center text-center text-lg transition-all duration-500"></i>
                 <span [ngClass]="{ 'opacity-0': commonService.isCollapsed }"
-                    class="-translate-y-px text-base transition-all duration-500">Situations</span>
+                    class="max-lg:!opacity-100 -translate-y-px text-base transition-all duration-500">Situations</span>
             </div>
         </li>
         <li
@@ -23,7 +28,7 @@
                 class="grid grid-cols-[56px_1fr] items-center px-3 py-4 text-gray-800 dark:text-gray-300">
                 <i class="fa-solid fa-table-cells-large w-6 justify-self-center text-center text-lg transition-all duration-500"></i>
                 <span [ngClass]="{ 'opacity-0': commonService.isCollapsed }"
-                    class="-translate-y-px text-base transition-all duration-500">Grille</span>
+                    class="max-lg:!opacity-100 -translate-y-px text-base transition-all duration-500">Grille</span>
             </div>
         </li>
         <li
@@ -32,7 +37,7 @@
                 class="grid grid-cols-[56px_1fr] items-center px-3 py-4 no-underline text-gray-800 dark:text-gray-300">
                 <i class="fa-solid fa-book w-6 justify-self-center text-center text-lg transition-all duration-500"></i>
                 <span [ngClass]="{ 'opacity-0': commonService.isCollapsed }"
-                    class="-translate-y-px text-base transition-all duration-500">Lexique</span>
+                    class="max-lg:!opacity-100 -translate-y-px text-base transition-all duration-500">Lexique</span>
             </div>
         </li>
         <li
@@ -41,7 +46,7 @@
                 class="grid grid-cols-[56px_1fr] items-center px-3 py-4 text-gray-800 dark:text-gray-300">
                 <i class="fa-solid fa-gear w-6 justify-self-center text-center text-lg transition-all duration-500"></i>
                 <span [ngClass]="{ 'opacity-0': commonService.isCollapsed }"
-                    class="-translate-y-px text-base transition-all duration-500">Paramètres</span>
+                    class="max-lg:!opacity-100 -translate-y-px text-base transition-all duration-500">Paramètres</span>
             </div>
         </li>
     </ul>
@@ -71,7 +76,7 @@
     </div>
 </div>
 <div [ngStyle]="{ left: commonService.isCollapsed ? '80px' : '224px' }" (click)="toggleSidebar()"
-    class="border-solid border border-gray-400 flex justify-center items-center z-10 fixed top-8 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+    class="max-lg:hidden border-solid border border-gray-400 flex justify-center items-center z-10 fixed top-8 transform -translate-x-1/2 rounded-full w-7 h-7 text-xl transition-all duration-500 bg-white dark:bg-secondary-dark-bg text-gray-800 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer">
     <i class="fa-solid fa-angle-left text-base"
         [ngClass]="{ 'transform rotate-180': commonService.isCollapsed, 'transform rotate-0': !commonService.isCollapsed }"></i>
 </div>

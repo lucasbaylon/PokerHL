@@ -1,13 +1,13 @@
 <div class="flex h-screen flex-col overflow-hidden bg-gray-100 transition-colors duration-500 dark:bg-main-dark-bg">
 	<div
-		class="z-50 flex flex-wrap items-center gap-3 bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
+		class="max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:[&>*]:shrink-0 z-50 flex flex-wrap items-center gap-3 bg-white p-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
 	>
 		<input
 			[(ngModel)]="page.name"
 			(ngModelChange)="scheduleAutoSave()"
 			name="pageName"
 			type="text"
-			class="w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
+			class="max-lg:w-40 w-72 bg-white text-gray-800 placeholder:text-gray-400 transition-colors duration-500 dark:border-gray-700 dark:bg-secondary-dark-bg dark:text-gray-300 dark:placeholder:text-gray-500"
 			autocomplete="off"
 			pInputText
 		/>
@@ -220,8 +220,8 @@
 		</div>
 	</app-modal>
 
-	<main class="min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
-		<div
+	<main class="relative min-h-0 flex-1 animate-appear opacity-0 animation-delay-100">
+		<div #gridScroll
 			class="app-scrollbar h-full overflow-auto border border-gray-300 bg-gray-100 p-2 shadow-inner transition-colors duration-500 dark:border-gray-700 dark:bg-main-dark-bg"
 			(wheel)="onGridWheel($event)"
 		>
@@ -691,6 +691,18 @@
 					}
 				</div>
 			</div>
+		</div>
+		<!-- Zoom par boutons : écrans tactiles (< 1024 px) -->
+		<div class="absolute bottom-4 right-4 z-50 flex items-center gap-1 rounded-md bg-white p-1 shadow-lg dark:bg-secondary-dark-bg lg:hidden">
+			<button type="button" (click)="zoomBy(-1, gridScroll)" aria-label="Dézoomer"
+				class="flex h-11 w-11 items-center justify-center rounded-md border-0 bg-transparent text-gray-800 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+				<i class="fa-solid fa-magnifying-glass-minus" aria-hidden="true"></i>
+			</button>
+			<span class="w-12 text-center text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300">{{ (zoomLevel * 100).toFixed(0) }}%</span>
+			<button type="button" (click)="zoomBy(1, gridScroll)" aria-label="Zoomer"
+				class="flex h-11 w-11 items-center justify-center rounded-md border-0 bg-transparent text-gray-800 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+				<i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i>
+			</button>
 		</div>
 	</main>
 </div>

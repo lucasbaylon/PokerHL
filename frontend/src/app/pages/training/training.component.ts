@@ -37,7 +37,9 @@ export class TrainingComponent {
         if (!element) return;
         const stage = element.nativeElement;
         this.tableResizeObserver = new ResizeObserver(([entry]) => {
-            const scale = Math.min(1, entry.contentRect.width / 1000, entry.contentRect.height / 600);
+            // Écrans < 1024 px : table plus compacte (voir training.component.scss), donc moins réduite.
+            const [baseWidth, baseHeight] = window.matchMedia('(max-width: 1023.98px)').matches ? [580, 470] : [1000, 600];
+            const scale = Math.min(1, entry.contentRect.width / baseWidth, entry.contentRect.height / baseHeight);
             stage.style.setProperty('--table-scale', String(scale));
         });
         this.tableResizeObserver.observe(stage);

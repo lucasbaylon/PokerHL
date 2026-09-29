@@ -14,7 +14,7 @@
 
 <section class="animate-appear opacity-0 animation-delay-50 mb-6 rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg"
     aria-label="Préparation de l'entraînement">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="max-lg:!flex-col max-lg:!items-stretch flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-3">
             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-800 text-white dark:bg-gray-700 dark:text-gray-300">
                 <i class="fa-solid fa-play" aria-hidden="true"></i>
@@ -28,7 +28,7 @@
                 </p>
             </div>
         </div>
-        <div class="flex flex-wrap items-center gap-2 sm:shrink-0">
+        <div class="max-sm:grid max-sm:grid-cols-2 max-sm:[&>button]:px-2 flex flex-wrap items-center gap-2 sm:shrink-0">
             <button type="button" (click)="removeSelectedSituations()" [disabled]="selectedSituations.length === 0"
                 class="h-11 rounded-md border-0 bg-red-600 px-5 font-medium text-white shadow transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer">
                 Supprimer
@@ -57,7 +57,7 @@
 
 <div #tableContainer class="animate-appear opacity-0 animation-delay-100 w-full overflow-x-auto rounded-md bg-white shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg">
     <p-table [value]="situationList" dataKey="id" [paginator]="situationList.length > nbRowsPerPage"
-        [rows]="nbRowsPerPage" [(selection)]="selectedSituations" styleClass="min-w-[900px]">
+        [rows]="nbRowsPerPage" [(selection)]="selectedSituations" styleClass="min-w-[900px] max-lg:min-w-[540px]">
         <ng-template pTemplate="header">
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
                 <th class="w-14 bg-white dark:bg-secondary-dark-bg dark:border-gray-700">
@@ -84,13 +84,13 @@
                         </p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                <th class="max-lg:hidden bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Stack
                         <p-columnFilter type="numeric" field="stack" display="menu" class="ml-2"></p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                <th class="max-lg:hidden bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Joueurs
                         <p-columnFilter (onShow)="openMultiSelect()" field="nbPlayer" matchMode="in" display="menu"
@@ -118,7 +118,7 @@
                         </p-columnFilter>
                     </div>
                 </th>
-                <th class="bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
+                <th class="max-lg:hidden bg-white dark:text-gray-300 dark:bg-secondary-dark-bg dark:border-gray-700">
                     <div class="flex items-center">
                         Niveau
                         <p-columnFilter (onShow)="openMultiSelect()" field="opponentLevel" matchMode="in" display="menu"
@@ -147,10 +147,10 @@
                     </button>
                 </td>
                 <td class="dark:border-gray-700">@if (situation.type === 'flop' && flopTypesOf(situation).length) { {{ flopTypesOf(situation) | flopType }} } @else { {{ situation.type | type }} }</td>
-                <td class="dark:border-gray-700">{{ situation.stack }} BB</td>
-                <td class="dark:border-gray-700">{{ situation.nbPlayer }}</td>
+                <td class="max-lg:hidden dark:border-gray-700">{{ situation.stack }} BB</td>
+                <td class="max-lg:hidden dark:border-gray-700">{{ situation.nbPlayer }}</td>
                 <td class="dark:border-gray-700">{{ situation.position | position }}</td>
-                <td class="dark:border-gray-700">{{ situation.opponentLevel! | opponentLevel }}</td>
+                <td class="max-lg:hidden dark:border-gray-700">{{ situation.opponentLevel! | opponentLevel }}</td>
                 <td class="dark:border-gray-700">
                     <div class="flex justify-end gap-2">
                         <button type="button" title="Aperçu" [attr.aria-label]="'Voir ' + situation.name"

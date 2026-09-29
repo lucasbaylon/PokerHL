@@ -49,15 +49,15 @@ export class RangeGridComponent {
             return this.tableClass;
         }
         if (this.editable) {
-            return 'mx-auto table-fixed border-separate border-spacing-1';
+            return 'mx-auto table-fixed border-separate border-spacing-1 max-md:border-spacing-[2px]';
         }
         if (this.size === 'md') {
-            return 'mx-auto border-separate border-spacing-1';
+            return 'mx-auto border-separate border-spacing-1 max-md:border-spacing-[2px]';
         }
         if (this.cellWidth || this.cellHeight) {
             return 'border-separate border-spacing-1 select-none';
         }
-        return 'mx-auto border-separate border-spacing-1';
+        return 'mx-auto border-separate border-spacing-1 max-md:border-spacing-[2px]';
     }
 
     getCellClass(item: Card): string {
@@ -65,15 +65,15 @@ export class RangeGridComponent {
             return this.cellClass;
         }
         if (this.editable) {
-            return `rounded cursor-pointer ${this.getTextSizeClass(true)} font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl`;
+            return `rounded cursor-pointer ${this.getTextSizeClass(true)} font-semibold select-none text-center align-middle p-2 py-3 bg-white dark:text-white hover:bg-gray-300 dark:bg-secondary-dark-bg dark:hover:bg-gray-600 shadow-xl max-md:h-[calc((100vw-7rem)/13)] max-md:w-[calc((100vw-7rem)/13)] max-md:p-0 max-md:text-[9px]`;
         }
         if (this.size === 'md') {
-            return `h-10 w-10 select-none rounded text-center align-middle ${this.getTextSizeClass(false)} font-semibold text-white shadow-sm`;
+            return `h-10 w-10 select-none rounded text-center align-middle ${this.getTextSizeClass(false)} font-semibold text-white shadow-sm max-md:h-[calc((100vw-7rem)/13)] max-md:w-[calc((100vw-7rem)/13)] max-md:p-0 max-md:text-[9px]`;
         }
         if (this.cellWidth || this.cellHeight) {
             return 'relative cursor-default overflow-hidden rounded text-center align-middle font-semibold text-white shadow';
         }
-        return `h-10 w-10 select-none rounded text-center align-middle ${this.getTextSizeClass(false)} font-semibold text-white shadow-sm`;
+        return `h-10 w-10 select-none rounded text-center align-middle ${this.getTextSizeClass(false)} font-semibold text-white shadow-sm max-md:h-[calc((100vw-7rem)/13)] max-md:w-[calc((100vw-7rem)/13)] max-md:p-0 max-md:text-[9px]`;
     }
 
     getCustomFontSize(): number | undefined {

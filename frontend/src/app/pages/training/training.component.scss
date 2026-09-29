@@ -47,3 +47,18 @@
     .session-stats { bottom: 0; left: 12px; }
     .mode-status { right: 12px; bottom: 24px; }
 }
+@media (max-width: 1023.98px) {
+    .training-page { height: auto; min-height: calc(100dvh - 104px); }
+    .training-header { position: static; }
+    .training-eyebrow { margin-bottom: 4px; font-size: 18px; }
+    .training-arena { order: 1; flex: none; }
+    .mode-status { order: 2; position: static; min-width: 0; min-height: 0; padding: 12px; }
+    .session-stats { order: 3; position: static; justify-content: center; gap: 32px; }
+    .table-stage { flex: none; width: 100%; aspect-ratio: 580 / 470; }
+    .table-wrap { width: 580px; height: 470px; padding-top: 80px; }
+    .poker-table { width: 500px; height: 270px; }
+    .player-seat { width: 200px; }
+    .seat-left { left: 12%; }
+    .seat-right { left: 88%; }
+    .decision-buttons > button { height: 48px; }
+}

@@ -1,0 +1,72 @@
+<main class="flex h-screen overflow-hidden bg-gray-100 transition-colors duration-500 dark:bg-main-dark-bg">
+    <!-- Panneau de marque : même habillage que la sidebar de l'application -->
+    <aside class="relative hidden w-96 shrink-0 flex-col bg-white shadow-xl transition-colors duration-500 dark:bg-secondary-dark-bg lg:flex">
+        <div class="ml-3 mt-4 flex w-fit items-center p-3">
+            <img src="../../../assets/img/logo.png" alt="" class="h-8 w-8">
+            <span class="ml-4 text-lg font-bold text-gray-800 transition-colors duration-500 dark:text-gray-300">Poker HL</span>
+        </div>
+
+        <div class="flex flex-1 flex-col justify-center px-6">
+            <p class="m-0 text-2xl font-bold leading-snug text-gray-800 transition-colors duration-500 dark:text-gray-300">
+                Travaillez vos ranges, situation par situation.
+            </p>
+            <p class="m-0 mt-2 text-gray-500 transition-colors duration-500 dark:text-gray-400">
+                Votre espace d'entraînement au poker.
+            </p>
+
+            <ul class="m-0 mt-8 flex list-none flex-col gap-5 p-0">
+                @for (feature of features; track feature.title) {
+                <li class="grid grid-cols-[40px_1fr] items-start gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors duration-500 dark:bg-gray-700 dark:text-gray-300">
+                        <i class="fa-solid {{ feature.icon }}" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="m-0 font-semibold text-gray-800 transition-colors duration-500 dark:text-gray-300">{{ feature.title }}</p>
+                        <p class="m-0 mt-0.5 text-sm text-gray-500 transition-colors duration-500 dark:text-gray-400">{{ feature.description }}</p>
+                    </div>
+                </li>
+                }
+            </ul>
+        </div>
+
+        <div class="box-border border-0 border-t border-solid border-gray-300 p-4 text-sm text-gray-500 transition-colors duration-500 dark:border-gray-600 dark:text-gray-400">
+            Poker HL · Entraînement aux ranges
+        </div>
+    </aside>
+
+    <div class="app-scrollbar flex flex-1 flex-col overflow-y-auto">
+        <!-- Barre du haut : écrans < 1024 px, comme dans l'application -->
+        <header class="flex h-14 shrink-0 items-center bg-white px-4 shadow transition-colors duration-500 dark:bg-secondary-dark-bg lg:hidden">
+            <img src="../../../assets/img/logo.png" alt="" class="h-8 w-8">
+            <span class="ml-3 text-lg font-bold text-gray-800 transition-colors duration-500 dark:text-gray-300">Poker HL</span>
+        </header>
+
+        <div class="flex flex-1 items-center justify-center px-4 py-8 sm:px-12">
+            <div class="w-full max-w-md animate-appear opacity-0">
+                <header class="mb-8">
+                    <h1 class="m-0 text-3xl font-bold text-gray-800 transition-colors duration-500 dark:text-gray-300 md:text-4xl">{{ title }}</h1>
+                    @if (subtitle) {
+                    <p class="m-0 mt-2 text-lg text-gray-500 transition-colors duration-500 dark:text-gray-400">{{ subtitle }}</p>
+                    }
+                </header>
+
+                <section class="rounded-md bg-white p-5 shadow-lg transition-colors duration-500 dark:bg-secondary-dark-bg sm:p-6"
+                    [attr.aria-label]="cardTitle">
+                    <div class="mb-5 flex items-center gap-3">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors duration-500 dark:bg-gray-700 dark:text-gray-300">
+                            <i class="fa-solid {{ cardIcon }}" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h2 class="m-0 text-lg font-semibold text-gray-800 transition-colors duration-500 dark:text-gray-300">{{ cardTitle }}</h2>
+                            @if (cardSubtitle) {
+                            <p class="m-0 text-sm text-gray-500 transition-colors duration-500 dark:text-gray-400">{{ cardSubtitle }}</p>
+                            }
+                        </div>
+                    </div>
+
+                    <ng-content></ng-content>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>

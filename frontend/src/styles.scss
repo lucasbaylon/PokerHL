@@ -734,3 +734,12 @@ html.dark app-settings .p-dropdown .p-dropdown-trigger {
         translate: 0 5px;
     }
 }
+
+/* Écrans < 1024 px : les menus PrimeNG (filtres de colonnes, listes déroulantes) restent dans l'écran. */
+@media (max-width: 1023.98px) {
+    .p-column-filter-overlay,
+    .p-multiselect-panel,
+    .p-dropdown-panel {
+        max-width: calc(100vw - 2rem);
+    }
+}

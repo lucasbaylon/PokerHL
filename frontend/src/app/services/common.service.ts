@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 import Swal from 'sweetalert2';
 import { HeroSpot, Situation } from '../interfaces/situation';
 import { Solution, SolutionAction } from '../interfaces/solution';
@@ -22,9 +23,15 @@ export class CommonService {
 
     constructor(
         private router: Router
-    ) { }
+    ) {
+        // Le tiroir de navigation mobile se referme à chaque changement de page.
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => this.mobileMenuOpen = false);
+    }
 
     public isCollapsed: boolean = false;
+
+    /** Tiroir de navigation ouvert (écrans < 1024 px uniquement). */
+    public mobileMenuOpen: boolean = false;
     empty_situation_obj: Situation = {
         id: undefined,
         name: undefined,
