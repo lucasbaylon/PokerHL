@@ -351,16 +351,16 @@
                 @if (isFlop && !isFacingBet) {
                 <div class="max-sm:grid-cols-3 raise-presets grid grid-cols-6 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
                     @for (preset of betPresets; track preset) {
-                    <button type="button" (click)="setBetPercent(preset)" class="h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">{{preset}}%</button>
+                    <button type="button" (click)="setBetPercent(preset)" [disabled]="preset < minimumBetPercent()" [title]="preset < minimumBetPercent() ? 'Mise inférieure à 1 BB' : ''" class="disabled:cursor-not-allowed disabled:opacity-40 h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">{{preset}}%</button>
                     }
                     <button type="button" (click)="submitPokerAction('all-in')" class="h-9 rounded-md border-0 bg-red-700 px-3 text-sm font-semibold text-white shadow transition-colors duration-150 hover:bg-red-800 dark:bg-red-800 dark:hover:bg-red-700 cursor-pointer">All-in</button>
                 </div>
                 <div class="flex items-center gap-3 mb-3 rounded-md bg-gray-100 px-3 py-1.5 dark:bg-main-dark-bg">
-                    <input type="range" class="w-full min-w-0 accent-gray-800 dark:accent-gray-400 cursor-pointer" min="1" [max]="maximumBetPercent()" step="1"
+                    <input type="range" class="w-full min-w-0 accent-gray-800 dark:accent-gray-400 cursor-pointer" [min]="minimumBetPercent()" [max]="maximumBetPercent()" step="1"
                         [ngModel]="betPercent" (ngModelChange)="setBetPercent($event)" aria-label="Taille de la mise en pourcentage du pot" />
                     <div class="flex shrink-0 items-center gap-2">
                         <div class="relative w-24">
-                            <p-inputNumber inputId="trainingBetPercent" [min]="1" [max]="maximumBetPercent()"
+                            <p-inputNumber inputId="trainingBetPercent" [min]="minimumBetPercent()" [max]="maximumBetPercent()"
                                 [step]="1" [maxFractionDigits]="0" [ngModel]="betPercent"
                                 (ngModelChange)="setBetPercent($event)" styleClass="situation-stack-input w-24"
                                 [inputStyle]="{'width': '6rem', 'height': '2.25rem', 'padding-right': '2rem'}"

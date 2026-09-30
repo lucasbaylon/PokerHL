@@ -204,7 +204,7 @@ export class TrainingComponent {
             this.generatePreflopSituation(situation);
         }
         this.raiseAmount = Math.min(this.maximumRaise(), Math.max(2, this.highestCurrentBet() * 2));
-        this.betPercent = 50;
+        this.setBetPercent(50);
         this.raiseMultiplier = Math.min(3, this.maximumRaiseMultiplier());
         this.playerInfoAnimationName = this.playerInfoAnimationName === 'training-player-info-in-a'
             ? 'training-player-info-in-b'
@@ -414,8 +414,17 @@ export class TrainingComponent {
         return pot > 0 ? Math.max(1, Math.ceil(this.maximumRaise() / pot * 100)) : 100;
     }
 
+    /**
+     * Plus petit pourcentage du pot donnant un bet d'au moins 1 BB (sans dépasser le tapis).
+     */
+    minimumBetPercent(): number {
+        const pot = this.activeSituation?.pot ?? 0;
+        const minimum = pot > 0 ? Math.ceil(100 / pot) : 1;
+        return Math.min(this.maximumBetPercent(), Math.max(1, minimum));
+    }
+
     setBetPercent(percent: number) {
-        this.betPercent = Math.min(this.maximumBetPercent(), Math.max(1, Math.round(percent || 1)));
+        this.betPercent = Math.min(this.maximumBetPercent(), Math.max(this.minimumBetPercent(), Math.round(percent || 0)));
     }
 
     setRaisePreset(preset: 'x2' | 'x3' | 'pot') {
