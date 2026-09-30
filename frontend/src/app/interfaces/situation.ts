@@ -25,7 +25,8 @@ export type ActionLineAction = 'limp' | 'raise' | 'check' | 'bet' | 'call';
 /** Action jouée avant la situation, affichée au héros pour décrire le coup. */
 export interface ActionLineStep {
     street: ActionLineStreet;
-    actor: 'hero' | 'villain';
+    /** villain : adversaire 1 (siège de gauche à 3 joueurs, seul adversaire en HU) ; villain2 : adversaire 2 (siège de droite). */
+    actor: 'hero' | 'villain' | 'villain2';
     action: ActionLineAction;
     /** Taille : % du pot pour un bet, multiplicateur pour un raise. */
     size?: number;
@@ -41,20 +42,42 @@ export const ACTION_LINE_ACTIONS: { code: ActionLineAction, name: string }[] = [
 ];
 
 /**
- * Ligne d'action lisible, regroupée par street (ex. « Flop : Héros bet 75 % · Adversaire call »).
+ * Ligne d'action regroupée par street, chaque action avec son acteur (ex. Flop : [héros, « bet 75 % »], [adversaire, « call »]).
  * @param line Actions précédant la situation.
  */
-export function describeActionLine(line: ActionLineStep[] | undefined): { street: string, text: string }[] {
+export function actionLineByStreet(line: ActionLineStep[] | undefined): { street: string, steps: { actor: ActionLineStep['actor'], text: string }[] }[] {
     return ACTION_LINE_STREETS
         .map(street => ({
             street: street.name,
-            text: (line ?? []).filter(step => step.street === street.code).map(step => {
+            steps: (line ?? []).filter(step => step.street === street.code).map(step => {
                 const action = ACTION_LINE_ACTIONS.find(item => item.code === step.action)?.name.toLowerCase() ?? step.action;
                 const size = step.size == null ? '' : step.action === 'bet' ? ` ${step.size} %` : step.action === 'raise' ? ` x${step.size}` : '';
-                return `${step.actor === 'hero' ? 'Héros' : 'Adversaire'} ${action}${size}`;
-            }).join(' · ')
+                return { actor: step.actor, text: `${action}${size}` };
+            })
         }))
-        .filter(item => item.text);
+        .filter(item => item.steps.length);
+}
+
+/**
+ * Nom d'un acteur de la ligne d'action ; les adversaires ne sont numérotés que s'il y en a deux.
+ * @param actor Acteur de l'action.
+ * @param numbered Numéroter les adversaires (situation à 3 joueurs).
+ */
+export function actionLineActorName(actor: ActionLineStep['actor'], numbered: boolean): string {
+    if (actor === 'hero') return 'Héros';
+    return numbered ? `Adversaire ${actor === 'villain2' ? 2 : 1}` : 'Adversaire';
+}
+
+/**
+ * Ligne d'action lisible, regroupée par street (ex. « Flop : Héros bet 75 % · Adversaire call »).
+ * @param line Actions précédant la situation.
+ * @param nbPlayer Nombre de joueurs : à 3, les adversaires sont numérotés.
+ */
+export function describeActionLine(line: ActionLineStep[] | undefined, nbPlayer?: number): { street: string, text: string }[] {
+    return actionLineByStreet(line).map(item => ({
+        street: item.street,
+        text: item.steps.map(step => `${actionLineActorName(step.actor, nbPlayer === 3)} ${step.text}`).join(' · ')
+    }));
 }
 
 /** Valeur des cases de la range d'une situation flop. */

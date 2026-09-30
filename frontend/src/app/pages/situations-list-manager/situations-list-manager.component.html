@@ -141,8 +141,10 @@
             <tr class="dark:text-gray-300 dark:bg-secondary-dark-bg">
                 <td class="dark:border-gray-700"><p-tableCheckbox [value]="situation"></p-tableCheckbox></td>
                 <td class="dark:border-gray-700">
-                    <button type="button" (click)="displaySituation(situation)"
-                        class="border-0 bg-transparent p-0 text-left font-normal text-gray-800 hover:text-gray-600 hover:underline dark:text-gray-300 dark:hover:text-white cursor-pointer">
+                    <!-- Une seule ligne ; le nom complet s'affiche au survol s'il est coupé -->
+                    <button #nameButton type="button" (click)="displaySituation(situation)" (mouseenter)="measureTruncation(nameButton)"
+                        [pTooltip]="situation.name" tooltipPosition="top" [showDelay]="100" [tooltipDisabled]="truncatedElement !== nameButton"
+                        class="block max-w-[13rem] truncate border-0 bg-transparent p-0 text-left font-normal text-gray-800 hover:text-gray-600 hover:underline dark:text-gray-300 dark:hover:text-white cursor-pointer">
                         {{ situation.name }}
                     </button>
                 </td>
@@ -200,7 +202,9 @@
     panelClass="w-fit max-w-[94vw]">
     @if (situationToDisplay) {
         <div class="border-b border-gray-200 pb-3 pr-10 dark:border-gray-700">
-            <h4 id="display-situation-title" class="m-0 text-xl font-semibold text-gray-900 dark:text-gray-100">
+            <!-- w-0 min-w-full : le titre prend la largeur de la fenêtre sans l'élargir ; nom complet au survol s'il est coupé -->
+            <h4 #nameTitle id="display-situation-title" (mouseenter)="measureTruncation(nameTitle)" class="m-0 w-0 min-w-full truncate text-xl font-semibold text-gray-900 dark:text-gray-100"
+                [pTooltip]="situationToDisplay.name" tooltipPosition="top" [showDelay]="100" [tooltipDisabled]="truncatedElement !== nameTitle">
                 {{ situationToDisplay.name }}
             </h4>
             <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
@@ -253,10 +257,10 @@
                     <span class="text-base text-gray-800 dark:text-gray-200">Hors range</span>
                 </div>
 
-                @if (describeActionLine(situationToDisplay.actionLine).length) {
+                @if (describeActionLine(situationToDisplay.actionLine, situationToDisplay.nbPlayer).length) {
                 <h5 class="m-0 mb-2 mt-5 text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Ligne d'action</h5>
                 <ul class="m-0 flex list-none flex-col gap-1 p-0 text-sm text-gray-800 dark:text-gray-200">
-                    @for (step of describeActionLine(situationToDisplay.actionLine); track step.street) {
+                    @for (step of describeActionLine(situationToDisplay.actionLine, situationToDisplay.nbPlayer); track step.street) {
                     <li><span class="font-semibold">{{ step.street }} :</span> {{ step.text }}</li>
                     }
                 </ul>

@@ -1,4 +1,5 @@
 import { NgStyle } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -247,6 +248,16 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         return situation.flopTypes ?? (situation.flopType ? [situation.flopType] : []);
     }
 
+    /** Élément survolé dont le texte est coupé par « … » : seul à afficher son infobulle. */
+    truncatedElement: HTMLElement | null = null;
+
+    /**
+     * Mesure au survol si le texte d'un élément est coupé (l'infobulle n'est utile que dans ce cas).
+     */
+    measureTruncation(element: HTMLElement) {
+        this.truncatedElement = element.scrollWidth > element.clientWidth ? element : null;
+    }
+
     /**
      * Noms des types de flop d'une situation, un par ligne (infobulle de la colonne Type).
      */
@@ -356,7 +367,13 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
                     this.commonService.showSwalToast(`${response.count} fichier(s) importé(s) avec succès !`);
                     this.apiSituation.getSituations();
                 },
-                error: () => this.commonService.showSwalToast(`Échec de l'import`, 'error')
+                error: (error: HttpErrorResponse) => {
+                    // Message du serveur (fichier invalide, taille refusée…) pour comprendre l'échec
+                    const serverMessage: string = error.error?.message ?? (typeof error.error === 'string' && error.error.length < 200 ? error.error : '');
+                    const detail = serverMessage || (error.status === 413 ? 'fichier trop volumineux pour le serveur' : `erreur HTTP ${error.status}`);
+                    console.error('Import de situations refusé', error.error?.errors ?? error.error);
+                    this.commonService.showSwalToast(`Échec de l'import : ${detail}`, 'error');
+                }
             });
         };
 

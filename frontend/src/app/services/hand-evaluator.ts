@@ -89,6 +89,10 @@ export interface RunoutFeatures {
     rank: number;
     /** Rangs distincts du board précédent, du plus haut au plus bas. */
     previousRanks: number[];
+    /** Rangs distincts du flop. */
+    flopRanks: number[];
+    /** Le tirage couleur du flop est arrivé : une couleur présente deux fois au flop compte au moins trois cartes sur le board. */
+    flopFlushDrawCompleted: boolean;
     /** Changement depuis le board précédent (dernière carte seule). */
     previous: RunoutChange;
     /** Changement depuis le flop (turn et river). */
@@ -106,6 +110,8 @@ export interface BoardFeatures {
     pairRank?: number;
     /** Rang de la plus haute carte non pairée d'un board pairé. */
     unpairedRank?: number;
+    /** Rangs non pairés du board, du plus haut au plus bas : top pair puis 2e paire (sur un board pairé, les paires se comptent sur ces rangs). */
+    unpairedRanks: number[];
     paired: boolean;
     suits: BoardSuits;
     straightPossible: boolean;
@@ -385,6 +391,9 @@ export function evaluateBoard(board: PlayingCard[]): BoardFeatures {
         ? {
             rank: boardRanks[boardRanks.length - 1],
             previousRanks: [...new Set(boardRanks.slice(0, -1))].sort((a, b) => b - a),
+            flopRanks: [...new Set(boardRanks.slice(0, 3))],
+            flopFlushDrawCompleted: SUITS.some(suit => board.slice(0, 3).filter(card => card.color === suit).length === 2
+                && board.filter(card => card.color === suit).length >= 3),
             previous: runoutChange(board.slice(0, -1), board.slice(-1)),
             flop: runoutChange(board.slice(0, 3), board.slice(3))
         }
@@ -397,6 +406,7 @@ export function evaluateBoard(board: PlayingCard[]): BoardFeatures {
         bottom: ranks[ranks.length - 1],
         pairRank,
         unpairedRank: pairRank === undefined ? undefined : [...counts].filter(([, count]) => count === 1).map(([rank]) => rank).sort((a, b) => b - a)[0],
+        unpairedRanks: [...counts].filter(([, count]) => count === 1).map(([rank]) => rank).sort((a, b) => b - a),
         paired: pairRank !== undefined,
         suits,
         straightPossible: straightMax >= 3,

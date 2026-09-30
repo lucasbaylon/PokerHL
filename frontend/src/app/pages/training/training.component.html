@@ -5,6 +5,39 @@
             <p class="m-0 mt-2 text-base text-gray-500 dark:text-gray-400">{{currentSituationName}}</p>
         </div>
     </header>
+    @if (isPostflop && actionFeed.length) {
+    <aside class="action-feed animate-fadeIn rounded-md bg-white px-4 py-3 text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300" aria-label="Actions précédentes">
+        @for (street of actionFeed; track street.street) {
+        <div>
+            <p class="m-0 mb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ street.street }}</p>
+            <ul class="m-0 flex list-none flex-col gap-1.5 p-0">
+                @for (step of street.steps; track $index) {
+                <li class="flex items-center gap-2.5 text-sm">
+                    @if (step.actor === 'hero') {
+                    <span class="h-7 w-7 shrink-0 overflow-hidden rounded-full" [title]="actionActorName(step.actor)">
+                        @if (authService.getUserAvatar()) {
+                        <img [src]="authService.getUserAvatar()" alt="" class="h-full w-full object-cover" />
+                        } @else {
+                        <span class="flex h-full w-full items-center justify-center bg-gray-700 text-white"><i class="fa-solid fa-user text-xs" aria-hidden="true"></i></span>
+                        }
+                    </span>
+                    } @else {
+                    <span class="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700" [title]="actionActorName(step.actor)">
+                        <i class="fa-solid {{ opponentIcon(step.actor) }} text-sm" aria-hidden="true"></i>
+                        @if (opponentNumber(step.actor)) {
+                        <span class="opponent-badge">{{ opponentNumber(step.actor) }}</span>
+                        }
+                    </span>
+                    }
+                    <span class="sr-only">{{ actionActorName(step.actor) }}</span>
+                    <span class="font-medium">{{ step.text }}</span>
+                </li>
+                }
+            </ul>
+        </div>
+        }
+    </aside>
+    }
     <div class="session-stats animate-fadeIn animation-delay-200 rounded-md bg-white px-5 py-4 text-gray-500 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-400" aria-label="Statistiques de la session">
         <div><strong>{{goodResponse}}<span> / {{totalResponse}}</span></strong><span>Bonnes réponses</span></div>
         <div><strong>{{successRatePercentage}}<span>%</span></strong><span>Réussite</span></div>
@@ -42,13 +75,6 @@
                             <img src="assets/img/chip-medium.png" class="h-7 w-auto object-contain drop-shadow-lg" alt="" />
                             <span>Pot {{activeSituation.pot}} BB</span>
                         </div>
-                        @if (actionLineLabel.length) {
-                        <ul class="action-line" aria-label="Actions précédentes">
-                            @for (step of actionLineLabel; track step.street) {
-                            <li><strong>{{ step.street }} :</strong> {{ step.text }}</li>
-                            }
-                        </ul>
-                        }
                     </div>
                     } @else {
                     <div class="table-brand" aria-hidden="true">
@@ -100,18 +126,11 @@
                         class="player-seat seat-left bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
                         [class.seat-folded]="getOpponentAction('left') === 'Fold'">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1">
-                            @if (activeSituation.opponentLevel == "fish"){
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else if (activeSituation.opponentLevel == "shark") {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                            } @else if (activeSituation.opponentLevel == "fish_shark") {
-                            @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) ===
-                            "opponent1") {
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                            }
-                            }
+                            <!-- Numéro de l'adversaire, repris dans les actions précédentes -->
+                            <div class="relative my-1" title="Adversaire 1">
+                                <i class="fa-solid {{ opponentIcon('villain') }} text-2xl"></i>
+                                <span class="opponent-badge">1</span>
+                            </div>
                             <h3 class="seat-name">Adversaire</h3>
                             @if (getOpponentRemainingStack(getOpponentPosition('left'), getOpponentAction('left'), activeSituation.stack) === 0) {
                                 <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>
@@ -144,18 +163,11 @@
                         class="player-seat seat-right bg-white text-gray-800 shadow transition-colors duration-500 dark:bg-secondary-dark-bg dark:text-gray-300"
                         [class.seat-folded]="getOpponentAction('right') === 'Fold'">
                         <div class="w-1/2 flex flex-col items-center justify-center gap-1">
-                            @if (activeSituation.opponentLevel == "fish"){
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else if (activeSituation.opponentLevel == "shark") {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                            } @else if (activeSituation.opponentLevel == "fish_shark") {
-                            @if (getFishPosition(activeSituation.position!, activeSituation.fishPosition!) ===
-                            "opponent2") {
-                            <i class="fa-solid fa-fish-fins text-2xl my-1"></i>
-                            } @else {
-                            <i class="fa-solid fa-crown text-2xl my-1"></i>
-                            }
-                            }
+                            <!-- Numéro de l'adversaire, repris dans les actions précédentes -->
+                            <div class="relative my-1" title="Adversaire 2">
+                                <i class="fa-solid {{ opponentIcon('villain2') }} text-2xl"></i>
+                                <span class="opponent-badge">2</span>
+                            </div>
                             <h3 class="seat-name">Adversaire</h3>
                             @if (getOpponentRemainingStack(getOpponentPosition('right'), getOpponentAction('right'), activeSituation.stack) === 0) {
                                 <h3 class="m-0 text-xl text-red-600 font-bold uppercase animate-pulse">ALL IN</h3>

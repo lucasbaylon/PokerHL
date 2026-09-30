@@ -122,7 +122,8 @@ export class FlopConditionDialogComponent implements OnChanges {
     ];
     readonly refs: Option<string>[] = [
         { code: 'top', name: 'Top card du board' }, { code: 'second', name: '2e carte du board' }, { code: 'third', name: '3e carte du board' },
-        { code: 'bottom', name: 'Plus petite carte du board' }, { code: 'pair', name: 'Paire du board' }, { code: 'rank', name: 'Rang précis' }
+        { code: 'bottom', name: 'Plus petite carte du board' }, { code: 'pair', name: 'Paire du board' },
+        { code: 'topPair', name: 'Carte de la top pair (non pairée)' }, { code: 'secondPair', name: 'Carte de la 2e paire (non pairée)' }, { code: 'rank', name: 'Rang précis' }
     ];
     readonly boardAttrs: Option<string>[] = [
         { code: 'topRank', name: 'Top card' }, { code: 'bottomRank', name: 'Plus petite carte' }, { code: 'pairRank', name: 'Rang de la paire' },
@@ -138,7 +139,10 @@ export class FlopConditionDialogComponent implements OnChanges {
         { code: 'newCardPairs', name: 'Dernière carte : paire le board précédent' },
         { code: 'newCardSuits', name: 'Nouvelle(s) carte(s) : couleur possible, 4-flush…' },
         { code: 'newCardStraight', name: 'Nouvelle(s) carte(s) : quinte possible, 4-straight…' },
-        { code: 'newCardTh', name: 'Nouvelle(s) carte(s) : parmi les meilleures absentes (TH)' }
+        { code: 'newCardTh', name: 'Nouvelle(s) carte(s) : parmi les meilleures absentes (TH)' },
+        { code: 'pairGap', name: 'Écart entre la top pair et la 2e paire' },
+        { code: 'fromFlop', name: 'Carte du board déjà présente au flop' },
+        { code: 'flopFlushDraw', name: 'Tirage couleur du flop arrivé (turn ou river)' }
     ];
     readonly pairingOptions: Option<BoardPairing>[] = (Object.keys(BOARD_PAIRING_LABELS) as BoardPairing[])
         .map(code => ({ code, name: BOARD_PAIRING_LABELS[code] }));
@@ -276,6 +280,8 @@ export class FlopConditionDialogComponent implements OnChanges {
             case 'newCardRank': d.op = '>='; d.rank = 9; break;
             case 'newCardVs': d.op = '>'; d.ref = 'top'; break;
             case 'newCardPairs': d.ref = 'any'; break;
+            case 'pairGap': d.op = '>='; d.n = 4; break;
+            case 'fromFlop': d.ref = 'third'; break;
         }
     }
 
@@ -337,6 +343,8 @@ export class FlopConditionDialogComponent implements OnChanges {
                     case 'newCardRank': return { kind: 'board', attr: 'newCardRank', op: d.op, rank: d.rank, ...negate };
                     case 'newCardVs': return { kind: 'board', attr: 'newCardVs', op: d.op, ref: d.ref as 'top', ...negate };
                     case 'newCardPairs': return { kind: 'board', attr: 'newCardPairs', ref: d.ref as 'top', ...negate };
+                    case 'pairGap': return { kind: 'board', attr: 'pairGap', op: d.op, n: Math.max(0, d.n ?? 0), ...negate };
+                    case 'fromFlop': return { kind: 'board', attr: 'fromFlop', ref: d.ref as 'top', ...negate };
                     case 'newCardSuits':
                     case 'newCardStraight': {
                         const runout: RuleCondition = { kind: 'board', attr: d.attr, n: Math.min(5, Math.max(2, d.n || 2)), ...negate };

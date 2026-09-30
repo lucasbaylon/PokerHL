@@ -111,9 +111,17 @@ export class SituationManagerComponent {
     /** Liste de conditions de board en cours d'édition : flop, turn ou river. */
     editedBoardList: BoardConditionList = 'boardConditions';
 
-    readonly actionLineActors: { name: string, code: ActionLineStep['actor'] }[] = [
+    private readonly headsUpActionLineActors: { name: string, code: ActionLineStep['actor'] }[] = [
         { name: 'Héros', code: 'hero' }, { name: 'Adversaire', code: 'villain' }
     ];
+    private readonly threeWayActionLineActors: { name: string, code: ActionLineStep['actor'] }[] = [
+        { name: 'Héros', code: 'hero' }, { name: 'Adversaire 1', code: 'villain' }, { name: 'Adversaire 2', code: 'villain2' }
+    ];
+
+    /** Joueurs de la ligne d'action : à 3 joueurs, l'adversaire 1 est à gauche du héros et l'adversaire 2 à droite. */
+    get actionLineActors(): { name: string, code: ActionLineStep['actor'] }[] {
+        return this.nbPlayer?.code === 3 ? this.threeWayActionLineActors : this.headsUpActionLineActors;
+    }
     readonly actionLineActions = ACTION_LINE_ACTIONS;
 
     testResult?: { hero: FlopCard[], board: FlopCard[], hand: string[], rule: string, action?: Solution };
@@ -330,6 +338,10 @@ export class SituationManagerComponent {
      */
     onSelectNbPlayers() {
         this.withCharacteristicsAnimation(() => this.onChangeNbPlayersTable());
+        // En heads-up, il n'y a plus d'adversaire 2 : ses actions passent à l'unique adversaire.
+        if (this.nbPlayer.code === 2) {
+            this.situation_obj.actionLine?.forEach(step => { if (step.actor === 'villain2') step.actor = 'villain'; });
+        }
     }
 
     /**

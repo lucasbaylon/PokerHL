@@ -24,7 +24,7 @@ export type RuleCondition = { negate?: boolean } & (
     | { kind: 'underpair', constraint: RankConstraint }
     | { kind: 'draw', draw: 'fd' | 'oesd' | 'gutshot' | 'straightDraw' | 'combo' | 'any', fdRank?: RankConstraint, twoCards?: boolean, overThird?: boolean }
     | { kind: 'backdoor', draw: 'bdfd' | 'bdsd' | 'bdoesd', highCard?: boolean, twoCards?: boolean, throughTop?: boolean }
-    | { kind: 'heroCard', card: 'high' | 'low' | 'any', op: Comparator, ref: 'top' | 'second' | 'third' | 'bottom' | 'pair' | 'rank', rank?: number }
+    | { kind: 'heroCard', card: 'high' | 'low' | 'any', op: Comparator, ref: 'top' | 'second' | 'third' | 'bottom' | 'pair' | 'topPair' | 'secondPair' | 'rank', rank?: number }
     | { kind: 'kicker', constraint: RankConstraint }
     | { kind: 'th', op: Comparator, n: number }
     | { kind: 'broadway' }
@@ -43,10 +43,13 @@ export type RuleCondition = { negate?: boolean } & (
     | { kind: 'board', attr: 'newCardPairs', ref: PreviousBoardRef | 'any' }
     | { kind: 'board', attr: 'newCardSuits' | 'newCardStraight', n: number, from?: RunoutFrom }
     | { kind: 'board', attr: 'newCardTh', op: Comparator, n: number, from?: RunoutFrom }
+    | { kind: 'board', attr: 'pairGap', op: Comparator, n: number }
+    | { kind: 'board', attr: 'fromFlop', ref: PreviousBoardRef }
+    | { kind: 'board', attr: 'flopFlushDraw' }
 );
 
 /** Critères de board portant sur la dernière carte (turn ou river) : sans objet au flop. */
-export const RUNOUT_ATTRS: BoardCondition['attr'][] = ['newCardRank', 'newCardVs', 'newCardPairs', 'newCardSuits', 'newCardStraight', 'newCardTh'];
+export const RUNOUT_ATTRS: BoardCondition['attr'][] = ['newCardRank', 'newCardVs', 'newCardPairs', 'newCardSuits', 'newCardStraight', 'newCardTh', 'fromFlop', 'flopFlushDraw'];
 
 export type ConditionKind = RuleCondition['kind'];
 
@@ -129,6 +132,14 @@ export function matchBoardCondition(condition: BoardCondition, board: BoardFeatu
                 const th = runout?.[condition.from ?? 'previous'].th;
                 return th !== undefined && compare(th, condition.op, condition.n);
             }
+            case 'pairGap':
+                return board.unpairedRanks.length >= 2
+                    && compare(board.unpairedRanks[0] - board.unpairedRanks[1] - 1, condition.op, condition.n);
+            case 'fromFlop': {
+                const rank = previousRank(board.ranks, condition.ref);
+                return !!runout && rank !== undefined && runout.flopRanks.includes(rank);
+            }
+            case 'flopFlushDraw': return !!runout?.flopFlushDrawCompleted;
         }
     })();
     return condition.negate ? !result : result;
@@ -181,6 +192,8 @@ export function matchCondition(condition: RuleCondition, hand: HandFeatures): bo
                     third: hand.board.third,
                     bottom: hand.board.bottom,
                     pair: hand.board.pairRank,
+                    topPair: hand.board.unpairedRanks[0],
+                    secondPair: hand.board.unpairedRanks[1],
                     rank: condition.rank
                 };
                 const reference = references[condition.ref];
@@ -292,6 +305,10 @@ const FLOP_TERMS: (FlopTerm & { pattern: RegExp })[] = [
     { term: '4 cartes qui se suivent', pattern: /4 cartes qui se suivent/, explanation: 'Quatre rangs consécutifs sur le board (ex. 9-8-7-6).' },
     { term: 'Board double pairé', pattern: /double pairé/, explanation: 'Deux paires différentes sur le board.' },
     { term: 'Dernière carte', pattern: /Dernière carte/, explanation: 'La carte arrivée en dernier : la turn sur un board de 4 cartes, la river sur un board de 5 cartes.' },
+    { term: 'Carte de la top pair / 2e paire', pattern: /carte de la (top pair|2e paire)/, explanation: 'Carte du board avec laquelle on fait la top pair ou la 2e paire. Sur un board pairé, les paires se comptent sur les cartes non pairées (ex. K92K : top pair = 9, 2e paire = 2).' },
+    { term: 'Cartes entre la top pair et la 2e paire', pattern: /entre la top pair et la 2e paire/, explanation: 'Nombre de valeurs strictement entre les deux plus hautes cartes non pairées du board (ex. Q754 : J, T, 9, 8 = 4).' },
+    { term: 'Tirage couleur du flop arrivé', pattern: /Tirage couleur du flop arrivé/, explanation: 'Le flop avait deux cartes d\'une même couleur et la turn ou la river a amené la troisième.' },
+    { term: 'Déjà au flop', pattern: /déjà au flop/, explanation: 'Cette carte du board était sur le flop (et n\'est pas tombée à la turn ou à la river).' },
     { term: 'Board précédent', pattern: /board précédent/, explanation: 'Le board avant la dernière carte (le flop pour une turn, le board du turn pour une river).' },
     { term: 'Depuis le flop', pattern: /[Dd]epuis le flop/, explanation: 'En comptant toutes les cartes arrivées après le flop (turn et river).' },
     { term: 'Meilleure absente', pattern: /meilleure absente/, explanation: '« 2e meilleure absente » : 2e plus forte valeur parmi celles qui ne sont pas sur le board de référence.' }
@@ -345,7 +362,8 @@ const PREVIOUS_REFS: Record<PreviousBoardRef, string> = {
 const RUNOUT_FROM_LABELS: Record<RunoutFrom, string> = { previous: 'Dernière carte', flop: 'Depuis le flop' };
 
 const HERO_CARD_REFS: Record<string, string> = {
-    top: 'la top card', second: 'la 2e carte', third: 'la 3e carte', bottom: 'la plus petite carte', pair: 'la paire du board'
+    top: 'la top card', second: 'la 2e carte', third: 'la 3e carte', bottom: 'la plus petite carte', pair: 'la paire du board',
+    topPair: 'la carte de la top pair', secondPair: 'la carte de la 2e paire'
 };
 
 /**
@@ -425,6 +443,9 @@ export function describeCondition(condition: RuleCondition): string {
                         : `Dernière carte pairée avec ${PREVIOUS_REFS[condition.ref]} du board précédent`;
                     case 'newCardSuits': return `${RUNOUT_FROM_LABELS[condition.from ?? 'previous']} : passe à ${condition.n} cartes de la même couleur`;
                     case 'newCardStraight': return `${RUNOUT_FROM_LABELS[condition.from ?? 'previous']} : passe à ${condition.n} cartes à la quinte`;
+                    case 'pairGap': return `Board : cartes entre la top pair et la 2e paire ${COMPARATOR_LABELS[condition.op]} ${condition.n}`;
+                    case 'fromFlop': return `Board : ${PREVIOUS_REFS[condition.ref]} était déjà au flop`;
+                    case 'flopFlushDraw': return 'Tirage couleur du flop arrivé (turn ou river)';
                     case 'newCardTh': return condition.from === 'flop'
                         ? `Une carte tombée depuis le flop ${COMPARATOR_LABELS[condition.op]} ${ordinal(condition.n)} meilleure absente du flop`
                         : `Dernière carte ${COMPARATOR_LABELS[condition.op]} ${ordinal(condition.n)} meilleure absente du board précédent`;

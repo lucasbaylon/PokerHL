@@ -219,7 +219,7 @@
                 <p-dropdown inputId="boardAttr" [(ngModel)]="draft.attr" [options]="availableBoardAttrs" optionLabel="name" optionValue="code"
                     (onChange)="onChangeAttr()" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
             </div>
-            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'broadwayCount', 'suitCount', 'straightCount', 'newCardRank', 'newCardVs', 'newCardTh'].includes(draft.attr)) {
+            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'broadwayCount', 'suitCount', 'straightCount', 'newCardRank', 'newCardVs', 'newCardTh', 'pairGap'].includes(draft.attr)) {
             <div>
                 <label for="boardOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
                 <p-dropdown inputId="boardOp" [(ngModel)]="draft.op" [options]="comparators" optionLabel="name" optionValue="code"
@@ -243,6 +243,19 @@
             <div>
                 <label for="boardThN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Position (1 = meilleure absente)</label>
                 <p-inputNumber inputId="boardThN" [(ngModel)]="draft.n" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            @if (draft.attr === 'pairGap') {
+            <div>
+                <label for="boardGap" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Cartes entre les deux</label>
+                <p-inputNumber inputId="boardGap" [(ngModel)]="draft.n" [min]="0" [max]="11" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            @if (draft.attr === 'fromFlop') {
+            <div>
+                <label for="boardFromFlop" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Carte du board</label>
+                <p-dropdown inputId="boardFromFlop" [(ngModel)]="draft.ref" [options]="previousRefs" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
             </div>
             }
             @if (draft.attr === 'newCardVs') {

@@ -9,7 +9,7 @@ import { DefaultCardsComponent } from '../../components/default-cards/default-ca
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { ActiveSituation, TableCard, TableColorCard, TableColorCardObj } from '../../interfaces/active-situation';
 import { Card } from '../../interfaces/card';
-import { IN_RANGE, Situation, describeActionLine, isPostflop as isPostflopType } from '../../interfaces/situation';
+import { ActionLineStep, IN_RANGE, Situation, actionLineActorName, actionLineByStreet, describeActionLine, isPostflop as isPostflopType } from '../../interfaces/situation';
 import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
@@ -31,18 +31,45 @@ import { CommonService } from './../../services/common.service';
 })
 export class TrainingComponent {
     private tableResizeObserver?: ResizeObserver;
+    private tableStageElement?: HTMLElement;
+
+    /** Largeur réservée à droite de la table pour les actions précédentes (écrans ≥ 1024 px). */
+    private readonly actionFeedReserve = 276;
 
     @ViewChild('tableStage') set tableStage(element: ElementRef<HTMLElement> | undefined) {
         this.tableResizeObserver?.disconnect();
+        this.tableStageElement = element?.nativeElement;
         if (!element) return;
-        const stage = element.nativeElement;
-        this.tableResizeObserver = new ResizeObserver(([entry]) => {
-            // Écrans < 1024 px : table plus compacte (voir training.component.scss), donc moins réduite.
-            const [baseWidth, baseHeight] = window.matchMedia('(max-width: 1023.98px)').matches ? [580, 470] : [1000, 600];
-            const scale = Math.min(1, entry.contentRect.width / baseWidth, entry.contentRect.height / baseHeight);
-            stage.style.setProperty('--table-scale', String(scale));
-        });
-        this.tableResizeObserver.observe(stage);
+        this.tableResizeObserver = new ResizeObserver(() => this.updateTableLayout());
+        this.tableResizeObserver.observe(element.nativeElement);
+    }
+
+    /**
+     * Met la table à l'échelle de la zone disponible. Avec les actions précédentes à droite,
+     * la table est décalée vers la gauche (puis réduite si besoin) pour ne pas passer dessous.
+     */
+    private updateTableLayout() {
+        const stage = this.tableStageElement;
+        if (!stage) return;
+        // Écrans < 1024 px : table plus compacte (voir training.component.scss), donc moins réduite.
+        const isMobile = window.matchMedia('(max-width: 1023.98px)').matches;
+        const [baseWidth, baseHeight] = isMobile ? [580, 470] : [1000, 600];
+        const width = stage.clientWidth;
+        const height = stage.clientHeight;
+        const reserve = !isMobile && this.activeSituation && this.isPostflop && this.actionFeed.length ? this.actionFeedReserve : 0;
+
+        let scale = Math.min(1, width / baseWidth, height / baseHeight);
+        let shift = 0;
+        if (reserve) {
+            if (baseWidth * scale <= width - reserve) {
+                shift = Math.max(0, width / 2 + baseWidth * scale / 2 - (width - reserve));
+            } else {
+                scale = Math.max(0, (width - reserve) / baseWidth);
+                shift = reserve / 2;
+            }
+        }
+        stage.style.setProperty('--table-scale', String(scale));
+        stage.style.setProperty('--table-shift', `${shift}px`);
     }
 
     mode: string = "";
@@ -206,6 +233,7 @@ export class TrainingComponent {
         this.raiseAmount = Math.min(this.maximumRaise(), Math.max(2, this.highestCurrentBet() * 2));
         this.setBetPercent(50);
         this.raiseMultiplier = Math.min(3, this.maximumRaiseMultiplier());
+        this.updateTableLayout();
         this.playerInfoAnimationName = this.playerInfoAnimationName === 'training-player-info-in-a'
             ? 'training-player-info-in-b'
             : 'training-player-info-in-a';
@@ -360,7 +388,36 @@ export class TrainingComponent {
 
     /** Ligne d'action de la situation en cours, par street. */
     get actionLineLabel(): { street: string, text: string }[] {
-        return describeActionLine(this.activeSituation?.actionLine);
+        return describeActionLine(this.activeSituation?.actionLine, this.activeSituation?.nbPlayer);
+    }
+
+    /** Actions précédentes par street, affichées à droite de l'écran. */
+    get actionFeed(): { street: string, steps: { actor: ActionLineStep['actor'], text: string }[] }[] {
+        return actionLineByStreet(this.activeSituation?.actionLine);
+    }
+
+    actionActorName(actor: ActionLineStep['actor']): string {
+        return actionLineActorName(actor, this.activeSituation?.nbPlayer === 3);
+    }
+
+    /**
+     * Numéro d'un adversaire (1 à gauche, 2 à droite), uniquement à 3 joueurs.
+     */
+    opponentNumber(actor: ActionLineStep['actor']): number | undefined {
+        if (actor === 'hero' || this.activeSituation?.nbPlayer !== 3) return undefined;
+        return actor === 'villain2' ? 2 : 1;
+    }
+
+    /**
+     * Icône d'un adversaire : poisson (fish) ou couronne (reg), selon son niveau et sa place.
+     */
+    opponentIcon(actor: ActionLineStep['actor']): string {
+        const level = this.activeSituation?.opponentLevel;
+        if (level === 'fish_shark' && this.activeSituation.nbPlayer === 3) {
+            const opponent = actor === 'villain2' ? 'opponent2' : 'opponent1';
+            return this.getFishPosition(this.activeSituation.position!, this.activeSituation.fishPosition!) === opponent ? 'fa-fish-fins' : 'fa-crown';
+        }
+        return level === 'shark' ? 'fa-crown' : 'fa-fish-fins';
     }
 
     get isFacingBet(): boolean {

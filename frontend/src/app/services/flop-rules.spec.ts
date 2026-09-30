@@ -42,6 +42,25 @@ describe('conditions de board turn et river', () => {
         expect(onBoard(condition, 'Qh 7d 3c 3s 2h')).toBeFalse();
     });
 
+    it('mesure l\'écart entre la top pair et la 2e paire (cartes non pairées)', () => {
+        expect(onBoard({ kind: 'board', attr: 'pairGap', op: '>=', n: 4 }, 'Qs 7h 5d 4c')).toBeTrue();
+        expect(onBoard({ kind: 'board', attr: 'pairGap', op: '>=', n: 4 }, 'Js 9h 5d 4c')).toBeFalse();
+        // Q466 : top pair Q, 2e paire 4
+        expect(onBoard({ kind: 'board', attr: 'pairGap', op: '=', n: 7 }, 'Qs 6h 4d 6c')).toBeTrue();
+    });
+
+    it('sait si une carte du board était déjà au flop', () => {
+        expect(onBoard({ kind: 'board', attr: 'fromFlop', ref: 'third' }, 'Qs Th 7d 3c 2h')).toBeTrue();
+        expect(onBoard({ kind: 'board', attr: 'fromFlop', ref: 'third' }, 'Js 9h 3d 7c 2h')).toBeFalse();
+    });
+
+    it('reconnaît le tirage couleur du flop arrivé (et pas une autre couleur)', () => {
+        const condition: BoardCondition = { kind: 'board', attr: 'flopFlushDraw' };
+        expect(onBoard(condition, 'Th 9h 5c 5d Kh')).toBeTrue();
+        // Flop cœur-cœur-trèfle, turn et river trèfle : trois trèfles mais le tirage du flop (cœur) n'est pas arrivé
+        expect(onBoard(condition, 'Th 9h 5c 2c Kc')).toBeFalse();
+    });
+
     it('filtre la structure du board', () => {
         expect(onBoard({ kind: 'board', attr: 'pairing', pairing: 'doublePaired' }, '8d 3c 3h 8s')).toBeTrue();
         expect(onBoard({ kind: 'board', attr: 'suitCount', op: '=', n: 4 }, 'Qs 7s 6s 3s')).toBeTrue();
@@ -66,6 +85,17 @@ describe('conditions de main turn et river', () => {
 
         const kicker: RuleCondition = { kind: 'kickerPlays' };
         expect(matchCondition(kicker, evaluateHand(cards('Jd 4c'), cards('9s 4h 3d 9c Ts')))).toBeTrue();
+    });
+
+    it('compare une paire servie aux paires du board comptées sur les cartes non pairées', () => {
+        // J94J : top pair = 9, 2e paire = 4 ; 66 est entre les deux
+        const between: RuleCondition[] = [
+            { kind: 'heroCard', card: 'low', op: '>', ref: 'secondPair' },
+            { kind: 'heroCard', card: 'low', op: '<', ref: 'topPair' }
+        ];
+        const board = cards('Js 9h 4d Jc');
+        expect(between.every(condition => matchCondition(condition, evaluateHand(cards('6s 6h'), board)))).toBeTrue();
+        expect(between.every(condition => matchCondition(condition, evaluateHand(cards('Ts Th'), board)))).toBeFalse();
     });
 
     it('résout la première règle remplie', () => {
