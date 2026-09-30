@@ -76,14 +76,10 @@
                             [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                             [showApplyButton]="false" class="ml-2">
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <div class="flex w-64 max-w-full flex-col gap-2">
-                                    <p-multiSelect #multiSelect [ngModel]="value?.types" [options]="typeLst" placeholder="Type" [filter]="false"
-                                        (onChange)="filter(typeFilterValue($event.value, value?.flopText))" optionLabel="name" optionValue="value">
-                                    </p-multiSelect>
-                                    <input type="text" pInputText [ngModel]="value?.flopText" (ngModelChange)="filter(typeFilterValue(value?.types, $event))"
-                                        placeholder="Type de flop (ex. paired, mono)" aria-label="Filtrer par type de flop"
-                                        class="box-border w-full" />
-                                </div>
+                                <p-multiSelect #multiSelect [ngModel]="value" [options]="typeLst" placeholder="Type" [filter]="false"
+                                    [group]="true" optionGroupLabel="label" optionGroupChildren="items" styleClass="w-64 max-w-full"
+                                    (onChange)="filter($event.value)" optionLabel="name" optionValue="value">
+                                </p-multiSelect>
                             </ng-template>
                         </p-columnFilter>
                     </div>

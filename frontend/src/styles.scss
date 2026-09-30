@@ -743,3 +743,16 @@ html.dark app-settings .p-dropdown .p-dropdown-trigger {
         max-width: calc(100vw - 2rem);
     }
 }
+
+/* Titres de groupe des listes multiples (ex. filtre Type : Type / Types de flop) */
+.p-multiselect-panel .p-multiselect-item-group {
+    @apply text-xs font-semibold uppercase tracking-wider text-gray-500;
+}
+
+.p-multiselect-panel .p-multiselect-item-group:not(:first-child) {
+    @apply mt-1 border-0 border-t border-solid border-gray-200;
+}
+
+html.dark .p-multiselect-panel .p-multiselect-item-group {
+    @apply border-gray-700 bg-secondary-dark-bg text-gray-400;
+}
