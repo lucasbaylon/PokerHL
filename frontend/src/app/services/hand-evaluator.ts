@@ -1,5 +1,5 @@
 /**
- * Analyse d'une main du héros par rapport au board : main faite, tirages, backdoors, cartes hautes.
+ * Analyse d'une main du héros par rapport au board (flop, turn ou river) : main faite, tirages, backdoors, cartes hautes.
  * Fonctions pures, sans dépendance Angular, pour être utilisées par le moteur de règles et testées isolément.
  */
 
@@ -32,7 +32,8 @@ export function rankValue(rank: number): string {
 /** Niveaux de main faite, du plus fort au plus faible. */
 export type MadeHandLevel =
     'straight_flush' | 'quads' | 'full_house' | 'flush' | 'straight' | 'set' | 'trips' | 'two_pair' | 'overpair' |
-    'top_pair' | 'pp_below_top' | 'second_pair' | 'pp_below_second' | 'third_pair' | 'pp_below_board' | 'nothing';
+    'top_pair' | 'pp_below_top' | 'second_pair' | 'pp_below_second' | 'third_pair' | 'pp_below_third' |
+    'fourth_pair' | 'pp_below_fourth' | 'fifth_pair' | 'pp_below_board' | 'nothing';
 
 export const MADE_HAND_LEVELS: { code: MadeHandLevel, name: string, score: number }[] = [
     { code: 'straight_flush', name: 'Quinte flush', score: 100 },
@@ -49,7 +50,11 @@ export const MADE_HAND_LEVELS: { code: MadeHandLevel, name: string, score: numbe
     { code: 'second_pair', name: '2nd pair', score: 25 },
     { code: 'pp_below_second', name: 'Paire servie sous la 2e carte', score: 20 },
     { code: 'third_pair', name: '3rd pair', score: 15 },
-    { code: 'pp_below_board', name: 'Paire servie sous le board', score: 10 },
+    { code: 'pp_below_third', name: 'Paire servie sous la 3e carte', score: 13 },
+    { code: 'fourth_pair', name: '4th pair', score: 11 },
+    { code: 'pp_below_fourth', name: 'Paire servie sous la 4e carte', score: 9 },
+    { code: 'fifth_pair', name: '5th pair', score: 7 },
+    { code: 'pp_below_board', name: 'Paire servie sous le board', score: 5 },
     { code: 'nothing', name: 'Aucune main faite', score: 0 }
 ];
 
@@ -64,6 +69,31 @@ export interface RankPosition {
 }
 
 export type BoardSuits = 'rainbow' | 'twoTone' | 'mono' | 'other';
+
+/** Structure des paires du board. */
+export type BoardPairing = 'unpaired' | 'paired' | 'doublePaired' | 'trips' | 'fullHouse' | 'quads';
+
+/** Évolution du board entre un board de référence et le board actuel. */
+export interface RunoutChange {
+    /** Nombre maximal de cartes d'une même couleur avant les nouvelles cartes. */
+    suitMaxBefore: number;
+    /** Nombre maximal de cartes tenant dans une même quinte avant les nouvelles cartes. */
+    straightMaxBefore: number;
+    /** Meilleure position d'une nouvelle carte parmi les rangs absents du board de référence (1 = la plus haute), si l'une d'elles n'y est pas. */
+    th?: number;
+}
+
+/** Dernière carte du board (turn ou river), comparée au board précédent et au flop. */
+export interface RunoutFeatures {
+    /** Rang de la dernière carte. */
+    rank: number;
+    /** Rangs distincts du board précédent, du plus haut au plus bas. */
+    previousRanks: number[];
+    /** Changement depuis le board précédent (dernière carte seule). */
+    previous: RunoutChange;
+    /** Changement depuis le flop (turn et river). */
+    flop: RunoutChange;
+}
 
 export interface BoardFeatures {
     /** Rangs distincts du board, du plus haut au plus bas. */
@@ -81,6 +111,15 @@ export interface BoardFeatures {
     straightPossible: boolean;
     connected: boolean;
     broadwayCount: number;
+    /** Nombre maximal de cartes d'une même couleur (3 : couleur possible, 4 : 4-flush, 5 : couleur sur le board). */
+    suitMax: number;
+    /** Nombre maximal de cartes tenant dans une même quinte (3 : quinte possible, 4 : 4-straight, 5 : quinte sur le board). */
+    straightMax: number;
+    /** Quatre rangs consécutifs sur le board. */
+    fourInRow: boolean;
+    pairing: BoardPairing;
+    /** Dernière carte du board (turn ou river uniquement). */
+    runout?: RunoutFeatures;
 }
 
 export interface BackdoorFlush {
@@ -104,6 +143,10 @@ export interface HandFeatures {
     pocketPairRank?: number;
     /** Paire servie sous la top card du board : position parmi les paires possibles sous la top card (hors rangs du board). */
     underpair?: RankPosition;
+    /** Position de la main parmi les mains de même catégorie possibles sur ce board (quinte, couleur, full, carré, quinte flush). */
+    strength?: RankPosition;
+    /** Le kicker du héros joue : la main vaut plus avec lui qu'avec la seule carte qui fait la paire (ou le brelan). */
+    kickerPlays: boolean;
     fd: boolean;
     fdRank?: RankPosition;
     oesd: boolean;
@@ -194,6 +237,71 @@ function openEnded(heroRanks: number[], boardRanks: number[], through?: number):
     return false;
 }
 
+/** Base de codage des valeurs de mains (rangs de 2 à 14). */
+const VALUE_BASE = 15;
+
+/**
+ * Valeur exacte de la meilleure main de 5 cartes (ou moins si le board est incomplet) : plus elle est grande, plus la main est forte.
+ * @param cards Cartes disponibles (jusqu'à 7).
+ */
+export function handValue(cards: PlayingCard[]): number {
+    const encode = (category: number, ranks: number[]) =>
+        [...ranks, 0, 0, 0, 0, 0].slice(0, 5).reduce((value, rank) => value * VALUE_BASE + rank, category);
+    const ranks = cards.map(card => cardRank(card.value)).sort((a, b) => b - a);
+    const flushRanks = (suit: Suit) => cards.filter(card => card.color === suit).map(card => cardRank(card.value)).sort((a, b) => b - a);
+    const flushSuit = SUITS.find(suit => flushRanks(suit).length >= 5);
+    if (flushSuit) {
+        const straightFlush = straightHigh(flushRanks(flushSuit));
+        if (straightFlush) return encode(8, [straightFlush]);
+    }
+    const counts = new Map<number, number>();
+    ranks.forEach(rank => counts.set(rank, (counts.get(rank) ?? 0) + 1));
+    // Groupes triés par nombre de cartes puis par rang
+    const groups = [...counts].sort((a, b) => b[1] - a[1] || b[0] - a[0]);
+    const kickers = (exclude: number[], n: number) => ranks.filter(rank => !exclude.includes(rank)).slice(0, n);
+    if (groups[0][1] >= 4) return encode(7, [groups[0][0], ...kickers([groups[0][0]], 1)]);
+    if (groups[0][1] === 3) {
+        const pair = groups.slice(1).find(([, count]) => count >= 2);
+        if (pair) return encode(6, [groups[0][0], pair[0]]);
+    }
+    if (flushSuit) return encode(5, flushRanks(flushSuit));
+    const straight = straightHigh(ranks);
+    if (straight) return encode(4, [straight]);
+    if (groups[0][1] === 3) return encode(3, [groups[0][0], ...kickers([groups[0][0]], 2)]);
+    if (groups[0][1] === 2 && groups[1]?.[1] === 2) {
+        const pairs = [groups[0][0], groups[1][0]];
+        return encode(2, [...pairs, ...kickers(pairs, 1)]);
+    }
+    if (groups[0][1] === 2) return encode(1, [groups[0][0], ...kickers([groups[0][0]], 3)]);
+    return encode(0, ranks);
+}
+
+/**
+ * Catégorie d'une valeur de main (0 : carte haute … 8 : quinte flush).
+ */
+export function handCategory(value: number): number {
+    return Math.floor(value / VALUE_BASE ** 5);
+}
+
+/**
+ * Position d'une valeur de main parmi les mains de même catégorie possibles sur un board (toutes les combinaisons de deux cartes hors board).
+ * @param value Valeur de la main du héros.
+ * @param board Cartes du board.
+ */
+function strengthAmongPossible(value: number, board: PlayingCard[]): RankPosition {
+    const category = handCategory(value);
+    const deck = CARD_VALUES.flatMap(cardValue => SUITS.map(color => ({ value: cardValue, color })))
+        .filter(card => !board.some(item => item.value === card.value && item.color === card.color));
+    const values = new Set<number>([value]);
+    for (let i = 0; i < deck.length; i++) {
+        for (let j = i + 1; j < deck.length; j++) {
+            const other = handValue([deck[i], deck[j], ...board]);
+            if (handCategory(other) === category) values.add(other);
+        }
+    }
+    return rankPosition(value, [...values]);
+}
+
 /**
  * Position d'un rang parmi une liste de rangs possibles.
  */
@@ -204,8 +312,49 @@ function rankPosition(rank: number, possible: number[]): RankPosition {
     };
 }
 
+/** Rangs avec l'As compté aussi comme 1 (roue). */
+function withLowAce(ranks: number[]): number[] {
+    return ranks.includes(14) ? [...ranks, 1] : ranks;
+}
+
+/**
+ * Nombre maximal de cartes d'une même couleur.
+ */
+function suitMaxOf(board: PlayingCard[]): number {
+    return Math.max(...SUITS.map(suit => board.filter(card => card.color === suit).length));
+}
+
+/**
+ * Nombre maximal de rangs distincts tenant dans une même quinte (fenêtre de 5 rangs, As bas compris).
+ */
+function straightMaxOf(board: PlayingCard[]): number {
+    const ranks = withLowAce([...new Set(board.map(card => cardRank(card.value)))]);
+    let max = 0;
+    for (let low = 1; low <= 10; low++) {
+        max = Math.max(max, ranks.filter(rank => rank >= low && rank <= low + 4).length);
+    }
+    return max;
+}
+
+/**
+ * Évolution entre un board de référence et les cartes arrivées depuis.
+ */
+function runoutChange(reference: PlayingCard[], added: PlayingCard[]): RunoutChange {
+    const referenceRanks = reference.map(card => cardRank(card.value));
+    const absent = ALL_RANKS.filter(rank => !referenceRanks.includes(rank));
+    const positions = added.map(card => cardRank(card.value))
+        .filter(rank => absent.includes(rank))
+        .map(rank => rankPosition(rank, absent).top);
+    return {
+        suitMaxBefore: suitMaxOf(reference),
+        straightMaxBefore: straightMaxOf(reference),
+        th: positions.length ? Math.min(...positions) : undefined
+    };
+}
+
 /**
  * Caractéristiques du board, indépendantes de la main du héros.
+ * Au turn et à la river, le board garde l'ordre de distribution : les trois cartes du flop, puis la turn, puis la river.
  * @param board Cartes du board (3 à 5).
  */
 export function evaluateBoard(board: PlayingCard[]): BoardFeatures {
@@ -222,13 +371,24 @@ export function evaluateBoard(board: PlayingCard[]): BoardFeatures {
         suits = 'rainbow';
     }
     // Quinte possible : les rangs du board tiennent, à 3, dans une fenêtre de 5 (As bas compris)
-    const withLowAce = ranks.includes(14) ? [...ranks, 1] : ranks;
-    let straightPossible = false;
-    for (let low = 1; low <= 10 && !straightPossible; low++) {
-        straightPossible = withLowAce.filter(rank => rank >= low && rank <= low + 4).length >= 3;
-    }
+    const straightMax = straightMaxOf(board);
+    const lowAce = withLowAce(ranks);
     // Connecté : deux rangs distincts pouvant faire partie d'une même quinte (4 rangs d'écart ou moins)
-    const connected = withLowAce.some((a, i) => withLowAce.some((b, j) => i !== j && a !== b && Math.abs(a - b) <= 4));
+    const connected = lowAce.some((a, i) => lowAce.some((b, j) => i !== j && a !== b && Math.abs(a - b) <= 4));
+    const fourInRow = lowAce.some(rank => [1, 2, 3].every(step => lowAce.includes(rank + step)));
+    const sizes = [...counts.values()].sort((a, b) => b - a);
+    const pairing: BoardPairing = sizes[0] >= 4 ? 'quads'
+        : sizes[0] === 3 ? (sizes[1] >= 2 ? 'fullHouse' : 'trips')
+        : sizes[0] === 2 ? (sizes[1] === 2 ? 'doublePaired' : 'paired')
+        : 'unpaired';
+    const runout: RunoutFeatures | undefined = board.length > 3
+        ? {
+            rank: boardRanks[boardRanks.length - 1],
+            previousRanks: [...new Set(boardRanks.slice(0, -1))].sort((a, b) => b - a),
+            previous: runoutChange(board.slice(0, -1), board.slice(-1)),
+            flop: runoutChange(board.slice(0, 3), board.slice(3))
+        }
+        : undefined;
     return {
         ranks,
         top: ranks[0],
@@ -239,16 +399,21 @@ export function evaluateBoard(board: PlayingCard[]): BoardFeatures {
         unpairedRank: pairRank === undefined ? undefined : [...counts].filter(([, count]) => count === 1).map(([rank]) => rank).sort((a, b) => b - a)[0],
         paired: pairRank !== undefined,
         suits,
-        straightPossible,
+        straightPossible: straightMax >= 3,
         connected,
-        broadwayCount: boardRanks.filter(rank => rank >= 10).length
+        broadwayCount: boardRanks.filter(rank => rank >= 10).length,
+        suitMax: suitMaxOf(board),
+        straightMax,
+        fourInRow,
+        pairing,
+        runout
     };
 }
 
 /**
  * Analyse la main du héros sur un board.
  * @param hero Les deux cartes du héros.
- * @param board Les cartes du board (flop : 3 cartes).
+ * @param board Les cartes du board (3 à 5), dans l'ordre de distribution.
  */
 export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFeatures {
     const boardFeatures = evaluateBoard(board);
@@ -272,14 +437,26 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
     const quadsRank = [...rankCounts].find(([, count]) => count >= 4)?.[0];
     const tripsRanks = [...rankCounts].filter(([, count]) => count >= 3).map(([rank]) => rank);
     const pairRanks = [...rankCounts].filter(([, count]) => count >= 2).map(([rank]) => rank);
+    const heroValue = handValue(all);
+    const boardStraight = straightHigh(boardRanks);
+    const river = board.length === 5;
+    // River : le héros joue le board quand ses cartes n'améliorent pas la meilleure main des cinq cartes du board
+    const playsBoard = river && heroValue === handValue(board);
 
     let level: MadeHandLevel = 'nothing';
     let kicker: RankPosition | undefined;
     let flushRank: RankPosition | undefined;
     let straightIsBottom: boolean | undefined;
+    let kickerPlays = false;
     const pocketPairRank = heroRanks[0] === heroRanks[1] ? heroRanks[0] : undefined;
+    // Le kicker joue si la main vaut plus qu'avec la seule carte du héros qui fait la paire (ou le brelan)
+    const kickerCounts = (madeRank: number) =>
+        heroValue > handValue([hero.find(card => cardRank(card.value) === madeRank)!, ...board]);
 
-    if (flushSuit && straightHigh(suitRanks(flushSuit, all)) && suitRanks(flushSuit, hero).length) {
+    // Carré sur le board : seule la plus haute carte compte
+    if (playsBoard || boardFeatures.pairing === 'quads') {
+        kicker = rankPosition(lowCard, notOnBoard.filter(rank => rank !== highCard));
+    } else if (flushSuit && straightHigh(suitRanks(flushSuit, all)) && suitRanks(flushSuit, hero).length) {
         level = 'straight_flush';
     } else if (quadsRank !== undefined && heroRanks.includes(quadsRank)) {
         level = 'quads';
@@ -288,14 +465,14 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
     } else if (flushSuit && suitRanks(flushSuit, hero).length) {
         level = 'flush';
         flushRank = rankPosition(heroSuitRank(flushSuit), possibleInSuit(flushSuit));
-    } else if (heroStraight && !straightHigh(boardRanks)) {
+    } else if (heroStraight > boardStraight) {
         level = 'straight';
-        // Quinte la plus basse possible sur ce board, toutes combinaisons de deux rangs confondues
+        // Quinte la plus basse possible sur ce board (au-dessus d'une quinte du board), toutes combinaisons de deux rangs confondues
         let lowest = 15;
         for (const a of ALL_RANKS) {
             for (const b of ALL_RANKS) {
                 const high = straightHigh([...boardRanks, a, b]);
-                if (high && high < lowest) lowest = high;
+                if (high > boardStraight && high < lowest) lowest = high;
             }
         }
         straightIsBottom = heroStraight === lowest;
@@ -307,6 +484,8 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
             if (pocketPairRank > ranks[0]) level = 'overpair';
             else if (ranks.length > 1 && pocketPairRank > ranks[1]) level = 'pp_below_top';
             else if (ranks.length > 2 && pocketPairRank > ranks[2]) level = 'pp_below_second';
+            else if (ranks.length > 3 && pocketPairRank > ranks[3]) level = 'pp_below_third';
+            else if (ranks.length > 4 && pocketPairRank > ranks[4]) level = 'pp_below_fourth';
             else level = 'pp_below_board';
         }
     } else {
@@ -318,28 +497,35 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
             level = 'trips';
             const kickerRank = heroRanks.find(rank => rank !== tripsRank)!;
             kicker = rankPosition(kickerRank, notOnBoard);
+            kickerPlays = kickerCounts(tripsRank);
         } else if (matching.length === 2) {
             level = 'two_pair';
         } else if (matching.length === 1) {
             const index = unpaired.indexOf(matching[0]);
-            level = index === 0 ? 'top_pair' : index === 1 ? 'second_pair' : 'third_pair';
+            const pairLevels: MadeHandLevel[] = ['top_pair', 'second_pair', 'third_pair', 'fourth_pair', 'fifth_pair'];
+            level = pairLevels[Math.max(0, index)] ?? 'fifth_pair';
             const kickerRank = heroRanks.find(rank => rank !== matching[0])!;
             kicker = rankPosition(kickerRank, notOnBoard);
+            kickerPlays = kickerCounts(matching[0]);
         } else {
             kicker = rankPosition(lowCard, notOnBoard.filter(rank => rank !== highCard));
         }
     }
 
-    // Tirages couleur
+    const strength = ['straight', 'flush', 'full_house', 'quads', 'straight_flush'].includes(level)
+        ? strengthAmongPossible(heroValue, board)
+        : undefined;
+
+    // Tirages couleur (plus de tirage à la river)
     const heroSuits = SUITS.filter(suit => suitRanks(suit, hero).length > 0);
-    const fdSuit = level === 'flush' || level === 'straight_flush'
+    const fdSuit = river || level === 'flush' || level === 'straight_flush'
         ? undefined
         : heroSuits.find(suit => all.filter(card => card.color === suit).length === 4);
     const fdRank = fdSuit ? rankPosition(heroSuitRank(fdSuit), possibleInSuit(fdSuit)) : undefined;
 
     // Tirages quinte
     const hasStraight = level === 'straight' || level === 'straight_flush';
-    const outs = hasStraight ? 0 : straightOuts(heroRanks, boardRanks);
+    const outs = river || hasStraight ? 0 : straightOuts(heroRanks, boardRanks);
     const oesd = outs >= 2;
     const oesdTwoCards = oesd && Math.max(...heroRanks.map(rank => straightOuts([rank], boardRanks))) < 2;
     const overThirdRanks = heroRanks.filter(rank => rank > (boardFeatures.third ?? boardFeatures.bottom));
@@ -400,6 +586,8 @@ export function evaluateHand(hero: PlayingCard[], board: PlayingCard[]): HandFea
         underpair: pocketPairRank !== undefined && pocketPairRank < boardFeatures.top && !boardRanks.includes(pocketPairRank)
             ? rankPosition(pocketPairRank, notOnBoard.filter(rank => rank < boardFeatures.top))
             : undefined,
+        strength,
+        kickerPlays,
         fd: !!fdSuit,
         fdRank,
         oesd,

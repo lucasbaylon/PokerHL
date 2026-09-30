@@ -9,7 +9,7 @@ import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
-import { IN_RANGE, Situation } from '../../interfaces/situation';
+import { IN_RANGE, Situation, describeActionLine, isPostflop } from '../../interfaces/situation';
 import { Solution } from '../../interfaces/solution';
 import { OpponentLevelPipe } from '../../pipes/opponent-level.pipe';
 import { PositionPipe } from '../../pipes/position.pipe';
@@ -50,7 +50,9 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
 
     private readonly situationTypeOptions = [
         { name: 'Pré-flop', value: "preflop" },
-        { name: 'Flop', value: "flop" }
+        { name: 'Flop', value: "flop" },
+        { name: 'Turn', value: "turn" },
+        { name: 'River', value: "river" }
     ];
 
     /** Options du filtre Type : types de situation, puis types de flop présents dans les situations (voir updateTypeLst). */
@@ -71,13 +73,30 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
 
     situationToDisplay!: Situation;
     readonly describeCondition = describeCondition;
+    readonly describeActionLine = describeActionLine;
+    readonly isPostflop = isPostflop;
     readonly rangeSolution: Solution = { id: IN_RANGE, type: 'unique', display_name: 'Dans la range', color: '#16a34a' };
 
     /**
-     * Solutions servant à colorer la grille : pour une situation flop, la grille est la range du héros.
+     * Solutions servant à colorer la grille : pour une situation postflop, la grille est la range du héros.
      */
     gridSolutions(situation: Situation): Solution[] {
-        return situation.type === 'flop' ? [...situation.solutions, this.rangeSolution] : situation.solutions;
+        return isPostflop(situation.type) ? [...situation.solutions, this.rangeSolution] : situation.solutions;
+    }
+
+    /** Street d'une situation postflop, avec son article (« au flop », « au turn », « à la river »). */
+    streetLabel(situation: Situation): string {
+        return situation.type === 'river' ? 'à la river' : situation.type === 'turn' ? 'au turn' : 'au flop';
+    }
+
+    /** Conditions de board d'une situation postflop, par street (listes vides omises). */
+    boardConditionGroups(situation: Situation): { label: string, conditions: string[] }[] {
+        return [
+            { label: 'Flop', conditions: situation.boardConditions ?? [] },
+            { label: 'Turn', conditions: situation.type !== 'flop' ? situation.turnConditions ?? [] : [] },
+            { label: 'River', conditions: situation.type === 'river' ? situation.riverConditions ?? [] : [] }
+        ].map(group => ({ label: group.label, conditions: group.conditions.map(describeCondition) }))
+            .filter(group => group.conditions.length);
     }
 
     /** Nom d'affichage d'une action de la situation. */
@@ -106,7 +125,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
 
     /**
      * Une situation passe le filtre Type si son type est coché,
-     * ou si c'est un flop dont l'un des types de flop est coché.
+     * ou si c'est une situation postflop dont l'un des types de flop est coché.
      */
     private matchesTypeFilter(situation: Situation | undefined, selected: string[] | null): boolean {
         if (!selected || selected.length === 0) {
@@ -118,7 +137,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
         if (selected.includes(situation.type)) {
             return true;
         }
-        return situation.type === 'flop' && this.flopTypesOf(situation).some(type => selected.includes(type));
+        return isPostflop(situation.type) && this.flopTypesOf(situation).some(type => selected.includes(type));
     }
 
     /** Ajuste le nombre de lignes au redimensionnement de la fenêtre. */
@@ -211,7 +230,7 @@ export class SituationsListManagerComponent implements AfterViewInit, OnDestroy 
      * Types de flop cochables dans le filtre : uniquement ceux utilisés par les situations, dans l'ordre de FLOP_TYPES.
      */
     private updateTypeLst() {
-        const usedTypes = new Set(this.situationList.filter(situation => situation.type === 'flop').flatMap(situation => this.flopTypesOf(situation)));
+        const usedTypes = new Set(this.situationList.filter(situation => isPostflop(situation.type)).flatMap(situation => this.flopTypesOf(situation)));
         const flopTypeOptions = FLOP_TYPES
             .filter(type => usedTypes.has(type.code))
             .map(type => ({ name: type.name, value: type.code }));

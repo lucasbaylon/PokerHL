@@ -13,16 +13,29 @@ import { Subscription } from 'rxjs';
 import { AppModalComponent } from '../../components/app-modal/app-modal.component';
 import { FlopConditionDialogComponent } from '../../components/flop-condition-dialog/flop-condition-dialog.component';
 import { FlopRulesEditorComponent } from '../../components/flop-rules-editor/flop-rules-editor.component';
-import { HeroSpot, IN_RANGE, Situation } from '../../interfaces/situation';
+import { ACTION_LINE_ACTIONS, ACTION_LINE_STREETS, ActionLineStep, HeroSpot, IN_RANGE, Situation, isPostflop as isPostflopType } from '../../interfaces/situation';
 import { Solution, SolutionAction } from '../../interfaces/solution';
 import { UserParams } from '../../interfaces/user-params';
 import { RangeGridComponent } from '../../components/range-grid/range-grid.component';
 import { SolutionColorPipe } from '../../pipes/solution-color.pipe';
 import { CommonService } from '../../services/common.service';
-import { BoardSuitsFilter, FLOP_TYPES, FlopCard, FlopFilter, FlopService, FlopType, FlopTypeInfo } from '../../services/flop.service';
+import { BoardFilter, BoardSuitsFilter, FLOP_TYPES, FlopCard, FlopService, FlopType, FlopTypeInfo, Street } from '../../services/flop.service';
 import { RuleCondition, describeCondition, describeHand, resolveAction } from '../../services/flop-rules';
 import { evaluateHand } from '../../services/hand-evaluator';
 import { SituationService } from '../../services/situation.service';
+
+/** Listes de conditions de board d'une situation postflop, par street. */
+type BoardConditionList = 'boardConditions' | 'turnConditions' | 'riverConditions';
+
+/** Streets de la ligne d'action pour chaque street de situation (listes stables pour les dropdowns). */
+const ACTION_LINE_STREETS_BEFORE: Record<Street, typeof ACTION_LINE_STREETS> = {
+    flop: ACTION_LINE_STREETS.slice(0, 1),
+    turn: ACTION_LINE_STREETS.slice(0, 2),
+    river: ACTION_LINE_STREETS.slice(0, 3)
+};
+
+/** Nombre de boards évalués pour vérifier, à l'enregistrement, qu'un board turn ou river existe. */
+const VALIDATION_BOARD_BUDGET = 300000;
 
 @Component({
     selector: 'app-situation-manager',
@@ -65,7 +78,9 @@ export class SituationManagerComponent {
 
     availableSituationType: any[] = [
         { name: 'Pré-flop', code: 'preflop' },
-        { name: 'Flop', code: 'flop' }
+        { name: 'Flop', code: 'flop' },
+        { name: 'Turn', code: 'turn' },
+        { name: 'River', code: 'river' }
     ];
 
     readonly flopTypes: FlopTypeInfo[] = FLOP_TYPES;
@@ -93,6 +108,13 @@ export class SituationManagerComponent {
 
     boardConditionDialogOpen = false;
     editedBoardConditionIndex?: number;
+    /** Liste de conditions de board en cours d'édition : flop, turn ou river. */
+    editedBoardList: BoardConditionList = 'boardConditions';
+
+    readonly actionLineActors: { name: string, code: ActionLineStep['actor'] }[] = [
+        { name: 'Héros', code: 'hero' }, { name: 'Adversaire', code: 'villain' }
+    ];
+    readonly actionLineActions = ACTION_LINE_ACTIONS;
 
     testResult?: { hero: FlopCard[], board: FlopCard[], hand: string[], rule: string, action?: Solution };
 
@@ -166,7 +188,7 @@ export class SituationManagerComponent {
             this.situation_obj = JSON.parse(situation_str);
             this.commonService.migrateSolutions(this.situation_obj.solutions);
             this.editSituationName = this.situation_obj.name;
-            if (this.isFlop) this.initializeFlopFields();
+            if (this.isPostflop) this.initializeFlopFields();
             this.ensureActionSolutions();
 
             // Initialisation des listes et des valeurs
@@ -214,16 +236,40 @@ export class SituationManagerComponent {
         this.refreshFlopPool();
     }
 
-    get isFlop(): boolean {
-        return this.situation_obj.type === 'flop';
+    /** Situation postflop (flop, turn ou river) : range, board, pot et règles d'action. */
+    get isPostflop(): boolean {
+        return isPostflopType(this.situation_obj.type);
+    }
+
+    /** Street de la situation postflop (flop par défaut). */
+    get street(): Street {
+        return this.isPostflop ? this.situation_obj.type as Street : 'flop';
+    }
+
+    /** Situation turn ou river : conditions sur la turn (et la river) en plus du filtre du flop. */
+    get hasTurn(): boolean {
+        return this.street !== 'flop';
+    }
+
+    get hasRiver(): boolean {
+        return this.street === 'river';
+    }
+
+    /** Street avec son article : « au flop », « au turn », « à la river ». */
+    get streetArrival(): string {
+        return { flop: 'au flop', turn: 'au turn', river: 'à la river' }[this.street];
+    }
+
+    get potLabel(): string {
+        return `Pot ${this.streetArrival}`;
     }
 
     get isFacingBet(): boolean {
-        return this.isFlop && this.situation_obj.heroSpot === 'facingBet';
+        return this.isPostflop && this.situation_obj.heroSpot === 'facingBet';
     }
 
     /**
-     * Complète les champs d'une situation flop et migre l'ancien format (un seul type de flop, grille peinte d'actions).
+     * Complète les champs d'une situation postflop et migre l'ancien format (un seul type de flop, grille peinte d'actions).
      */
     initializeFlopFields() {
         const situation = this.situation_obj;
@@ -231,6 +277,9 @@ export class SituationManagerComponent {
         delete situation.flopType;
         situation.boardSuits ??= 'any';
         situation.boardConditions ??= [];
+        situation.turnConditions ??= [];
+        situation.riverConditions ??= [];
+        situation.actionLine ??= [];
         situation.heroSpot ??= 'first';
         situation.rules ??= [];
         situation.situations.forEach(row => row.forEach(cell => {
@@ -243,11 +292,11 @@ export class SituationManagerComponent {
      * raise en multiple de la mise adverse au flop face à une mise.
      */
     get sizeAction(): 'raise' | 'bet' {
-        return this.isFlop && !this.isFacingBet ? 'bet' : 'raise';
+        return this.isPostflop && !this.isFacingBet ? 'bet' : 'raise';
     }
 
     get sizeUnit(): string {
-        if (!this.isFlop) return 'BB';
+        if (!this.isPostflop) return 'BB';
         return this.isFacingBet ? 'x' : '%';
     }
 
@@ -262,11 +311,11 @@ export class SituationManagerComponent {
      * Indique si une solution est utilisable pour le type et le spot actuels.
      */
     private isSolutionAllowed(solution: Solution): boolean {
-        if (solution.type === 'mixed') return !this.isFlop;
+        if (solution.type === 'mixed') return !this.isPostflop;
         const allowed = this.commonService.actionsForType(this.situation_obj.type, this.situation_obj.heroSpot);
         if (!solution.action || !allowed.some(action => action.code === solution.action)) return false;
         // Un raise au flop s'exprime en multiple de la mise, au préflop en BB
-        return solution.action !== 'raise' || (solution.raiseMultiplier != null) === this.isFlop;
+        return solution.action !== 'raise' || (solution.raiseMultiplier != null) === this.isPostflop;
     }
 
     /**
@@ -315,11 +364,11 @@ export class SituationManagerComponent {
      * Change le type de situation. La grille préflop devient la range du flop ; au retour au préflop, la range est vidée.
      */
     private applySituationType() {
-        const wasFlop = this.isFlop;
+        const wasFlop = this.isPostflop;
         this.situation_obj.type = this.situationType.code;
-        if (this.isFlop && !wasFlop) {
+        if (this.isPostflop && !wasFlop) {
             this.initializeFlopFields();
-        } else if (!this.isFlop && wasFlop) {
+        } else if (!this.isPostflop && wasFlop) {
             this.situation_obj.situations.forEach(row => row.forEach(cell => cell.solution = undefined));
         }
         this.applyAllowedActions();
@@ -378,11 +427,16 @@ export class SituationManagerComponent {
         this.situation_obj.flopTypes = types;
     }
 
-    private get flopFilter(): FlopFilter {
+    /**
+     * Filtre des boards de la situation : flop, puis conditions sur la turn et la river selon la street.
+     */
+    private get boardFilter(): BoardFilter {
         return {
             flopTypes: this.situation_obj.flopTypes ?? [],
             boardSuits: this.situation_obj.boardSuits,
-            boardConditions: this.situation_obj.boardConditions
+            boardConditions: this.situation_obj.boardConditions,
+            turnConditions: this.hasTurn ? this.situation_obj.turnConditions : [],
+            riverConditions: this.hasRiver ? this.situation_obj.riverConditions : []
         };
     }
 
@@ -390,40 +444,76 @@ export class SituationManagerComponent {
      * Recalcule le nombre de flops correspondant au filtre et tire un nouvel exemple.
      */
     refreshFlopPool() {
-        this.flopPoolSize = this.isFlop ? this.flopService.flopPool(this.flopFilter).length : 0;
+        this.flopPoolSize = this.isPostflop ? this.flopService.flopPool(this.boardFilter).length : 0;
         this.refreshExampleFlop();
     }
 
     /**
-     * Tire un nouvel exemple de flop correspondant au filtre.
+     * Tire un nouvel exemple de board (flop, turn ou river) correspondant au filtre.
      */
     refreshExampleFlop() {
-        this.exampleFlop = this.isFlop ? this.flopService.randomFlop(this.flopFilter) : [];
+        this.exampleFlop = this.isPostflop ? this.flopService.randomBoard(this.boardFilter, this.street) : [];
     }
 
     /**
      * Ouvre le dialogue de condition de board : ajout, ou modification de la condition d'index donné.
+     * @param list Liste de conditions : flop, turn ou river.
+     * @param index Condition à modifier.
      */
-    openBoardCondition(index?: number) {
+    openBoardCondition(list: BoardConditionList, index?: number) {
+        this.editedBoardList = list;
         this.editedBoardConditionIndex = index;
         this.boardConditionDialogOpen = true;
     }
 
+    /** Street évaluée par la liste de conditions en cours d'édition. */
+    get editedBoardStreet(): Street {
+        return ({ boardConditions: 'flop', turnConditions: 'turn', riverConditions: 'river' } as const)[this.editedBoardList];
+    }
+
     get editedBoardCondition(): RuleCondition | undefined {
-        return this.editedBoardConditionIndex === undefined ? undefined : this.situation_obj.boardConditions?.[this.editedBoardConditionIndex];
+        return this.editedBoardConditionIndex === undefined ? undefined : this.situation_obj[this.editedBoardList]?.[this.editedBoardConditionIndex];
     }
 
     onBoardConditionSaved(condition: RuleCondition) {
-        const conditions = this.situation_obj.boardConditions ??= [];
+        const conditions = this.situation_obj[this.editedBoardList] ??= [];
         if (this.editedBoardConditionIndex === undefined) conditions.push(condition);
         else conditions[this.editedBoardConditionIndex] = condition;
         this.closeBoardConditionDialog();
         this.refreshFlopPool();
     }
 
-    removeBoardCondition(index: number) {
-        this.situation_obj.boardConditions?.splice(index, 1);
+    /** Conditions d'une liste de board (flop, turn ou river). */
+    boardConditionList(list: BoardConditionList): RuleCondition[] {
+        return this.situation_obj[list] ?? [];
+    }
+
+    removeBoardCondition(list: BoardConditionList, index: number) {
+        this.situation_obj[list]?.splice(index, 1);
         this.refreshFlopPool();
+    }
+
+    /** Streets proposées dans la ligne d'action : celles qui précèdent la street de la situation. */
+    get actionLineStreets() {
+        return ACTION_LINE_STREETS_BEFORE[this.street];
+    }
+
+    /**
+     * Ajoute une action à la ligne d'action, sur la dernière street précédant la situation.
+     */
+    addActionStep() {
+        const line = this.situation_obj.actionLine ??= [];
+        const previous = line[line.length - 1];
+        line.push({ street: previous?.street ?? this.actionLineStreets[this.actionLineStreets.length - 1].code, actor: previous?.actor === 'hero' ? 'villain' : 'hero', action: 'check' });
+    }
+
+    removeActionStep(index: number) {
+        this.situation_obj.actionLine?.splice(index, 1);
+    }
+
+    /** Taille d'une action de la ligne : % du pot pour un bet, multiplicateur pour un raise. */
+    actionStepHasSize(step: ActionLineStep): boolean {
+        return step.action === 'bet' || step.action === 'raise';
     }
 
     closeBoardConditionDialog() {
@@ -461,9 +551,9 @@ export class SituationManagerComponent {
             this.commonService.showSwalToast('Ajoutez des mains à la range pour tester les règles.', 'error');
             return;
         }
-        const board = this.flopService.randomFlop(this.flopFilter, hero);
+        const board = this.flopService.randomBoard(this.boardFilter, this.street, hero);
         if (!board.length) {
-            this.commonService.showSwalToast('Aucun flop ne correspond aux critères du board.', 'error');
+            this.commonService.showSwalToast('Aucun board ne correspond aux critères.', 'error');
             return;
         }
         const hand = evaluateHand(hero, board);
@@ -505,7 +595,7 @@ export class SituationManagerComponent {
      * Les solutions inutilisées sont retirées à l'enregistrement.
      */
     ensureActionSolutions() {
-        const defaultSizes: Partial<Record<SolutionAction, number>> = { raise: this.isFlop ? 3 : 2, bet: 33 };
+        const defaultSizes: Partial<Record<SolutionAction, number>> = { raise: this.isPostflop ? 3 : 2, bet: 33 };
         for (const action of this.commonService.actionsForType(this.situation_obj.type, this.situation_obj.heroSpot)) {
             if (!this.situation_obj.solutions.some(solution => solution.type === 'unique' && solution.action === action.code)) {
                 this.createUniqueSolution(action.code, defaultSizes[action.code]);
@@ -568,7 +658,7 @@ export class SituationManagerComponent {
     private setSolutionSize(solution: Solution, size?: number) {
         if (size == null) return;
         if (solution.action === 'bet') solution.betPercent = size;
-        else if (solution.action === 'raise' && this.isFlop) solution.raiseMultiplier = size;
+        else if (solution.action === 'raise' && this.isPostflop) solution.raiseMultiplier = size;
         else if (solution.action === 'raise') solution.raiseAmount = size;
     }
 
@@ -584,7 +674,7 @@ export class SituationManagerComponent {
         this.raiseEditorSolutionId = solution?.id;
         const isBet = this.sizeAction === 'bet';
         let defaultSize = 2;
-        if (this.isFlop) defaultSize = isBet ? 33 : 3;
+        if (this.isPostflop) defaultSize = isBet ? 33 : 3;
         if (solution) {
             this.raiseEditorAmount = this.solutionSize(solution) ?? defaultSize;
         } else {
@@ -667,7 +757,7 @@ export class SituationManagerComponent {
             || (solution.action === 'raise' && !((solution.raiseMultiplier ?? solution.raiseAmount)! > 0))
             || (solution.action === 'bet' && !(solution.betPercent! > 0)));
 
-        if (!this.isFlop) {
+        if (!this.isPostflop) {
             if (situation.situations.flat().some(cell => cell.solution === undefined)) return 'Veuillez remplir toutes les cases du tableau des ranges.';
             const usedIds = new Set(situation.situations.flat().map(cell => cell.solution));
             if (situation.solutions.some(solution => usedIds.has(solution.id) && invalidSize(solution))) {
@@ -678,6 +768,11 @@ export class SituationManagerComponent {
 
         if (!situation.flopTypes?.length) return 'Veuillez choisir au moins un type de flop.';
         if (!this.flopPoolSize) return 'Aucun flop ne correspond aux critères du board.';
+        if (this.hasTurn && !this.flopService.randomBoard(this.boardFilter, this.street, [], VALIDATION_BOARD_BUDGET).length) {
+            return `Aucun board ne correspond aux conditions ${this.hasRiver ? 'de la turn et de la river' : 'de la turn'}.`;
+        }
+        const incompleteStep = (situation.actionLine ?? []).findIndex(step => this.actionStepHasSize(step) && !(step.size! > 0));
+        if (incompleteStep !== -1) return `Veuillez indiquer la taille de l'action ${incompleteStep + 1} de la ligne d'action.`;
         if (!(situation.pot! > 0)) return 'Veuillez remplir le champ "Pot".';
         if (this.isFacingBet && !(situation.facingBetPercent! > 0)) return 'Veuillez indiquer la mise adverse (% du pot).';
         if (!this.rangeHands.length) return 'Veuillez ajouter au moins une main à la range.';
@@ -761,7 +856,7 @@ export class SituationManagerComponent {
      * Les champs propres à l'autre type de situation (actions précédentes ou flop) sont retirés.
      */
     situationToSave(): Situation {
-        const usedSolutionIds = new Set<string | undefined>(this.isFlop
+        const usedSolutionIds = new Set<string | undefined>(this.isPostflop
             ? [...(this.situation_obj.rules ?? []).map(rule => rule.solutionId), this.situation_obj.defaultSolutionId]
             : this.situation_obj.situations.flat().map(cell => cell.solution));
         this.situation_obj.solutions
@@ -772,12 +867,19 @@ export class SituationManagerComponent {
             solutions: this.situation_obj.solutions.filter(solution => usedSolutionIds.has(solution.id))
         };
         delete situation.flopType;
-        if (this.isFlop) {
+        if (this.isPostflop) {
             delete situation.previousPlayer1Action;
             delete situation.previousPlayer2Action;
             if (situation.heroSpot !== 'facingBet') delete situation.facingBetPercent;
+            if (!this.hasTurn) delete situation.turnConditions;
+            if (!this.hasRiver) delete situation.riverConditions;
+            // Ligne d'action : seulement les streets qui précèdent la situation
+            const streets = this.actionLineStreets.map(street => street.code);
+            situation.actionLine = (situation.actionLine ?? [])
+                .filter(step => streets.includes(step.street))
+                .map(step => this.actionStepHasSize(step) ? step : { street: step.street, actor: step.actor, action: step.action });
         } else {
-            for (const field of ['flopTypes', 'boardSuits', 'boardConditions', 'heroSpot', 'facingBetPercent', 'pot', 'rules', 'defaultSolutionId'] as const) {
+            for (const field of ['flopTypes', 'boardSuits', 'boardConditions', 'turnConditions', 'riverConditions', 'actionLine', 'heroSpot', 'facingBetPercent', 'pot', 'rules', 'defaultSolutionId'] as const) {
                 delete situation[field];
             }
         }
@@ -1092,7 +1194,7 @@ export class SituationManagerComponent {
         // 1. Déterminer le MODE
         if (this.nbPlayer.code === 2) {
             mode = "HU";
-        } else if (this.isFlop) {
+        } else if (this.isPostflop) {
             mode = "3w";
         } else {
             if (this.previousPlayer1Action.code === 'Fold') {
@@ -1106,11 +1208,12 @@ export class SituationManagerComponent {
         const isFirstToAct = (this.nbPlayer.code === 2 && this.position.code === 'sb') || 
                             (this.nbPlayer.code === 3 && this.position.code === 'bu');
 
-        if (this.isFlop) {
-            // Flop : les types de flop et la mise adverse remplacent l'action précédente
+        if (this.isPostflop) {
+            // Postflop : la street, les types de flop et la mise adverse remplacent l'action précédente
             const types = this.flopTypes.filter(type => this.selectedFlopTypes.includes(type.code)).map(type => type.name).join(' / ');
             const facing = this.isFacingBet ? `vs ${this.situation_obj.facingBetPercent ?? 0}% ` : '';
-            action = `${types ? types + ' ' : ''}${facing}`;
+            const street = this.hasTurn ? `${this.situationType?.name ?? ''} ` : '';
+            action = `${street}${types ? types + ' ' : ''}${facing}`;
         } else if (!isFirstToAct) {
             let lastAction = "Fold";
 

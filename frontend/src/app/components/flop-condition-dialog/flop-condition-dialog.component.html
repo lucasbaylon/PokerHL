@@ -56,6 +56,22 @@
                     styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
             </div>
             }
+            @if (hasStrength) {
+            <div>
+                <label for="madeStrength" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Rang parmi les mains possibles</label>
+                <p-dropdown inputId="madeStrength" [(ngModel)]="draft.strengthMode" [options]="rankModes" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            @if (draft.strengthMode !== 'none') {
+            <div>
+                <label for="madeStrengthN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">N</label>
+                <p-inputNumber inputId="madeStrengthN" [(ngModel)]="draft.strengthN" [min]="1" [max]="20" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            <p class="m-0 text-xs text-gray-500 sm:col-span-2 dark:text-gray-400">
+                Position de la main parmi toutes les mains de la même catégorie possibles sur ce board : « Parmi les 1 meilleurs » = la meilleure (nuts), « Parmi les 1 plus bas » = la plus faible.
+            </p>
+            }
             }
 
             @case ('pocketPair') {
@@ -200,28 +216,74 @@
             @case ('board') {
             <div class="sm:col-span-2">
                 <label for="boardAttr" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Critère</label>
-                <p-dropdown inputId="boardAttr" [(ngModel)]="draft.attr" [options]="boardAttrs" optionLabel="name" optionValue="code"
-                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+                <p-dropdown inputId="boardAttr" [(ngModel)]="draft.attr" [options]="availableBoardAttrs" optionLabel="name" optionValue="code"
+                    (onChange)="onChangeAttr()" styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
             </div>
-            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'broadwayCount'].includes(draft.attr)) {
+            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'broadwayCount', 'suitCount', 'straightCount', 'newCardRank', 'newCardVs', 'newCardTh'].includes(draft.attr)) {
             <div>
                 <label for="boardOp" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Comparaison</label>
                 <p-dropdown inputId="boardOp" [(ngModel)]="draft.op" [options]="comparators" optionLabel="name" optionValue="code"
                     styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
             </div>
             }
-            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'containsRank'].includes(draft.attr)) {
+            @if (['topRank', 'bottomRank', 'pairRank', 'unpairedRank', 'containsRank', 'newCardRank'].includes(draft.attr)) {
             <div>
                 <label for="boardRank" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Rang</label>
                 <p-dropdown inputId="boardRank" [(ngModel)]="draft.rank" [options]="ranks" optionLabel="name" optionValue="code"
                     styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
             </div>
             }
-            @if (draft.attr === 'broadwayCount') {
+            @if (['broadwayCount', 'suitCount', 'straightCount', 'newCardSuits', 'newCardStraight'].includes(draft.attr)) {
             <div>
-                <label for="boardN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+                <label for="boardN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ ['newCardSuits', 'newCardStraight'].includes(draft.attr) ? 'Passe à (nombre de cartes)' : 'Nombre' }}</label>
                 <p-inputNumber inputId="boardN" [(ngModel)]="draft.n" [min]="0" [max]="5" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
             </div>
+            }
+            @if (draft.attr === 'newCardTh') {
+            <div>
+                <label for="boardThN" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Position (1 = meilleure absente)</label>
+                <p-inputNumber inputId="boardThN" [(ngModel)]="draft.n" [min]="1" [max]="12" styleClass="w-full" inputStyleClass="w-full box-border"></p-inputNumber>
+            </div>
+            }
+            @if (draft.attr === 'newCardVs') {
+            <div>
+                <label for="boardVsRef" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Carte du board précédent</label>
+                <p-dropdown inputId="boardVsRef" [(ngModel)]="draft.ref" [options]="previousRefs" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            @if (draft.attr === 'newCardPairs') {
+            <div>
+                <label for="boardPairsRef" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Carte pairée</label>
+                <p-dropdown inputId="boardPairsRef" [(ngModel)]="draft.ref" [options]="pairsRefs" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            @if (draft.attr === 'pairing') {
+            <div class="sm:col-span-2">
+                <label for="boardPairing" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Paires du board</label>
+                <p-dropdown inputId="boardPairing" [(ngModel)]="draft.pairing" [options]="pairingOptions" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            @if (hasFrom) {
+            <div class="sm:col-span-2">
+                <label for="boardFrom" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Cartes prises en compte</label>
+                <p-dropdown inputId="boardFrom" [(ngModel)]="draft.from" [options]="fromOptions" optionLabel="name" optionValue="code"
+                    styleClass="w-full" appendTo="body" [baseZIndex]="10000"></p-dropdown>
+            </div>
+            }
+            @if (['suitCount', 'straightCount', 'newCardSuits', 'newCardStraight'].includes(draft.attr)) {
+            <p class="m-0 text-xs text-gray-500 sm:col-span-2 dark:text-gray-400">
+                @if (draft.attr === 'suitCount' || draft.attr === 'newCardSuits') {
+                Cartes d'une même couleur sur le board : 3 = couleur possible, 4 = board 4-flush, 5 = couleur sur le board.
+                } @else {
+                Cartes du board tenant dans une même quinte : 3 = quinte possible, 4 = board 4-straight, 5 = quinte sur le board.
+                }
+                @if (draft.attr === 'newCardSuits' || draft.attr === 'newCardStraight') {
+                Vrai quand les nouvelles cartes font passer le board à ce nombre (il était plus bas avant).
+                }
+            </p>
             }
             @if (draft.attr === 'suits') {
             <div>

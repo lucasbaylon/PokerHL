@@ -398,7 +398,8 @@ function validateJsonContent(fileName, jsonContent) {
         const champsObligatoires = ["name", "type", "nbPlayer", "stack", "position", "opponentLevel", "solutions", "situations"];
         const champsOptionnels = [
             "fishPosition", "previousPlayer1Action", "previousPlayer2Action",
-            "flopType", "flopTypes", "boardSuits", "boardConditions", "heroSpot", "facingBetPercent", "pot", "rules", "defaultSolutionId"
+            "flopType", "flopTypes", "boardSuits", "boardConditions", "turnConditions", "riverConditions", "actionLine",
+            "heroSpot", "facingBetPercent", "pot", "rules", "defaultSolutionId"
         ];
         const champsValides = [...champsObligatoires, ...champsOptionnels];
 
@@ -425,7 +426,7 @@ function validateJsonContent(fileName, jsonContent) {
             name: val => typeof val === 'string',
             nbPlayer: val => typeof val === 'number' && (val === 2 || val === 3),
             stack: val => typeof val === 'number',
-            type: val => typeof val === 'string' && ['preflop', 'flop'].includes(val),
+            type: val => typeof val === 'string' && ['preflop', 'flop', 'turn', 'river'].includes(val),
             position: val => typeof val === 'string' && ['sb', 'bb', 'bu'].includes(val),
             opponentLevel: val => typeof val === 'string' && ['fish', 'shark', 'fish_shark'].includes(val),
         };
@@ -447,6 +448,12 @@ function validateJsonContent(fileName, jsonContent) {
             flopTypes: val => Array.isArray(val) && val.every(type => flopTypesValides.includes(type)),
             boardSuits: val => ['any', 'rainbow', 'twoTone', 'mono'].includes(val),
             boardConditions: val => Array.isArray(val) && val.every(isCondition),
+            turnConditions: val => Array.isArray(val) && val.every(isCondition),
+            riverConditions: val => Array.isArray(val) && val.every(isCondition),
+            actionLine: val => Array.isArray(val) && val.every(step => step !== null && typeof step === 'object'
+                && ['preflop', 'flop', 'turn'].includes(step.street) && ['hero', 'villain'].includes(step.actor)
+                && ['limp', 'raise', 'check', 'bet', 'call'].includes(step.action)
+                && (step.size === undefined || (typeof step.size === 'number' && step.size > 0))),
             heroSpot: val => ['first', 'facingBet'].includes(val),
             facingBetPercent: val => typeof val === 'number' && val > 0,
             rules: val => Array.isArray(val) && val.every(rule => rule !== null && typeof rule === 'object'
@@ -537,8 +544,8 @@ function validateJsonContent(fileName, jsonContent) {
                 if (typeof situation.card !== 'string') {
                     situationErrors.push(`Groupe ${groupIndex}, Situation ${situationIndex}: 'card' doit être une chaîne de caractères.`);
                 }
-                // Situation flop : la grille est la range du héros (case dans la range ou vide)
-                const validCell = jsonData.type === 'flop'
+                // Situation postflop (flop, turn, river) : la grille est la range du héros (case dans la range ou vide)
+                const validCell = ['flop', 'turn', 'river'].includes(jsonData.type)
                     ? situation.solution === undefined || situation.solution === null || situation.solution === 'in_range'
                     : /^(unique_solution_|mixed_solution_)\d+$/.test(situation.solution);
                 if (!validCell) {

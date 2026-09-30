@@ -19,6 +19,18 @@ export interface FlopFilter {
     boardConditions?: RuleCondition[];
 }
 
+/** Street postflop d'une situation. */
+export type Street = 'flop' | 'turn' | 'river';
+
+/** Filtre des boards tirés pour une situation : filtre du flop, puis conditions sur le board après la turn et après la river. */
+export interface BoardFilter extends FlopFilter {
+    turnConditions?: RuleCondition[];
+    riverConditions?: RuleCondition[];
+}
+
+/** Nombre maximal de boards évalués pour compléter un flop avant d'abandonner (filtre sans board possible). */
+const BOARD_BUDGET = 40000;
+
 export interface FlopTypeInfo {
     code: FlopType;
     name: string;
@@ -44,6 +56,30 @@ export { CARD_VALUES, cardRank };
 
 /** Une carte est haute à partir du 9. */
 const HIGH_CARD_RANK = 9;
+
+/** Les 52 cartes du jeu. */
+const DECK: FlopCard[] = CARD_VALUES.flatMap(value => SUITS.map(color => ({ value, color })));
+
+/**
+ * Copie mélangée d'une liste (Fisher-Yates).
+ */
+function shuffled<T>(items: T[]): T[] {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+/**
+ * Conditions de board seules d'une liste de conditions.
+ */
+function boardConditionsOf(conditions: RuleCondition[] | undefined): BoardCondition[] {
+    return (conditions ?? []).filter((condition): condition is BoardCondition => condition.kind === 'board');
+}
+
+const sameCard = (a: FlopCard, b: FlopCard) => a.value === b.value && a.color === b.color;
 
 /**
  * Classe un flop dans l'un des types de flop.
@@ -107,7 +143,7 @@ export class FlopService {
      */
     private getBuckets(): Map<FlopType, FlopCard[][]> {
         if (!this.buckets) {
-            const deck = CARD_VALUES.flatMap(value => SUITS.map(color => ({ value, color })));
+            const deck = DECK;
             this.buckets = new Map(FLOP_TYPES.map(type => [type.code, [] as FlopCard[][]]));
             for (let i = 0; i < deck.length; i++) {
                 for (let j = i + 1; j < deck.length; j++) {
@@ -129,8 +165,7 @@ export class FlopService {
         const key = JSON.stringify([filter.flopTypes, filter.boardSuits ?? 'any', filter.boardConditions ?? []]);
         let pool = this.poolCache.get(key);
         if (!pool) {
-            const conditions = (filter.boardConditions ?? [])
-                .filter((condition): condition is BoardCondition => condition.kind === 'board');
+            const conditions = boardConditionsOf(filter.boardConditions);
             pool = filter.flopTypes.flatMap(type => this.getBuckets().get(type) ?? []).filter(flop => {
                 const board = evaluateBoard(flop);
                 if (filter.boardSuits && filter.boardSuits !== 'any' && board.suits !== filter.boardSuits) return false;
@@ -149,11 +184,47 @@ export class FlopService {
      */
     randomFlop(filter: FlopFilter | FlopType, excluded: FlopCard[] = []): FlopCard[] {
         const pool = this.flopPool(typeof filter === 'string' ? { flopTypes: [filter] } : filter);
-        const isExcluded = (card: FlopCard) => excluded.some(item => item.value === card.value && item.color === card.color);
+        const isExcluded = (card: FlopCard) => excluded.some(item => sameCard(item, card));
         const candidates = excluded.length ? pool.filter(flop => !flop.some(isExcluded)) : pool;
         if (!candidates.length) return [];
         const flop = candidates[Math.floor(Math.random() * candidates.length)];
         return [...flop].sort((a, b) => cardRank(b.value) - cardRank(a.value));
+    }
+
+    /**
+     * Tire un board complet pour une street : un flop correspondant au filtre, puis une turn et une river
+     * vérifiant les conditions de leur street. Le flop est trié de la plus haute à la plus basse carte, suivi de la turn puis de la river.
+     * @param filter Filtre de la situation.
+     * @param street Street de la situation.
+     * @param excluded Cartes déjà distribuées.
+     * @param budget Nombre maximal de boards évalués avant d'abandonner.
+     * @returns Les cartes du board, ou un tableau vide si aucun board ne correspond.
+     */
+    randomBoard(filter: BoardFilter, street: Street, excluded: FlopCard[] = [], budget: number = BOARD_BUDGET): FlopCard[] {
+        if (street === 'flop') return this.randomFlop(filter, excluded);
+        const turnConditions = boardConditionsOf(filter.turnConditions);
+        const riverConditions = street === 'river' ? boardConditionsOf(filter.riverConditions) : [];
+        const matches = (conditions: BoardCondition[], board: FlopCard[]) => {
+            budget--;
+            if (!conditions.length) return true;
+            const features = evaluateBoard(board);
+            return conditions.every(condition => matchBoardCondition(condition, features));
+        };
+        while (budget > 0) {
+            const flop = this.randomFlop(filter, excluded);
+            if (!flop.length) return [];
+            const remaining = DECK.filter(card => ![...flop, ...excluded].some(used => sameCard(used, card)));
+            for (const turn of shuffled(remaining)) {
+                if (budget <= 0) break;
+                if (!matches(turnConditions, [...flop, turn])) continue;
+                if (street === 'turn') return [...flop, turn];
+                for (const river of shuffled(remaining.filter(card => !sameCard(card, turn)))) {
+                    if (budget <= 0) break;
+                    if (matches(riverConditions, [...flop, turn, river])) return [...flop, turn, river];
+                }
+            }
+        }
+        return [];
     }
 
     /**

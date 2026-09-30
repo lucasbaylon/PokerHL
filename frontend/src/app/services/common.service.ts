@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import Swal from 'sweetalert2';
-import { HeroSpot, Situation } from '../interfaces/situation';
+import { HeroSpot, Situation, isPostflop } from '../interfaces/situation';
 import { Solution, SolutionAction } from '../interfaces/solution';
 import { ActionColors, DEFAULT_ACTION_COLORS, DEFAULT_PARTICLE_SETTINGS, ParticleSettings } from '../interfaces/user-params';
 
@@ -95,13 +95,13 @@ export class CommonService {
 
     /**
      * Actions disponibles pour un type de situation.
-     * Au flop : check, bet ou all-in en premier à parler ; fold, call, raise ou all-in face à une mise.
-     * @param type Type de situation ('preflop' ou 'flop').
-     * @param heroSpot Situation du héros au flop.
+     * Postflop (flop, turn, river) : check, bet ou all-in en premier à parler ; fold, call, raise ou all-in face à une mise.
+     * @param type Type de situation ('preflop', 'flop', 'turn' ou 'river').
+     * @param heroSpot Situation du héros postflop.
      */
     actionsForType(type: string | undefined, heroSpot?: HeroSpot): { name: string, code: SolutionAction }[] {
         let codes: SolutionAction[] = ['fold', 'check', 'call', 'limp', 'raise', 'all-in'];
-        if (type === 'flop') {
+        if (isPostflop(type)) {
             codes = heroSpot === 'facingBet' ? ['fold', 'call', 'raise', 'all-in'] : ['check', 'bet', 'all-in'];
         }
         return this.solutionActions.filter(action => codes.includes(action.code));

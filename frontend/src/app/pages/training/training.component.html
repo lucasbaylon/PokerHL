@@ -17,8 +17,8 @@
             <div class="table-wrap">
                 <div class="poker-table animate-appear opacity-0"
                     [style.background]="backgroundColor">
-                    @if (isFlop) {
-                    <div class="flop-board" aria-label="Flop">
+                    @if (isPostflop) {
+                    <div class="flop-board" aria-label="Board">
                         <div class="relative">
                             <!-- Mise adverse : jetons juste au-dessus du flop -->
                             @if (isFacingBet) {
@@ -42,6 +42,13 @@
                             <img src="assets/img/chip-medium.png" class="h-7 w-auto object-contain drop-shadow-lg" alt="" />
                             <span>Pot {{activeSituation.pot}} BB</span>
                         </div>
+                        @if (actionLineLabel.length) {
+                        <ul class="action-line" aria-label="Actions précédentes">
+                            @for (step of actionLineLabel; track step.street) {
+                            <li><strong>{{ step.street }} :</strong> {{ step.text }}</li>
+                            }
+                        </ul>
+                        }
                     </div>
                     } @else {
                     <div class="table-brand" aria-hidden="true">
@@ -348,7 +355,7 @@
                     </div>
                 </div>
                 }
-                @if (isFlop && !isFacingBet) {
+                @if (isPostflop && !isFacingBet) {
                 <div class="max-sm:grid-cols-3 raise-presets grid grid-cols-6 gap-2 mb-2 rounded-md bg-gray-100 p-2 dark:bg-main-dark-bg">
                     @for (preset of betPresets; track preset) {
                     <button type="button" (click)="setBetPercent(preset)" [disabled]="preset < minimumBetPercent()" [title]="preset < minimumBetPercent() ? 'Mise inférieure à 1 BB' : ''" class="disabled:cursor-not-allowed disabled:opacity-40 h-9 rounded-md border-0 bg-gray-100 px-3 text-sm font-semibold text-gray-800 shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">{{preset}}%</button>
@@ -374,7 +381,7 @@
                 </div>
                 }
                 <div class="decision-buttons flex flex-wrap justify-center gap-2">
-                    @if (!isFlop || isFacingBet) {
+                    @if (!isPostflop || isFacingBet) {
                     <button type="button" (click)="submitPokerAction('fold')" class="h-10 w-32 rounded-md border-0 bg-gray-100 text-gray-800 font-semibold shadow transition-colors duration-150 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">Fold</button>
                     }
                     @if (canCheck()) {
@@ -389,7 +396,7 @@
                     @if (canRaise()) {
                     <button type="button" (click)="submitPokerAction('raise')" class="h-10 w-32 rounded-md border-0 bg-green-700 text-white font-semibold shadow transition-colors duration-150 hover:bg-green-800 dark:bg-green-800 dark:hover:bg-green-700 cursor-pointer">Raise <span class="ml-1 font-normal opacity-80">{{raiseAmount}} BB</span></button>
                     }
-                    @if (isFlop && !isFacingBet) {
+                    @if (isPostflop && !isFacingBet) {
                     <button type="button" (click)="submitPokerAction('bet')" class="h-10 w-32 rounded-md border-0 bg-green-700 text-white font-semibold shadow transition-colors duration-150 hover:bg-green-800 dark:bg-green-800 dark:hover:bg-green-700 cursor-pointer">Bet <span class="ml-1 font-normal opacity-80">{{betPercent}}%</span></button>
                     }
                     @if (isFacingBet) {
@@ -404,7 +411,7 @@
 
     <!-- Div affichée lors d'une mauvaise réponse -->
     <app-modal [open]="showWrongAnswerModal" (closed)="closeSolutionModal()"
-        [panelClass]="isFlop ? 'w-[44rem] max-w-[94vw]' : 'w-fit max-w-[94vw]'">
+        [panelClass]="isPostflop ? 'w-[44rem] max-w-[94vw]' : 'w-fit max-w-[94vw]'">
         @if (currentSituation) {
             <h4
                 class="m-0 text-left text-sm font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
@@ -415,9 +422,9 @@
             <div class="mt-2 mb-0 flex flex-wrap gap-x-4 gap-y-1 border-b border-gray-200 pb-3 pr-10 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-layer-group text-gray-500" aria-hidden="true"></i>
-                    {{ currentSituation.type | type }}@if (isFlop) { · {{ flopTypesLabel }} }
+                    {{ currentSituation.type | type }}@if (isPostflop) { · {{ flopTypesLabel }} }
                 </span>
-                @if (isFlop) {
+                @if (isPostflop) {
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-sack-dollar text-gray-500" aria-hidden="true"></i>
                     Pot {{ activeSituation.pot }} BB
@@ -426,6 +433,12 @@
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-hand-holding-dollar text-gray-500" aria-hidden="true"></i>
                     Mise adverse {{ activeSituation.facingBetPercent }}%
+                </span>
+                }
+                @for (step of actionLineLabel; track step.street) {
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-gray-500" aria-hidden="true"></i>
+                    {{ step.street }} : {{ step.text }}
                 </span>
                 }
                 }
@@ -446,7 +459,7 @@
                     {{ currentSituation.opponentLevel! | opponentLevel }}
                 </span>
             </div>
-            @if (isFlop && activeSituation.hand) {
+            @if (isPostflop && activeSituation.hand) {
             <!-- Flop : cartes et caractéristiques à gauche, solutions et réponses à droite -->
             <div class="grid gap-6 pt-4 sm:grid-cols-[minmax(0,1fr)_auto]">
                 <div class="flex min-w-0 flex-col gap-5 text-left">
@@ -459,7 +472,7 @@
                             </div>
                         </div>
                         <div>
-                            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Flop</h4>
+                            <h4 class="m-0 mb-2 text-left text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ currentSituation.type | type }}</h4>
                             <div class="flex gap-1.5 select-none">
                                 @for (card of activeSituation.board; track $index) {
                                 <ng-container *ngTemplateOutlet="modalCard; context: { $implicit: card }"></ng-container>

@@ -1,6 +1,6 @@
 import { FlopRule } from "../services/flop-rules";
 import { HandFeatures } from "../services/hand-evaluator";
-import { HeroSpot } from "./situation";
+import { ActionLineStep, HeroSpot } from "./situation";
 import { Solution } from "./solution";
 
 export interface TableColorCardObj {
@@ -53,7 +53,10 @@ export interface ActiveSituation {
 
     facingBetPercent?: number;
 
-    /** Analyse de la main sur le flop et règle qui a donné la réponse (-1 : action par défaut). */
+    /** Actions jouées avant la situation, affichées au héros. */
+    actionLine?: ActionLineStep[];
+
+    /** Analyse de la main sur le board et règle qui a donné la réponse (-1 : action par défaut). */
     hand?: HandFeatures;
 
     rule?: FlopRule;

@@ -6,10 +6,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Solution } from '../../interfaces/solution';
 import { CommonService } from '../../services/common.service';
 import { FlopRule, RuleCondition, describeCondition } from '../../services/flop-rules';
+import { Street } from '../../services/flop.service';
 import { FlopConditionDialogComponent } from '../flop-condition-dialog/flop-condition-dialog.component';
 
 /**
- * Éditeur des règles d'une situation flop : chaque règle associe des conditions (toutes requises) à une action.
+ * Éditeur des règles d'une situation postflop (flop, turn, river) : chaque règle associe des conditions (toutes requises) à une action.
  * Les règles sont testées dans l'ordre ; l'action « Sinon » s'applique quand aucune ne correspond.
  */
 @Component({
@@ -26,6 +27,8 @@ export class FlopRulesEditorComponent {
     /** Toutes les solutions de la situation (couleurs des raises et bets). */
     @Input() solutions: Solution[] = [];
     @Input() defaultSolutionId?: string;
+    /** Street de la situation : limite les conditions proposées. */
+    @Input() street: Street = 'flop';
     @Output() defaultSolutionIdChange = new EventEmitter<string>();
 
     readonly describeCondition = describeCondition;

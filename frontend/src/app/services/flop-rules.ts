@@ -1,8 +1,8 @@
 /**
- * Moteur de règles des situations flop : une règle associe des conditions (toutes requises) à une action.
+ * Moteur de règles des situations postflop (flop, turn, river) : une règle associe des conditions (toutes requises) à une action.
  * La première règle dont les conditions sont remplies donne l'action attendue, sinon l'action par défaut s'applique.
  */
-import { BoardFeatures, BoardSuits, HandFeatures, MADE_HAND_LEVELS, MadeHandLevel, RankPosition, madeHandScore, rankValue } from './hand-evaluator';
+import { BoardFeatures, BoardPairing, BoardSuits, HandFeatures, MADE_HAND_LEVELS, MadeHandLevel, RankPosition, madeHandScore, rankValue } from './hand-evaluator';
 
 export type Comparator = '>' | '>=' | '=' | '<=' | '<';
 
@@ -12,8 +12,14 @@ export interface RankConstraint {
     n: number;
 }
 
+/** Carte du board précédent servant de référence à la dernière carte. */
+export type PreviousBoardRef = 'top' | 'second' | 'third' | 'bottom';
+
+/** Board de référence d'une évolution : board avant la dernière carte, ou flop. */
+export type RunoutFrom = 'previous' | 'flop';
+
 export type RuleCondition = { negate?: boolean } & (
-    | { kind: 'made', op: '>=' | '=' | '<=', level: MadeHandLevel, kicker?: RankConstraint, flushRank?: RankConstraint, straight?: 'bottom' | 'notBottom' }
+    | { kind: 'made', op: '>=' | '=' | '<=', level: MadeHandLevel, kicker?: RankConstraint, flushRank?: RankConstraint, straight?: 'bottom' | 'notBottom', strength?: RankConstraint }
     | { kind: 'pocketPair', op: Comparator, rank: number }
     | { kind: 'underpair', constraint: RankConstraint }
     | { kind: 'draw', draw: 'fd' | 'oesd' | 'gutshot' | 'straightDraw' | 'combo' | 'any', fdRank?: RankConstraint, twoCards?: boolean, overThird?: boolean }
@@ -23,12 +29,24 @@ export type RuleCondition = { negate?: boolean } & (
     | { kind: 'th', op: Comparator, n: number }
     | { kind: 'broadway' }
     | { kind: 'suited' }
+    | { kind: 'kickerPlays' }
     | { kind: 'board', attr: 'topRank' | 'bottomRank' | 'pairRank' | 'unpairedRank', op: Comparator, rank: number }
     | { kind: 'board', attr: 'suits', suits: Exclude<BoardSuits, 'other'> }
     | { kind: 'board', attr: 'paired' | 'straightPossible' | 'connected' }
     | { kind: 'board', attr: 'containsRank', rank: number }
     | { kind: 'board', attr: 'broadwayCount', op: Comparator, n: number }
+    | { kind: 'board', attr: 'suitCount' | 'straightCount', op: Comparator, n: number }
+    | { kind: 'board', attr: 'fourInRow' }
+    | { kind: 'board', attr: 'pairing', pairing: BoardPairing }
+    | { kind: 'board', attr: 'newCardRank', op: Comparator, rank: number }
+    | { kind: 'board', attr: 'newCardVs', op: Comparator, ref: PreviousBoardRef }
+    | { kind: 'board', attr: 'newCardPairs', ref: PreviousBoardRef | 'any' }
+    | { kind: 'board', attr: 'newCardSuits' | 'newCardStraight', n: number, from?: RunoutFrom }
+    | { kind: 'board', attr: 'newCardTh', op: Comparator, n: number, from?: RunoutFrom }
 );
+
+/** Critères de board portant sur la dernière carte (turn ou river) : sans objet au flop. */
+export const RUNOUT_ATTRS: BoardCondition['attr'][] = ['newCardRank', 'newCardVs', 'newCardPairs', 'newCardSuits', 'newCardStraight', 'newCardTh'];
 
 export type ConditionKind = RuleCondition['kind'];
 
@@ -62,9 +80,18 @@ function matchRank(position: RankPosition | undefined, constraint: RankConstrain
 }
 
 /**
- * Vérifie une condition de board seule (utilisée aussi pour filtrer les flops d'une situation).
+ * Rang d'une carte du board précédent (rangs distincts, du plus haut au plus bas).
+ */
+function previousRank(ranks: number[], ref: PreviousBoardRef): number | undefined {
+    return ref === 'bottom' ? ranks[ranks.length - 1] : ranks[{ top: 0, second: 1, third: 2 }[ref]];
+}
+
+/**
+ * Vérifie une condition de board seule (utilisée aussi pour filtrer les boards d'une situation).
+ * Les critères sur la dernière carte sont faux sur un flop.
  */
 export function matchBoardCondition(condition: BoardCondition, board: BoardFeatures): boolean {
+    const runout = board.runout;
     const result = (() => {
         switch (condition.attr) {
             case 'topRank': return compare(board.top, condition.op, condition.rank);
@@ -77,6 +104,31 @@ export function matchBoardCondition(condition: BoardCondition, board: BoardFeatu
             case 'connected': return board.connected;
             case 'containsRank': return board.ranks.includes(condition.rank);
             case 'broadwayCount': return compare(board.broadwayCount, condition.op, condition.n);
+            case 'suitCount': return compare(board.suitMax, condition.op, condition.n);
+            case 'straightCount': return compare(board.straightMax, condition.op, condition.n);
+            case 'fourInRow': return board.fourInRow;
+            case 'pairing': return board.pairing === condition.pairing;
+            case 'newCardRank': return !!runout && compare(runout.rank, condition.op, condition.rank);
+            case 'newCardVs': {
+                const reference = runout && previousRank(runout.previousRanks, condition.ref);
+                return !!runout && reference !== undefined && compare(runout.rank, condition.op, reference);
+            }
+            case 'newCardPairs':
+                return !!runout && (condition.ref === 'any'
+                    ? runout.previousRanks.includes(runout.rank)
+                    : previousRank(runout.previousRanks, condition.ref) === runout.rank);
+            case 'newCardSuits': {
+                const before = runout?.[condition.from ?? 'previous'].suitMaxBefore;
+                return before !== undefined && before < condition.n && board.suitMax >= condition.n;
+            }
+            case 'newCardStraight': {
+                const before = runout?.[condition.from ?? 'previous'].straightMaxBefore;
+                return before !== undefined && before < condition.n && board.straightMax >= condition.n;
+            }
+            case 'newCardTh': {
+                const th = runout?.[condition.from ?? 'previous'].th;
+                return th !== undefined && compare(th, condition.op, condition.n);
+            }
         }
     })();
     return condition.negate ? !result : result;
@@ -93,6 +145,7 @@ export function matchCondition(condition: RuleCondition, hand: HandFeatures): bo
                 const target = madeHandScore(condition.level);
                 const qualifies = matchRank(hand.kicker, condition.kicker)
                     && matchRank(hand.flushRank, condition.flushRank)
+                    && matchRank(hand.strength, condition.strength)
                     && (!condition.straight || (condition.straight === 'bottom') === !!hand.straightIsBottom);
                 if (condition.op === '=') return hand.score === target && qualifies;
                 if (condition.op === '>=') return hand.score > target || (hand.score === target && qualifies);
@@ -137,6 +190,7 @@ export function matchCondition(condition: RuleCondition, hand: HandFeatures): bo
             case 'th': return hand.th !== undefined && compare(hand.th, condition.op, condition.n);
             case 'broadway': return hand.broadway;
             case 'suited': return hand.suited;
+            case 'kickerPlays': return hand.kickerPlays;
         }
     })();
     return condition.negate ? !result : result;
@@ -163,9 +217,12 @@ export function describeHand(hand: HandFeatures): string[] {
         const details = [
             hand.kicker ? `kicker top ${hand.kicker.top}` : '',
             hand.flushRank ? `couleur top ${hand.flushRank.top}` : '',
+            hand.strength ? `rang ${hand.strength.top} parmi les possibles` : '',
             hand.straightIsBottom ? 'la plus basse' : ''
         ].filter(Boolean).join(', ');
         labels.push(`${level.name}${details ? ` (${details})` : ''}`);
+        // Au flop, le kicker joue toujours : l'information n'est utile qu'au turn et à la river
+        if (hand.kickerPlays && hand.board.runout) labels.push('Kicker qui joue');
     } else {
         labels.push(level.name);
         if (hand.th !== undefined) labels.push(`Carte haute : ${ordinal(hand.th)} meilleure absente du board`);
@@ -202,10 +259,14 @@ const FLOP_TERMS: (FlopTerm & { pattern: RegExp })[] = [
     { term: 'Top pair', pattern: /Top pair/, explanation: 'Paire avec la plus haute carte du board (sur un board pairé : avec la plus haute carte non pairée).' },
     { term: '2nd pair', pattern: /2nd pair/, explanation: 'Paire avec la 2e carte du board.' },
     { term: '3rd pair', pattern: /3rd pair/, explanation: 'Paire avec la 3e carte du board.' },
+    { term: '4th pair', pattern: /4th pair/, explanation: 'Paire avec la 4e carte du board (turn ou river).' },
+    { term: '5th pair', pattern: /5th pair/, explanation: 'Paire avec la 5e carte du board (river).' },
     { term: 'Paire servie', pattern: /Paire servie/, explanation: 'Paire que tu as en main (ex. 77).' },
     { term: 'Aucune main faite', pattern: /Aucune main faite/, explanation: 'Ni paire ni mieux.' },
     { term: 'Top card', pattern: /top card/i, explanation: 'Plus haute carte du board.' },
-    { term: 'Kicker', pattern: /kicker/i, explanation: 'Ta carte qui ne sert pas à la paire (ou au brelan) : elle départage deux mains égales.' },
+    { term: 'Kicker qui joue', pattern: /Kicker qui joue/, explanation: 'Ton kicker fait partie de tes cinq meilleures cartes : tu bats la même paire avec un kicker plus faible (sinon le board départage).' },
+    { term: 'Kicker', pattern: /kicker(?! qui joue)/i, explanation: 'Ta carte qui ne sert pas à la paire (ou au brelan) : elle départage deux mains égales.' },
+    { term: 'Rang parmi les possibles', pattern: /parmi les possibles|parmi les mains possibles/, explanation: 'Position de ta main parmi toutes les mains de la même catégorie possibles sur ce board : rang 1 = la meilleure (ex. le meilleur full).' },
     { term: 'Top N', pattern: /\btop \d/, explanation: '« top 4 » : 4e meilleure valeur possible parmi les cartes absentes du board (top 1 = la meilleure).' },
     { term: 'Carte haute', pattern: /Carte haute/, explanation: 'Ta plus haute carte. « 2e meilleure absente du board » : 2e plus forte valeur parmi celles qui ne sont pas sur le board.' },
     { term: 'Carte basse', pattern: /Carte basse/, explanation: 'Ta plus petite carte.' },
@@ -225,7 +286,15 @@ const FLOP_TERMS: (FlopTerm & { pattern: RegExp })[] = [
     { term: 'Arc-en-ciel', pattern: /arc-en-ciel/i, explanation: 'Board de trois couleurs différentes : aucun tirage couleur au flop.' },
     { term: 'Two-tone', pattern: /two-tone/i, explanation: 'Board avec deux cartes de la même couleur : tirage couleur possible.' },
     { term: 'Monotone', pattern: /monotone/i, explanation: 'Board de trois cartes de la même couleur.' },
-    { term: 'Board connecté', pattern: /connecté/, explanation: 'Deux cartes du board à 4 rangs ou moins l\'une de l\'autre.' }
+    { term: 'Board connecté', pattern: /connecté/, explanation: 'Deux cartes du board à 4 rangs ou moins l\'une de l\'autre.' },
+    { term: 'Cartes de la même couleur', pattern: /de la même couleur/, explanation: 'Plus grand nombre de cartes du board d\'une même couleur : 3 = couleur possible, 4 = board 4-flush, 5 = couleur sur le board.' },
+    { term: 'Cartes à la quinte', pattern: /cartes à la quinte/, explanation: 'Plus grand nombre de cartes du board tenant dans une même quinte : 3 = quinte possible, 4 = board 4-straight, 5 = quinte sur le board.' },
+    { term: '4 cartes qui se suivent', pattern: /4 cartes qui se suivent/, explanation: 'Quatre rangs consécutifs sur le board (ex. 9-8-7-6).' },
+    { term: 'Board double pairé', pattern: /double pairé/, explanation: 'Deux paires différentes sur le board.' },
+    { term: 'Dernière carte', pattern: /Dernière carte/, explanation: 'La carte arrivée en dernier : la turn sur un board de 4 cartes, la river sur un board de 5 cartes.' },
+    { term: 'Board précédent', pattern: /board précédent/, explanation: 'Le board avant la dernière carte (le flop pour une turn, le board du turn pour une river).' },
+    { term: 'Depuis le flop', pattern: /[Dd]epuis le flop/, explanation: 'En comptant toutes les cartes arrivées après le flop (turn et river).' },
+    { term: 'Meilleure absente', pattern: /meilleure absente/, explanation: '« 2e meilleure absente » : 2e plus forte valeur parmi celles qui ne sont pas sur le board de référence.' }
 ];
 
 /**
@@ -259,6 +328,22 @@ function describeRank(constraint: RankConstraint | undefined, noun: string): str
     return labels[constraint.mode];
 }
 
+/** Libellés des structures de paires du board. */
+export const BOARD_PAIRING_LABELS: Record<BoardPairing, string> = {
+    unpaired: 'Board non pairé',
+    paired: 'Board pairé (une seule paire)',
+    doublePaired: 'Board double pairé',
+    trips: 'Board avec un brelan',
+    fullHouse: 'Board avec un full',
+    quads: 'Board avec un carré'
+};
+
+const PREVIOUS_REFS: Record<PreviousBoardRef, string> = {
+    top: 'la top card', second: 'la 2e carte', third: 'la 3e carte', bottom: 'la plus petite carte'
+};
+
+const RUNOUT_FROM_LABELS: Record<RunoutFrom, string> = { previous: 'Dernière carte', flop: 'Depuis le flop' };
+
 const HERO_CARD_REFS: Record<string, string> = {
     top: 'la top card', second: 'la 2e carte', third: 'la 3e carte', bottom: 'la plus petite carte', pair: 'la paire du board'
 };
@@ -274,6 +359,7 @@ export function describeCondition(condition: RuleCondition): string {
                 const details = [
                     describeRank(condition.kicker, 'kicker'),
                     describeRank(condition.flushRank, 'couleur'),
+                    describeRank(condition.strength, 'rang parmi les mains possibles'),
                     condition.straight === 'bottom' ? 'la plus basse' : condition.straight === 'notBottom' ? 'pas la plus basse' : ''
                 ].filter(Boolean).join(', ');
                 const prefix = condition.op === '=' ? '' : `${COMPARATOR_LABELS[condition.op]} `;
@@ -315,6 +401,7 @@ export function describeCondition(condition: RuleCondition): string {
             case 'th': return `Carte haute ${COMPARATOR_LABELS[condition.op]} ${ordinal(condition.n)} meilleure absente du board`;
             case 'broadway': return 'Broadway';
             case 'suited': return 'Main assortie';
+            case 'kickerPlays': return 'Kicker qui joue';
             case 'board': {
                 switch (condition.attr) {
                     case 'topRank': return `Board : top card ${COMPARATOR_LABELS[condition.op]} ${rankValue(condition.rank)}`;
@@ -327,6 +414,20 @@ export function describeCondition(condition: RuleCondition): string {
                     case 'connected': return 'Board connecté (2 cartes à 4 rangs ou moins)';
                     case 'containsRank': return `Board contient ${rankValue(condition.rank)}`;
                     case 'broadwayCount': return `Board : cartes ≥ T ${COMPARATOR_LABELS[condition.op]} ${condition.n}`;
+                    case 'suitCount': return `Board : cartes de la même couleur ${COMPARATOR_LABELS[condition.op]} ${condition.n}`;
+                    case 'straightCount': return `Board : cartes à la quinte ${COMPARATOR_LABELS[condition.op]} ${condition.n}`;
+                    case 'fourInRow': return 'Board : 4 cartes qui se suivent';
+                    case 'pairing': return BOARD_PAIRING_LABELS[condition.pairing];
+                    case 'newCardRank': return `Dernière carte ${COMPARATOR_LABELS[condition.op]} ${rankValue(condition.rank)}`;
+                    case 'newCardVs': return `Dernière carte ${COMPARATOR_LABELS[condition.op]} ${PREVIOUS_REFS[condition.ref]} du board précédent`;
+                    case 'newCardPairs': return condition.ref === 'any'
+                        ? 'Dernière carte pairée avec le board précédent'
+                        : `Dernière carte pairée avec ${PREVIOUS_REFS[condition.ref]} du board précédent`;
+                    case 'newCardSuits': return `${RUNOUT_FROM_LABELS[condition.from ?? 'previous']} : passe à ${condition.n} cartes de la même couleur`;
+                    case 'newCardStraight': return `${RUNOUT_FROM_LABELS[condition.from ?? 'previous']} : passe à ${condition.n} cartes à la quinte`;
+                    case 'newCardTh': return condition.from === 'flop'
+                        ? `Une carte tombée depuis le flop ${COMPARATOR_LABELS[condition.op]} ${ordinal(condition.n)} meilleure absente du flop`
+                        : `Dernière carte ${COMPARATOR_LABELS[condition.op]} ${ordinal(condition.n)} meilleure absente du board précédent`;
                 }
             }
         }
