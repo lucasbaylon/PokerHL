@@ -30,7 +30,7 @@
     "@tsparticles/slim": "^3.4.0",
     "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
-    "ngx-socket-io": "^4.6.1",
+    "ngx-socket-io": "4.6.1",
     "primeng": "^17.18.1",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.11.1",
