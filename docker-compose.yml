@@ -8,17 +8,11 @@ services:
       - .env
     environment:
       NODE_ENV: production
-    ports:
-      - "3000:3000"
-    # Réseau partagé avec le conteneur MariaDB : DB_HOST = nom du conteneur MariaDB
-    networks:
-      - db-net
+    # Réseau de l'hôte : l'appli écoute directement sur le port 3000 du VPS
+    # et joint le MySQL installé sur le VPS via DB_HOST=localhost
+    network_mode: host
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
-
-networks:
-  db-net:
-    external: true
