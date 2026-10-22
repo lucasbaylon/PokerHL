@@ -6,7 +6,8 @@ require('dotenv').config();
 const JSZip = require('jszip');
 const multer = require('multer');
 
-const admin = require('firebase-admin');
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
 
 const { getConnection } = require('./database');
 
@@ -16,8 +17,8 @@ const http = require('http').Server(app);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-admin.initializeApp({
-    credential: admin.credential.cert({
+initializeApp({
+    credential: cert({
         private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         client_email: process.env.FIREBASE_CLIENT_EMAIL,
         project_id: process.env.FIREBASE_PROJECT_ID
@@ -49,8 +50,7 @@ const authMiddleware = (req, res, next) => {
 
     if (!token) return res.status(401).send('Unauthorized');
 
-    admin
-        .auth()
+    getAuth()
         .verifyIdToken(token)
         .then((decodedToken) => {
             req.user = decodedToken;
