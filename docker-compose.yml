@@ -1,0 +1,20 @@
+services:
+  pokerhl:
+    build: .
+    image: pokerhl:latest
+    container_name: pokerhl
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    # Permet d'atteindre une base MySQL installée sur l'hôte via DB_HOST=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

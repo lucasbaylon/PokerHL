@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+node_modules
+prod
+frontend/node_modules
+frontend/dist
+frontend/.angular
+*.md
+buildProd.sh
+buildQualif.ps1
+ecosystem_production.config.js
+Dockerfile
+docker-compose.yml
